@@ -5,16 +5,16 @@
 export * from './campaign';
 
 // Export all domain related types
-export * from './domain.d';
+export * from './domain-fixed';
 
 // Export all mailbox related types
-export * from './mailbox.d';
+export * from './mailbox';
 
 // Export all template related types
-export * from './templates.d';
+export * from './templates';
 
 // Export all conversation/inbox related types
-export * from './conversation.d';
+export * from './conversation';
 
 // Export navigation related types
 export * from './nav-link';
@@ -26,7 +26,7 @@ export * from './notification';
 export * from './auth';
 
 // Export tab/ui related types
-export * from './tab.d';
+export * from './tab';
 
 // Export common/shared utility types
 // Export settings and configuration types
@@ -39,4 +39,4 @@ export * from './common';
 export * from './ui';
 
 // Export analytics related types
-export * from './analytics.d';
+export * from './analytics';

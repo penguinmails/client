@@ -1,24 +1,9 @@
 import { z } from "zod";
 
 // DNS Record Types
-export enum DNSRecordType {
-  A = "A",
-  AAAA = "AAAA",
-  CNAME = "CNAME",
-  MX = "MX",
-  TXT = "TXT",
-  SPF = "SPF",
-  DKIM = "DKIM",
-  DMARC = "DMARC",
-  NS = "NS",
-  SRV = "SRV"
-}
+export type DNSRecordType = "A" | "AAAA" | "CNAME" | "MX" | "TXT" | "SPF" | "DKIM" | "DMARC" | "NS" | "SRV";
 
-export enum DNSRecordStatus {
-  VERIFIED = "verified",
-  PENDING = "pending",
-  FAILED = "failed"
-}
+export type DNSRecordStatus = "verified" | "pending" | "failed";
 
 export interface DNSRecord {
   type: DNSRecordType | string; // Allow string for backward compatibility, but prefer enum
@@ -53,6 +38,15 @@ export enum VerificationStatus {
   NOT_CONFIGURED = "NOT_CONFIGURED",
   DISABLED = "DISABLED"
 }
+
+// Add const objects for runtime usage where needed
+export const VerificationStatusConstants = {
+  VERIFIED: "VERIFIED" as const,
+  PENDING: "PENDING" as const,
+  ERROR: "ERROR" as const,
+  NOT_CONFIGURED: "NOT_CONFIGURED" as const,
+  DISABLED: "DISABLED" as const
+} as const;
 
 // Relay Types
 export enum RelayType {

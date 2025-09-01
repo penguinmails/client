@@ -31,7 +31,7 @@ export const domains = [
     addedDate: '1 day ago'
   }
 ]
-import { Mailbox } from "@/types/mailbox.d";
+import { Mailbox } from "@/types/mailbox";
 
 export const mailboxes : Mailbox[] = [
   {

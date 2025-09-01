@@ -25,27 +25,11 @@ export interface Message {
 }
 
 // Enums
-export enum MessageType {
-  OUTGOING = 'outgoing',
-  INCOMING = 'incoming',
-}
+export type MessageType = 'outgoing' | 'incoming';
 
-export enum ConversationStatus {
-  UNREAD = 'unread',
-  READ = 'read',
-  ARCHIVED = 'archived',
-  MUTED = 'muted',
-  IMPORTANT = 'important',
-}
+export type ConversationStatus = 'unread' | 'read' | 'archived' | 'muted' | 'important';
 
-export enum TagType {
-  INTERESTED = 'interested',
-  NOT_INTERESTED = 'not-interested',
-  MAYBE_LATER = 'maybe-later',
-  HOT_LEAD = 'hot-lead',
-  FOLLOW_UP = 'follow-up',
-  REPLIED = 'replied',
-}
+export type TagType = 'interested' | 'not-interested' | 'maybe-later' | 'hot-lead' | 'follow-up' | 'replied';
 
 // Inbox Filter Types
 export interface InboxFilter {
@@ -55,14 +39,7 @@ export interface InboxFilter {
   icon?: any; // Can be React component or icon string
 }
 
-export enum InboxFilterType {
-  ALL = 'all',
-  UNREAD = 'unread',
-  STARRED = 'starred',
-  ARCHIVED = 'archived',
-  MUTED = 'muted',
-  IMPORTANT = 'important',
-}
+export type InboxFilterType = 'all' | 'unread' | 'starred' | 'archived' | 'muted' | 'important';
 
 // Conversation Interface (Enhanced)
 export interface Conversation {
@@ -125,3 +102,35 @@ export interface InboxState {
   currentPage: number;
   totalCount: number;
 }
+
+// Add constants for runtime usage
+export const MessageTypeConstants = {
+  OUTGOING: 'outgoing' as const,
+  INCOMING: 'incoming' as const
+} as const;
+
+export const ConversationStatusConstants = {
+  UNREAD: 'unread' as const,
+  READ: 'read' as const,
+  ARCHIVED: 'archived' as const,
+  MUTED: 'muted' as const,
+  IMPORTANT: 'important' as const
+} as const;
+
+export const TagTypeConstants = {
+  INTERESTED: 'interested' as const,
+  NOT_INTERESTED: 'not-interested' as const,
+  MAYBE_LATER: 'maybe-later' as const,
+  HOT_LEAD: 'hot-lead' as const,
+  FOLLOW_UP: 'follow-up' as const,
+  REPLIED: 'replied' as const
+} as const;
+
+export const InboxFilterTypeConstants = {
+  ALL: 'all' as const,
+  UNREAD: 'unread' as const,
+  STARRED: 'starred' as const,
+  ARCHIVED: 'archived' as const,
+  MUTED: 'muted' as const,
+  IMPORTANT: 'important' as const
+} as const;

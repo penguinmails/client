@@ -11,10 +11,11 @@ import { EmailAccount } from "@/types/domain";
 import { ArrowLeft, PlusCircle } from "lucide-react";
 import Link from "next/link";
 
-export default function DomainAccountsPage({ params }: { params: { domainId: string } }) {
+export default async function DomainAccountsPage({ params }: { params: Promise<{ domainId: string }> }) {
+  const { domainId } = await params;
   // TODO: Fetch domain and accounts data based on domainId
   const domain = {
-    id: params.domainId,
+    id: domainId,
     name: "example.com",
   };
 
@@ -87,7 +88,7 @@ export default function DomainAccountsPage({ params }: { params: { domainId: str
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <EmailsTable emailAccounts={emailAccounts} domainId={params.domainId} />
+          <EmailsTable emailAccounts={emailAccounts} domainId={domainId} />
         </CardContent>
       </Card>
     </div>

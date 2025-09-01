@@ -4,10 +4,9 @@ import EmailAccountForm, { type EmailAccountFormValues } from "@/components/doma
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function NewDomainAccountPage({ params }: { params: { domainId: string } }) {
-  // TODO: Fetch domain data based on domainId
+function NewAccountClient({ domainId }: { domainId: string }) {
   const domain = {
-    id: parseInt(params.domainId),
+    id: parseInt(domainId),
     name: "example.com",
   };
 
@@ -40,4 +39,14 @@ export default function NewDomainAccountPage({ params }: { params: { domainId: s
       />
     </div>
   );
+}
+
+// Server component
+export default async function NewDomainAccountPage({
+  params,
+}: {
+  params: Promise<{ domainId: string }>;
+}) {
+  const { domainId } = await params;
+  return <NewAccountClient domainId={domainId} />;
 }

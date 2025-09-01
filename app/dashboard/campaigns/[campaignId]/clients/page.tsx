@@ -6,8 +6,8 @@ export default async function ClientsPage({
   params,
   searchParams,
 }: {
-  params: { campaignId: string };
-  searchParams: { page?: string };
+  params: Promise<{ campaignId: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { campaignId } = await params;
   const { page } = await searchParams;

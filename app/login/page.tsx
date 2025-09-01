@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,11 +13,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal, LogIn } from "lucide-react";
+import { Terminal, LogIn, User } from "lucide-react";
 import { LandingLayout } from "@/components/layout/landing";
 import { loginContent } from "./content";
 import { useRouter } from "next/navigation";
-import { useSignIn } from "@niledatabase/react";
+import {
+  useSignIn,
+  SignedIn,
+  SignedOut,
+  UserInfo,
+  SignOutButton,
+} from "@niledatabase/react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -27,18 +33,38 @@ export default function LoginPage() {
   const router = useRouter();
 
   const signIn = useSignIn({
-    onSuccess: () => {
-      router.push("/dashboard");
+    onSuccess: (data) => {
+      if (data) {
+        console.log(data);
+        const { ok, error, status } = data;
+
+        if (error) {
+          setError(error.message);
+        }
+
+        if (status === 401) {
+          setError(loginContent.errors.generic);
+        }
+        if (ok) {
+          return router.push("/dashboard");
+        }
+      } else {
+        return router.push("/dashboard");
+      }
+      setIsLoading(false);
     },
     onError: (err: Error) => {
       console.error("Login failed:", err);
       setError(err.message || loginContent.errors.generic);
+      setIsLoading(false);
     },
+    callbackUrl: "/dashboard",
   });
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
     signIn({
       provider: "credentials",
       email,
@@ -50,74 +76,97 @@ export default function LoginPage() {
     <LandingLayout>
       <div className="flex-grow flex items-center justify-center py-12 px-4">
         <Card className="w-full max-w-sm">
-          <CardHeader className="text-center">
-            <LogIn className="mx-auto h-8 w-8 mb-2 text-primary" />
-            <CardTitle className="text-2xl">{loginContent.title}</CardTitle>
-            <CardDescription>{loginContent.description}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">{loginContent.email.label}</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder={loginContent.email.placeholder}
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">
-                    {loginContent.password.label}
-                  </Label>
-                  <Link
-                    href="/forgot-password"
-                    className="text-sm font-medium text-primary hover:underline underline-offset-4"
-                  >
-                    {loginContent.forgotPassword}
-                  </Link>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
-
-              {/* Error Message */}
-              {error && (
-                <Alert variant="destructive">
-                  <Terminal className="h-4 w-4" />
-                  <AlertTitle>{loginContent.errors.title}</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading
-                  ? loginContent.loginButton.loading
-                  : loginContent.loginButton.default}
-              </Button>
-            </form>
-          </CardContent>
-          <CardFooter className="flex flex-col items-center space-y-2">
-            <p className="text-xs text-muted-foreground">
-              {loginContent.signup.text}{" "}
-              <Link
-                href="/signup"
-                className="underline font-medium text-primary"
+          <SignedIn>
+            <CardHeader className="text-center">
+              <User className="mx-auto h-8 w-8 mb-2 text-primary" />
+              <CardTitle className="text-2xl">
+                You are already signed in.
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <UserInfo />
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <SignOutButton />
+              <Button
+                className="py-5"
+                onClick={() => router.push("/dashboard")}
               >
-                {loginContent.signup.link}
-              </Link>
-            </p>
-          </CardFooter>
+                <Terminal className="h-4 w-4 mr-2" />
+                Go to Dashboard
+              </Button>
+            </CardFooter>
+          </SignedIn>
+          <SignedOut>
+            <CardHeader className="text-center">
+              <LogIn className="mx-auto h-8 w-8 mb-2 text-primary" />
+              <CardTitle className="text-2xl">{loginContent.title}</CardTitle>
+              <CardDescription>{loginContent.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">{loginContent.email.label}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder={loginContent.email.placeholder}
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">
+                      {loginContent.password.label}
+                    </Label>
+                    <Link
+                      href="/forgot-password"
+                      className="text-sm font-medium text-primary hover:underline underline-offset-4"
+                    >
+                      {loginContent.forgotPassword}
+                    </Link>
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+
+                {/* Error Message */}
+                {error && (
+                  <Alert variant="destructive">
+                    <Terminal className="h-4 w-4" />
+                    <AlertTitle>{loginContent.errors.title}</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading
+                    ? loginContent.loginButton.loading
+                    : loginContent.loginButton.default}
+                </Button>
+              </form>
+            </CardContent>
+            <CardFooter className="flex flex-col items-center space-y-2">
+              <p className="text-xs text-muted-foreground">
+                {loginContent.signup.text}{" "}
+                <Link
+                  href="/signup"
+                  className="underline font-medium text-primary"
+                >
+                  {loginContent.signup.link}
+                </Link>
+              </p>
+            </CardFooter>
+          </SignedOut>
         </Card>
       </div>
     </LandingLayout>

@@ -1,5 +1,4 @@
-"use client"; // Required for useState and useEffect, and form handling
-
+"use client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -7,7 +6,8 @@ import Link from "next/link";
 import EmailAccountForm, { EmailAccountFormValues } from "@/components/domains/email-account-form";
 import { DomainAccountCreationType, RelayType, VerificationStatus } from "@/types/domain";
 import { EmailProvider } from "@/components/domains/constants";
-import { MailboxStatus, WarmupStatus } from "@/types/mailbox.d";
+import { WarmupStatus } from "@/types/mailbox";
+import { MailboxStatus } from "@/types/mailbox";
 
 // Define the type for the data EmailAccountForm expects for its initialData prop
 type EmailAccountFormInitialData = Partial<EmailAccountFormValues> & {
@@ -18,48 +18,44 @@ type EmailAccountFormInitialData = Partial<EmailAccountFormValues> & {
   };
 };
 
-// Helper function to simulate API call
-async function fetchAccountDetails(accountId: string): Promise<EmailAccountFormInitialData> {
-  console.log("Fetching account details for:", accountId);
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  // Return mock data - replace with actual API call
-  return {
-    email: "sales@example.com",
-    provider: EmailProvider.GMAIL, // Corrected enum key
-    status: MailboxStatus.ACTIVE,
-    reputation: 95,
-    warmupStatus: WarmupStatus.WARMED,
-    dayLimit: 250, // This was currentDailyLimit in old mock
-    // sent24h: 0, // Defaulted in schema
-    password: "currentpassword", // For editing, might not show but needed for submission
-    accountType: DomainAccountCreationType.VIRTUAL_USER_DB,
-    accountSmtpAuthStatus: VerificationStatus.VERIFIED,
-    relayType: RelayType.DEFAULT_SERVER_CONFIG,
-    // relayHost: "", // Only if EXTERNAL
-    virtualMailboxMapping: "sales/",
-    mailboxPath: "/var/mail/example.com/sales",
-    mailboxQuotaMB: 1024,
-    warmupDailyIncrement: 10, // This was dailyIncrease
-    warmupTargetDailyVolume: 500, // This was maxDailyEmails
-    accountSetupStatus: "Configuration Complete",
-    accountDeliverabilityStatus: "Checks Passed",
-    domainAuthStatus: { // Mocked domain auth status
-      spfVerified: true,
-      dkimVerified: true,
-      dmarcVerified: true,
-    }
-    // The 'metrics' object from the old mock is not part of EmailAccountFormValues
-    // and would be handled by the separate "Performance Metrics" card if kept.
+
+function AccountSettingsClient({ domainId, accountId }: { domainId: string; accountId: string }) {
+  // The fetchAccountDetails function remains outside as helper
+  const fetchAccountDetails = async (accountId: string): Promise<EmailAccountFormInitialData> => {
+    console.log("Fetching account details for:", accountId);
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    // Return mock data - replace with actual API call
+    return {
+      email: "sales@example.com",
+      provider: EmailProvider.GMAIL, // Corrected enum key
+      status: MailboxStatus.ACTIVE,
+      reputation: 95,
+      warmupStatus: WarmupStatus.WARMED,
+      dayLimit: 250, // This was currentDailyLimit in old mock
+      // sent24h: 0, // Defaulted in schema
+      password: "currentpassword", // For editing, might not show but needed for submission
+      accountType: DomainAccountCreationType.VIRTUAL_USER_DB,
+      accountSmtpAuthStatus: VerificationStatus.VERIFIED,
+      relayType: RelayType.DEFAULT_SERVER_CONFIG,
+      // relayHost: "", // Only if EXTERNAL
+      virtualMailboxMapping: "sales/",
+      mailboxPath: "/var/mail/example.com/sales",
+      mailboxQuotaMB: 1024,
+      warmupDailyIncrement: 10, // This was dailyIncrease
+      warmupTargetDailyVolume: 500, // This was maxDailyEmails
+      accountSetupStatus: "Configuration Complete",
+      accountDeliverabilityStatus: "Checks Passed",
+      domainAuthStatus: { // Mocked domain auth status
+        spfVerified: true,
+        dkimVerified: true,
+        dmarcVerified: true,
+      }
+      // The 'metrics' object from the old mock is not part of EmailAccountFormValues
+      // and would be handled by the separate "Performance Metrics" card if kept.
+    };
   };
-}
 
-
-export default function AccountSettingsPage({
-  params,
-}: {
-  params: { domainId: string; accountId: string };
-}) {
   const [initialData, setInitialData] = useState<EmailAccountFormInitialData | null>(null);
   const [isLoading, setIsLoading] = useState(true); // For form submission
   const [isFetchingData, setIsFetchingData] = useState(true); // For initial data load
@@ -68,7 +64,7 @@ export default function AccountSettingsPage({
     async function loadAccountData() {
       setIsFetchingData(true);
       try {
-        const data = await fetchAccountDetails(params.accountId);
+        const data = await fetchAccountDetails(accountId);
         setInitialData(data);
       } catch (error) {
         console.error("Failed to fetch account details:", error);
@@ -78,7 +74,7 @@ export default function AccountSettingsPage({
       }
     }
     loadAccountData();
-  }, [params.accountId]);
+  }, [accountId]);
 
   const handleSubmit = async (data: EmailAccountFormValues) => {
     setIsLoading(true);
@@ -105,13 +101,13 @@ export default function AccountSettingsPage({
       <div className="flex items-center gap-4 mb-8">
         <Button variant="ghost" size="icon" asChild>
           {/* TODO: Update this link if the account detail view path changes */}
-          <Link href={`/dashboard/domains/${params.domainId}/accounts/${params.accountId}`}>
+          <Link href={`/dashboard/domains/${domainId}/accounts/${accountId}`}>
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
         <div>
           <h1 className="text-3xl font-bold">Account Settings</h1>
-          <p className="text-muted-foreground">{initialData.email || `Account ID: ${params.accountId}`}</p>
+          <p className="text-muted-foreground">{initialData.email || `Account ID: ${accountId}`}</p>
         </div>
       </div>
 
@@ -126,4 +122,14 @@ export default function AccountSettingsPage({
       </div>
     </div>
   );
+}
+
+// Server component that fetches params and renders client component
+export default async function AccountSettingsPage({
+  params,
+}: {
+  params: Promise<{ domainId: string; accountId: string }>;
+}) {
+  const { domainId, accountId } = await params;
+  return <AccountSettingsClient domainId={domainId} accountId={accountId} />;
 }

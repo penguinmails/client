@@ -2,7 +2,7 @@ import { z } from "zod";
 import { isValidTimeRange } from "@/lib/utils";
 import { CampaignEventCondition, CampaignStatus } from "@/types/campaign";
 import { TemplateCategory } from "@/types";
-import { VerificationStatus } from "@/types/domain";
+import { VerificationStatus, VerificationStatusConstants } from "@/types/domain";
 import { EmailProvider, DnsProvider, DkimManagementType } from "@/components/domains/constants";
 import { WarmupStatus } from "@/types/mailbox";
 import { RelayType, DomainAccountCreationType } from "@/types/domain";

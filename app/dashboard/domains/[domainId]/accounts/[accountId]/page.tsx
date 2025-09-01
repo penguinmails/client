@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import AccountWarmupDetailsContent from './content';
 
-interface AccountPageParams {
+type AccountPageParams = Promise<{
   domainId: string;
   accountId: string;
-}
+}>;
 
 interface AccountDetails {
   id: string;
@@ -52,7 +52,7 @@ async function getAccountDetails(domainId: string, accountId: string): Promise<A
 }
 
 export default async function AccountDetailsPage({ params }: { params: AccountPageParams }) {
-  const { domainId, accountId } = params;
+  const { domainId, accountId } = await params;
   const accountDetails = await getAccountDetails(domainId, accountId);
 
   if (!accountDetails) {

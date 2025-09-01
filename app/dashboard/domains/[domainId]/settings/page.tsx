@@ -28,10 +28,11 @@ import { ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function DomainSettingsPage({ params }: { params: { domainId: string } }) {
+export default async function DomainSettingsPage({ params }: { params: Promise<{ domainId: string }> }) {
   // TODO: Fetch domain data based on domainId
+  const { domainId } = await params;
   const domain = {
-    id: parseInt(params.domainId),
+    id: parseInt(domainId),
     name: "example.com",
     warmupEnabled: true,
     dailyIncrease: 10,

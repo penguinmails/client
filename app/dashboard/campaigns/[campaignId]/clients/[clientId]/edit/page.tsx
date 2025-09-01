@@ -4,7 +4,7 @@ import ClientForm from '@/components/clients/client-form';
 import { ClientHeader } from '@/components/clients/client-header';
 
 interface EditClientPageProps {
-  params: { campaignId: string, clientId?: string;  };
+  params: Promise<{ campaignId: string, clientId: string }>;
 }
 
 export default async function EditClientPage({ params }: EditClientPageProps) {

@@ -40,7 +40,7 @@ export default function Navbar() {
         </>
       ) : (
         <>
-          <Image src="/logo.svg" alt="Logo" width={24} height={24} />
+          <Image src="/img/icon.png" alt="Logo" width={24} height={24} />
           <span className="font-bold inline-block">Penguin Mails</span>
         </>
       )}

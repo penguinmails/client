@@ -9,6 +9,7 @@
 /**
  * Granularity options for time series data aggregation
  */
+/** Granularity options for time series data aggregation */
 export type DataGranularity = "day" | "week" | "month";
 
 /**

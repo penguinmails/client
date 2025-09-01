@@ -70,13 +70,4 @@ export const AccountCreationType = {
 
 export type AccountCreationType = typeof AccountCreationType[keyof typeof AccountCreationType];
 
-export enum EmailProvider {
-  LOCAL_SMTP = "LOCAL_SMTP",
-  GMAIL_SMTP = "GMAIL_SMTP",
-  OUTLOOK_SMTP = "OUTLOOK_SMTP",
-  CUSTOM_SMTP = "CUSTOM_SMTP",
-  SENDGRID = "SENDGRID",
-  MAILGUN = "MAILGUN",
-  AMAZON_SES = "AMAZON_SES",
-  OTHER = "OTHER"
-}
+export type EmailProvider = "LOCAL_SMTP" | "GMAIL_SMTP" | "OUTLOOK_SMTP" | "CUSTOM_SMTP" | "SENDGRID" | "MAILGUN" | "AMAZON_SES" | "OTHER";

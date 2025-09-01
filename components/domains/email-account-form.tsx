@@ -1,5 +1,5 @@
 "use client"
-import { VerificationStatus, RelayType, DomainAccountCreationType, EmailAccount, EmailAccountStatus } from "@/types/domain"
+import { VerificationStatus, VerificationStatusConstants, RelayType, RelayTypeConstants, DomainAccountCreationType, DomainAccountCreationTypeConstants, EmailAccount, EmailAccountStatus } from "@/types/domain-fixed"
 // import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, UseFormReturn } from "react-hook-form"
 import * as z from "zod"
@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { emailAccountCopy } from "../domains/copy"
 import { EmailProvider } from "../domains/constants"
-import { WarmupStatus } from "@/types/mailbox.d"
+import { WarmupStatus } from "@/types/mailbox"
 
 const copy = emailAccountCopy.form
 

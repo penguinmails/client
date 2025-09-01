@@ -11,9 +11,9 @@ import { Template } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-function page({ params }: { params: { id: string } }) {
+async function page({ params }: { params: Promise<{ id: string }> }) {
   const quickReplies = initialQuickReplies;
-  const { id } = params;
+  const { id } = await params;
   return (
     <div className="bg-gray-50 p-2 px-4 border-r border-gray-200 w-72 space-y-5">
       <div className="flex items-center justify-between">

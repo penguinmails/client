@@ -54,13 +54,111 @@ export const allTimezones = moment.tz.names().map(tz => {
 
 
  export  const getRelativeTime = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return 'Just now';
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays}d ago`;
-    return date.toLocaleDateString();
-  };
+   const date = new Date(dateString);
+   const now = new Date();
+   const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+
+   if (diffInHours < 1) return 'Just now';
+   if (diffInHours < 24) return `${diffInHours}h ago`;
+   const diffInDays = Math.floor(diffInHours / 24);
+   if (diffInDays < 7) return `${diffInDays}d ago`;
+   return date.toLocaleDateString();
+ };
+
+// Password strength types
+export interface PasswordStrength {
+ score: number; // 0-4
+ label: string;
+ color: 'red' | 'yellow' | 'green';
+ feedback: string[];
+}
+
+// Password validation functions
+export const validatePasswordRequirements = (password: string) => {
+ const requirements = {
+   length: password.length >= 8,
+   uppercase: /[A-Z]/.test(password),
+   lowercase: /[a-z]/.test(password),
+   number: /\d/.test(password),
+   special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+ };
+
+ return requirements;
+};
+
+// Password strength calculation
+export const calculatePasswordStrength = (password: string): PasswordStrength => {
+ if (password.length === 0) {
+   return {
+     score: 0,
+     label: 'Very Weak',
+     color: 'red',
+     feedback: ['Enter a password'],
+   };
+ }
+
+ const requirements = validatePasswordRequirements(password);
+ const score = Object.values(requirements).filter(Boolean).length;
+
+ let label: string;
+ let color: 'red' | 'yellow' | 'green';
+ const feedback: string[] = [];
+
+ // Generate feedback messages
+ if (!requirements.length) feedback.push('Use at least 8 characters');
+ if (!requirements.uppercase) feedback.push('Add uppercase letter');
+ if (!requirements.lowercase) feedback.push('Add lowercase letter');
+ if (!requirements.number) feedback.push('Add number');
+ if (!requirements.special) feedback.push('Add special character');
+
+ // Determine strength level
+ if (score === 0) {
+   label = 'Very Weak';
+   color = 'red';
+   if (password.length > 0) {
+     feedback.unshift('Very weak password');
+   }
+ } else if (score <= 2) {
+   label = 'Weak';
+   color = 'red';
+   feedback.unshift('Weak password');
+ } else if (score <= 3) {
+   label = 'Fair';
+   color = 'yellow';
+   feedback.unshift('Fair password strength');
+ } else if (score <= 4) {
+   label = 'Good';
+   color = 'green';
+   feedback.unshift('Good password strength');
+ } else {
+   label = 'Strong';
+   color = 'green';
+   feedback.unshift('Strong password');
+ }
+
+ return {
+   score,
+   label,
+   color,
+   feedback,
+ };
+};
+
+// Utility function to check if password meets minimum requirements
+export const isPasswordStrongEnough = (password: string): boolean => {
+ const strength = calculatePasswordStrength(password);
+ return strength.score >= 3; // At least "Fair" strength required
+};
+
+// Debounce utility function
+export const debounce = <T extends (...args: any[]) => any>(
+ func: T,
+ wait: number
+): ((...args: Parameters<T>) => void) => {
+ let timeout: NodeJS.Timeout;
+
+ return (...args: Parameters<T>) => {
+   clearTimeout(timeout);
+   timeout = setTimeout(() => func(...args), wait);
+ };
+};

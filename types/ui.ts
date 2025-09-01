@@ -84,7 +84,7 @@ export interface DashboardLayoutProps {
 
 // Chart and Visualization Prop Types
 export interface CampaignPerformanceChartProps {
-  data: import('./analytics.d').ChartDataPoint[];
+  data: import('./analytics').ChartDataPoint[];
 }
 
 export interface PieChartDataPoint {

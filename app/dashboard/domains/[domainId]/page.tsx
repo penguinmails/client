@@ -23,12 +23,12 @@ import Link from "next/link";
 export default async function DomainPage({
   params,
 }: {
-  params: { domainId: string };
+  params: Promise<{ domainId: string }>;
 }) {
   const { domainId } = await params;
   // TODO: Fetch domain data based on domainId
   const domain = {
-    id: parseInt(params.domainId),
+    id: parseInt(domainId),
     name: "example.com",
     provider: "Google Workspace",
     status: "VERIFIED",

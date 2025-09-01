@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function NewClientPage({
   params,
 }: {
-  params: { campaignId: string };
+  params: Promise<{ campaignId: string }>;
 }) {
   const { campaignId } = await params;
   return (
