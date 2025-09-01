@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TemplateHeader } from "@/components/templates/TemplateHeader";
 import { TemplateViewMode } from "@/components/templates/TemplateViewMode";
 import { copyText as t } from "@/components/templates/copy";
+import { Template } from "@/types";
 
 interface TemplateContentProps {
   template: Template | undefined;

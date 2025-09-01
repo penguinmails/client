@@ -18,8 +18,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { signOut } from "firebase/auth";
-import { authClient } from "@/lib/firebase/firebase-client";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 
@@ -137,7 +135,7 @@ export function DashboardSidebar() {
             <div className="h-8 w-8 rounded-full overflow-hidden relative">
               {user?.photoURL ? (
                 <Image
-                  src={user.photoURL}
+                  src={user?.photoURL}
                   alt="User Avatar"
                   width={32}
                   height={32}
@@ -177,7 +175,6 @@ export function DashboardSidebar() {
                 className="text-red-600 hover:text-red-800"
                 onClick={async () => {
                   try {
-                    await signOut(authClient);
                     router.push("/login");
                   } catch (error) {
                     console.error("Error signing out:", error);

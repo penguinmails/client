@@ -1,11 +1,11 @@
-import KpiCard from "@/components/KpiCard";
+import StatsCard from "@/components/StatsCard";
 import { statsCards } from "@/lib/data/stats.mock";
 
 async function StatsCards() {
   return (
     <>
       {statsCards.map((item) => (
-        <KpiCard
+        <StatsCard
           className="flex-row-reverse justify-end gap-2 "
           key={item.title}
           title={item.title}

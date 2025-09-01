@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { DNSRecord } from "@/types/domain";
 
 const getRecordIcon = (status: string) => {
   switch (status) {

@@ -1,21 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import RedoOutlinedIcon from "@mui/icons-material/RedoOutlined";
-import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
-import FormatBoldOutlinedIcon from "@mui/icons-material/FormatBoldOutlined";
-import FormatItalicOutlinedIcon from "@mui/icons-material/FormatItalicOutlined";
-import FormatUnderlinedOutlinedIcon from "@mui/icons-material/FormatUnderlinedOutlined";
-import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
-import FormatAlignLeftOutlinedIcon from "@mui/icons-material/FormatAlignLeftOutlined";
-import FormatAlignRightOutlinedIcon from "@mui/icons-material/FormatAlignRightOutlined";
-import FormatAlignJustifyOutlinedIcon from "@mui/icons-material/FormatAlignJustifyOutlined";
-import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
-import LooksOneOutlinedIcon from "@mui/icons-material/LooksOneOutlined";
-import LooksTwoOutlinedIcon from "@mui/icons-material/LooksTwoOutlined";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import TextFieldsOutlinedIcon from "@mui/icons-material/TextFieldsOutlined";
-import CodeIcon from "@mui/icons-material/Code";
-import ImageIcon from "@mui/icons-material/Image";
+import { Redo2, Undo2, Bold, Italic, Underline, Link2, AlignLeft, AlignRight, AlignCenter, Quote, List, ListOrdered, Type, Code, Image as ImageIcon } from 'lucide-react';
 import { ComponentType } from "react";
 
 export const eventTypes = {
@@ -50,67 +34,67 @@ export interface PluginItem {
 const pluginsList: PluginItem[] = [
   {
     id: 1,
-    Icon: TextFieldsOutlinedIcon,
+    Icon: Type,
     event: eventTypes.paragraph,
   },
   {
     id: 2,
-    Icon: LooksOneOutlinedIcon,
+    Icon: () => <span style={{ fontWeight: 'bold' }}>H1</span>,
     event: eventTypes.h1,
   },
   {
     id: 3,
-    Icon: LooksTwoOutlinedIcon,
+    Icon: () => <span style={{ fontWeight: 'bold', fontSize: '0.9em' }}>H2</span>,
     event: eventTypes.h2,
   },
   {
     id: 4,
-    Icon: FormatListBulletedIcon,
+    Icon: List,
     event: eventTypes.ul,
   },
   {
     id: 5,
-    Icon: FormatListNumberedIcon,
+    Icon: ListOrdered,
     event: eventTypes.ol,
   },
   {
     id: 6,
-    Icon: FormatQuoteIcon,
+    Icon: Quote,
     event: eventTypes.quote,
   },
   {
     id: 7,
-    Icon: CodeIcon,
+    Icon: Code,
     event: eventTypes.formatCode,
   },
   {
     id: 8,
-    Icon: UndoOutlinedIcon,
+    Icon: Undo2,
     event: eventTypes.formatUndo,
   },
   {
     id: 9,
-    Icon: RedoOutlinedIcon,
+    Icon: Redo2,
     event: eventTypes.formatRedo,
   },
   {
     id: 10,
-    Icon: FormatBoldOutlinedIcon,
+    Icon: Bold,
     event: eventTypes.formatBold,
   },
   {
     id: 11,
-    Icon: FormatItalicOutlinedIcon,
+    Icon: Italic,
     event: eventTypes.formatItalic,
   },
   {
     id: 12,
-    Icon: FormatUnderlinedOutlinedIcon,
+    Icon: Underline,
     event: eventTypes.formatUnderline,
   },
   // { // reactive it if you need it
   //   id: 13,
-  //   Icon: StrikethroughSOutlinedIcon,
+  //   Icon: () => <span style={{ textDecoration: 'line-through' }}>S</span>,
   //   event: eventTypes.formatStrike,
   // },
   {
@@ -120,22 +104,22 @@ const pluginsList: PluginItem[] = [
   },
   {
     id: 14,
-    Icon: InsertLinkOutlinedIcon,
+    Icon: Link2,
     event: eventTypes.formatInsertLink,
   },
   {
     id: 15,
-    Icon: FormatAlignLeftOutlinedIcon,
+    Icon: AlignLeft,
     event: eventTypes.formatAlignLeft,
   },
   {
     id: 16,
-    Icon: FormatAlignJustifyOutlinedIcon,
+    Icon: AlignCenter,
     event: eventTypes.formatAlignCenter,
   },
   {
     id: 17,
-    Icon: FormatAlignRightOutlinedIcon,
+    Icon: AlignRight,
     event: eventTypes.formatAlignRight,
   },
 ];

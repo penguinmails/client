@@ -25,6 +25,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
+import { Mailbox } from "@/types/mailbox";
 
 function MailboxActions({ mailbox }: { mailbox: Mailbox }) {
   return (
@@ -87,7 +88,7 @@ function UpdateMailboxSetting({ mailbox }: { mailbox: Mailbox }) {
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
-      pause: mailbox.status === "paused",
+      pause: mailbox.warmupStatus === "PAUSED",
     },
   });
 

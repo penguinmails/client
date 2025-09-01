@@ -1,6 +1,7 @@
 import TemplateItem from "@/components/templates/template-item";
 import { Input } from "@/components/ui/input";
 import { initialTemplates } from "@/lib/data/template.mock";
+import { Template } from "@/types";
 
 function Page() {
   return (

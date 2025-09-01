@@ -9,7 +9,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { EmailsTable } from "@/components/domains/emails-table";
-import { EmailAccount } from "@/components/domains/types";
+import { EmailAccount } from "@/types/domain";
 import {
   ArrowLeft,
   ArrowRight,

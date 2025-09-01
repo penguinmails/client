@@ -1,4 +1,4 @@
-import { Campaign } from "@/lib/data/campaigns";
+import { CampaignDisplay as Campaign } from "@/lib/data/campaigns";
 import CampaignsActions, { CampaignActionsEnum } from "../CampaignsActions";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";

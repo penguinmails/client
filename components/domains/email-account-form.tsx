@@ -1,5 +1,5 @@
 "use client"
-import { VerificationStatus, RelayType, AccountCreationType, EmailAccount } from "./types"
+import { VerificationStatus, RelayType, DomainAccountCreationType, EmailAccount, EmailAccountStatus } from "@/types/domain"
 // import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, UseFormReturn } from "react-hook-form"
 import * as z from "zod"
@@ -20,19 +20,22 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { emailAccountCopy } from "../domains/copy"
 import { EmailProvider } from "../domains/constants"
+import { WarmupStatus } from "@/types/mailbox.d"
 
 const copy = emailAccountCopy.form
+
+const ACCOUNT_STATUSES = ["PENDING", "ACTIVE", "ISSUE", "SUSPENDED", "DELETED"] as const
 
 export const emailAccountFormSchema = z.object({
   email: z.string().email(copy.validation.email.invalid),
   provider: z.nativeEnum(EmailProvider),
-  status: z.nativeEnum(EmailAccountStatus).default(EmailAccountStatus.PENDING),
+  status: z.enum(ACCOUNT_STATUSES).default("PENDING" as const),
   reputation: z.number().min(0).max(100).default(100),
   warmupStatus: z.nativeEnum(WarmupStatus).default(WarmupStatus.NOT_STARTED),
   dayLimit: z.number().min(1).max(2000).default(100),
   sent24h: z.number().default(0),
   password: z.string().min(8, copy.validation.password.minLength).optional(),
-  accountType: z.nativeEnum(AccountCreationType).default(AccountCreationType.VIRTUAL_USER_DB), // Default to one type
+  accountType: z.nativeEnum(DomainAccountCreationType).default(DomainAccountCreationType.VIRTUAL_USER_DB), // Default to one type
 
   // Account-specific SMTP Auth Status
   accountSmtpAuthStatus: z.nativeEnum(VerificationStatus).default(VerificationStatus.NOT_CONFIGURED).optional(),
@@ -298,7 +301,7 @@ export default function EmailAccountForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {Object.values(EmailAccountStatus).map((status) => (
+                  {ACCOUNT_STATUSES.map((status) => (
                     <SelectItem key={status} value={status}>
                       {status.charAt(0) + status.slice(1).toLowerCase()}
                     </SelectItem>
@@ -327,7 +330,7 @@ export default function EmailAccountForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {Object.values(AccountCreationType).map((type) => (
+                    {Object.values(DomainAccountCreationType).map((type) => (
                       <SelectItem key={type} value={type}>
                         {copy.enums?.accountCreationType?.[type] || type.replace('_', ' ')}
                       </SelectItem>
@@ -423,7 +426,7 @@ export default function EmailAccountForm({
           <h3 className="text-lg font-medium">{copy.ui.mailboxSetup.title}</h3>
           <p className="text-sm text-muted-foreground">{copy.ui.mailboxSetup.description}</p>
           {/* isVirtualUser FormField is removed, logic now depends on watchedAccountType */}
-          {watchedAccountType === AccountCreationType.VIRTUAL_USER_DB && (
+          {watchedAccountType === DomainAccountCreationType.VIRTUAL_USER_DB && (
             <div className="pl-2 space-y-3 mt-2">
               <FormField
                 control={form.control}

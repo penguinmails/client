@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, useState } from "react";
+import { Conversation } from "@/types";
 
 const ConversationContext = createContext<{
   selectedConversation: Conversation;

@@ -5,12 +5,11 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TemplateHeader } from "@/components/templates/TemplateHeader";
-import {
-  TemplateForm,
-  TemplateFormValues,
-} from "@/components/templates/TemplateForm";
+import { TemplateForm } from "@/components/templates/TemplateForm";
+import { TemplateFormValues } from "@/types/forms";
 import { copyText as t } from "@/components/templates/copy";
 import { getTemplate, updateTemplate } from "../../../(nonLayout)/actions";
+import { Template } from "@/types";
 
 interface ContentProps {
   template: Template;

@@ -1,4 +1,4 @@
-import { Campaign } from "@/lib/data/campaigns";
+import { CampaignDisplay as Campaign } from "@/lib/data/campaigns";
 import { Clock, Pause, Play, Server } from "lucide-react";
 import CampaignsActions, { CampaignActionsEnum } from "./CampaignsActions";
 

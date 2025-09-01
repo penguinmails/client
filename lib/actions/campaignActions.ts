@@ -2,7 +2,7 @@
 "use server";
 
 import { mockCampaignEditDetail, timezones } from "@/components/campaigns/mock-data";
-import { CampaignFormValues } from "@/components/campaigns/types";
+import { CampaignFormValues } from "@/types";
 
 // Define the structure for campaign data based on the screenshot
 export interface CampaignData {

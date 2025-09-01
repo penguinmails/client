@@ -1,11 +1,11 @@
-import { statusCampaign } from "@/types/campaign";
+import { CampaignStatusEnum } from "@/types/campaign";
 import { Mail, Send, TrendingUp, Users } from "lucide-react";
 
 export const campaignsData = [
   {
     id: 1,
     name: "Q1 SaaS Outreach",
-    status: statusCampaign.active,
+    status: CampaignStatusEnum.active,
     mailboxes: 3,
     leadsSent: 847,
     replies: 73,
@@ -28,7 +28,7 @@ export const campaignsData = [
   {
     id: 2,
     name: "Enterprise Prospects",
-    status: statusCampaign.paused,
+    status: CampaignStatusEnum.paused,
     mailboxes: 5,
     leadsSent: 1203,
     replies: 124,
@@ -53,7 +53,7 @@ export const campaignsData = [
   {
     id: 3,
     name: "SMB Follow-up",
-    status: statusCampaign.active,
+    status: CampaignStatusEnum.active,
     mailboxes: 2,
     leadsSent: 492,
     replies: 38,
@@ -72,7 +72,7 @@ export const campaignsData = [
   {
     id: 4,
     name: "Product Launch Outreach",
-    status: statusCampaign.completed,
+    status: CampaignStatusEnum.completed,
     mailboxes: 4,
     leadsSent: 2156,
     replies: 287,
@@ -96,7 +96,7 @@ export const campaignsData = [
   {
     id: 5,
     name: "Partnership Outreach",
-    status: statusCampaign.active,
+    status: CampaignStatusEnum.active,
     mailboxes: 2,
     leadsSent: 324,
     replies: 45,
@@ -115,10 +115,10 @@ export const campaignsData = [
 ];
 
 
-export type Campaign = {
+export type CampaignDisplay = {
   id: number;
   name: string;
-  status: statusCampaign; 
+  status: CampaignStatusEnum; 
   mailboxes: number;
   leadsSent: number;
   replies: number;

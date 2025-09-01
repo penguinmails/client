@@ -26,7 +26,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { InfoIcon } from "lucide-react";
 import { DnsProvider, DNS_RECORD_TYPES, DkimManagementType } from "./constants";
-import { VerificationStatus } from "@/components/domains/types"; // Assuming VerificationStatus is in accounts/types for now
+import { VerificationStatus } from "@/types/domain";
 import { copyText as t } from "./copy";
 
 const DOMAIN_REGEX = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}$/;
@@ -35,8 +35,8 @@ const formSchema = z.object({
   domain: z.string()
     .min(1, t.form.validation.domain.required)
     .regex(DOMAIN_REGEX, t.form.validation.domain.invalid),
-  provider: z.nativeEnum(DnsProvider, { // This makes provider required
-    required_error: t.form.validation.provider.required
+  provider: z.nativeEnum(DnsProvider, {
+    message: "Please select a valid DNS provider"
   }),
   spfRecordValue: z.string().optional(),
   spfStatus: z.nativeEnum(VerificationStatus).optional(),

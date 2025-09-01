@@ -47,9 +47,9 @@ const mockAccountData: AccountDetails = {
 
 export async function GET(
   request: Request,
-  { params }: { params: { domainId: string; accountId: string } }
+  { params }: { params: Promise<{ domainId: string; accountId: string }> }
 ) {
-  const { domainId, accountId } = params;
+  const { domainId, accountId } = await params;
 
   // In a real application, you would fetch data from your database
   // using domainId and accountId

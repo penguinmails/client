@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import EmailAccountForm, { EmailAccountFormValues } from "@/components/domains/email-account-form";
-import { AccountCreationType, RelayType, VerificationStatus } from "@/components/domains/types";
+import { DomainAccountCreationType, RelayType, VerificationStatus } from "@/types/domain";
 import { EmailProvider } from "@/components/domains/constants";
+import { MailboxStatus, WarmupStatus } from "@/types/mailbox.d";
 
 // Define the type for the data EmailAccountForm expects for its initialData prop
 type EmailAccountFormInitialData = Partial<EmailAccountFormValues> & {
@@ -32,7 +33,7 @@ async function fetchAccountDetails(accountId: string): Promise<EmailAccountFormI
     dayLimit: 250, // This was currentDailyLimit in old mock
     // sent24h: 0, // Defaulted in schema
     password: "currentpassword", // For editing, might not show but needed for submission
-    accountType: AccountCreationType.VIRTUAL_USER_DB,
+    accountType: DomainAccountCreationType.VIRTUAL_USER_DB,
     accountSmtpAuthStatus: VerificationStatus.VERIFIED,
     relayType: RelayType.DEFAULT_SERVER_CONFIG,
     // relayHost: "", // Only if EXTERNAL

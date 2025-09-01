@@ -5,7 +5,7 @@ import StatsCard from "../StatsCard";
 
 function OverviewCards() {
   const readyMailboxes = mailboxes.filter(
-    (m) => m.warmupStatus === "ready"
+    (m) => m.warmupStatus === "WARMED"
   ).length;
 
   const cards = [
@@ -18,7 +18,7 @@ function OverviewCards() {
     },
     {
       title: "Active Mailboxes",
-      value: mailboxes.filter((m) => m.status === "active").length,
+      value: mailboxes.filter((m) => m.status === "ACTIVE").length,
       icon: Mail,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",

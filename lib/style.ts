@@ -1,4 +1,4 @@
-import { NotificationType } from "@/types/notification";
+import { NotificationType } from "@/types";
 import { Send, BarChart3, AlertTriangle, Check, Info } from "lucide-react";
 
 export const notificationStyles = (type: NotificationType) => {

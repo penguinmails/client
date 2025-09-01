@@ -2,7 +2,7 @@
 
 import React from "react";
 import { copyText as t } from "./copy";
-import { CampaignFormValues } from "./types";
+import { CampaignFormValues } from "@/types/campaign";
 
 interface CampaignDetailsProps {
   readOnly: boolean;

@@ -1,5 +1,5 @@
 import { CampaignResponse, EmailEventType } from "@/types/campaign";
-import { CampaignFormValues } from "./types";
+import { CampaignFormValues } from "@/types/campaign";
 
 export const mockCampaigns: CampaignResponse[] = [
   {

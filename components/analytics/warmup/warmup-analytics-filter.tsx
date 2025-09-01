@@ -9,6 +9,7 @@ function WarmupAnalyticsFilter() {
         <div className="flex items-center space-x-4 ">
           <Icon icon={Calendar} className="text-gray-500 w-5  h-5" />
           <DropDownFilter
+            placeholder="Select a time frame"
             options={[
               {
                 label: "Last 7 days",
@@ -32,6 +33,7 @@ function WarmupAnalyticsFilter() {
         <div className="flex items-center space-x-4">
           <Icon icon={FilterIcon} className="text-gray-500 w-5  h-5" />
           <DropDownFilter
+            placeholder="Select a time frame"
             options={[
               {
                 label: "Daily",

@@ -16,16 +16,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send, Upload } from "lucide-react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-const contactFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Please enter a valid email address"),
-  subject: z.string().min(1, "Subject is required"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-  file: z.instanceof(File).optional(),
-});
-
-type ContactFormValues = z.infer<typeof contactFormSchema>;
+import { contactFormSchema, ContactFormValues } from "@/types/forms";
 
 function ContactForm() {
   const form = useForm<ContactFormValues>({

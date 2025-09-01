@@ -26,11 +26,12 @@ import {
   type TemplateUsage,
 } from "@/components/templates/mocks";
 import { copyText as t } from "@/components/templates/copy";
+import { Template, TemplateCategoryType } from "@/types";
 
 interface TemplatesContentProps {
   userTemplates: Template[];
   builtInTemplates: Template[];
-  categories: TemplateCategory[];
+  categories: TemplateCategoryType[];
 }
 
 export function TemplatesContent({

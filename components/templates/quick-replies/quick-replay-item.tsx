@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import TemplateActions from "../template-actions";
 import Link from "next/link";
+import { Template } from "@/types";
 
 function QuickReplyItem({ template }: { template: Template }) {
   return (

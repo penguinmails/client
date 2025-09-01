@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { initialQuickReplies } from "@/lib/data/template.mock";
 import { cn } from "@/lib/utils";
+import { Template } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 

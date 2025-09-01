@@ -7,14 +7,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { EmailsTable } from "@/components/domains/emails-table";
-import { EmailAccount } from "@/components/accounts/types";
+import { EmailAccount } from "@/types/domain";
 import { ArrowLeft, PlusCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function DomainAccountsPage({ params }: { params: { domainId: string } }) {
   // TODO: Fetch domain and accounts data based on domainId
   const domain = {
-    id: parseInt(params.domainId),
+    id: params.domainId,
     name: "example.com",
   };
 
@@ -87,7 +87,7 @@ export default function DomainAccountsPage({ params }: { params: { domainId: str
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <EmailsTable emailAccounts={emailAccounts} />
+          <EmailsTable emailAccounts={emailAccounts} domainId={params.domainId} />
         </CardContent>
       </Card>
     </div>

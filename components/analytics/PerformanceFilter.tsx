@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useAnalytics } from "@/context/AnalyticsContext";
+import { DataGranularity, DateRangePreset } from "@/types";
 import { campaignData, mailboxes, metrics } from "@/lib/data/analytics.mock";
 import { ChevronDown, Mail, Settings, Target } from "lucide-react";
 import { DropDownFilter, Filter } from "../Filter";
@@ -50,11 +51,11 @@ function PerformanceFilter() {
 
   // Filter granularity options based on allowed granularities
   const filteredGranularityOptions = granularityOptions.filter((option) =>
-    allowedGranularities.includes(option.value as "day" | "week" | "month")
+    allowedGranularities.includes(option.value as DataGranularity)
   );
 
   const handleDateRangeChange = (value: string) => {
-    setDateRange(value);
+    setDateRange(value as DateRangePreset);
     setShowCustomDate(value === "custom");
   };
 
@@ -66,7 +67,7 @@ function PerformanceFilter() {
           options={dateRangeOptions}
           placeholder="Select date range"
           value={dateRange}
-          onValueChange={handleDateRangeChange}
+          onChange={handleDateRangeChange}
         />
 
         {/* Custom Date Picker */}
@@ -93,8 +94,8 @@ function PerformanceFilter() {
           options={filteredGranularityOptions}
           placeholder="Granularity"
           value={granularity}
-          onValueChange={(value) =>
-            setGranularity(value as "day" | "week" | "month")
+          onChange={(value: string) =>
+            setGranularity(value as DataGranularity)
           }
         />
 

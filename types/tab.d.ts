@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react";
 
-interface Tab {
+export interface Tab {
   id: string;
   label: string;
   count?: number;

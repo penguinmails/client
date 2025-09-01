@@ -1,6 +1,7 @@
 import QuickReplyItem from "@/components/templates/quick-replies/quick-replay-item";
 import { Input } from "@/components/ui/input";
 import { initialQuickReplies } from "@/lib/data/template.mock";
+import { Template } from "@/types";
 
 function page() {
   return (

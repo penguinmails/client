@@ -1,5 +1,6 @@
 import Folders from "@/components/templates/Folder-Structure/Folders";
 import { initialFolders } from "@/lib/data/template.mock";
+import { TemplateFolder } from "@/types";
 import { FolderIcon } from "lucide-react";
 
 function TemplateFolders() {

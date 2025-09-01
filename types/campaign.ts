@@ -42,7 +42,7 @@ export type CampaignResponse = {
   }[]
   updatedAt: Date
 }
-export enum statusCampaign {
+export enum CampaignStatusEnum {
   active = "active",
   paused = "paused",
   completed = "completed",
@@ -66,9 +66,9 @@ export interface MetricToggle {
   visible: boolean;
 }
 
-export type CampaignEventContition = "ALWAYS" | "IF_NOT_OPENED" | "IF_NOT_CLICKED" | "IF_NOT_REPLIED" | "IF_OPTION_A" | "IF_OPTION_B" | "IF_OPTION_C" | "IF_OPTION_D" | "IF_OPTION_E" | "IF_UNSUBSCRIBED";
+export type CampaignEventCondition = "ALWAYS" | "IF_NOT_OPENED" | "IF_NOT_CLICKED" | "IF_NOT_REPLIED" | "IF_OPTION_A" | "IF_OPTION_B" | "IF_OPTION_C" | "IF_OPTION_D" | "IF_OPTION_E" | "IF_UNSUBSCRIBED";
 
-export const CampaignEventContition = {
+export const CampaignEventCondition = {
   ALWAYS: "ALWAYS",
   IF_NOT_OPENED: "IF_NOT_OPENED",
   IF_NOT_CLICKED: "IF_NOT_CLICKED",
@@ -80,4 +80,199 @@ export const CampaignEventContition = {
   IF_OPTION_E: "IF_OPTION_E",
   IF_UNSUBSCRIBED: "IF_UNSUBSCRIBED"
 } as const;
+
+// Zod schemas and inferred types
+import { z } from "zod";
+import { MouseEvent, RefObject } from "react";
+import { Control, UseFormRegister, UseFormReturn } from "react-hook-form";
+import type { Template } from "./templates"; // Assuming templates are in types
+
+export const campaignStepSchema = z.object({
+  id: z.number().optional(),
+  sequenceOrder: z.number(),
+  delayDays: z.number(),
+  delayHours: z.number(),
+  templateId: z.number(),
+  campaignId: z.number(),
+  emailSubject: z.string().min(1).optional(),
+  emailBody: z.string().optional(),
+  condition: z.nativeEnum(CampaignEventCondition),
+});
+
+export const campaignFormSchema = z
+  .object({
+    id: z.number().optional(),
+    name: z.string().min(1),
+    fromName: z.string().min(1),
+    fromEmail: z.string().email(),
+    status: z.nativeEnum(CampaignStatus).default(CampaignStatus.DRAFT),
+    companyId: z.number().optional(),
+    createdById: z.string().optional(),
+    steps: z.array(campaignStepSchema).min(1),
+    sendDays: z.array(z.number()).optional(),
+    sendTimeStart: z.string().optional(),
+    sendTimeEnd: z.string().optional(),
+    emailsPerDay: z.number().optional(),
+    timezone: z.string().optional().default("UTC"),
+    clients: z.array(z.string().email()),
+    metrics: z
+      .object({
+        recipients: z
+          .object({
+            sent: z.number(),
+            total: z.number(),
+          })
+          .optional(),
+        opens: z
+          .object({
+            total: z.number(),
+            rate: z.number(),
+          })
+          .optional(),
+        clicks: z
+          .object({
+            total: z.number(),
+            rate: z.number(),
+          })
+          .optional(),
+        replies: z
+          .object({
+            total: z.number(),
+            rate: z.number(),
+          })
+          .optional(),
+        bounces: z
+          .object({
+            total: z.number(),
+            rate: z.number(),
+          })
+          .optional(),
+      })
+      .optional(),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
+  })
+
+export type CampaignFormValues = z.infer<typeof campaignFormSchema>;
+
+export interface CampaignFormProps {
+  initialData?: CampaignFormValues;
+  onSubmit: (data: CampaignFormValues) => Promise<void>;
+  onCancel?: () => void;
+  submitLabel?: string;
+  submitLoadingLabel?: string;
+  readOnly?: boolean;
+}
+
+export type CampaignSteps = z.infer<typeof campaignStepSchema>[];
+
+export type PartialCampaignStep = Partial<z.infer<typeof campaignStepSchema>>;
+
+// Sequence types with fixed typo
+interface SequenceStepActionsProps {
+  onMoveStepUp: (index: number) => void;
+  onMoveStepDown: (index: number) => void;
+  onRemoveStep: (index: number) => void;
+  onUpdateStep: (
+    index: number,
+    updates: Partial<SequenceStepProps["step"]>
+  ) => void;
+  onInsertTag: (index: number, tag: string) => void;
+  onSetCurrentEditingStep: (index: number | null) => void;
+  onSelectTemplate: (index: number, templateId: number) => void;
+}
+
+interface EmailSequencingSettingsProps {
+  steps: CampaignSteps;
+  templates?: Template[];
+  currentEditingStep: number | null;
+  emailBodyRef: RefObject<HTMLTextAreaElement>;
+  stepErrors: any;
+  actions: SequenceStepActionsProps & {
+    handleAddEmailStep: (index: number) => void;
+  };
+}
+
+interface SequenceStepProps {
+  step: {
+    id?: number;
+    sequenceOrder: number;
+    delayDays: number;
+    delayHours: number;
+    emailSubject?: string;
+    emailBody?: string;
+    templateId?: number;
+    campaignId: number;
+    condition: CampaignEventCondition;
+    createdAt?: Date;
+    updatedAt?: Date;
+  };
+  templates?: Template[];
+  index: number;
+  totalSteps: number;
+  currentEditingStep: number | null;
+  emailBodyRef: RefObject<HTMLTextAreaElement>;
+  actions: SequenceStepActionsProps;
+}
+
+// ScheduleSettings types
+interface ScheduleSettingsProps {
+  selectedTimezone: string;
+  timezones: string[];
+  selectedSendDays: number[];
+  control: Control<CampaignFormValues>;
+  register: UseFormRegister<CampaignFormValues>;
+  handleDayChange: (dayId: number, evt: MouseEvent<HTMLButtonElement>) => void;
+}
+
+// Action enum
+export enum CampaignActionsEnum {
+  VIEW = "view",
+  EDIT = "edit",
+  DELETE = "delete",
+  PAUSE = "pause",
+  RESUME = "resume",
+  COPY = "copy",
+}
+
+// Display types from lib/data/campaigns.ts
+interface LeadsList {
+  id: number;
+  name: string;
+  description: string;
+  contacts: number;
+}
+
+interface CampaignLead {
+  id: number;
+  name: string;
+  email: string;
+  company: string;
+  status: "replied" | "opened" | "sent";
+  currentStep: number;
+  lastActivity: string;
+}
+
+interface ActivityLog {
+  id: number;
+  type: "sent" | "reply" | "opened";
+  message: string;
+  timestamp: string;
+  details: string;
+}
+
+export interface CampaignDisplay {
+  id: number;
+  name: string;
+  status: CampaignStatusEnum;
+  mailboxes: number;
+  leadsSent: number;
+  replies: number;
+  openRate: string;
+  replyRate: string;
+  lastSent: string;
+  createdDate: string;
+  assignedMailboxes: string[];
+  leadsList: LeadsList;
+}
 

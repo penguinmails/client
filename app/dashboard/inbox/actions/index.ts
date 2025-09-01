@@ -101,7 +101,7 @@ export const getUniqueFiltersAction = async (idToken = "") => {
       },
     ];
 
-    const email = emails.map((e) => e.client?.email).filter(Boolean);
+    const email = emails.map((e) => e.client?.email).filter(Boolean) as string[];
 
     const fromSet = new Set(
       froms
@@ -110,12 +110,12 @@ export const getUniqueFiltersAction = async (idToken = "") => {
           const last = f.client?.lastName;
           return first && last ? `${first} ${last}` : null;
         })
-        .filter(Boolean)
+        .filter(Boolean) as string[]
     );
 
     const from = Array.from(fromSet);
 
-    const campaign = campaigns.map((c) => c.campaign?.name).filter(Boolean);
+    const campaign = campaigns.map((c) => c.campaign?.name).filter(Boolean) as string[];
 
     return {
       email,

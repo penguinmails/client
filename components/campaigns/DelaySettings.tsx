@@ -8,16 +8,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { copyText as t } from "./copy";
-import { CampaignEventContition } from "@/types/campaign";
+import { CampaignEventCondition } from "@/types/campaign";
 
 interface DelaySettingsProps {
   delayDays: number;
   delayHours: number;
-  condition: CampaignEventContition;
+  condition: CampaignEventCondition;
   onUpdate: (updates: {
     delayDays?: number;
     delayHours?: number;
-    condition?: CampaignEventContition;
+    condition?: CampaignEventCondition;
   }) => void;
 }
 
@@ -62,14 +62,14 @@ export function DelaySettings({
           <Select
             value={condition}
             onValueChange={(value) =>
-              onUpdate({ condition: value as CampaignEventContition })
+              onUpdate({ condition: value as CampaignEventCondition })
             }
           >
             <SelectTrigger>
               <SelectValue placeholder={t.delay.selectCondition} />
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(CampaignEventContition).map(([key, value]) => (
+              {Object.entries(CampaignEventCondition).map(([key, value]) => (
                 <SelectItem key={key} value={value}>
                   {t.conditions[key.toLowerCase() as keyof typeof t.conditions]}
                 </SelectItem>

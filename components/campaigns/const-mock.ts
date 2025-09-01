@@ -1,4 +1,4 @@
-import { CampaignEventContition } from "@/types/campaign";
+import { CampaignEventCondition } from "@/types/campaign";
 
 export const defaultSteps = [{
   sequenceOrder: 0,
@@ -8,5 +8,5 @@ export const defaultSteps = [{
   campaignId: 0,
   emailSubject: "",
   emailBody: "",
-  condition: CampaignEventContition.ALWAYS,
+  condition: CampaignEventCondition.ALWAYS,
 }];

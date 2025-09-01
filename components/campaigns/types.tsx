@@ -2,7 +2,8 @@ import { z } from "zod";
 import { MouseEvent, RefObject } from "react";
 import { Control, UseFormRegister } from "react-hook-form";
 import { campaignFormSchema, campaignStepSchema } from "./schemaValidations";
-import { CampaignEventContition } from "@/types/campaign";
+import { CampaignEventCondition } from "@/types/campaign";
+import { Template } from "@/types";
 
 export type CampaignFormValues = z.infer<typeof campaignFormSchema>;
 
@@ -50,11 +51,11 @@ export interface SequenceStepProps {
     sequenceOrder: number;
     delayDays: number;
     delayHours: number;
-    emailSubject: string;
+    emailSubject?: string;
     emailBody?: string;
     templateId?: number;
     campaignId: number;
-    condition: CampaignEventContition;
+    condition: CampaignEventCondition;
     createdAt?: Date;
     updatedAt?: Date;
   };

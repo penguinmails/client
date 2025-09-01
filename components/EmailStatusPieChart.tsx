@@ -23,23 +23,27 @@ interface EmailStatusPieChartProps {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#8884d8', '#FF8042'];
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ 
-  cx, 
-  cy, 
-  midAngle, 
-  innerRadius, 
-  outerRadius, 
-  percent, 
-  // index 
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle = 0,
+  innerRadius,
+  outerRadius,
+  percent = 0,
+  index = 0
 }: {
   cx: number;
   cy: number;
-  midAngle: number;
+  midAngle?: number;
   innerRadius: number;
   outerRadius: number;
-  percent: number;
-  index: number;
+  percent?: number;
+  index?: number;
 }) => {
+  if (midAngle === undefined || innerRadius === undefined || outerRadius === undefined || percent === undefined) {
+    return null;
+  }
+
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);

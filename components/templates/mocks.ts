@@ -1,3 +1,5 @@
+import { Template, TemplateCategory, TemplateCategoryType } from "@/types";
+
 
 export const userTemplates: Template[] = [
   {
@@ -187,7 +189,7 @@ export const builtInTemplates: Template[] = [
   }
 ];
 
-export const categories: TemplateCategory[] = [
+export const categories: TemplateCategoryType[] = [
   "OUTREACH",
   "INTRODUCTION",
   "FOLLOW_UP",

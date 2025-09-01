@@ -1,4 +1,5 @@
 import { userTemplates, builtInTemplates } from '@/components/templates/mocks';
+import { Template } from '@/types';
 
 export async function getTemplates(userId: string): Promise<Template[]> {
   try {

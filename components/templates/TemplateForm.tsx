@@ -32,16 +32,8 @@ import {
 import { copyText as t } from "./copy";
 import PersonalizationTags from "@/components/email/PersonalizationTags";
 import LexicalEditor, { LexicalEditorRef } from "@/components/ui/LexicalEditor";
-
-const templateFormSchema = z.object({
-  name: z.string().min(1, "Template name is required"),
-  description: z.string().optional(),
-  category: z.nativeEnum(TemplateCategory),
-  subject: z.string().min(1, "Subject line is required"),
-  body: z.string().min(1, "Email body is required"),
-});
-
-export type TemplateFormValues = z.infer<typeof templateFormSchema>;
+import { templateFormSchema, TemplateFormValues } from "@/types/forms";
+import { TemplateCategory } from "@/types";
 
 interface TemplateFormProps {
   initialData?: TemplateFormValues;

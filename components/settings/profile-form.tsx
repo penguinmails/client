@@ -29,9 +29,7 @@ const profileSchema = z.object({
   email: z.string().email("Invalid email address"),
   company: z.string().min(1, "Company is required"),
   timezone: z.string().min(1, "Timezone is required"),
-  sidebarView: z.enum(["collapsed", "expanded"], {
-    required_error: "Please select a sidebar view preference",
-  }),
+  sidebarView: z.enum(["collapsed", "expanded"]),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
+import { Template } from "@/types";
 
 interface TemplateSelectorProps {
   template?: Template;

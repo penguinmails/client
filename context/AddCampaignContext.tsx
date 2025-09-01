@@ -1,5 +1,5 @@
 "use client";
-import { Campaign } from "@/lib/data/campaigns";
+import { CampaignDisplay as Campaign } from "@/lib/data/campaigns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar, Check, Mail, Target, Users, Zap } from "lucide-react";
 import { createContext, useContext, useState } from "react";

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { copyText as t } from "./copy";
 import { isValidTimeRange } from "@/lib/utils";
-import { CampaignEventContition, CampaignStatus } from "@/types/campaign";
+import { CampaignEventCondition, CampaignStatus } from "@/types/campaign";
 
 // Schema definitions
 export const campaignStepSchema = z.object({
@@ -13,7 +13,7 @@ export const campaignStepSchema = z.object({
   campaignId: z.number(),
   emailSubject: z.string().min(1, t.validation.subject).optional(),
   emailBody: z.string().optional(),
-  condition: z.nativeEnum(CampaignEventContition),
+  condition: z.nativeEnum(CampaignEventCondition),
 });
 
 export const campaignFormSchema = z

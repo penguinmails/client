@@ -17,6 +17,7 @@ import { Terminal, LogIn } from "lucide-react";
 import { LandingLayout } from "@/components/layout/landing";
 import { loginContent } from "./content";
 import { useRouter } from "next/navigation";
+import { useSignIn } from "@niledatabase/react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -25,39 +26,24 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: { preventDefault: () => void }) => {
+  const signIn = useSignIn({
+    onSuccess: () => {
+      router.push("/dashboard");
+    },
+    onError: (err: Error) => {
+      console.error("Login failed:", err);
+      setError(err.message || loginContent.errors.generic);
+    },
+  });
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
-
-    try {
-      const user = {
-        uid: "",
-        email,
-      };
-
-      if (!user?.uid) {
-        throw new Error("User UID not found");
-      }
-
-      const response = {
-        user: {
-          uid: user.uid,
-          email: user.email,
-        },
-        error: null,
-      };
-
-      if (response?.error) {
-        throw new Error(response.error);
-      }
-
-      router.push("/dashboard");
-    } catch (err) {
-      console.error("Login failed:", err);
-      setError(
-        err instanceof Error ? err.message : loginContent.errors.generic
-      );
-    }
+    signIn({
+      provider: "credentials",
+      email,
+      password,
+    });
   };
 
   return (

@@ -46,7 +46,7 @@ export default function InboxMessages({ emails }: Props) {
                   !email.read ? "font-semibold" : ""
                 }`}
               >
-                {email.client.firstName && email.client.lastName}
+                {email.client?.firstName && email.client?.lastName && `${email.client.firstName} ${email.client.lastName}`}
               </h3>
               <div className="flex items-center space-x-2 justify-content-center">
                 <EmailActions email={email} />
@@ -55,7 +55,7 @@ export default function InboxMessages({ emails }: Props) {
                 </span>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground mb-1">{email.client.email}</p>
+            <p className="text-sm text-muted-foreground mb-1">{email.client?.email || "Unknown Email"}</p>
             <h4
               className={`text-sm mb-1 ${!email.read ? "font-medium" : ""}`}
             >
@@ -66,7 +66,7 @@ export default function InboxMessages({ emails }: Props) {
             </p>
             <div className="mt-2">
               <span className="inline-block bg-blue-100 text-xs text-blue-800 px-2 py-1 rounded-full">
-                {email.campaign.name}
+                {email.campaign?.name || "Unknown Campaign"}
               </span>
             </div>
           </div>

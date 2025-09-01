@@ -5,11 +5,12 @@ import {
   metrics,
 } from "@/lib/data/analytics.mock";
 import { createContext, useContext, useState, useMemo, useEffect } from "react";
+import { AnalyticsContextState, DataGranularity, TimeSeriesDataPoint, DateRangePreset } from "@/types";
 
 // Helper function to get allowed granularities based on date range
 const getAllowedGranularities = (
   days: number
-): ("day" | "week" | "month")[] => {
+): DataGranularity[] => {
   if (days <= 14) {
     // For 14 days or less, allow daily and weekly
     return ["day", "week"];
@@ -22,41 +23,16 @@ const getAllowedGranularities = (
   }
 };
 
-interface AnalyticsContextType {
-  totalSent: number | string;
-  openRate: number | string;
-  replyRate: number | string;
-  clickRate: number | string;
-  chartData: any;
-  visibleMetrics: any;
-  setVisibleMetrics: (value: any) => void;
-  showCustomDate: boolean;
-  setShowCustomDate: (value: boolean) => void;
-  dateRange: string;
-  setDateRange: (value: string) => void;
-  granularity: "day" | "week" | "month";
-  setGranularity: (value: "day" | "week" | "month") => void;
-  allowedGranularities: ("day" | "week" | "month")[];
-  customDateStart: string;
-  setCustomDateStart: (value: string) => void;
-  customDateEnd: string;
-  setCustomDateEnd: (value: string) => void;
-  selectedCampaigns: string[];
-  setSelectedCampaigns: (value: string[]) => void;
-  selectedMailboxes: string[];
-  setSelectedMailboxes: (value: string[]) => void;
-}
-
-const AnalyticsContext = createContext<AnalyticsContextType | undefined>(
+const AnalyticsContext = createContext<AnalyticsContextState | undefined>(
   undefined
 );
 
 function AnalyticsProvider({ children }: { children: React.ReactNode }) {
-  const [dateRange, setDateRange] = useState("30d");
+  const [dateRange, setDateRange] = useState<DateRangePreset>("30d");
   const [customDateStart, setCustomDateStart] = useState("");
   const [customDateEnd, setCustomDateEnd] = useState("");
   const [showCustomDate, setShowCustomDate] = useState(false);
-  const [granularity, setGranularity] = useState<"day" | "week" | "month">(
+  const [granularity, setGranularity] = useState<DataGranularity>(
     "day"
   );
   const [selectedCampaigns, setSelectedCampaigns] = useState(["all"]);

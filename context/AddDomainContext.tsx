@@ -3,6 +3,7 @@ import { CheckCircle, Globe, Server } from "lucide-react";
 import { createContext, useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
+import { DNSRecord } from "@/types";
 
 const steps = [
   {

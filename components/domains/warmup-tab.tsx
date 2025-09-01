@@ -59,12 +59,13 @@ export default WarmupTab;
 
 const getStatusIcon = (status: string) => {
   switch (status) {
-    case "ready":
+    case "WARMED":
       return <CheckCircle className="w-3 h-3" />;
-    case "warming":
+    case "WARMING":
       return <Clock className="w-3 h-3" />;
-    case "paused":
+    case "PAUSED":
       return <Pause className="w-3 h-3" />;
+    case "NOT_STARTED":
     default:
       return <Clock className="w-3 h-3" />;
   }
@@ -129,8 +130,14 @@ function WarmupMailboxesTable() {
                     >
                       {getStatusIcon(mailbox.warmupStatus)}
                       <span className="capitalize">
-                        {mailbox.warmupStatus === "ready"
+                        {mailbox.warmupStatus === "WARMED"
                           ? "Ready"
+                          : mailbox.warmupStatus === "WARMING"
+                          ? "Warming"
+                          : mailbox.warmupStatus === "PAUSED"
+                          ? "Paused"
+                          : mailbox.warmupStatus === "NOT_STARTED"
+                          ? "Not Started"
                           : mailbox.warmupStatus}
                       </span>
                     </span>
@@ -140,7 +147,7 @@ function WarmupMailboxesTable() {
                     <div className="flex items-center space-x-2">
                       <Mail className="w-4 h-4 text-gray-400" />
                       <span className="text-sm font-medium text-gray-900">
-                        {mailbox.warmupStatus === "paused"
+                        {mailbox.warmupStatus === "PAUSED"
                           ? "0"
                           : Math.floor(
                               mailbox.dailyLimit *
@@ -178,8 +185,8 @@ function WarmupMailboxesTable() {
                   </TableCell>
                   <TableCell className="px-6 py-6 text-right">
                     <div className="flex items-center justify-end space-x-2">
-                      {mailbox.warmupStatus === "warming" ||
-                      mailbox.warmupStatus === "ready" ? (
+                      {mailbox.warmupStatus === "WARMING" ||
+                      mailbox.warmupStatus === "WARMED" ? (
                         <Button variant="ghost" size="icon">
                           <Pause className="w-4 h-4" />
                         </Button>

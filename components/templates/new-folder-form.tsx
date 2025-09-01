@@ -13,36 +13,23 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const formSchema = z.object({
-  folderName: z
-    .string()
-    .min(1, "Folder name is required")
-    .max(50, "Folder name must be less than 50 characters")
-    .regex(
-      /^[a-zA-Z0-9\s-_]+$/,
-      "Folder name can only contain letters, numbers, spaces, hyphens, and underscores"
-    ),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { newFolderFormSchema, NewFolderFormValues } from "@/types/forms";
 
 interface NewFolderFormProps {
-  onSubmit?: (data: FormValues) => void;
+  onSubmit?: (data: NewFolderFormValues) => void;
   onCancel?: () => void;
   className?: string;
 }
 
 function NewFolderForm({ onSubmit, onCancel, className }: NewFolderFormProps) {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<NewFolderFormValues>({
+    resolver: zodResolver(newFolderFormSchema),
     defaultValues: {
       folderName: "",
     },
   });
 
-  const handleSubmit = (data: FormValues) => {
+  const handleSubmit = (data: NewFolderFormValues) => {
     console.log("Creating folder:", data);
     onSubmit?.(data);
     form.reset();

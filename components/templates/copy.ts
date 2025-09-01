@@ -1,3 +1,5 @@
+import { TemplateCategoryType } from "@/types";
+
 export const copyText = {
   page: {
     title: "Email Templates",
@@ -28,7 +30,7 @@ export const copyText = {
       HR: "HR & Recruitment",
       FINANCE: "Financial Services",
       HEALTHCARE: "Healthcare"
-    } as Record<TemplateCategory, string>,
+    } as Record<TemplateCategoryType, string>,
   },
   templateCard: {
     usage: "usage",

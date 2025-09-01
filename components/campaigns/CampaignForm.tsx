@@ -25,14 +25,14 @@ import {
   CampaignFormValues,
   CampaignSteps,
   PartialCampaignStep,
-} from "./types";
+} from "@/types/campaign";
 import { CampaignDetails } from "./CampaignDetails";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { campaignFormSchema } from "./schemaValidations";
 import { EmailSecuenceSettings } from "./EmailSecuenceSettings";
 import { defaultSteps } from "./const-mock";
 import Loader from "./loader";
-import { CampaignEventContition } from "@/types/campaign";
+import { CampaignEventCondition } from "@/types/campaign";
 
 export function CampaignForm({
   initialData,
@@ -110,7 +110,7 @@ export function CampaignForm({
       campaignId: 0,
       emailSubject: "",
       emailBody: "",
-      condition: CampaignEventContition.ALWAYS,
+      condition: CampaignEventCondition.ALWAYS,
     });
     setSteps(newSteps);
   };
