@@ -53,48 +53,6 @@ export default function LoginPage() {
       </p>
     </div>
   );
-  const children = user ? undefined : (
-    <form onSubmit={handleLogin} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="email">{loginContent.email.label}</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder={loginContent.email.placeholder}
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={isLoading}
-        />
-      </div>
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password">
-            {loginContent.password.label}
-          </Label>
-          <Link
-            href="/forgot-password"
-            className="text-sm font-medium text-primary hover:underline underline-offset-4"
-          >
-            {loginContent.forgotPassword}
-          </Link>
-        </div>
-        <PasswordInput
-          name="password"
-          placeholder=""
-          value={password}
-          onValueChange={setPassword}
-          disabled={isLoading}
-          required
-        />
-      </div>
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading
-          ? loginContent.loginButton.loading
-          : loginContent.loginButton.default}
-      </Button>
-    </form>
-  );
 
   return (
     <LandingLayout>
@@ -103,10 +61,52 @@ export default function LoginPage() {
         icon={icon}
         title={title}
         description={description}
-        children={children}
         footer={footer}
         error={mode === 'form' ? error : undefined}
-      />
+      >
+        {user ? undefined : (
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">{loginContent.email.label}</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder={loginContent.email.placeholder}
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">
+                  {loginContent.password.label}
+                </Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-sm font-medium text-primary hover:underline underline-offset-4"
+                >
+                  {loginContent.forgotPassword}
+                </Link>
+              </div>
+              <PasswordInput
+                name="password"
+                placeholder=""
+                value={password}
+                onValueChange={setPassword}
+                disabled={isLoading}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading
+                ? loginContent.loginButton.loading
+                : loginContent.loginButton.default}
+            </Button>
+          </form>
+        )}
+      </AuthTemplate>
     </LandingLayout>
   );
 }

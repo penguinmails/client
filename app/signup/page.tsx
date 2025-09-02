@@ -90,86 +90,6 @@ export default function SignUpPage() {
       </p>
     </div>
   );
-  const children = user ? undefined : (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* Email Field */}
-      <div className="space-y-2">
-        <Label htmlFor="email">{signupContent.form.email.label}</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder={signupContent.form.email.placeholder}
-          {...register("email", {
-            required: "Email is required",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Please enter a valid email address",
-            },
-          })}
-          disabled={isSignUpLoading}
-        />
-        {errors.email && (
-          <p className="text-sm text-red-600">{errors.email.message}</p>
-        )}
-      </div>
-
-      {/* Password Field */}
-      <div className="space-y-2">
-        <PasswordInput
-          label={signupContent.form.password.label}
-          placeholder={signupContent.form.password.placeholder}
-          showStrengthMeter={true}
-          onStrengthChange={handlePasswordStrengthChange}
-          value={watch("password")}
-          onValueChange={(value) => setValue("password", value)}
-          disabled={isSignUpLoading}
-          {...register("password", {
-            required: "Password is required",
-            minLength: {
-              value: 8,
-              message: "Password must be at least 8 characters",
-            },
-            validate: {
-              strength: () => {
-                if (passwordStrength && passwordStrength.score < 2) {
-                  return "Password is too weak. Please include at least 2 of: uppercase, lowercase, number, special character";
-                }
-                return true;
-              },
-            },
-          })}
-        />
-        {errors.password && (
-          <p className="text-sm text-red-600">{errors.password.message}</p>
-        )}
-      </div>
-
-      {/* Confirm Password Field */}
-      <div className="space-y-2">
-        <PasswordInput
-          label={signupContent.form.confirmPassword.label}
-          placeholder={signupContent.form.confirmPassword.placeholder}
-          value={watch("confirmPassword")}
-          onValueChange={(value) => setValue("confirmPassword", value)}
-          disabled={isSignUpLoading}
-          {...register("confirmPassword", {
-            required: "Please confirm your password",
-            validate: {
-              match: (value: string, { password }: FormData) =>
-                value === password || "Passwords do not match",
-            },
-          })}
-        />
-        {errors.confirmPassword && (
-          <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
-        )}
-      </div>
-
-      <Button type="submit" className="w-full" disabled={isSignUpLoading}>
-        {isSignUpLoading ? "Signing up..." : "Create Account"}
-      </Button>
-    </form>
-  );
 
   return (
     <LandingLayout>
@@ -178,10 +98,90 @@ export default function SignUpPage() {
         icon={icon}
         title={title}
         description={description}
-        children={children}
         footer={footer}
         error={error}
-      />
+      >
+        {user ? undefined : (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Email Field */}
+            <div className="space-y-2">
+              <Label htmlFor="email">{signupContent.form.email.label}</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder={signupContent.form.email.placeholder}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Please enter a valid email address",
+                  },
+                })}
+                disabled={isSignUpLoading}
+              />
+              {errors.email && (
+                <p className="text-sm text-red-600">{errors.email.message}</p>
+              )}
+            </div>
+
+            {/* Password Field */}
+            <div className="space-y-2">
+              <PasswordInput
+                label={signupContent.form.password.label}
+                placeholder={signupContent.form.password.placeholder}
+                showStrengthMeter={true}
+                onStrengthChange={handlePasswordStrengthChange}
+                value={watch("password")}
+                onValueChange={(value) => setValue("password", value)}
+                disabled={isSignUpLoading}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters",
+                  },
+                  validate: {
+                    strength: () => {
+                      if (passwordStrength && passwordStrength.score < 2) {
+                        return "Password is too weak. Please include at least 2 of: uppercase, lowercase, number, special character";
+                      }
+                      return true;
+                    },
+                  },
+                })}
+              />
+              {errors.password && (
+                <p className="text-sm text-red-600">{errors.password.message}</p>
+              )}
+            </div>
+
+            {/* Confirm Password Field */}
+            <div className="space-y-2">
+              <PasswordInput
+                label={signupContent.form.confirmPassword.label}
+                placeholder={signupContent.form.confirmPassword.placeholder}
+                value={watch("confirmPassword")}
+                onValueChange={(value) => setValue("confirmPassword", value)}
+                disabled={isSignUpLoading}
+                {...register("confirmPassword", {
+                  required: "Please confirm your password",
+                  validate: {
+                    match: (value: string, { password }: FormData) =>
+                      value === password || "Passwords do not match",
+                  },
+                })}
+              />
+              {errors.confirmPassword && (
+                <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+              )}
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isSignUpLoading}>
+              {isSignUpLoading ? "Signing up..." : "Create Account"}
+            </Button>
+          </form>
+        )}
+      </AuthTemplate>
     </LandingLayout>
   );
 }

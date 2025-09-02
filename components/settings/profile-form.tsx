@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,6 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle, CheckCircle, Loader2, RefreshCw, AlertCircle } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -49,12 +53,100 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 function ProfileForm() {
+  const router = useRouter();
   const { user: authUser, loading: authLoading, updateUser } = useAuth();
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState<ProfileError | null>(null);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [isRetryingProfile, setIsRetryingProfile] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const [customAvatarUrl, setCustomAvatarUrl] = useState("");
+
+  const MAX_RETRIES = 3;
+
+  // Enhanced retry function with exponential backoff
+  const retryFetchProfile = async () => {
+    if (retryCount >= MAX_RETRIES) {
+      toast.error("Unable to load profile", {
+        description: "Please check your connection and refresh the page.",
+      });
+      return;
+    }
+
+    setIsRetryingProfile(true);
+    setRetryCount(prev => prev + 1);
+
+    try {
+      const result = await getUserProfile();
+
+      if (result.success && result.data) {
+        const nileFormData = mapNileUserToFormData(result.data);
+        form.reset({
+          ...form.getValues(),
+          name: nileFormData.name,
+          firstName: nileFormData.firstName,
+          lastName: nileFormData.lastName,
+          email: nileFormData.email,
+          avatarUrl: nileFormData.avatarUrl,
+        });
+        setProfileError(null);
+        setRetryCount(0); // Reset retry count on success
+        toast.success("Profile loaded successfully");
+      } else if (result.error) {
+        setProfileError(result.error);
+
+        if (result.error.type === 'auth') {
+          toast.error("Authentication required", {
+            description: "Redirecting to login page...",
+          });
+          setTimeout(() => {
+            router.push('/login');
+          }, 2000);
+        } else if (result.error.type === 'network') {
+          // Network error - will be handled in the error component
+        } else {
+          toast.error("Failed to load profile", {
+            description: result.error.message,
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      const networkError: ProfileError = {
+        type: 'network',
+        message: retryCount === 0
+          ? 'Failed to load profile data. Please try again.'
+          : `Failed to load profile data (${retryCount}/${MAX_RETRIES} retry attempts). Please check your connection.`,
+      };
+      setProfileError(networkError);
+    } finally {
+      setIsRetryingProfile(false);
+      setProfileLoading(false);
+    }
+  };
+
+  // Helper function to get error variants
+  const getErrorVariant = (type: string) => {
+    switch (type) {
+      case 'auth': return 'destructive';
+      case 'validation': return 'default';
+      case 'network': return 'default';
+      case 'server': return 'destructive';
+      default: return 'default';
+    }
+  };
+
+  // Helper function to get error icons
+  const getErrorIcon = (type: string) => {
+    switch (type) {
+      case 'auth': return <AlertTriangle className="h-4 w-4" />;
+      case 'validation': return <AlertCircle className="h-4 w-4" />;
+      case 'network': return <RefreshCw className="h-4 w-4" />;
+      case 'server': return <AlertTriangle className="h-4 w-4" />;
+      default: return <AlertCircle className="h-4 w-4" />;
+    }
+  };
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -89,36 +181,7 @@ function ProfileForm() {
       }
 
       // Then try to fetch from NileDB server action
-      try {
-        const result = await getUserProfile();
-
-        if (result.success && result.data) {
-          const nileFormData = mapNileUserToFormData(result.data);
-          form.reset({
-            ...form.getValues(),
-            name: nileFormData.name,
-            firstName: nileFormData.firstName,
-            lastName: nileFormData.lastName,
-            email: nileFormData.email,
-            avatarUrl: nileFormData.avatarUrl,
-          });
-          setProfileError(null);
-        } else if (result.error) {
-          setProfileError(result.error);
-          // If it's an auth error, the user will be redirected by the server action
-          if (result.error.type === 'auth') {
-            // Server action handles redirect
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-        setProfileError({
-          type: 'network',
-          message: 'Failed to load profile data. Please refresh the page.'
-        });
-      } finally {
-        setProfileLoading(false);
-      }
+      await retryFetchProfile();
     };
 
     // Only fetch if we have auth context loaded
@@ -130,6 +193,9 @@ function ProfileForm() {
   const onSubmit = async (data: ProfileFormValues) => {
     setSubmitLoading(true);
     setMessage({ type: "", text: "" });
+
+    // Clear any existing form errors
+    form.clearErrors();
 
     try {
       // Extract the profile fields for NileDB update
@@ -160,23 +226,53 @@ function ProfileForm() {
           }
         });
 
-        setMessage({ type: "success", text: "Profile updated successfully!" });
-      } else if (result.error) {
-        setMessage({
-          type: "error",
-          text: result.error.message,
+        toast.success("Profile updated successfully", {
+          description: "Your profile information has been saved.",
         });
+      } else if (result.error) {
+        // Handle field-specific errors by setting form errors
+        if (result.error.field) {
+          form.setError(result.error.field as keyof ProfileFormValues, {
+            message: result.error.message,
+          });
+        } else {
+          // Handle general errors with toast
+          const errorMessage = result.error.message || "Failed to update profile. Please try again.";
+
+          if (result.error.type === 'auth') {
+            toast.error("Authentication expired", {
+              description: "Redirecting to login page...",
+            });
+            setTimeout(() => {
+              router.push('/login');
+            }, 2000);
+          } else if (result.error.type === 'network') {
+            toast.error("Network error", {
+              description: "Please check your connection and try again.",
+              action: {
+                label: "Retry",
+                onClick: () => onSubmit(data),
+              },
+            });
+          } else if (result.error.type === 'validation') {
+            toast.error("Validation error", {
+              description: errorMessage,
+            });
+          } else {
+            toast.error("Update failed", {
+              description: errorMessage,
+            });
+          }
+        }
       } else {
-        setMessage({
-          type: "error",
-          text: "Failed to update profile. Please try again.",
+        toast.error("Update failed", {
+          description: "Failed to update profile. Please try again.",
         });
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      setMessage({
-        type: "error",
-        text: "An unexpected error occurred while updating your profile."
+      toast.error("Unexpected error", {
+        description: "An unexpected error occurred while updating your profile. Please try again.",
       });
     } finally {
       setSubmitLoading(false);
@@ -187,42 +283,46 @@ function ProfileForm() {
     <div className="space-y-6">
       {/* Profile Loading State */}
       {profileLoading && (
-        <div className="mb-4 p-4 border border-blue-200 rounded-md bg-blue-50">
-          <div className="flex items-center">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-            <span>Loading your profile...</span>
-          </div>
-        </div>
+        <Alert>
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <AlertDescription>
+            {isRetryingProfile
+              ? `Loading your profile... (attempt ${retryCount}/${MAX_RETRIES})`
+              : "Loading your profile..."
+            }
+          </AlertDescription>
+        </Alert>
       )}
 
       {/* Profile Error State */}
-      {profileError && (
-        <div className="mb-4 p-4 border border-red-200 rounded-md bg-red-50">
-          <div className="text-red-800">
-            <strong>Error:</strong> {profileError.message}
-          </div>
-          {profileError.type === 'network' && (
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-            >
-              Retry
-            </button>
-          )}
-        </div>
+      {profileError && !profileLoading && (
+        <Alert variant={getErrorVariant(profileError.type)}>
+          {getErrorIcon(profileError.type)}
+          <AlertDescription className="flex items-center justify-between">
+            <span>{profileError.message}</span>
+            {profileError.type === 'network' && retryCount < MAX_RETRIES && (
+              <div className="flex items-center gap-2 ml-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={retryFetchProfile}
+                  disabled={isRetryingProfile}
+                  className="h-7 px-2"
+                >
+                  {isRetryingProfile ? (
+                    <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                  ) : (
+                    <RefreshCw className="h-3 w-3 mr-1" />
+                  )}
+                  Retry
+                </Button>
+              </div>
+            )}
+          </AlertDescription>
+        </Alert>
       )}
 
-      {/* Success/Error Messages */}
-      {message.text && (
-        <div
-          className={`mb-4 p-3 rounded ${message.type === "success"
-            ? "bg-green-50 text-green-800"
-            : "bg-red-50 text-red-800"
-            }`}
-        >
-          {message.text}
-        </div>
-      )}
+      {/* Field-specific validation errors are shown in the form fields via FormMessage */}
 
       <Form {...form}>
         {/* Profile Information Section */}
@@ -384,7 +484,14 @@ function ProfileForm() {
             disabled={submitLoading || profileLoading}
             onClick={form.handleSubmit(onSubmit)}
           >
-            {submitLoading ? "Saving..." : "Save Changes"}
+            {submitLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                Saving...
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </div>
       </Form>
