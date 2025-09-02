@@ -63,10 +63,18 @@ export default function ProfilePage() {
       if (response.ok) {
         setMessage({ type: "success", text: "Profile updated successfully!" });
       } else {
-        const error = await response.json();
+        let errorMessage = "Failed to update profile";
+        try {
+          const error = await response.json() as { message?: string };
+          if (error.message && typeof error.message === 'string') {
+            errorMessage = error.message;
+          }
+        } catch {
+          // Ignore JSON parsing errors
+        }
         setMessage({
           type: "error",
-          text: error.message || "Failed to update profile",
+          text: errorMessage,
         });
       }
     } catch (error) {

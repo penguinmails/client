@@ -19,8 +19,16 @@ export async function createDomain(data: CreateDomainData) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to create domain');
+      let errorMessage = 'Failed to create domain';
+      try {
+        const error = await response.json() as { message?: string };
+        if (error.message && typeof error.message === 'string') {
+          errorMessage = error.message;
+        }
+      } catch {
+        // Ignore JSON parsing errors
+      }
+      throw new Error(errorMessage);
     }
 
     const domain = await response.json();
@@ -41,8 +49,16 @@ export async function getDomains() {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to fetch domains');
+      let errorMessage = 'Failed to fetch domains';
+      try {
+        const error = await response.json() as { message?: string };
+        if (error.message && typeof error.message === 'string') {
+          errorMessage = error.message;
+        }
+      } catch {
+        // Ignore JSON parsing errors
+      }
+      throw new Error(errorMessage);
     }
 
     return response.json();

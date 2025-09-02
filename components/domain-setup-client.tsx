@@ -33,8 +33,8 @@ async function verifyDnsRecord(domainId: number, recordType: "spf" | "dkim" | "d
 
     if (!response.ok) throw new Error("Verification failed");
 
-    const data = await response.json();
-    return data.verified;
+    const data = await response.json() as { verified?: boolean };
+    return data.verified || false;
   } catch {
     console.error("DNS verification error");
     throw new Error("Verification failed");
@@ -73,7 +73,7 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
       try {
         const response = await fetch(`/api/domains/${domainId}`);
         if (!response.ok) throw new Error("Failed to fetch domain data");
-        const data = await response.json();
+        const data = await response.json() as DomainData;
         setDomain(data);
       } catch {
         toast.error("Failed to load domain data");

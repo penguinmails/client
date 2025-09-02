@@ -92,6 +92,16 @@ npm run deploy
 npm run upload
 ```
 
+### Cloudflare Setup
+For complete Cloudflare configuration instructions:
+- 📖 **Cloudflare Setup Guide**: [`CLOUDFLARE-SETUP.md`](./CLOUDFLARE-SETUP.md)
+- 🔐 **GitHub Secrets Setup**: [`.github/SETUP-SECRETS.md`](./.github/SETUP-SECRETS.md)
+- 📋 **Workflow Documentation**: [`.github/workflows/README.md`](./.github/workflows/README.md)
+
+## Current Deployment
+✅ **Status**: Deployed and running
+🔗 **URL**: https://penguin-mails.mailspenguin.workers.dev
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
