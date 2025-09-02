@@ -162,3 +162,66 @@ export const debounce = <T extends (...args: any[]) => any>(
    timeout = setTimeout(() => func(...args), wait);
  };
 };
+
+// Profile mapping interfaces
+export interface NileUser {
+  id: string;
+  email: string;
+  name?: string;
+  familyName?: string;
+  givenName?: string;
+  picture?: string;
+  created: string;
+  updated?: string;
+  emailVerified?: boolean;
+  tenants: { id: string }[];
+}
+
+export interface ProfileFormData {
+  firstName: string;
+  lastName: string;
+  name: string;
+  email: string;
+  avatarUrl: string;
+}
+
+// Mapping functions
+export const mapNileUserToFormData = (user: NileUser): ProfileFormData => ({
+  firstName: user.givenName || "",
+  lastName: user.familyName || "",
+  name: user.name || "",
+  email: user.email,
+  avatarUrl: user.picture || "",
+});
+
+export const mapFormDataToNileUpdate = (formData: ProfileFormData) => ({
+  name: formData.name || undefined,
+  givenName: formData.firstName || undefined,
+  familyName: formData.lastName || undefined,
+  picture: formData.avatarUrl || undefined,
+});
+
+// Validation function
+export const validateProfileUpdateData = (data: {
+  name?: string;
+  givenName?: string;
+  familyName?: string;
+  picture?: string;
+}) => {
+  const errors: string[] = [];
+
+  if (data.name !== undefined && data.name !== "" && typeof data.name !== 'string') {
+    errors.push('Name must be a string');
+  }
+  if (data.givenName !== undefined && data.givenName !== "" && typeof data.givenName !== 'string') {
+    errors.push('First name must be a string');
+  }
+  if (data.familyName !== undefined && data.familyName !== "" && typeof data.familyName !== 'string') {
+    errors.push('Last name must be a string');
+  }
+  if (data.picture !== undefined && data.picture !== "" && typeof data.picture !== 'string') {
+    errors.push('Picture must be a string');
+  }
+
+  return { isValid: errors.length === 0, errors };
+};
