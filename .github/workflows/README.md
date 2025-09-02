@@ -7,7 +7,8 @@ This repository is configured for automated deployment to Cloudflare using GitHu
 ### 1. `deploy.yml` - Production Deployment
 - **Trigger**: Push to `main` branch, PR to `main` branch, or manual dispatch
 - **Function**: Builds and deploys to Cloudflare Workers
-- **Commands**: `npm run build && npx opennextjs-cloudflare build` then deploys
+- **Commands**: `npm run build:open-next` then `npx wrangler deploy`
+- **Workflow Steps**: Build Next.js → Build OpenNext → Verify worker → Deploy
 
 ### 2. `ci.yml` - Continuous Integration
 - Runs linting and tests on every PR
@@ -42,13 +43,19 @@ You need to set up the following secrets in your GitHub repository:
 # Build Next.js
 npm run build
 
-# Build for OpenNext Cloudflare
-npx opennextjs-cloudflare build
+# Build Next.js
+npm run build
 
-# Preview locally
+# Build OpenNext worker
+npm run build:open-next
+
+# Test build without deployment
+npm run build:dry
+
+# Preview locally (Cloudflare runtime)
 npm run preview
 
-# Deploy to production
+# Deploy to Cloudflare
 npm run deploy
 ```
 

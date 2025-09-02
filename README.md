@@ -73,8 +73,17 @@ npm run build
 ### Deployment Scripts
 
 ```bash
-# Build Next.js and OpenNext
-npm run build && npx opennextjs-cloudflare build
+# Build Next.js
+npm run build
+
+# Build OpenNext worker
+npm run build:open-next
+
+# Test build without deployment
+npm run build:dry
+
+# Preview locally (Cloudflare runtime)
+npm run preview
 
 # Deploy to Cloudflare
 npm run deploy

@@ -13,6 +13,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy to Cloudflare
+    # Uncomment the next line if you have a job named 'lint'
+    # needs: lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,8 +31,18 @@ jobs:
       - name: Run linting
         run: npm run lint
 
-      - name: Build for Cloudflare
-        run: npm run build && npx opennextjs-cloudflare build
+      - name: Build OpenNext Worker
+        run: npm run build:open-next
+
+      - name: Verify Worker Build
+        run: |
+          echo "Checking OpenNext build directory..."
+          ls -la .open-next/
+          if [ ! -f ".open-next/worker.js" ]; then
+            echo "::error::OpenNext worker build failed - .open-next/worker.js not found"
+            exit 1
+          fi
+          echo "✅ Worker successfully built at .open-next/worker.js"
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
