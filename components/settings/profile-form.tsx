@@ -49,7 +49,7 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 function ProfileForm() {
-  const { user: authUser, loading: authLoading } = useAuth();
+  const { user: authUser, loading: authLoading, updateUser } = useAuth();
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState<ProfileError | null>(null);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -148,6 +148,18 @@ function ProfileForm() {
         form.setValue('firstName', updatedFormData.firstName);
         form.setValue('lastName', updatedFormData.lastName);
         form.setValue('avatarUrl', updatedFormData.avatarUrl);
+
+        // Update AuthContext with fresh data from NileDB
+        updateUser({
+          displayName: updatedFormData.name,
+          photoURL: updatedFormData.avatarUrl,
+          profile: {
+            firstName: updatedFormData.firstName,
+            lastName: updatedFormData.lastName,
+            avatar: updatedFormData.avatarUrl,
+          }
+        });
+
         setMessage({ type: "success", text: "Profile updated successfully!" });
       } else if (result.error) {
         setMessage({

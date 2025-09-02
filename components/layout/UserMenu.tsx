@@ -1,12 +1,16 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/AuthContext";
+
 function UserMenu() {
+  const { user } = useAuth();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -15,14 +19,13 @@ function UserMenu() {
           className="p-0 rounded-full transition-all duration-200 group"
         >
           <Avatar className="w-8 h-8">
-            <AvatarImage src="/path/to/user/avatar.jpg" alt="User Avatar" />
+            <AvatarImage src={user?.profile?.avatar} alt="User Avatar" />
             <AvatarFallback>
               <AvatarCallback />
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      {/* <DropdownMenuContent></DropdownMenuContent> */}
     </DropdownMenu>
   );
 }

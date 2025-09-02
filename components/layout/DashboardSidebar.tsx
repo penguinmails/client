@@ -109,11 +109,11 @@ export function DashboardSidebar() {
                   className={cn(
                     "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-medium",
                     item.badge.variant === "default" &&
-                      "bg-primary text-primary-foreground",
+                    "bg-primary text-primary-foreground",
                     item.badge.variant === "success" &&
-                      "bg-green-500 text-white",
+                    "bg-green-500 text-white",
                     item.badge.variant === "destructive" &&
-                      "bg-destructive text-destructive-foreground"
+                    "bg-destructive text-destructive-foreground"
                   )}
                 >
                   {item.badge.text}
@@ -127,15 +127,14 @@ export function DashboardSidebar() {
       {/* User Info */}
       <div className="mt-auto p-4 border-t border-gray-200 dark:border-gray-800">
         <div
-          className={`flex items-start md:items-center justify-between rounded-md p-2 ${
-            collapsed ? "flex-col" : "flex-row"
-          }`}
+          className={`flex items-start md:items-center justify-between rounded-md p-2 ${collapsed ? "flex-col" : "flex-row"
+            }`}
         >
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-full overflow-hidden relative">
-              {user?.photoURL ? (
+              {user?.profile?.avatar ? (
                 <Image
-                  src={user?.photoURL}
+                  src={user?.profile?.avatar}
                   alt="User Avatar"
                   width={32}
                   height={32}

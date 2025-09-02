@@ -93,6 +93,7 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, firstName?: string, lastName?: string, companyName?: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (user: Partial<User>) => void;
   refreshToken?: () => Promise<void>;
 }
 
