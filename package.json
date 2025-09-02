@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:dry": "next build && npx opennextjs-cloudflare build --dry-run",
-    "build:open-next": "next build && npx opennextjs-cloudflare build",
+    "build:dry": "npx opennextjs-cloudflare build --dry-run",
+    "build:open-next": "npx opennextjs-cloudflare build",
     "start": "next start",
     "lint": "eslint",
     "preview": "npm run build:open-next && npx opennextjs-cloudflare preview",
