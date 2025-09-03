@@ -1,7 +1,7 @@
 import Icon from "@/components/ui/Icon";
 import NavLink from "@/components/settings/nav-link";
 import { Separator } from "@/components/ui/separator";
-import { Bell, CreditCard, Shield, Target, User, Users } from "lucide-react";
+import { Bell, CreditCard, Shield, Target, User } from "lucide-react";
 
 const tabs = [
   { id: "", label: "General", icon: User },

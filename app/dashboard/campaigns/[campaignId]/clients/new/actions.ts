@@ -34,7 +34,7 @@ export async function createClient(data: CreateClientData) {
   return client;
 }
 
-export async function updateClient(id: number, data: ClientData) {
+export async function updateClient(_id: number, _data: ClientData) {
   // Mock implementation
   await new Promise(resolve => setTimeout(resolve, 1000));
   return { success: true };

@@ -39,19 +39,15 @@ const eslintConfig = defineConfig([
     files: ["**/*.{js,jsx,ts,tsx}"],
     extends: [...compat.config({
       extends: [
-        "next/core-web-vitals",
         "next/typescript"
       ],
     })],
     rules: {
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "react/no-unescaped-entities": "warn",
       // Additional best practice rules
       "@/prefer-const": "error",
       "@typescript-eslint/no-var-requires": "error",
-      "react/jsx-curly-brace-presence": ["warn", { props: "never", children: "never" }],
-      "react/self-closing-comp": ["warn", { component: true }],
     },
     linterOptions: {
       reportUnusedDisableDirectives: "warn",

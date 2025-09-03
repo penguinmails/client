@@ -8,7 +8,7 @@
     "build:dry": "npx opennextjs-cloudflare build --dry-run",
     "build:open-next": "npx opennextjs-cloudflare build",
     "start": "next start",
-    "lint": "eslint . --cache",
+    "lint": "eslint . --cache --concurrency=auto",
     "typecheck": "npx tsc -p tsconfig.json --noEmit --skipLibCheck",
     "preview": "npm run build:open-next && npx opennextjs-cloudflare preview",
     "deploy": "npm run build:open-next && npx wrangler deploy",

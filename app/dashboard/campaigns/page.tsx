@@ -10,7 +10,6 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
-const companyId = 1;
 interface CampaignsPageProps {
   searchParams: Promise<{
     page?: string;
@@ -19,7 +18,7 @@ interface CampaignsPageProps {
 }
 
 export default async function CampaignsPage({
-  searchParams,
+  searchParams: _searchParams,
 }: CampaignsPageProps) {
   return (
     <div className="space-y-8">

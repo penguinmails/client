@@ -263,7 +263,6 @@ function ProfileForm() {
     if (!authLoading) {
       fetchProfileData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser, authLoading, form]);
 
   // Auto-retry when coming back online

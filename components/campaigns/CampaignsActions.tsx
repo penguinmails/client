@@ -73,7 +73,7 @@ function DeleteAction({ campaignId }: { campaignId: number }) {
     />
   );
 }
-function PauseAction({ campaignId }: { campaignId: number }) {
+function PauseAction({ campaignId: _campaignId }: { campaignId: number }) {
   return (
     <Button
       variant="ghost"
@@ -85,7 +85,7 @@ function PauseAction({ campaignId }: { campaignId: number }) {
     </Button>
   );
 }
-function ResumeAction({ campaignId }: { campaignId: number }) {
+function ResumeAction({ campaignId: _campaignId }: { campaignId: number }) {
   return (
     <Button
       variant="ghost"
@@ -97,7 +97,7 @@ function ResumeAction({ campaignId }: { campaignId: number }) {
     </Button>
   );
 }
-function CopyAction({ campaignId }: { campaignId: number }) {
+function CopyAction({ campaignId: _campaignId }: { campaignId: number }) {
   return (
     <Button
       variant="ghost"

@@ -1,6 +1,5 @@
 "use server";
 
-import { ERROR_CODES } from "@/lib/responses/errors";
 
 interface Query {
   email?: string[];
@@ -62,7 +61,7 @@ export const getAllMessagesAction = async (
   }
 };
 
-export const getUniqueFiltersAction = async (idToken = "") => {
+export const getUniqueFiltersAction = async (_idToken = "") => {
   try {
     const emails = [
       {
@@ -128,7 +127,7 @@ export const getUniqueFiltersAction = async (idToken = "") => {
   }
 };
 
-export async function fetchEmailByIdAction(id: string, idToken = "") {
+export async function fetchEmailByIdAction(id: string, _idToken = "") {
   try {
     const email = {
       id: 1,

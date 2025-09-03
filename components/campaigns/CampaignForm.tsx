@@ -2,7 +2,6 @@
 
 import { useState, useRef, MouseEvent, ChangeEvent, useEffect } from "react";
 import {
-  ResolverResult,
   SubmitHandler,
   useForm,
   UseFormReturn,
@@ -27,8 +26,6 @@ import {
   PartialCampaignStep,
 } from "@/types/campaign";
 import { CampaignDetails } from "./CampaignDetails";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { campaignFormSchema } from "./schemaValidations";
 import { EmailSecuenceSettings } from "./EmailSecuenceSettings";
 import { defaultSteps } from "./const-mock";
 import Loader from "./loader";
@@ -50,7 +47,7 @@ export function CampaignForm({
   >([]);
   const [timezones, setTimezones] = useState<string[]>([]);
   const [loadingAccounts, setLoadingAccounts] = useState<boolean>(true);
-  const [loadingTimezones, setLoadingTimezones] = useState<boolean>(true);
+  const [_loadingTimezones, setLoadingTimezones] = useState<boolean>(true);
   const [currentEditingStep, setCurrentEditingStep] = useState<number | null>(
     null
   );
@@ -142,14 +139,6 @@ export function CampaignForm({
     }
   };
 
-  const importTemplate = (index: number, subject: string, body: string) => {
-    const newSteps = [...steps];
-    if (newSteps[index]?.templateId) {
-      // Assuming templateId is used to fetch the template
-      // Update form state directly as well
-      form.setValue(`steps.${index}.templateId`, newSteps[index].templateId);
-    }
-  };
 
   const handleInsertTag = (index: number, tag: string) => {
     const textarea = emailBodyRef.current;
@@ -158,7 +147,7 @@ export function CampaignForm({
     const start = textarea.selectionStart ?? 0;
     const end = textarea.selectionEnd ?? 0;
     const currentBody = ""; // Assuming we fetch the body using templateId
-    const newBody =
+    const _newBody =
       currentBody.substring(0, start) + tag + currentBody.substring(end);
 
     const newSteps = [...steps];

@@ -11,7 +11,6 @@ import {
   BarChart3,
   Inbox,
   Settings, // Added Settings icon
-  ArrowDownRight,
 } from "lucide-react";
 import {
   AreaChart,
