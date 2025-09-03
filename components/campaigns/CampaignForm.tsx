@@ -275,10 +275,10 @@ export function CampaignForm({
                     onRemoveStep: removeStep,
                     onUpdateStep: updateStep,
                     onInsertTag: handleInsertTag,
-                    onSetCurrentEditingStep: (index) =>
+                    onSetCurrentEditingStep: (index: number | null) =>
                       setCurrentEditingStep(index),
                     handleAddEmailStep: addEmailStep,
-                    onSelectTemplate: (index, templateId) => {
+                    onSelectTemplate: (index: number, templateId: number) => {
                       const newSteps = [...steps];
                       newSteps[index].templateId = templateId;
                       setSteps(newSteps);

@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 import { NavigationButtons } from "./NavigationButtons";
 import { Step } from "./Step";
-import { OnboardingStep } from "./types";
+import { OnboardingStep } from "@/context/onboarding-context";
 
 interface StepHeaderProps {
   step: OnboardingStep;

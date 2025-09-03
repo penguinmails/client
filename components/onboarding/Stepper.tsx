@@ -8,7 +8,7 @@ import { useOnboarding } from "@/context/onboarding-context";
 import { cn } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 import { Fragment } from "react";
-import { OnboardingStep } from "./types";
+import { OnboardingStep } from "@/context/onboarding-context";
 
 interface StepIndicatorProps {
   step: OnboardingStep;

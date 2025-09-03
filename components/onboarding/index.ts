@@ -7,4 +7,4 @@ export { Step } from "./Step";
 export { StepCard } from "./StepCard";
 export { Stepper } from "./Stepper";
 export { VideoTutorial } from "./VideoTutorial";
-export type { OnboardingStep } from "./types";
+export type { OnboardingStep } from "@/types/onboarding";

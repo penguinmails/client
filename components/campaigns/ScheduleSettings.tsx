@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "../ui/button";
 import { copyText as t } from "./copy";
-import { ScheduleSettingsProps } from "./types";
+import { ScheduleSettingsProps } from "@/types/campaigns";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 
 const daysOfWeek = [

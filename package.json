@@ -9,6 +9,7 @@
     "build:open-next": "npx opennextjs-cloudflare build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "npx tsc -p tsconfig.json --noEmit --skipLibCheck",
     "preview": "npm run build:open-next && npx opennextjs-cloudflare preview",
     "deploy": "npm run build:open-next && npx wrangler deploy",
     "upload": "npm run build:open-next && npx opennextjs-cloudflare upload",

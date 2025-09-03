@@ -25,7 +25,7 @@ import {
   Shield,
 } from "lucide-react";
 import { copyText as t } from "./copy";
-import { Domain } from "./types";
+import { Domain } from "@/types";
 import Link from "next/link";
 
 type DomainsTableProps = {

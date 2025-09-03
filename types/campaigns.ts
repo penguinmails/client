@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { MouseEvent, RefObject } from "react";
 import { Control, UseFormRegister } from "react-hook-form";
-import { campaignFormSchema, campaignStepSchema } from "./schemaValidations";
+import { campaignFormSchema, campaignStepSchema } from "@/components/campaigns/schemaValidations";
 import { CampaignEventCondition } from "@/types/campaign";
 import { Template } from "@/types";
 

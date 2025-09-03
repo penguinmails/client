@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { TemplateSelector } from "./TemplateSelector";
 import PersonalizationTags from "@/components/email/PersonalizationTags";
 import { copyText as t } from "./copy";
-import { PartialCampaignStep } from "./types";
+import { PartialCampaignStep } from "@/types/campaigns";
 import { Template } from "@/types";
 
 interface EmailStepProps {

@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { copyText as t } from "./copy";
-import { EmailSecuenceSettingsProps } from "./types";
+import { EmailSecuenceSettingsProps } from "@/types/campaigns";
 import { FileText } from "lucide-react";
 import { SequenceStep } from "./SequenceStep";
 

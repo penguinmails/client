@@ -18,7 +18,7 @@ import {
   RefreshCcw,
 } from "lucide-react";
 import { copyText as t } from "./copy";
-import { EmailAccount } from "./types";
+import { EmailAccount } from "@/types";
 import Link from "next/link";
 
 type EmailsTableProps = {
