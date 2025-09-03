@@ -280,7 +280,7 @@ function ProfileForm() {
 
       return () => clearTimeout(timer);
     }
-  }, [isOnline, wasOffline, profileError]);
+  }, [isOnline, wasOffline, profileError, retryFetchProfile]);
 
   // Show offline notification
   useEffect(() => {
