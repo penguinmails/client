@@ -159,7 +159,7 @@ function ChangePasswordForm() {
 
   const newPassword = form.watch("newPassword");
 
-  const handlePasswordChange = (data: PasswordFormValues) => {};
+  const handlePasswordChange = (_data: PasswordFormValues) => {};
 
   return (
     <Form {...form}>

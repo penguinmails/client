@@ -17,7 +17,7 @@ import { UserInfo, SignOutButton } from "@niledatabase/react";
 
 interface AuthTemplateProps {
   mode: 'form' | 'loggedIn';
-  icon?: React.ComponentType<any>;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   title: string;
   description: string | React.ReactNode;
   children?: React.ReactNode;

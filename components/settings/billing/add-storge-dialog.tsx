@@ -18,7 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { storageOptions } from "@/lib/data/usage.mock";
 import { cn } from "@/lib/utils";
-import { HardDrive, Plus } from "lucide-react";
+import { HardDrive } from "lucide-react";
 import { useState } from "react";
 
 function AddStorageTrigger({ children }: { children: React.ReactNode }) {

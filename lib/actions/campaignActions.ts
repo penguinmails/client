@@ -94,7 +94,7 @@ const mockCampaigns: CampaignData[] = [
   },
 ];
 
-export async function getCampaignsStatisticsAction(companyId: number) {
+export async function getCampaignsStatisticsAction(_companyId: number) {
   try {
     // mock data
     const totalCampaigns = mockCampaigns.length;
@@ -113,7 +113,7 @@ export async function getCampaignsStatisticsAction(companyId: number) {
       }
     };
 
-  } catch (error) {
+  } catch {
     return {
       success: false, message: "Error trying to fetch summary.",
       summary: {
@@ -126,7 +126,7 @@ export async function getCampaignsStatisticsAction(companyId: number) {
   }
 }
 
-export async function getCampaignsDataAction({ companyId, page = 1, pageSize = 10 }: { companyId: number, page: number, pageSize: number }) {
+export async function getCampaignsDataAction({ _companyId, page = 1, pageSize = 10 }: { _companyId: number, page: number, pageSize: number }) {
   const skip = (page - 1) * pageSize;
 
   const campaigns = mockCampaigns.slice(skip, skip + pageSize);
@@ -142,7 +142,7 @@ export async function getCampaignsDataAction({ companyId, page = 1, pageSize = 1
 }
 
 // Mock action for creating a campaign (Phase 4)
-export async function createCampaignAction(formData: CampaignFormValues) {
+export async function createCampaignAction(_formData: CampaignFormValues) {
   
   // Simulate network delay
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -150,7 +150,7 @@ export async function createCampaignAction(formData: CampaignFormValues) {
   return { success: true, message: "Campaign created successfully (simulation)." };
 }
 
-export async function updateCampaignAction(id: number, formData: CampaignFormValues) {
+export async function updateCampaignAction(_id: number, _formData: CampaignFormValues) {
 
   try {
     
@@ -159,12 +159,12 @@ export async function updateCampaignAction(id: number, formData: CampaignFormVal
 
     return { success: true, message: "Campaign updated successfully." };
 
-  } catch (error) {
+  } catch {
     return { success: false, message: "Error trying update a campaign." };
   }
 }
 
-export async function getCampaignAction(id: number) {
+export async function getCampaignAction(_id: number) {
   
   // Simulate network delay
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -172,7 +172,7 @@ export async function getCampaignAction(id: number) {
   return mockCampaignEditDetail;
 }
 
-export async function getCampaignSendingAccountsAction(companyId: number) {
+export async function getCampaignSendingAccountsAction(_companyId: number) {
   const mappedEmailAccount = {
     value: "example@example.com",
     label: "Example Email"

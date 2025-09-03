@@ -1,6 +1,6 @@
 import React from 'react';
-
-type CampaignStatus = 'Running' | 'Paused' | 'Draft' | 'Completed';
+import { DisplayStatus } from '@/types/common';
+import { CampaignStatus } from '@/types/campaign';
 
 interface StatusIndicatorProps {
   status: CampaignStatus;
@@ -9,23 +9,33 @@ interface StatusIndicatorProps {
 const StatusIndicator: React.FC<StatusIndicatorProps> = ({ status }) => {
   let colorClass = '';
   let textClass = '';
+  let displayText: DisplayStatus = 'Draft'; // Default value that matches the type
 
   switch (status) {
-    case 'Running':
+    case 'ACTIVE':
       colorClass = 'bg-green-100';
       textClass = 'text-green-800';
+      displayText = 'Running';
       break;
-    case 'Paused':
+    case 'PAUSED':
       colorClass = 'bg-yellow-100';
       textClass = 'text-yellow-800';
+      displayText = 'Paused';
       break;
-    case 'Draft':
+    case 'DRAFT':
       colorClass = 'bg-blue-100';
       textClass = 'text-blue-800';
+      displayText = 'Draft';
       break;
-    case 'Completed':
+    case 'COMPLETED':
       colorClass = 'bg-gray-100';
       textClass = 'text-gray-800';
+      displayText = 'Completed';
+      break;
+    case 'ARCHIVED':
+      colorClass = 'bg-gray-200';
+      textClass = 'text-gray-800';
+      displayText = 'Archived';
       break;
     default:
       colorClass = 'bg-gray-100';
@@ -36,7 +46,7 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({ status }) => {
   // The screenshot shows a simple dot, this uses a badge style which is common.
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass} ${textClass}`}>
-      {status}
+      {displayText}
     </span>
   );
 };

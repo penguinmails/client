@@ -152,15 +152,15 @@ export const isPasswordStrongEnough = (password: string): boolean => {
 
 // Debounce utility function
 export const debounce = <T extends (...args: any[]) => any>(
- func: T,
- wait: number
+  func: T,
+  wait: number
 ): ((...args: Parameters<T>) => void) => {
- let timeout: NodeJS.Timeout;
+  let timeout: NodeJS.Timeout;
 
- return (...args: Parameters<T>) => {
-   clearTimeout(timeout);
-   timeout = setTimeout(() => func(...args), wait);
- };
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
 };
 
 // Profile mapping interfaces
@@ -195,7 +195,7 @@ export const mapNileUserToFormData = (user: NileUser): ProfileFormData => ({
 });
 
 export const mapFormDataToNileUpdate = (formData: Partial<ProfileFormData>) => {
-  const result: any = {};
+  const result: Record<string, string | undefined> = {};
 
   if (formData.name !== undefined) result.name = formData.name.trim() || undefined;
   if (formData.firstName !== undefined) result.givenName = formData.firstName.trim() || undefined;

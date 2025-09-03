@@ -74,7 +74,7 @@ function NotificationsSettings() {
     }, {} as NotificationFormValues),
   });
 
-  const onSubmit = (data: NotificationFormValues) => {};
+  const onSubmit = (_data: NotificationFormValues) => {};
 
   return (
     <Form {...form}>

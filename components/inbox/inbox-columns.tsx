@@ -2,6 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Client, Email } from "@/app/dashboard/inbox/schemas/schemas";
 import { Campaign } from "@/types/campaign";
+import { User } from "@/types/auth";
 import { Button } from "@/components/ui/button";
 import { markEmailAsStarredAction } from "@/app/dashboard/inbox/actions";
 import { toast } from "sonner";
@@ -12,7 +13,7 @@ import { redirect } from "next/navigation";
 const markEmailAsStarredMutarion = async (
   id: number,
   starred: boolean,
-  user: any
+  user: User | null
 ) => {
   try {
     const response = await markEmailAsStarredAction(id, starred, user?.token);
@@ -39,7 +40,7 @@ const markEmailAsStarredMutarion = async (
 
 export const inboxColumns = (
   refetch: () => void,
-  user: any
+  user: User | null
 ): ColumnDef<Email>[] => [
   {
     accessorKey: "starred",

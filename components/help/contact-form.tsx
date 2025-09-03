@@ -111,7 +111,7 @@ function ContactForm() {
             <FormField
               control={form.control}
               name="file"
-              render={({ field: { value, onChange, ...field } }) => (
+              render={({ field: { value: _value, onChange, ...field } }) => (
                 <FormItem>
                   <FormLabel>Attachment (Optional)</FormLabel>
                   <FormControl>

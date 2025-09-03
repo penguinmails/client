@@ -5,8 +5,7 @@ import { nile } from "@/app/api/[...nile]/nile";
 import {
   NileUser,
   ProfileFormData,
-  mapFormDataToNileUpdate,
-  validateProfileUpdateData
+  mapFormDataToNileUpdate
 } from "@/lib/utils";
 
 // Profile update payload for NileDB
@@ -18,7 +17,7 @@ export interface ProfileUpdatePayload {
 }
 
 // Server action response types
-export interface ProfileActionResponse<T = any> {
+export interface ProfileActionResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: ProfileError;
@@ -147,9 +146,10 @@ export async function getUserProfile(): Promise<ProfileActionResponse<NileUser>>
       data: user as NileUser
     };
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle authentication errors
-    if (error.message?.includes("401") || error.message?.includes("unauthorized")) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage?.includes("401") || errorMessage?.includes("unauthorized")) {
       return {
         success: false,
         error: {
@@ -160,7 +160,7 @@ export async function getUserProfile(): Promise<ProfileActionResponse<NileUser>>
     }
 
     // Handle network errors
-    if (error.message?.includes("fetch") || error.message?.includes("network")) {
+    if (errorMessage?.includes("fetch") || errorMessage?.includes("network")) {
       return {
         success: false,
         error: {
@@ -266,9 +266,10 @@ export async function updateUserProfile(
       data: updatedUser as NileUser
     };
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle authentication errors
-    if (error.message?.includes("401") || error.message?.includes("unauthorized")) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage?.includes("401") || errorMessage?.includes("unauthorized")) {
       return {
         success: false,
         error: {
@@ -279,7 +280,7 @@ export async function updateUserProfile(
     }
 
     // Handle network errors
-    if (error.message?.includes("fetch") || error.message?.includes("network")) {
+    if (errorMessage?.includes("fetch") || errorMessage?.includes("network")) {
       return {
         success: false,
         error: {
@@ -290,13 +291,13 @@ export async function updateUserProfile(
     }
 
     // Handle field-specific errors if available
-    if (error.message?.includes("givenName") || error.message?.includes("familyName")) {
+    if (errorMessage?.includes("givenName") || errorMessage?.includes("familyName")) {
       return {
         success: false,
         error: {
           type: "validation",
           message: "Invalid name format detected",
-          field: error.message?.includes("givenName") ? "firstName" : "lastName"
+          field: errorMessage?.includes("givenName") ? "firstName" : "lastName"
         }
       };
     }
@@ -307,7 +308,7 @@ export async function updateUserProfile(
       success: false,
       error: {
         type: "server",
-        message: error.message || "An error occurred while updating your profile"
+        message: errorMessage || "An error occurred while updating your profile"
       }
     };
   }

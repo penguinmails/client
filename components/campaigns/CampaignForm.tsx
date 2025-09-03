@@ -5,6 +5,7 @@ import {
   SubmitHandler,
   useForm,
   UseFormReturn,
+  FieldErrors,
 } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,7 +48,6 @@ export function CampaignForm({
   >([]);
   const [timezones, setTimezones] = useState<string[]>([]);
   const [loadingAccounts, setLoadingAccounts] = useState<boolean>(true);
-  const [_loadingTimezones, setLoadingTimezones] = useState<boolean>(true);
   const [currentEditingStep, setCurrentEditingStep] = useState<number | null>(
     null
   );
@@ -81,10 +81,8 @@ export function CampaignForm({
 
   useEffect(() => {
     const fetchTimezones = async () => {
-      setLoadingTimezones(true);
       const fetchedTimezones = await getTimezonesMockAction();
       setTimezones(fetchedTimezones);
-      setLoadingTimezones(false);
     };
     fetchTimezones();
   }, []);
@@ -144,18 +142,8 @@ export function CampaignForm({
     const textarea = emailBodyRef.current;
     if (!textarea || !steps[index]?.templateId) return;
 
+    // TODO: Implement tag insertion - fetch current body from template and update
     const start = textarea.selectionStart ?? 0;
-    const end = textarea.selectionEnd ?? 0;
-    const currentBody = ""; // Assuming we fetch the body using templateId
-    const _newBody =
-      currentBody.substring(0, start) + tag + currentBody.substring(end);
-
-    const newSteps = [...steps];
-    // Assuming we update the body using templateId
-    setSteps(newSteps);
-
-    // Update form state directly
-    form.setValue(`steps.${index}.templateId`, newSteps[index].templateId);
 
     // Set cursor position after inserted tag
     setTimeout(() => {
@@ -256,7 +244,7 @@ export function CampaignForm({
                   steps={steps}
                   currentEditingStep={currentEditingStep}
                   emailBodyRef={emailBodyRef}
-                  stepErrors={form.formState.errors.steps}
+                  stepErrors={form.formState.errors.steps as FieldErrors<CampaignSteps>}
                   templates={[]}
                   actions={{
                     onMoveStepUp: moveStepUp,

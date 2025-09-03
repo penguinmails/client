@@ -11,7 +11,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-const complianceFormSchema = z.object({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const complianceFormSchema = z.object({
   autoAddUnsubscribeLink: z.boolean().default(true),
   unsubscribeText: z.string().min(1, { message: "Unsubscribe text is required." }),
   unsubscribeLandingPage: z.string().url({ message: "Please enter a valid URL." }),

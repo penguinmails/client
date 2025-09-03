@@ -68,12 +68,12 @@ function WarmUpLineChart() {
     }));
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Record<string, any>[]; label?: string }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
           <p className="font-medium text-gray-900 mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry: Record<string, any>, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               <span className="font-semibold">{entry.value}</span>
               <span className="ml-2 text-gray-600">

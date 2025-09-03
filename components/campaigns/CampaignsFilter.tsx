@@ -43,7 +43,7 @@ function CampaignsFilter() {
           type="text"
           placeholder="Search campaigns..."
           className="w-full lg:max-w-md border-none shadow-none focus-visible:border-none focus-visible:ring-0 peer"
-          onChange={(e) => {
+          onChange={(_e) => {
             /* Handle search input */
           }}
         />

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { isValidTimeRange } from "@/lib/utils";
 import { CampaignEventCondition, CampaignStatus } from "@/types/campaign";
 import { TemplateCategory } from "@/types";
-import { VerificationStatus, VerificationStatusConstants } from "@/types/domain";
+import { VerificationStatus } from "@/types/domain";
 import { EmailProvider, DnsProvider, DkimManagementType } from "@/components/domains/constants";
 import { WarmupStatus } from "@/types/mailbox";
 import { RelayType, DomainAccountCreationType } from "@/types/domain";
@@ -218,18 +218,18 @@ export interface FormFieldError {
   path?: (string | number)[];
 }
 
-export interface FormValidationResult {
+export interface FormValidationResult<T = unknown> {
   success: boolean;
-  data?: any;
+  data?: T;
   errors?: FormFieldError[];
 }
 
-export interface FieldValidationType {
+export interface FieldValidationType<T = unknown> {
   required: boolean;
   minLength?: number;
   maxLength?: number;
   pattern?: string;
-  customValidator?: (value: any) => boolean | Promise<boolean>;
+  customValidator?: (value: T) => boolean | Promise<boolean>;
 }
 
 // Contact form data structure for form submission
@@ -242,10 +242,10 @@ export interface ContactFormData {
 }
 
 // Enhanced validation utilities
-export const validateFormField = async (
-  value: any,
-  validationRules: FieldValidationType
-): Promise<FormValidationResult> => {
+export const validateFormField = async <T = Record<string, unknown>>(
+  value: T,
+  validationRules: FieldValidationType<T>
+): Promise<FormValidationResult<T>> => {
   const errors: FormFieldError[] = [];
 
   // Required check
@@ -278,7 +278,7 @@ export const validateFormField = async (
       if (!isValid) {
         errors.push({ message: 'Custom validation failed', code: 'CUSTOM_VALIDATION' });
       }
-    } catch (error) {
+    } catch {
       errors.push({ message: 'Validation error occurred', code: 'VALIDATION_ERROR' });
     }
   }

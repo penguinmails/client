@@ -41,7 +41,7 @@ export interface ChartContainerProps extends React.ComponentProps<'div'> {
 // Chart Tooltip Content Props
 export interface ChartTooltipContentProps extends React.ComponentProps<typeof import('recharts').Tooltip> {
   active?: boolean;
-  payload?: any[];
+  payload?: Record<string, unknown>[];
   className?: string;
   hideLabel?: boolean;
   hideIndicator?: boolean;

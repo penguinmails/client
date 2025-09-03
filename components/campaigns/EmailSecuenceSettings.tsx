@@ -41,14 +41,14 @@ export function EmailSecuenceSettings({ steps, templates, emailBodyRef, currentE
           </Button>
         </div>
       </div>
-      {stepErrors?.message && (
+      {(stepErrors as any)?.message && (
         <p className="text-sm font-medium text-destructive mt-2">
-          {stepErrors.message}
+          {(stepErrors as any)?.message}
         </p>
       )}
-      {stepErrors?.root?.message && (
+      {(stepErrors as any)?.root?.message && (
         <p className="text-sm font-medium text-destructive mt-2">
-          {stepErrors.root.message}
+          {(stepErrors as any)?.root.message}
         </p>
       )}
     </>

@@ -2,7 +2,7 @@
 
 import React, { MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { Mail, Clock, Trash2, ArrowUp, ArrowDown } from "lucide-react";
+import { Trash2, ArrowUp, ArrowDown } from "lucide-react";
 import { copyText as t } from "./copy";
 
 interface StepHeaderProps {

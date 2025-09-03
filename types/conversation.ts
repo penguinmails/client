@@ -1,4 +1,5 @@
 // Email Types
+import { ComponentType, SVGProps } from 'react';
 export interface Email {
   id: number;
   subject: string;
@@ -36,7 +37,7 @@ export interface InboxFilter {
   id: string;
   label: string;
   count?: number;
-  icon?: any; // Can be React component or icon string
+  icon?: ComponentType<SVGProps<SVGSVGElement>> | string;
 }
 
 export type InboxFilterType = 'all' | 'unread' | 'starred' | 'archived' | 'muted' | 'important';

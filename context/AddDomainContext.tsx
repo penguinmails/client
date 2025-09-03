@@ -68,7 +68,8 @@ export const AddDomainContext = createContext<{
   currentStepData: (typeof steps)[0];
 } | null>(null);
 
-const addDomainFormSchema = z.object({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const addDomainFormSchema = z.object({
   domain: z
     .string()
     .min(1, "Domain is required")

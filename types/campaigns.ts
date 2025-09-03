@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { MouseEvent, RefObject } from "react";
-import { Control, UseFormRegister } from "react-hook-form";
+import { Control, UseFormRegister, FieldErrors } from "react-hook-form";
 import { campaignFormSchema, campaignStepSchema } from "@/components/campaigns/schemaValidations";
 import { CampaignEventCondition } from "@/types/campaign";
 import { Template } from "@/types";
@@ -39,7 +39,7 @@ export interface EmailSecuenceSettingsProps {
   templates?: Template[];
   currentEditingStep: number | null;
   emailBodyRef: RefObject<HTMLTextAreaElement>;
-  stepErrors: any;
+  stepErrors?: FieldErrors<CampaignSteps>;
   actions: SequenceStepActionsProps & {
     handleAddEmailStep: (index: number) => void;
   };

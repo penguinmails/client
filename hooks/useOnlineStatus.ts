@@ -29,7 +29,7 @@ export function useOnlineStatus() {
           cache: 'no-cache'
         });
         if (!response.ok) throw new Error('Connection check failed');
-      } catch (error) {
+      } catch {
         // If we were online and now can't connect, mark as offline
         if (isOnline) {
           setIsOnline(false);

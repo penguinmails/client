@@ -9,6 +9,18 @@ import {
 import { getUserProfile, ProfileActionResponse } from "@/lib/actions/profileActions";
 import { NileUser, mapNileUserToFormData } from "@/lib/utils";
 
+// NileDB Session interface
+interface SessionData {
+  user?: {
+    id: string;
+    email: string;
+    name?: string;
+    givenName?: string;
+    familyName?: string;
+    picture?: string;
+  };
+}
+
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
@@ -31,10 +43,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const getUserFromSession = async () => {
           try {
             const session = await auth.getSession();
-            if ((session as any)?.user) {
-              console.log("[AuthContext] Session retrieved after login:", (session as any)?.user?.id);
+            const typedSession = session as SessionData;
+            if (typedSession?.user) {
+              console.log("[AuthContext] Session retrieved after login:", typedSession?.user?.id);
               // Set basic user data from session first (fast)
-              const basicUser = mapSessionToUser(session as any);
+              const basicUser = mapSessionToUser(typedSession);
               setUser(basicUser);
               setAuthError(null);
 
@@ -85,7 +98,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     callbackUrl: "/dashboard/settings"
   });
 
-  const mapSessionToUser = (session: any): User => {
+  const mapSessionToUser = (session: SessionData): User => {
+    if (!session.user) {
+      throw new Error('Session user data is missing');
+    }
     const userData = session.user;
     // Map NileDB fields: name, givenName, familyName, picture
     const displayName = userData.name || userData.email.split('@')[0];
@@ -152,7 +168,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const signup = async (email: string, password: string, firstName?: string, lastName?: string, companyName?: string): Promise<void> => {
+  const signup = async (email: string, password: string, _firstName?: string, _lastName?: string, _companyName?: string): Promise<void> => {
     setAuthError(null);
     try {
       await signUpHook({ email, password });
@@ -208,9 +224,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const initializeAuth = async () => {
       try {
         const session = await auth.getSession();
-        if ((session as any)?.user) {
+        const typedSession = session as SessionData;
+            if (typedSession?.user) {
           // Set basic user data from session first (fast)
-          const basicUser = mapSessionToUser(session as any);
+          const basicUser = mapSessionToUser(typedSession);
           setUser(basicUser);
           setLoading(false);
 

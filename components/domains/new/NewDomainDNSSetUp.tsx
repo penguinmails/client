@@ -89,7 +89,7 @@ const getRecordTypeIcon = (type: DNSRecord["type"]) => {
   }
 };
 function NewDomainDNSSetUp() {
-  const [_, setCopiedField] = useState<string | null>(null);
+  const [, setCopiedField] = useState<string | null>(null);
   const { dnsRecords } = useAddDomainContext();
   const copyToClipboard = async (text: string, recordType: string) => {
     try {

@@ -4,13 +4,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { allTimezones, calculateMaxEmails, cn } from "@/lib/utils";
 import { Calendar, Check, ChevronsUpDown } from "lucide-react";

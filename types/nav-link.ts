@@ -15,7 +15,7 @@ export type RouteConfig = {
   description?: string;
   requiresAuth?: boolean;
   permissions?: string[];
-  component?: () => Promise<any>;
+  component?: () => Promise<{ default: React.ComponentType<Record<string, unknown>> }>;
   breadcrumbs?: BreadcrumbItem[];
 };
 

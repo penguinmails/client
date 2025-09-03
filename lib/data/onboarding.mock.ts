@@ -1,10 +1,7 @@
 import {
     Globe,
     Mail,
-    PenTool,
     Send,
-    Settings,
-    Target,
     Users,
     Zap
 } from 'lucide-react';

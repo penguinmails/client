@@ -1,21 +1,12 @@
 import { cn } from "@/lib/utils";
 import { NavLinkItem } from "@/types/nav-link";
-import { redirect, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Icon from "../ui/Icon";
-import { SidebarMenuButton, useSidebar } from "../ui/sidebar";
+import { SidebarMenuButton } from "../ui/sidebar";
 
 function SidebarLink({ link }: { link: NavLinkItem }) {
   const isActive = usePathname() === link.to;
   const router = useRouter();
-  const {
-    toggleSidebar,
-    open,
-    setOpen,
-    isMobile,
-    openMobile,
-    setOpenMobile,
-    state,
-  } = useSidebar();
 
   function navigate() {
     router.push(link.to);

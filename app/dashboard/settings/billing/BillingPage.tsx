@@ -1,13 +1,12 @@
 
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 
 export default function BillingSettingsPage() {
   // Placeholder data - would fetch from API based on Company model
   const planType = 'FREE'; // Example: 'FREE', 'STARTER', 'PRO'
-  const stripeCustomerId = 'cus_placeholder123'; // Example
+  // const stripeCustomerId = 'cus_placeholder123'; // Example - commented out as unused
 
   // Placeholder URL for Stripe Customer Portal or Checkout
   const stripePortalUrl = `https://billing.stripe.com/p/login/test_...`; // Replace with actual logic

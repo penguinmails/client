@@ -160,7 +160,7 @@ export async function fetchEmailByIdAction(id: string, _idToken = "") {
 
 export async function markEmailAsReadAction(
   id: number | string | undefined,
-  idToken = ""
+  _idToken = ""
 ) {
   try {
     const email = {
@@ -223,7 +223,7 @@ export async function markEmailAsStarredAction(
  */
 export async function softDeleteEmailAction(
   emailId: number | string | undefined,
-  idToken = ""
+  _idToken = ""
 ) {
   try {
     const email = {
@@ -256,7 +256,7 @@ export async function softDeleteEmailAction(
  */
 export async function hideEmailAction(
   emailId: number | string | undefined,
-  idToken = ""
+  _idToken = ""
 ) {
   try {
     const email = {

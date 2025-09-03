@@ -8,7 +8,7 @@ function NotificationListItem({
   notification: Notification;
 }) {
   const { icon: Icon, color } = notificationStyles(notification.type);
-  const markAsRead = (id: string | number) => {
+  const markAsRead = (_id: string | number) => {
     // Logic to mark notification as read
   };
   return (

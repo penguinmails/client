@@ -16,6 +16,7 @@
 *.pem
 .kiro
 .eslintcache
+tasks
 
 # debug
 npm-debug.log*

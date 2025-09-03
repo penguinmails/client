@@ -21,10 +21,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  getTemplateUsage,
-  type TemplateUsage,
-} from "@/components/templates/mocks";
+import { getTemplateUsage } from "@/components/templates/mocks";
+import { type TemplateUsageLevel } from "@/types/templates";
 import { copyText as t } from "@/components/templates/copy";
 import { Template, TemplateCategoryType } from "@/types";
 
@@ -149,7 +147,7 @@ function TemplateCard({
     variant === "user" ? "hover:text-blue-600" : "hover:text-emerald-600";
 
   const usage = variant === "builtin" ? getTemplateUsage(template.id) : null;
-  const usageColors: Record<TemplateUsage, string> = {
+  const usageColors: Record<TemplateUsageLevel, string> = {
     high: "bg-amber-100 text-amber-700",
     medium: "bg-blue-100 text-blue-700",
     low: "bg-gray-100 text-gray-700",

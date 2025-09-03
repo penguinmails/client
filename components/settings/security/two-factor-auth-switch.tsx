@@ -113,7 +113,7 @@ function DialogTwoAuth() {
       } else {
         setError("Invalid verification code. Please try again.");
       }
-    } catch (err) {
+    } catch {
       setError("Verification failed. Please try again.");
     } finally {
       setIsVerifying(false);

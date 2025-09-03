@@ -22,9 +22,10 @@ import {
 } from "@/components/ui/table";
 import { DataTableToolbar } from "./datatable-toolbar";
 import EmailTableSkeleton from "../EmailTableSkeleton";
+import { Email } from "@/app/dashboard/inbox/schemas/schemas";
 
 interface DataTableProps<TData> {
-  columns: ColumnDef<TData, any>[];
+  columns: ColumnDef<TData, unknown>[];
   data?: TData[];
   disabled?: boolean;
   onDelete?: (rows: Row<TData>[]) => void;
@@ -111,7 +112,7 @@ export function InboxDataTable<TData>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 className={
-                  (row.original as any).read
+                  (row.original as Email).read
                     ? "bg-white text-gray-500"
                     : "bg-blue-50 text-black font-semibold"
                 }

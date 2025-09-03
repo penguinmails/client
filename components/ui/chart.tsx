@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const
 
+
 export type ChartConfig = {
   [k in string]: {
     label?: React.ReactNode
@@ -126,7 +127,7 @@ function ChartTooltipContent({
     nameKey?: string
     labelKey?: string
     active?: boolean
-    payload?: any[]
+    payload?: Record<string, any>[]
     label?: string
   }) {
   const { config } = useChart()
@@ -182,7 +183,7 @@ function ChartTooltipContent({
     >
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
-        {payload.map((item: any, index) => {
+        {payload.map((item: Record<string, any>, index) => {
           const key = `${nameKey || item.name || item.dataKey || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
           const indicatorColor = color || item.payload.fill || item.color
@@ -260,7 +261,7 @@ function ChartLegendContent({
   verticalAlign = "bottom",
   nameKey,
 }: React.ComponentProps<"div"> & {
-  payload?: any[]
+  payload?: Record<string, any>[]
   verticalAlign?: "bottom" | "top" | "middle"
   hideIcon?: boolean
   nameKey?: string
@@ -279,7 +280,7 @@ function ChartLegendContent({
         className
       )}
     >
-      {payload.map((item: any) => {
+      {payload.map((item: Record<string, any>) => {
         const key = `${nameKey || item.dataKey || "value"}`
         const itemConfig = getPayloadConfigFromPayload(config, item, key)
 

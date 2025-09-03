@@ -1,4 +1,4 @@
-import { Template, TemplateCategory, TemplateCategoryType } from "@/types";
+import { Template, TemplateCategoryType, TemplateUsageLevel } from "@/types";
 
 
 export const userTemplates: Template[] = [
@@ -205,11 +205,10 @@ export const categories: TemplateCategoryType[] = [
   "HEALTHCARE"
 ];
 
-export type TemplateUsage = 'low' | 'medium' | 'high';
 
-export function getTemplateUsage(templateId: number): TemplateUsage {
+export function getTemplateUsage(templateId: number): TemplateUsageLevel {
   // Simple algorithm based on template ID for mock data
-  const usageMap: Record<number, TemplateUsage> = {
+  const usageMap: Record<number, TemplateUsageLevel> = {
     7: 'high',    // SaaS Demo Request
     8: 'medium',  // Agency Introduction
     9: 'high',    // Consultant Value Prop

@@ -14,7 +14,7 @@ export type Notification = {
   description?: string;
   dismissed?: boolean;
   actions?: NotificationAction[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   userId?: string;
   createdAt?: Date;
   expiresAt?: Date;

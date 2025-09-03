@@ -15,7 +15,7 @@ export default async function InboxPage({
         <InboxFilter />
       </div>
       <div className="col-span-2">
-        <ConversationsList searchParams={params} />
+        <ConversationsList _searchParams={params} />
       </div>
     </div>
   );

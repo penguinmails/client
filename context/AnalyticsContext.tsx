@@ -5,7 +5,7 @@ import {
   metrics,
 } from "@/lib/data/analytics.mock";
 import { createContext, useContext, useState, useMemo, useEffect } from "react";
-import { AnalyticsContextState, DataGranularity, TimeSeriesDataPoint, DateRangePreset } from "@/types";
+import { AnalyticsContextState, DataGranularity, DateRangePreset } from "@/types";
 
 // Helper function to get allowed granularities based on date range
 const getAllowedGranularities = (

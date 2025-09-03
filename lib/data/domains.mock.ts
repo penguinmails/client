@@ -1,6 +1,3 @@
-import DomainsTab from "@/components/domains/domains-tab";
-import MailboxesTab from "@/components/domains/mailboxes/mailboxes-tab";
-import WarmupTab from "@/components/domains/warmup-tab";
 import { Globe, Mail, Zap } from "lucide-react";
 
 export const domains = [

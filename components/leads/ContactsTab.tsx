@@ -60,8 +60,8 @@ function ContactsTab() {
     setSortDirection(newSortDirection);
 
     const sortedContacts = [...filteredContacts].sort((a, b) => {
-      let aValue: any;
-      let bValue: any;
+      let aValue: string | number;
+      let bValue: string | number;
 
       if (field === "name") {
         aValue = a.name.toLowerCase();

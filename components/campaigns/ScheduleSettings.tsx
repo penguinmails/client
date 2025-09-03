@@ -25,8 +25,8 @@ const daysOfWeek = [
   { id: 5, label: t.schedule.days.sat },
   { id: 6, label: t.schedule.days.sun },
 ];
-
-export function ScheduleSettings({ control, timezones, selectedTimezone, selectedSendDays, register, handleDayChange }: ScheduleSettingsProps) {
+export function ScheduleSettings(props: ScheduleSettingsProps) {
+  const { control, timezones, selectedSendDays, handleDayChange } = props;
 
   return (
     <Card>

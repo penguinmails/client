@@ -83,8 +83,7 @@ export const CampaignEventCondition = {
 
 // Zod schemas and inferred types
 import { z } from "zod";
-import { MouseEvent, RefObject } from "react";
-import { Control, UseFormRegister, UseFormReturn } from "react-hook-form";
+import { RefObject } from "react";
 import type { Template } from "./templates"; // Assuming templates are in types
 
 export const campaignStepSchema = z.object({
@@ -182,17 +181,6 @@ interface SequenceStepActionsProps {
   onSelectTemplate: (index: number, templateId: number) => void;
 }
 
-interface EmailSequencingSettingsProps {
-  steps: CampaignSteps;
-  templates?: Template[];
-  currentEditingStep: number | null;
-  emailBodyRef: RefObject<HTMLTextAreaElement>;
-  stepErrors: any;
-  actions: SequenceStepActionsProps & {
-    handleAddEmailStep: (index: number) => void;
-  };
-}
-
 interface SequenceStepProps {
   step: {
     id?: number;
@@ -215,16 +203,6 @@ interface SequenceStepProps {
   actions: SequenceStepActionsProps;
 }
 
-// ScheduleSettings types
-interface ScheduleSettingsProps {
-  selectedTimezone: string;
-  timezones: string[];
-  selectedSendDays: number[];
-  control: Control<CampaignFormValues>;
-  register: UseFormRegister<CampaignFormValues>;
-  handleDayChange: (dayId: number, evt: MouseEvent<HTMLButtonElement>) => void;
-}
-
 // Action enum
 export enum CampaignActionsEnum {
   VIEW = "view",
@@ -241,24 +219,6 @@ interface LeadsList {
   name: string;
   description: string;
   contacts: number;
-}
-
-interface CampaignLead {
-  id: number;
-  name: string;
-  email: string;
-  company: string;
-  status: "replied" | "opened" | "sent";
-  currentStep: number;
-  lastActivity: string;
-}
-
-interface ActivityLog {
-  id: number;
-  type: "sent" | "reply" | "opened";
-  message: string;
-  timestamp: string;
-  details: string;
 }
 
 export interface CampaignDisplay {

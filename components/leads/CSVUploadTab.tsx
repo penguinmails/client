@@ -30,6 +30,9 @@ import { AlertCircle, Download, Loader2, Upload, X } from "lucide-react";
 import Papa from "papaparse";
 import { useRef, useState } from "react";
 
+// CSV data type for parsed records
+type CSVRecord = Record<string, string>;
+
 const downloadSampleCSV = () => {
   const csvContent = SAMPLE_CSV_DATA.map((row) =>
     row.map((cell) => `"${cell}"`).join(",")
@@ -116,7 +119,7 @@ function FilePreview({
   onImport,
 }: {
   file: File;
-  data: any[];
+  data: CSVRecord[];
   onClearFile: () => void;
   onImport: (params: {
     listName: string;
@@ -218,7 +221,7 @@ function FilePreview({
             <TableBody>
               {data.slice(0, 3).map((row, index) => (
                 <TableRow key={index}>
-                  {Object.values(row).map((value: any, i) => (
+                  {Object.values(row).map((value: string, i) => (
                     <TableCell key={i}>{value}</TableCell>
                   ))}
                 </TableRow>
@@ -269,11 +272,11 @@ function FilePreview({
 export default function CSVUploadTab() {
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [csvData, setCsvData] = useState<any[]>([]);
+  const [csvData, setCsvData] = useState<CSVRecord[]>([]);
   const [error, setError] = useState("");
 
   const parseCSV = (text: string) => {
-    return new Promise<any[]>((resolve, reject) => {
+    return new Promise<CSVRecord[]>((resolve, reject) => {
       interface CSVError {
         type: string;
         code: string;

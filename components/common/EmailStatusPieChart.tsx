@@ -29,8 +29,7 @@ const renderCustomizedLabel = ({
   midAngle = 0,
   innerRadius,
   outerRadius,
-  percent = 0,
-  index = 0
+  percent = 0
 }: {
   cx: number;
   cy: number;
@@ -38,7 +37,6 @@ const renderCustomizedLabel = ({
   innerRadius: number;
   outerRadius: number;
   percent?: number;
-  index?: number;
 }) => {
   if (midAngle === undefined || innerRadius === undefined || outerRadius === undefined || percent === undefined) {
     return null;

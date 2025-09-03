@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { Input } from "@/components/ui/input";
+
 import { FileText, Edit2, Trash2 } from "lucide-react";
 import { Template } from "@/types";
 
@@ -16,34 +16,7 @@ interface FileProps {
   onDelete?: (fileId: number) => void;
 }
 
-function File({ file, onRename, onDelete }: FileProps) {
-  const [isRenaming, setIsRenaming] = useState(false);
-  const [newName, setNewName] = useState(file.name);
-
-  const handleRename = () => {
-    if (newName.trim() && newName !== file.name && onRename) {
-      onRename(file.id, newName.trim());
-    }
-    setIsRenaming(false);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleRename();
-    } else if (e.key === "Escape") {
-      setNewName(file.name);
-      setIsRenaming(false);
-    }
-  };
-
-  const handleDelete = () => {
-    if (
-      onDelete &&
-      confirm(`Are you sure you want to delete the template "${file.name}"?`)
-    ) {
-      onDelete(file.id);
-    }
-  };
+function File({ file, onRename: _, onDelete: __ }: FileProps) {
 
   return (
     <ContextMenu>

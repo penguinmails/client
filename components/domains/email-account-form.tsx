@@ -1,5 +1,5 @@
 "use client"
-import { VerificationStatus, VerificationStatusConstants, RelayType, RelayTypeConstants, DomainAccountCreationType, DomainAccountCreationTypeConstants, EmailAccount, EmailAccountStatus } from "@/types/domain-fixed"
+import { VerificationStatus, RelayType, DomainAccountCreationType, EmailAccount } from "@/types/domain-fixed"
 // import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, UseFormReturn } from "react-hook-form"
 import * as z from "zod"

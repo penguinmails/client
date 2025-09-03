@@ -49,6 +49,8 @@ export const TemplateCategory = {
   HEALTHCARE: "HEALTHCARE"
 } as const;
 
+export type TemplateUsageLevel = 'low' | 'medium' | 'high';
+
 // Personalization tag types
 export interface PersonalizationTag {
   id: number;

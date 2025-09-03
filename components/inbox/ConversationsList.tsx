@@ -7,8 +7,6 @@ import {
   Eye,
   MoreHorizontal,
   Pin,
-  RefreshCw,
-  Settings,
   Star,
 } from "lucide-react";
 import Link from "next/link";
@@ -32,9 +30,9 @@ const getTagColor = (tag: string) => {
 };
 
 function ConversationsList({
-  searchParams,
+  _searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>;
+  _searchParams?: Record<string, string | string[] | undefined>;
 }) {
   const filteredConversations = conversations;
 

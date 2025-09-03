@@ -30,7 +30,7 @@ import {
   YAxis,
 } from "recharts";
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, _label }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const date = new Date(data.date);

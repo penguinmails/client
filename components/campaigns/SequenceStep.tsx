@@ -3,9 +3,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmailStep } from "@/components/campaigns/EmailStep";
-import { DelayStep } from "@/components/campaigns/DelayStep";
 import { StepHeader } from "@/components/campaigns/StepHeader";
-import { StepFooter } from "@/components/campaigns/StepFooter";
 import { DelaySettings } from "./DelaySettings";
 import { SequenceStepProps } from "@/types/campaigns";
 

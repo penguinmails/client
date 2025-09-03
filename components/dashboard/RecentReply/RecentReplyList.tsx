@@ -6,7 +6,7 @@ const RecentRepliesList = async () => {
   }
   return (
       <>
-        {recentReplies.map((reply, index) => (
+        {recentReplies.map((reply, _index) => (
             <div key={reply.email} className="p-6 hover:bg-gray-50 transition-colors">
               <div className="flex items-start space-x-4">
                 <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
