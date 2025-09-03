@@ -10,11 +10,11 @@ function StatsCardSkeleton({ className }: { className?: string }) {
         className={cn("flex items-center justify-between p-4", className)}
       >
         <div>
-          <Skeleton className="h-4 bg-gray-200 rounded animate-pulse w-20 mb-2"></Skeleton>
-          <Skeleton className="h-8 bg-gray-200 rounded animate-pulse w-16"></Skeleton>
+          <Skeleton className="h-4 bg-gray-200 rounded animate-pulse w-20 mb-2" />
+          <Skeleton className="h-8 bg-gray-200 rounded animate-pulse w-16" />
         </div>
         <div className="p-3 rounded-lg bg-gray-200 animate-pulse">
-          <Skeleton className="w-6 h-6 bg-gray-300 rounded"></Skeleton>
+          <Skeleton className="w-6 h-6 bg-gray-300 rounded" />
         </div>
       </CardContent>
     </Card>

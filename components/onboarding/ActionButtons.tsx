@@ -38,7 +38,7 @@ export function ActionButtons({ step }: ActionButtonsProps) {
         </Link>
       </Button>
 
-      <Button variant={"outline"} onClick={handleKnowledgeBase}>
+      <Button variant="outline" onClick={handleKnowledgeBase}>
         <BookOpen className="mr-2 h-5 w-5" />
         <span>{step.kbLink}</span>
         <ExternalLink className="ml-2 h-4 w-4" />

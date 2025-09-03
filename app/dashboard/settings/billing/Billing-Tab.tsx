@@ -146,7 +146,7 @@ function BillingTab() {
       <Card>
         <CardHeader className="flex-center-between">
           <CardTitle>Billing Address</CardTitle>
-          <EditAddressTrigger title={"Edit Addresss"} />
+          <EditAddressTrigger title="Edit Addresss" />
         </CardHeader>
         <CardContent>
           <div className="bg-gray-50 rounded-lg p-4">

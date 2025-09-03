@@ -125,7 +125,7 @@ function MailboxAssignmentStep() {
                           ? "bg-yellow-500"
                           : "bg-orange-500"
                       }`}
-                    ></div>
+                     />
                   </div>
                 </div>
               </Label>

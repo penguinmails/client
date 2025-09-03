@@ -14,7 +14,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ current, total }) => {
         <div 
           className="bg-blue-600 h-1.5 rounded-full transition-all duration-300 ease-in-out"
           style={{ width: `${percentage}%` }}
-        ></div>
+         />
       </div>
       <span className="text-xs text-gray-500 tabular-nums">{current.toLocaleString()}/{total.toLocaleString()}</span>
     </div>

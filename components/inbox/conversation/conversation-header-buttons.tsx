@@ -60,7 +60,7 @@ function ConversationHeaderButtons() {
         <Archive className="w-5 h-5" />
       </Button>
       <Button variant="ghost" size="icon" title="Back to inbox" asChild>
-        <Link href={"/dashboard/inbox"}>
+        <Link href="/dashboard/inbox">
           <X className="w-5 h-5" />
         </Link>
       </Button>

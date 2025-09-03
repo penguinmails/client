@@ -33,7 +33,7 @@ function DatePicker({
         </PopoverTrigger>
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">
           <Calendar
-            captionLayout={"dropdown"}
+            captionLayout="dropdown"
             navLayout="around"
             {...calendarProps}
           />

@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 function page() {
   return (
     <div className="space-y-10">
-      <div className={"grid grid-cols-responsive gap-4"}>
+      <div className="grid grid-cols-responsive gap-4">
         <AnalyticsStatistics
           totalSent={1000}
           openRate={75}

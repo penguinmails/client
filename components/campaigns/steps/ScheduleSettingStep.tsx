@@ -94,7 +94,7 @@ function ScheduleSettingStep() {
         <p className="text-gray-600">
           Configure when and how your emails will be sent
         </p>
-        <Alert variant={"default"} className="bg-blue-100 ">
+        <Alert variant="default" className="bg-blue-100 ">
           <AlertDescription className="text-blue-800 text-sm font-medium">
             📝 Changes will apply to next scheduled emails
           </AlertDescription>

@@ -35,7 +35,7 @@ function MailboxesFilter() {
           ]}
         />
 
-        <Button variant={"ghost"} size={"icon"}>
+        <Button variant="ghost" size="icon">
           ↑
         </Button>
       </div>

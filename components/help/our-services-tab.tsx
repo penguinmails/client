@@ -39,7 +39,7 @@ function OurServicesTab() {
                 <p className="text-muted-foreground  leading-relaxed">
                   {service.description}
                 </p>
-                <Button variant={"secondary"}>
+                <Button variant="secondary">
                   <span>{service.cta}</span>
                   <ArrowRight className="w-4 h-4 " />
                 </Button>
@@ -55,7 +55,7 @@ function OurServicesTab() {
           specific business needs. Let's discuss how we can help you achieve
           your outreach goals.
         </p>
-        <Button variant={"secondary"} size={"lg"}>
+        <Button variant="secondary" size="lg">
           Schedule a Consultation
         </Button>
       </div>

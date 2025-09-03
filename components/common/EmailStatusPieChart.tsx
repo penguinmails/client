@@ -108,7 +108,7 @@ const EmailStatusPieChart: React.FC<EmailStatusPieChartProps> = ({ data }) => {
        <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1">
         {data.map((entry, index) => (
           <div key={`legend-${index}`} className="flex items-center text-xs">
-            <span className="w-3 h-3 rounded-full mr-1.5" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+            <span className="w-3 h-3 rounded-full mr-1.5" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
             <span>{entry.name} {entry.value}%</span>
           </div>
         ))}

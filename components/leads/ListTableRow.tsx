@@ -128,7 +128,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
         <div>
           <Button
             variant="ghost"
-            size={"icon"}
+            size="icon"
             className=" hover:text-blue-600 hover:bg-blue-50"
             title="View Contacts"
           >
@@ -136,7 +136,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
           </Button>
           <Button
             variant="ghost"
-            size={"icon"}
+            size="icon"
             className=" hover:text-gray-600 hover:bg-gray-100"
             title="Edit List"
           >
@@ -144,7 +144,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
           </Button>
           <Button
             variant="ghost"
-            size={"icon"}
+            size="icon"
             className=" hover:text-green-600 hover:bg-green-50"
             title="Download CSV"
           >
@@ -152,7 +152,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
           </Button>
           <Button
             variant="ghost"
-            size={"icon"}
+            size="icon"
             className=" hover:text-red-600 hover:bg-red-50"
             title="Delete List"
           >

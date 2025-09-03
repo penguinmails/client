@@ -64,7 +64,7 @@ function ConversationsList({
                         </span>
                       </div>
                       {conversation.status === "unread" && (
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 rounded-full border-2 border-white"></div>
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 rounded-full border-2 border-white" />
                       )}
                     </div>
 

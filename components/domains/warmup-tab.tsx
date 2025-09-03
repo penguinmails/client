@@ -80,7 +80,7 @@ function WarmupMailboxesTable() {
           <Button variant="ghost" size="icon">
             <Settings className="w-4 h-4" />
           </Button>
-          <Link href={"/dashboard/analytics/mailboxes"}>
+          <Link href="/dashboard/analytics/mailboxes">
             <Button variant="ghost" size="icon">
               <BarChart3 className="w-4 h-4" />
             </Button>

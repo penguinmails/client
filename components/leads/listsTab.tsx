@@ -79,7 +79,7 @@ function ListsTab() {
                   })}
                 >
                   <Button
-                    variant={"ghost"}
+                    variant="ghost"
                     className="flex items-center gap-2 h-auto p-0 hover:bg-transparent"
                     onClick={
                       column.canSort ? () => handleSortBy(column.id) : undefined

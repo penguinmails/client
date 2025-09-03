@@ -39,14 +39,14 @@ function NavigationButtons() {
         <Button
           onClick={prevStep}
           disabled={currentStep === 1}
-          variant={"outline"}
+          variant="outline"
         >
           <ArrowLeft className="w-5 h-5" />
           <span className="font-medium">Previous</span>
         </Button>
 
         <div className="flex items-center space-x-4">
-          <Button variant={"outline"}>Save as Draft</Button>
+          <Button variant="outline">Save as Draft</Button>
           {currentStep < steps.length ? (
             <Button onClick={nextStep} disabled={disabled}>
               <span>Continue</span>

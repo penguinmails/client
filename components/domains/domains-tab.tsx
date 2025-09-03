@@ -45,7 +45,7 @@ function DomainsTab() {
       <div className="flex justify-end">
         <Button asChild>
           <Link
-            href={"/dashboard/domains/new"}
+            href="/dashboard/domains/new"
             className="flex items-center gap-2"
           >
             <Plus className="w-4 h-4 " />

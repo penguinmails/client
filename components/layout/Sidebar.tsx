@@ -78,7 +78,7 @@ function AppSideBar() {
             <SidebarMenuItem>
               <SidebarMenuButton
                 className="flex items-center gap-2"
-                size={"lg"}
+                size="lg"
               >
                 <Logo />
               </SidebarMenuButton>

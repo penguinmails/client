@@ -21,7 +21,7 @@ function page() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="icon" asChild>
-                <Link href={"/dashboard/domains"}>
+                <Link href="/dashboard/domains">
                   <ArrowLeft className="w-6 h-6" />
                 </Link>
               </Button>

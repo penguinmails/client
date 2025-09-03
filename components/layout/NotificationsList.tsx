@@ -19,7 +19,7 @@ function NotificationsList({
         <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
         <div className="flex items-center space-x-2">
           {unreadCount > 0 && (
-            <Button onClick={markAllAsRead} variant={"link"}>
+            <Button onClick={markAllAsRead} variant="link">
               Mark all as read
             </Button>
           )}

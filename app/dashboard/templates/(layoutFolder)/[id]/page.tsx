@@ -29,10 +29,10 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
         <CardHeader>
           <div className="flex justify-between">
             <div className="flex  gap-2 items-start">
-              <Link href={"/dashboard/templates"}>
+              <Link href="/dashboard/templates">
                 <Button
-                  variant={"link"}
-                  size={"icon"}
+                  variant="link"
+                  size="icon"
                   asChild
                   className="text-gray-400"
                 >
@@ -45,7 +45,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
               </div>
               {isStarred && (
                 <div>
-                  <Button variant={"link"} size={"icon"} asChild>
+                  <Button variant="link" size="icon" asChild>
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
                   </Button>
                 </div>

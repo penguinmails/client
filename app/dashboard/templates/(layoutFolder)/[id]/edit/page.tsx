@@ -30,10 +30,10 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
         <CardHeader>
           <div className="flex justify-between">
             <div className="flex  gap-2 items-start">
-              <Link href={"/dashboard/templates"}>
+              <Link href="/dashboard/templates">
                 <Button
-                  variant={"link"}
-                  size={"icon"}
+                  variant="link"
+                  size="icon"
                   asChild
                   className="text-gray-400"
                 >
@@ -46,7 +46,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant={"outline"}>Cancel</Button>
+              <Button variant="outline">Cancel</Button>
               <Button>Save Changes</Button>
             </div>
           </div>

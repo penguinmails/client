@@ -14,7 +14,7 @@ function CreateNewFolderButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"secondary"}>
+        <Button variant="secondary">
           <FolderPlus className="w-5 h-5" />
         </Button>
       </DialogTrigger>

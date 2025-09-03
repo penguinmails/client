@@ -22,7 +22,7 @@ function MailboxesTab() {
         <div className="flex justify-end">
           <Button asChild>
             <Link
-              href={"/dashboard/domains/mailboxes/new"}
+              href="/dashboard/domains/mailboxes/new"
               className="flex items-center gap-2"
             >
               <Plus className="w-4 h-4 " />

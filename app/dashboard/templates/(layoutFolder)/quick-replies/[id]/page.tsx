@@ -26,7 +26,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
       <Card className="h-full">
         <CardHeader className="flex justify-between items-center">
           <div className="flex gap-5 ">
-            <Link href={"/dashboard/templates/quick-replies"}>
+            <Link href="/dashboard/templates/quick-replies">
               <Button variant="ghost" size="icon">
                 <ArrowLeft />
               </Button>

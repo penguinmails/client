@@ -50,7 +50,7 @@ function SidebarLink({ link }: { link: NavLinkItem }) {
       <span>{link.label}</span>
       {link.highlight && (
         <div className="ml-auto">
-          <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
         </div>
       )}
     </SidebarMenuButton>

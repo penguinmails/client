@@ -102,7 +102,7 @@ function GlossaryTab() {
                     {term.meaning}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={"outline"}>{term.tag}</Badge>
+                    <Badge variant="outline">{term.tag}</Badge>
                   </TableCell>
                 </TableRow>
               ))}

@@ -19,7 +19,7 @@ function NotesPanel() {
         <h3 className="font-medium text-yellow-900">Internal Notes</h3>
         <Button
           variant="ghost"
-          size={"icon"}
+          size="icon"
           onClick={handleClose}
           className="text-yellow-600 hover:text-yellow-800"
         >

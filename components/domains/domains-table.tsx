@@ -46,7 +46,7 @@ export function DomainsTable({ domains }: DomainsTableProps) {
               <TableHead>{t.tables.domains.headers.reputation}</TableHead>
               <TableHead>{t.tables.domains.headers.accounts}</TableHead>
               <TableHead>{t.tables.domains.headers.authentication}</TableHead>
-              <TableHead className="w-[50px]"></TableHead>
+              <TableHead className="w-[50px]" />
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -105,7 +105,7 @@ function ConfirmDialog() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={"outline"} className="w-full">
+        <Button variant="outline" className="w-full">
           Change Plan
         </Button>
       </AlertDialogTrigger>

@@ -162,7 +162,7 @@ function DialogTwoAuth() {
           </div>
         </div>
         <DialogFooter>
-          <Button variant={"ghost"} onClick={handleCancel}>
+          <Button variant="ghost" onClick={handleCancel}>
             Cancel
           </Button>
           <Button

@@ -33,7 +33,7 @@ function NotificationListItem({
               {notification.title}
             </h4>
             {!notification.isRead && (
-              <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+              <div className="w-2 h-2 bg-blue-600 rounded-full" />
             )}
           </div>
           <p className="text-sm text-gray-600 mt-1 line-clamp-2">

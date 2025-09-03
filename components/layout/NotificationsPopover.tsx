@@ -56,7 +56,7 @@ function NotificationsPopover() {
         <Button variant="ghost" className=" group relative">
           <Bell className="w-5 h-5 font-bold   group-hover:scale-110 transition-transform" />
           {unreadCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white" />
           )}
         </Button>
       </PopoverTrigger>

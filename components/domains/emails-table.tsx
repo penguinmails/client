@@ -47,7 +47,7 @@ export function EmailsTable({ emailAccounts, domainId }: EmailsTableProps) {
                 <TableHead>
                   {t.tables.emailAccounts.headers.authentication}
                 </TableHead>
-                <TableHead className="w-[50px]"></TableHead>
+                <TableHead className="w-[50px]" />
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -14,7 +14,7 @@ function BackArrow({ url }: { url?: string }) {
   }
   return (
     <Button
-      variant={"ghost"}
+      variant="ghost"
       size="icon"
       className="cursor-pointer "
       onClick={handleBack}
