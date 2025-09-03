@@ -20,6 +20,16 @@ export const metadata: Metadata = {
   title: "Penguin Mails - Email Outreach & Domain Warm-up",
   description:
     "Enter the world of Penguin Mails, where every message is a delightful surprise!",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/img/pengo_32X32.png",
+    other: [
+      { rel: "icon", url: "/img/pengo_16X16.png", sizes: "16x16" },
+      { rel: "icon", url: "/img/pengo_32X32.png", sizes: "32x32" },
+      { rel: "icon", url: "/img/pengo_48X48.png", sizes: "48x48" },
+    ],
+  },
 };
 
 export default function RootLayout({

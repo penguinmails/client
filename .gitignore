@@ -15,6 +15,7 @@
 .DS_Store
 *.pem
 .kiro
+.eslintcache
 
 # debug
 npm-debug.log*
