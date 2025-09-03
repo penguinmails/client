@@ -1,9 +1,6 @@
 "use client";
-import {
-  DropDownFilter,
-  Filter,
-  SearchInput,
-} from "@/components/ui/Filter";
+import { Filter } from "@/components/ui/custom/Filter";
+import { DropDownFilter, SearchInput } from "@/components/ui/custom/Filter";
 import { Button } from "@/components/ui/button";
 import {
   Table,

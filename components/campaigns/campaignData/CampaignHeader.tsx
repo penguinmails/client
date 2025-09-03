@@ -2,7 +2,7 @@ import { CampaignDisplay as Campaign } from "@/lib/data/campaigns";
 import CampaignsActions, { CampaignActionsEnum } from "../tables/CampaignsActions";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import BackArrow from "@/components/ui/BackArrow";
+import BackArrow from "@/components/ui/custom/BackArrow";
 
 function CampaignHeader({
   children,

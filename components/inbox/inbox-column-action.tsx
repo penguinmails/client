@@ -16,7 +16,7 @@ import {
   SquareArrowDown,
   Trash2Icon,
 } from "lucide-react";
-import { showCustomToast } from "@/components/ui/custom-toast";
+import { showCustomToast } from "@/components/ui/custom/custom-toast";
 import {
   hideEmailAction,
   markEmailAsReadAction,

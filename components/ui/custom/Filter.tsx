@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { Input } from "./input";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 function Filter({

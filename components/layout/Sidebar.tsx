@@ -1,5 +1,5 @@
 "use client";
-import { Logo } from "@/components/ui/Logo";
+import { Logo } from "@/components/ui/custom/Logo";
 import {
   Sidebar,
   SidebarContent,

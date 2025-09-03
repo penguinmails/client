@@ -1,8 +1,4 @@
-import {
-  DropDownFilter,
-  Filter,
-  SearchInput,
-} from "@/components/ui/Filter";
+import { Filter, DropDownFilter, SearchInput } from "@/components/ui/custom/Filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tooltip";
 import { copyText as t } from "./copy";
 import PersonalizationTags from "@/components/email/PersonalizationTags";
-import LexicalEditor, { LexicalEditorRef } from "@/components/ui/LexicalEditor";
+import LexicalEditor, { LexicalEditorRef } from "@/components/ui/custom/LexicalEditor";
 import { templateFormSchema, TemplateFormValues } from "@/types/forms";
 import { TemplateCategory } from "@/types";
 

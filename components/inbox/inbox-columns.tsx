@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { markEmailAsStarredAction } from "@/app/dashboard/inbox/actions";
 import { toast } from "sonner";
 import { InboxColumnAction } from "./inbox-column-action";
-import { showCustomToast } from "@/components/ui/custom-toast";
+import { showCustomToast } from "@/components/ui/custom/custom-toast";
 import { redirect } from "next/navigation";
 
 const markEmailAsStarredMutarion = async (

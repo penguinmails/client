@@ -27,13 +27,13 @@ import {
 } from "lexical";
 import { createCommand } from "lexical";
 import type { LexicalEditor as LexicalEditorType } from "lexical";
-import Toolbar from "../toolbar/toolbar";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListNode, ListItemNode } from "@lexical/list";
 import { LinkNode, AutoLinkNode } from "@lexical/link";
-import lexicalEditorTheme from "../theme/lexicalEditorTheme";
-import LinkClickHandler from "../toolbar/LinkClickHandler";
+import Toolbar from "@/components/toolbar/toolbar";
+import lexicalEditorTheme from "@/components/theme/lexicalEditorTheme";
+import LinkClickHandler from "@/components/toolbar/LinkClickHandler";
 
 export const INSERT_IMAGE_COMMAND = createCommand("INSERT_IMAGE_COMMAND");
 export const INDENT_CONTENT_COMMAND = createCommand("INDENT_CONTENT_COMMAND");

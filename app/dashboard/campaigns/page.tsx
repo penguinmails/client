@@ -3,7 +3,7 @@ import CampaignsFilter from "@/components/campaigns/tables/CampaignsFilter";
 import CampaignsTable, {
   campaignColumns,
 } from "@/components/campaigns/tables/CampaignsTable";
-import StatsCardSkeleton from "@/components/dashboard/StatsCardSkeleton";
+import StatsCardSkeleton from "@/components/dashboard/cards/StatsCardSkeleton";
 import StatsCards from "@/components/campaigns/reports/StatsCards";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
