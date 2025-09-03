@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/accordion"; // Assuming shadcn setup
 import { Check, Star, Briefcase, MailQuestion, HelpCircle } from "lucide-react"; // Icons
 import { pricingContent } from "./content";
-import { LandingLayout } from "@/components/layout/components/landing";
+import { LandingLayout } from "@/components/landing/LandingLayout";
 
 export default function PricingPage() {
   return (
