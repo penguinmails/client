@@ -1,5 +1,5 @@
 import { statsCards } from "@/lib/data/campaigns";
-import KpiCard from "../common/StatsCard";
+import KpiCard from "../analytics/StatsCard";
 
 async function KpiCards() {
   return (

@@ -1,5 +1,5 @@
 import { Eye, Mail, MousePointer, Reply } from "lucide-react";
-import StatsCard from "../common/StatsCard";
+import StatsCard from "./StatsCard";
 
 function AnalyticsStatistics({
   totalSent,
