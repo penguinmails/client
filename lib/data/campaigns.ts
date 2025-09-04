@@ -1,4 +1,4 @@
-import { CampaignStatusEnum } from "@/types/campaign";
+import { CampaignStatusEnum, StatsCardData, RecentReply } from "@/types/campaign";
 import { Mail, Send, TrendingUp, Users } from "lucide-react";
 
 export const campaignsData = [
@@ -114,19 +114,6 @@ export const campaignsData = [
   },
 ];
 
-export type CampaignDisplay = {
-  id: number;
-  name: string;
-  status: CampaignStatusEnum;
-  mailboxes: number;
-  leadsSent: number;
-  replies: number;
-  openRate: string;
-  replyRate: string;
-  lastSent: string;
-  createdDate: string;
-  assignedMailboxes: string[];
-};
 
 export const sequenceSteps = [
   {
@@ -223,7 +210,7 @@ export const availableMailboxes = [
   "david@mycompany.com",
 ];
 
-export const statsCards = [
+export const statsCards: StatsCardData[] = [
   { title: "Active Campaigns", value: "12", icon: Send, color: "bg-blue-500" },
   {
     title: "Leads Contacted",
@@ -239,7 +226,7 @@ export const statsCards = [
     color: "bg-orange-500",
   },
 ];
-export const recentReplies = [
+export const recentReplies: RecentReply[] = [
   {
     name: "Sarah Johnson",
     email: "sarah@techcorp.com",

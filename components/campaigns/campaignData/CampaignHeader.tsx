@@ -1,8 +1,10 @@
-import { CampaignDisplay as Campaign } from "@/lib/data/campaigns";
-import CampaignsActions, { CampaignActionsEnum } from "../tables/CampaignsActions";
+import CampaignsActions, {
+  CampaignActionsEnum,
+} from "../tables/CampaignsActions";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import BackArrow from "@/components/ui/custom/BackArrow";
+import { CampaignDisplay } from "@/types";
 
 function CampaignHeader({
   children,
@@ -10,7 +12,7 @@ function CampaignHeader({
   backArrow = false,
 }: {
   children: ReactNode;
-  campaign: Campaign;
+  campaign: CampaignDisplay;
   backArrow?: boolean;
 }) {
   const actions = ["EDIT"] as (keyof typeof CampaignActionsEnum)[];
@@ -32,7 +34,7 @@ function CampaignHeader({
                 ? "bg-green-100 text-green-800"
                 : campaign.status === "paused"
                   ? "bg-yellow-100 text-yellow-800"
-                  : "bg-gray-100 text-gray-800",
+                  : "bg-gray-100 text-gray-800"
             )}
           >
             {campaign.status}

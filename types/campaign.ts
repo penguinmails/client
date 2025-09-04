@@ -119,7 +119,7 @@ export const CampaignEventCondition = {
 
 // Zod schemas and inferred types
 import { z } from "zod";
-import { RefObject } from "react";
+import { RefObject, ComponentType } from "react";
 import type { Template } from "./templates"; // Assuming templates are in types
 
 export const campaignStepSchema = z.object({
@@ -250,7 +250,7 @@ export enum CampaignActionsEnum {
 
 // Display types from lib/data/campaigns.ts
 interface LeadsList {
-  id: number;
+  id?: number | string;
   name: string;
   description: string;
   contacts: number;
@@ -268,5 +268,21 @@ export interface CampaignDisplay {
   lastSent: string;
   createdDate: string;
   assignedMailboxes: string[];
-  leadsList: LeadsList;
+  leadsList?: LeadsList;
 }
+
+export interface StatsCardData {
+  title: string;
+  value: string;
+  icon: ComponentType<any>;
+  color: string;
+}
+
+export type RecentReply = {
+  name: string;
+  email: string;
+  company: string;
+  message: string;
+  time: string;
+  type: "positive" | "neutral";
+};

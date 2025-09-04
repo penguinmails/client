@@ -7,6 +7,7 @@ import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Suspense } from "react";
+import { statsCards, recentReplies } from "@/lib/data/campaigns";
 
 export default function DashboardContent() {
   return (
@@ -26,7 +27,7 @@ export default function DashboardContent() {
           </div>
         }
       >
-        <KpiCards />
+        <KpiCards cards={statsCards} />
       </Suspense>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
@@ -46,7 +47,7 @@ export default function DashboardContent() {
                   </div>
                 }
               >
-                <RecentRepliesList />
+                <RecentRepliesList recentReplies={recentReplies} />
               </Suspense>
             </CardContent>
           </Card>

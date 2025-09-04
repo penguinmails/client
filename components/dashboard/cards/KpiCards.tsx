@@ -1,10 +1,15 @@
-import { statsCards } from "@/lib/data/campaigns";
+import React from "react";
 import KpiCard from "@/components/analytics/cards/StatsCard";
+import { StatsCardData } from "@/types/campaign";
 
-async function KpiCards() {
+interface KpiCardsProps {
+  cards: StatsCardData[];
+}
+
+function KpiCards({ cards }: KpiCardsProps): React.JSX.Element {
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 ">
-      {statsCards.map((card) => (
+      {cards.map((card) => (
         <KpiCard
           key={card.title}
           title={card.title}

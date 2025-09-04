@@ -1,5 +1,5 @@
 "use client";
-import { CampaignDisplay as Campaign } from "@/lib/data/campaigns";
+import { CampaignDisplay as Campaign } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar, Check, Mail, Target, Users, Zap } from "lucide-react";
 import { createContext, useContext, useState } from "react";
@@ -56,7 +56,7 @@ const CampaignFormSchema = z.object({
   description: z.string().optional(),
   leadsList: z
     .object({
-      id: z.string(),
+      id: z.string().or(z.number()),
       name: z.string(),
       contacts: z.number(),
       description: z.string().optional(),
@@ -68,7 +68,7 @@ const CampaignFormSchema = z.object({
         id: z.string(),
         email: z.string().email("Invalid email address"),
         name: z.string().optional(),
-      }),
+      })
     )
     .min(1, "At least one mailbox must be selected"),
   sequence: z
@@ -81,7 +81,7 @@ const CampaignFormSchema = z.object({
         delay: z.number().optional(),
         delayUnit: z.enum(["hours", "days"]).optional(),
         condition: z.enum(["always", "no_reply"]).optional(),
-      }),
+      })
     )
     .min(1, "At least one sequence step is required"),
   schedule: z.object({
@@ -95,7 +95,7 @@ const CampaignFormSchema = z.object({
           "friday",
           "saturday",
           "sunday",
-        ]),
+        ])
       )
       .min(1, "At least one sending day must be selected"),
     startTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid start time format"),
@@ -193,7 +193,7 @@ export function useAddCampaignContext() {
   const context = useContext(AddCampaignContext);
   if (!context) {
     throw new Error(
-      "useAddCampaignContext must be used within an AddCampaignProvider",
+      "useAddCampaignContext must be used within an AddCampaignProvider"
     );
   }
   return context;

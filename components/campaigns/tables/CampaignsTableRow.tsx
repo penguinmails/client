@@ -1,6 +1,6 @@
-import { CampaignDisplay as Campaign } from "@/lib/data/campaigns";
 import { Clock, Pause, Play, Server } from "lucide-react";
 import CampaignsActions, { CampaignActionsEnum } from "./CampaignsActions";
+import { CampaignDisplay } from "@/types";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -25,7 +25,7 @@ const getStatusIcon = (status: string) => {
       return <Clock className="w-3 h-3" />;
   }
 };
-function CampaignsTableRow({ campaign }: { campaign: Campaign }) {
+function CampaignsTableRow({ campaign }: { campaign: CampaignDisplay }) {
   const actions = [
     "VIEW",
     "EDIT",
@@ -51,7 +51,7 @@ function CampaignsTableRow({ campaign }: { campaign: Campaign }) {
       <td className="px-6 py-6">
         <span
           className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm font-medium ${getStatusColor(
-            campaign.status,
+            campaign.status
           )}`}
         >
           {getStatusIcon(campaign.status)}
