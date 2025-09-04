@@ -271,6 +271,13 @@ export interface CampaignDisplay {
   leadsList?: LeadsList;
 }
 
+export interface WarmupSummaryData {
+  activeMailboxes: number;
+  warmingUp: number;
+  readyToSend: number;
+  needsAttention: number;
+}
+
 export interface StatsCardData {
   title: string;
   value: string;

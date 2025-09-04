@@ -1,4 +1,4 @@
-import { CampaignStatusEnum, StatsCardData, RecentReply } from "@/types/campaign";
+import { CampaignStatusEnum, StatsCardData, RecentReply, WarmupSummaryData } from "@/types/campaign";
 import { Mail, Send, TrendingUp, Users } from "lucide-react";
 
 export const campaignsData = [
@@ -255,3 +255,10 @@ export const recentReplies: RecentReply[] = [
     type: "positive",
   },
 ];
+
+export const warmupSummaryData: WarmupSummaryData = {
+  activeMailboxes: 8,
+  warmingUp: 3,
+  readyToSend: 5,
+  needsAttention: 2,
+};

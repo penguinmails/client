@@ -7,7 +7,7 @@ import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Suspense } from "react";
-import { statsCards, recentReplies } from "@/lib/data/campaigns";
+import { statsCards, recentReplies, warmupSummaryData } from "@/lib/data/campaigns";
 
 export default function DashboardContent() {
   return (
@@ -56,7 +56,7 @@ export default function DashboardContent() {
         <div className="space-y-6">
           {/* Warmup Summary */}
           <Suspense fallback={<WarmupSummarySkeleton />}>
-            <WarmupSummary />
+            <WarmupSummary data={warmupSummaryData} />
           </Suspense>
 
           {/* Quick Actions */}
