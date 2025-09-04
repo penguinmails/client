@@ -137,6 +137,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         replyRate,
         clickRate,
         chartData,
+        metrics,
         visibleMetrics,
         setVisibleMetrics,
         showCustomDate,

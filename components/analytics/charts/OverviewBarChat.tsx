@@ -1,6 +1,5 @@
 "use client";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import { metrics } from "@/lib/data/analytics.mock";
 import {
   Bar,
   BarChart,
@@ -11,7 +10,7 @@ import {
 } from "recharts";
 
 function OverviewBarChat() {
-  const { visibleMetrics, chartData } = useAnalytics();
+  const { visibleMetrics, chartData, metrics } = useAnalytics();
   return (
     <>
       <div className="h-96 ">

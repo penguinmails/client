@@ -207,6 +207,8 @@ export interface AnalyticsContextState {
   clickRate: number | string;
   /** Time series chart data */
   chartData: TimeSeriesDataPoint[];
+  /** Available analytics metrics */
+  metrics: AnalyticsMetric[];
   /** Visible metrics configuration */
   visibleMetrics: Record<string, boolean>;
   /** Function to update visible metrics */
