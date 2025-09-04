@@ -1,3 +1,5 @@
+"use client";
+
 import { DropDownFilter, Filter } from "@/components/ui/custom/Filter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,72 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Calendar, Download, HelpCircle } from "lucide-react";
-
-const dailyStats = [
-  {
-    date: "Aug 11",
-    emailsWarmed: 80,
-    delivered: 76,
-    spam: 2,
-    replies: 1,
-    bounce: 1,
-    healthScore: 88,
-  },
-  {
-    date: "Aug 10",
-    emailsWarmed: 85,
-    delivered: 83,
-    spam: 1,
-    replies: 1,
-    bounce: 0,
-    healthScore: 90,
-  },
-  {
-    date: "Aug 09",
-    emailsWarmed: 78,
-    delivered: 75,
-    spam: 2,
-    replies: 0,
-    bounce: 1,
-    healthScore: 86,
-  },
-  {
-    date: "Aug 08",
-    emailsWarmed: 82,
-    delivered: 79,
-    spam: 1,
-    replies: 2,
-    bounce: 0,
-    healthScore: 91,
-  },
-  {
-    date: "Aug 07",
-    emailsWarmed: 77,
-    delivered: 74,
-    spam: 1,
-    replies: 1,
-    bounce: 1,
-    healthScore: 87,
-  },
-  {
-    date: "Aug 06",
-    emailsWarmed: 84,
-    delivered: 81,
-    spam: 2,
-    replies: 0,
-    bounce: 1,
-    healthScore: 89,
-  },
-  {
-    date: "Aug 05",
-    emailsWarmed: 79,
-    delivered: 76,
-    spam: 1,
-    replies: 2,
-    bounce: 1,
-    healthScore: 88,
-  },
-];
+import { useAnalytics } from "@/context/AnalyticsContext";
 
 const headers = [
   { key: "date", label: "Date", tooltip: null },
@@ -121,7 +58,22 @@ const headers = [
       "Daily score based on how many emails got delivered vs flagged as spam or bounced.",
   },
 ];
-function WarmUpTable() {
+function WarmUpTable({ mailboxId: _mailboxId }: { mailboxId: string }) {
+  const { warmupChartData } = useAnalytics();
+
+  if (!warmupChartData || warmupChartData.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Daily Performance Metrics</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-center text-muted-foreground">No warmup data available</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <TooltipProvider>
       <Filter>
@@ -177,31 +129,26 @@ function WarmUpTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {dailyStats.map((stat) => (
+              {warmupChartData.map((stat) => (
                 <TableRow key={stat.date}>
                   <TableCell>{stat.date}</TableCell>
-                  <TableCell>{stat.emailsWarmed}</TableCell>
+                  <TableCell>{stat.totalWarmups}</TableCell>
                   <TableCell className="text-green-600">
-                    {stat.delivered}
+                    {/* Placeholder - would need to calculate from context */}
+                    -
                   </TableCell>
-                  <TableCell className="text-red-600">{stat.spam}</TableCell>
+                  <TableCell className="text-red-600">{stat.spamFlags}</TableCell>
                   <TableCell className="text-blue-600">
                     {stat.replies}
                   </TableCell>
                   <TableCell className="text-orange-600">
-                    {stat.bounce}
+                    {/* Placeholder for bounce - not in WarmupChartData */}
+                    -
                   </TableCell>
                   <TableCell>
-                    <span
-                      className={
-                        stat.healthScore >= 90
-                          ? "text-green-600"
-                          : stat.healthScore >= 70
-                            ? "text-yellow-600"
-                            : "text-red-600"
-                      }
-                    >
-                      {stat.healthScore}%
+                    <span className="text-gray-500">
+                      {/* Placeholder - would need to calculate or fetch healthScore per period */}
+                      N/A
                     </span>
                   </TableCell>
                 </TableRow>

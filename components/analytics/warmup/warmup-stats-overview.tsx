@@ -1,132 +1,92 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import StatsCard from "@/components/analytics/cards/StatsCard";
-import { mockMailboxes } from "@/lib/data/analytics.mock";
+import { useAnalytics } from "@/context/AnalyticsContext";
+import { MailboxAnalyticsData } from "@/types/analytics";
 import { AlertTriangle, Mail, MessageSquare, Zap } from "lucide-react";
 
-interface DailyStats {
-  date: string;
-  emailsWarmed: number;
-  delivered: number;
-  spam: number;
-  replies: number;
-  bounce: number;
+interface Mailbox {
+  id: string;
+  name: string;
+  email: string;
+  status: string;
+  warmupProgress: number;
+  dailyVolume: number;
   healthScore: number;
 }
-const dailyStats: DailyStats[] = [
-  {
-    date: "Aug 11",
-    emailsWarmed: 80,
-    delivered: 76,
-    spam: 2,
-    replies: 1,
-    bounce: 1,
-    healthScore: 88,
-  },
-  {
-    date: "Aug 10",
-    emailsWarmed: 85,
-    delivered: 83,
-    spam: 1,
-    replies: 1,
-    bounce: 0,
-    healthScore: 90,
-  },
-  {
-    date: "Aug 09",
-    emailsWarmed: 78,
-    delivered: 75,
-    spam: 2,
-    replies: 0,
-    bounce: 1,
-    healthScore: 86,
-  },
-  {
-    date: "Aug 08",
-    emailsWarmed: 82,
-    delivered: 79,
-    spam: 1,
-    replies: 2,
-    bounce: 0,
-    healthScore: 91,
-  },
-  {
-    date: "Aug 07",
-    emailsWarmed: 77,
-    delivered: 74,
-    spam: 1,
-    replies: 1,
-    bounce: 1,
-    healthScore: 87,
-  },
-  {
-    date: "Aug 06",
-    emailsWarmed: 84,
-    delivered: 81,
-    spam: 2,
-    replies: 0,
-    bounce: 1,
-    healthScore: 89,
-  },
-  {
-    date: "Aug 05",
-    emailsWarmed: 79,
-    delivered: 76,
-    spam: 1,
-    replies: 2,
-    bounce: 1,
-    healthScore: 88,
-  },
-];
 
-function WarmupStatsOverview({ id }: { id: string }) {
-  const mailbox = mockMailboxes.find((mailbox) => mailbox.id === id);
+function WarmupStatsOverview({
+  mailbox
+}: {
+  mailbox: Mailbox;
+}) {
+  const { fetchMailboxAnalytics } = useAnalytics();
+  const [analyticsData, setAnalyticsData] = useState<MailboxAnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock daily stats data
+  useEffect(() => {
+    const loadAnalytics = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchMailboxAnalytics(mailbox.id);
+        setAnalyticsData(data);
+      } catch (err) {
+        setError("Failed to load analytics data");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const totalStats = dailyStats.reduce(
-    (acc, day) => ({
-      emailsWarmed: acc.emailsWarmed + day.emailsWarmed,
-      delivered: acc.delivered + day.delivered,
-      spam: acc.spam + day.spam,
-      replies: acc.replies + day.replies,
-      bounce: acc.bounce + day.bounce,
-    }),
-    { emailsWarmed: 0, delivered: 0, spam: 0, replies: 0, bounce: 0 },
-  );
+    loadAnalytics();
+  }, [mailbox.id, fetchMailboxAnalytics]);
 
-  const deliveryRate = (
-    (totalStats.delivered / totalStats.emailsWarmed) *
-    100
-  ).toFixed(1);
-  const replyRate = (
-    (totalStats.replies / totalStats.emailsWarmed) *
-    100
-  ).toFixed(1);
+  if (loading) {
+    return (
+      <div className="grid grid-cols-responsive gap-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className="animate-pulse bg-gray-200 rounded-lg h-16"></div>
+        ))}
+      </div>
+    );
+  }
 
+  if (error || !analyticsData) {
+    return (
+      <div className="p-4 text-center text-red-500">
+        {error || "No analytics data available"}
+      </div>
+    );
+  }
+
+  // Use real data from analytics context instead of computing from dailyStats
   const stats = [
     {
       label: "Health Score",
-      value: `${mailbox?.healthScore || 0}%`,
+      value: `${analyticsData.healthScore}%`,
       icon: Zap,
       color: "bg-green-100 ",
       textColor: "text-green-600",
     },
     {
-      label: "Delivery Rate",
-      value: `${deliveryRate || 0}%`,
+      label: "Warmup Progress",
+      value: `${analyticsData.warmupProgress}%`,
       icon: Mail,
       color: "bg-blue-100 ",
       textColor: "text-blue-600",
     },
     {
-      label: "Reply Rate",
-      value: `${replyRate || 0}%`,
+      label: "Total Warmups",
+      value: analyticsData.totalWarmups.toLocaleString(),
       icon: MessageSquare,
       color: "bg-green-100 ",
       textColor: "text-green-600",
     },
     {
-      label: "Total Spam",
-      value: `${totalStats.spam || 0}`,
+      label: "Spam Flags",
+      value: analyticsData.spamFlags.toLocaleString(),
       icon: AlertTriangle,
       color: "bg-red-100 ",
       textColor: "text-red-600",
@@ -134,7 +94,7 @@ function WarmupStatsOverview({ id }: { id: string }) {
   ];
 
   return (
-    <div className="grid  grid-cols-responsive gap-4">
+    <div className="grid grid-cols-responsive gap-4">
       {stats.map((stat) => (
         <StatsCard
           key={stat.label}

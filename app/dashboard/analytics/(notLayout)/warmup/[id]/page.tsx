@@ -2,16 +2,21 @@ import WarmUpTable from "@/components/analytics/warmup/warmup-[id]-table";
 import WarmupStatsOverview from "@/components/analytics/warmup/warmup-stats-overview";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { mockMailboxes } from "@/lib/data/analytics.mock";
+import { getMailboxById } from "@/lib/queries/warmup";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!id) {
     return notFound();
   }
-  const mailbox = mockMailboxes.find((mailbox) => mailbox.id === id);
+
+  const [mailbox] = await Promise.all([
+    getMailboxById(id)
+  ]);
+
   if (!mailbox) {
     return notFound();
   }
@@ -32,8 +37,8 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
           </div>
         </div>
       </div>
-      <WarmupStatsOverview id={mailbox.id} />
-      <WarmUpTable />
+      <WarmupStatsOverview mailbox={mailbox} />
+      <WarmUpTable mailboxId={id} />
     </div>
   );
 }
