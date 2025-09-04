@@ -51,3 +51,37 @@ export interface AccountDetails {
   parentDomain: string;
   stats: AccountStatsDataPoint[];
 }
+
+/**
+ * Simplified warmup account data for the warmup route
+ */
+export interface WarmupAccount {
+  id: number;
+  email: string;
+  status: "Active" | "Paused";
+  sentToday: number;
+  inboxRate: number;
+  spamRate: number;
+  reputation: number;
+  dailyLimit: number;
+  daysActive: number;
+}
+
+/**
+ * Stats data point for warmup metrics
+ */
+export interface WarmupStatsDataPoint {
+  name: string;
+  volume: number;
+  inbox: number;
+  spam: number;
+  reputation: number;
+}
+
+/**
+ * Full warmup API response data structure
+ */
+export interface WarmupResponse {
+  accounts: WarmupAccount[];
+  stats: WarmupStatsDataPoint[];
+}

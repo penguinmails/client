@@ -120,6 +120,7 @@ export const CampaignEventCondition = {
 // Zod schemas and inferred types
 import { z } from "zod";
 import { RefObject, ComponentType } from "react";
+import type { LucideIcon } from "lucide-react";
 import type { Template } from "./templates"; // Assuming templates are in types
 
 export const campaignStepSchema = z.object({
@@ -281,7 +282,7 @@ export interface WarmupSummaryData {
 export interface StatsCardData {
   title: string;
   value: string;
-  icon: ComponentType<any>;
+  icon: LucideIcon;
   color: string;
 }
 
