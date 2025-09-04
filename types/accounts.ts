@@ -23,3 +23,31 @@ export interface EmailAccount {
     dueToSend: number;
   };
 }
+
+/**
+ * Data point for account statistics charts
+ */
+export interface AccountStatsDataPoint {
+  name: string;
+  volume: number;
+  inbox: number;
+  spam: number;
+  reputation: number;
+}
+
+/**
+ * Detailed account information including stats for API endpoints
+ */
+export interface AccountDetails {
+  id: string;
+  email: string;
+  status: "Active" | "Inactive" | "Warming";
+  sentToday: number;
+  dailyLimit: number;
+  inboxRate: number;
+  spamRate: number;
+  reputation: number;
+  daysActive: number;
+  parentDomain: string;
+  stats: AccountStatsDataPoint[];
+}
