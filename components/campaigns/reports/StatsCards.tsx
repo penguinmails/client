@@ -1,10 +1,21 @@
 import StatsCard from "@/components/analytics/cards/StatsCard";
-import { statsCards } from "@/lib/data/stats.mock";
+import { LucideIcon } from "lucide-react";
 
-async function StatsCards() {
+interface StatsItem {
+  title: string;
+  value: string;
+  icon: LucideIcon;
+  color: string;
+}
+
+interface StatsCardsProps {
+  stats: StatsItem[];
+}
+
+function StatsCards({ stats }: StatsCardsProps) {
   return (
     <>
-      {statsCards.map((item) => (
+      {stats.map((item) => (
         <StatsCard
           className="flex-row-reverse justify-end gap-2 "
           key={item.title}

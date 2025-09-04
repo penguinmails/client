@@ -1,3 +1,4 @@
+"use client";
 import CampaignTableSkeleton from "@/components/campaigns/tables/CampaignTableSkeleton";
 import CampaignsFilter from "@/components/campaigns/tables/CampaignsFilter";
 import CampaignsTable, {
@@ -6,9 +7,10 @@ import CampaignsTable, {
 import StatsCardSkeleton from "@/components/dashboard/cards/StatsCardSkeleton";
 import StatsCards from "@/components/campaigns/reports/StatsCards";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Send, Mail, Eye, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import { useAnalytics } from "@/context/AnalyticsContext";
 
 interface CampaignsPageProps {
   searchParams: Promise<{
@@ -17,9 +19,44 @@ interface CampaignsPageProps {
   }>;
 }
 
-export default async function CampaignsPage({
+export default function CampaignsPage({
   searchParams: _searchParams,
 }: CampaignsPageProps) {
+  const { totalSent, openRate, replyRate, clickRate, campaigns } = useAnalytics();
+
+  const stats = [
+    {
+      title: "Total Campaigns",
+      value: campaigns.length.toString(),
+      icon: Send,
+      color: "bg-blue-100 text-blue-600",
+    },
+    {
+      title: "Total Sent",
+      value: Number(totalSent).toLocaleString(),
+      icon: Mail,
+      color: "text-purple-600 bg-purple-100",
+    },
+    {
+      title: "Open Rate",
+      value: openRate + '%',
+      icon: Eye,
+      color: "text-orange-500  bg-orange-100",
+    },
+    {
+      title: "Click Rate",
+      value: clickRate + '%',
+      icon: TrendingUp,
+      color: "bg-green-100 text-green-600",
+    },
+    {
+      title: "Reply Rate",
+      value: replyRate + '%',
+      icon: Users,
+      color: "text-pink-600 bg-pink-100",
+    },
+  ];
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -45,7 +82,7 @@ export default async function CampaignsPage({
             />
           ))}
         >
-          <StatsCards />
+          <StatsCards stats={stats} />
         </Suspense>
       </div>
       <CampaignsFilter />
