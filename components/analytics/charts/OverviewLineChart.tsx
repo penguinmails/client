@@ -5,7 +5,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import { metrics } from "@/lib/data/analytics.mock";
 import {
   CartesianGrid,
   Line,
@@ -16,7 +15,7 @@ import {
 } from "recharts";
 
 function OverviewLineChart() {
-  const { chartData, visibleMetrics } = useAnalytics();
+  const { chartData, visibleMetrics, metrics } = useAnalytics();
 
   if (chartData.length === 0) {
     return (
