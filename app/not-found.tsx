@@ -31,7 +31,7 @@ const NotFound = () => {
       >
         <div className="flex flex-col items-center text-center p-8 bg-white rounded-lg shadow-lg">
           <Image
-            src="/logo.svg"
+            src="/img/pengo_48X48.png"
             alt="Product Logo"
             width={100}
             height={100}
@@ -73,11 +73,11 @@ const NotFound = () => {
                 </Link>
               </li>
             </ul>
-            or return home.
+            or
           </p>
           <Link
-            href="/"
-            className="px-6 py-3 bg-secondary text-white font-semibold rounded-md hover:bg-primary-700 transition-colors duration-300 ease-in-out"
+            href="https://penguinmails.com/"
+            className="px-6 py-3 font-semibold rounded-md transition-colors duration-300 ease-in-out"
           >
             Go back home
           </Link>
