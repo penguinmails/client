@@ -73,7 +73,7 @@ export function CampaignForm({
       setLoadingAccounts(true);
       const companyMockId = 1;
       const accounts = await getCampaignSendingAccountsAction(companyMockId);
-      setSendingAccounts([accounts]);
+      setSendingAccounts(accounts);
       setLoadingAccounts(false);
     };
     fetchSendingAccounts();
