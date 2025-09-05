@@ -1,7 +1,7 @@
 'use server';
 
 import { domains, mailboxes } from "@/lib/data/domains.mock";
-import { Domain } from "@/types";
+import { Domain, EmailAccount, EmailAccountStatus } from "@/types/domain";
 import { Mailbox } from "@/types/mailbox";
 
 export interface DomainWithMailboxesData {
@@ -98,4 +98,36 @@ export async function getDomainsWithMailboxesData(
   });
 
   return result;
+}
+
+export async function getDomainById(domainId: number): Promise<Domain | null> {
+  const domain = domains.find(d => d.id === domainId);
+  if (!domain) return null;
+  return domain as Domain; // Cast to Domain
+}
+
+export async function getTopAccountsForDomain(domainId: number, limit = 10): Promise<EmailAccount[]> {
+  const domainObj = domains.find(d => d.id === domainId);
+  if (!domainObj) return [];
+  const domainMailboxes = mailboxes.filter(mb => mb.domain === domainObj.domain);
+
+  const accounts: EmailAccount[] = domainMailboxes.slice(0, limit).map(mb => ({
+    id: mb.id,
+    email: mb.email,
+    provider: mb.provider,
+    status: mb.status as EmailAccountStatus,
+    reputation: mb.reputation,
+    warmupStatus: mb.warmupStatus,
+    dayLimit: mb.dailyLimit,
+    sent24h: mb.sent24h,
+    lastSync: mb.lastSync,
+    spf: mb.spf,
+    dkim: mb.dkim,
+    dmarc: mb.dmarc,
+    createdAt: mb.createdAt,
+    updatedAt: mb.updatedAt,
+    companyId: mb.companyId,
+    createdById: mb.createdById,
+  }));
+  return accounts;
 }

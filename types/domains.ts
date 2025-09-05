@@ -118,6 +118,13 @@ export interface Domain {
     dmarc: string;
     mx: string;
   };
+  metrics?: {
+    total24h: number;
+    bounceRate: number;
+    spamRate: number;
+    openRate: number;
+    replyRate: number;
+  };
   createdAt?: string;
   updatedAt?: string;
   addedDate?: string; // Mock compatibility

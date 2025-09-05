@@ -9,7 +9,8 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { EmailsTable } from "@/components/domains/components/emails-table";
-import { EmailAccount } from "@/types/domain";
+import { getDomainById, getTopAccountsForDomain } from "@/lib/actions/domainsActions";
+import WeeklyMetricsClient from "./weekly-metrics-client";
 import {
   ArrowLeft,
   ArrowRight,
@@ -19,6 +20,7 @@ import {
   Shield,
 } from "lucide-react";
 import Link from "next/link";
+import { Domain } from "@/types";
 
 export default async function DomainPage({
   params,
@@ -26,70 +28,13 @@ export default async function DomainPage({
   params: Promise<{ domainId: string }>;
 }) {
   const { domainId } = await params;
-  // TODO: Fetch domain data based on domainId
-  const domain = {
-    id: parseInt(domainId),
-    name: "example.com",
-    provider: "Google Workspace",
-    status: "VERIFIED",
-    daysActive: 120,
-    reputation: 88,
-    spf: true,
-    dkim: true,
-    dmarc: true,
-    emailAccounts: 3,
-    metrics: {
-      total24h: 245,
-      bounceRate: 0.02,
-      spamRate: 0.001,
-      openRate: 0.45,
-      replyRate: 0.12,
-    },
-    weeklyTrend: {
-      reputation: [85, 86, 87, 88, 88, 88, 89],
-      emailsSent: [200, 210, 225, 230, 240, 245, 245],
-    },
-  };
+  const domainIdNum = parseInt(domainId);
+  const domain = await getDomainById(domainIdNum);
+  if (!domain) {
+    return <div>Domain not found</div>;
+  }
 
-  // TODO: Fetch top 10 accounts for this domain
-  const topAccounts: EmailAccount[] = [
-    {
-      id: 1,
-      email: "sales@example.com",
-      provider: "Google Workspace",
-      status: "ACTIVE",
-      reputation: 92,
-      warmupStatus: "WARMED",
-      dayLimit: 300,
-      sent24h: 250,
-      lastSync: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-      spf: true,
-      dkim: true,
-      dmarc: true,
-      createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date().toISOString(),
-      companyId: 1,
-      createdById: "user_1",
-    },
-    {
-      id: 2,
-      email: "support@example.com",
-      provider: "Google Workspace",
-      status: "ACTIVE",
-      reputation: 88,
-      warmupStatus: "WARMING",
-      dayLimit: 200,
-      sent24h: 150,
-      lastSync: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-      spf: true,
-      dkim: true,
-      dmarc: true,
-      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date().toISOString(),
-      companyId: 1,
-      createdById: "user_1",
-    },
-  ];
+  const topAccounts = await getTopAccountsForDomain(domainIdNum, 10);
 
   return (
     <div className="container mx-auto py-6">
@@ -143,10 +88,10 @@ export default async function DomainPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {domain.metrics.total24h}
+                  {(domain as Domain).metrics?.total24h}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {(domain.metrics.bounceRate * 100).toFixed(1)}% bounce rate
+                  {((domain as Domain).metrics?.bounceRate ?? 0 * 100).toFixed(1)}% bounce rate
                 </p>
               </CardContent>
             </Card>
@@ -158,10 +103,10 @@ export default async function DomainPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {(domain.metrics.openRate * 100).toFixed(1)}%
+                  {((domain as Domain).metrics?.openRate ?? 0 * 100).toFixed(1)}%
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {(domain.metrics.replyRate * 100).toFixed(1)}% reply rate
+                  {((domain as Domain).metrics?.replyRate ?? 0 * 100).toFixed(1)}% reply rate
                 </p>
               </CardContent>
             </Card>
@@ -173,7 +118,7 @@ export default async function DomainPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {(domain.metrics.spamRate * 100).toFixed(3)}%
+                  {((domain as Domain).metrics?.spamRate ?? 0 * 100).toFixed(3)}%
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Last 7 days average
@@ -210,7 +155,7 @@ export default async function DomainPage({
                       {domain.spf ? "Configured" : "Not Configured"}
                     </Badge>
                   </div>
-
+  
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium mb-1">DKIM Record</div>
@@ -229,7 +174,7 @@ export default async function DomainPage({
                       {domain.dkim ? "Configured" : "Not Configured"}
                     </Badge>
                   </div>
-
+  
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium mb-1">DMARC Record</div>
@@ -249,7 +194,7 @@ export default async function DomainPage({
                     </Badge>
                   </div>
                 </div>
-
+  
                 {(!domain.spf || !domain.dkim || !domain.dmarc) && (
                   <Button className="w-full mt-6" asChild>
                     <Link href={`/dashboard/domains/${domain.id}/setup`}>
@@ -259,7 +204,7 @@ export default async function DomainPage({
                 )}
               </CardContent>
             </Card>
-
+  
             <Card>
               <CardHeader>
                 <CardTitle>Weekly Metrics</CardTitle>
@@ -267,12 +212,7 @@ export default async function DomainPage({
                   Performance trends over the last 7 days
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                {/* TODO: Add line charts for reputation and email volume trends */}
-                <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-                  Charts coming soon
-                </div>
-              </CardContent>
+              <WeeklyMetricsClient />
             </Card>
           </div>
         </div>

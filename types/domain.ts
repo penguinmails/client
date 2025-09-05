@@ -93,13 +93,26 @@ export interface Domain {
   domain: string;
   name: string;
   provider: string;
-  status: DomainStatus;
+  status: DomainStatus | string;
   daysActive: number;
   reputation: number;
   emailAccounts: number;
   spf: boolean;
   dkim: boolean;
   dmarc: boolean;
+  records?: {
+    spf: DNSRecordStatus | string;
+    dkim: DNSRecordStatus | string;
+    dmarc: DNSRecordStatus | string;
+    mx: DNSRecordStatus | string;
+  };
+  metrics?: {
+    total24h: number;
+    bounceRate: number;
+    spamRate: number;
+    openRate: number;
+    replyRate: number;
+  };
   createdAt: string;
   updatedAt: string;
   companyId: number;
