@@ -27,12 +27,9 @@ import { conversations } from "@/lib/data/Inbox.mock";
 
 function ConversationsList({
   conversations: filteredConversations,
-  _searchParams,
 }: {
   conversations: typeof conversations;
-  _searchParams?: Record<string, string | string[] | undefined>;
 }) {
-
   return (
     <div className="flex flex-col h-full w-full">
       <ConversationsListHeader />
@@ -47,7 +44,7 @@ function ConversationsList({
             >
               <Card
                 className={cn(
-                  "cursor-pointer hover:shadow-md transition-all duration-200 group p-0",
+                  "cursor-pointer hover:shadow-md transition-all duration-200 group p-0"
                 )}
               >
                 <CardContent className="p-6">
@@ -94,7 +91,7 @@ function ConversationsList({
                             variant="outline"
                             className={cn(
                               "text-sm font-medium",
-                              getTagColor(conversation.tag),
+                              getTagColor(conversation.tag)
                             )}
                           >
                             {conversation.tag.replace("-", " ")}
