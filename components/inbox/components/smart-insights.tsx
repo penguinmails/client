@@ -1,3 +1,5 @@
+"use client";
+
 import Icon from "@/components/ui/custom/Icon";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
