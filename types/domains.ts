@@ -322,6 +322,7 @@ export interface ReputationFactors {
 }
 
 export interface DomainSettings {
+  domain: string;
   authentication: DomainAuthentication;
   warmup: WarmupConfig;
   reputationFactors: ReputationFactors;

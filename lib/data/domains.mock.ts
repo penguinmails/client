@@ -73,6 +73,38 @@ export const domains = [
       openRate: 0.45,
       replyRate: 0.12,
     },
+    warmupEnabled: true,
+    dailyIncrease: 10,
+    maxDailyEmails: 1000,
+    initialDailyVolume: 10,
+    warmupSpeed: "moderate",
+    replyRate: "80",
+    threadDepth: "3",
+    autoAdjustWarmup: true,
+    reputationFactors: {
+      bounceRate: 0.3,
+      spamComplaints: 0.3,
+      engagement: 0.4,
+    },
+    authentication: {
+      spf: {
+        enabled: true,
+        record: "v=spf1 ip4:192.168.1.1 ip4:203.0.113.5 ~all",
+        policy: "soft",
+      },
+      dkim: {
+        enabled: true,
+        selector: "default",
+        key: "k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQ...",
+      },
+      dmarc: {
+        enabled: true,
+        policy: "quarantine",
+        percentage: 100,
+        reportEmail: "dmarc-reports@example.com",
+        record: "v=DMARC1; p=quarantine; rua=mailto:dmarc-reports@example.com;",
+      },
+    },
     weeklyTrend: {
       reputation: [85, 86, 87, 88, 88, 88, 89],
       emailsSent: [200, 210, 225, 230, 240, 245, 245],

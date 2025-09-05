@@ -27,49 +27,35 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
+import { getDomainSettings } from "@/lib/actions/domainsActions";
+import { notFound } from "next/navigation";
 
 export default async function DomainSettingsPage({
   params,
 }: {
   params: Promise<{ domainId: string }>;
 }) {
-  // TODO: Fetch domain data based on domainId
   const { domainId } = await params;
+  const domainSettings = await getDomainSettings(parseInt(domainId));
+
+  if (!domainSettings) {
+    notFound();
+  }
+
+  // Transform DomainSettings to the structure expected by the component
   const domain = {
     id: parseInt(domainId),
-    name: "example.com",
-    warmupEnabled: true,
-    dailyIncrease: 10,
-    maxDailyEmails: 1000,
-    initialDailyVolume: 10, // New
-    warmupSpeed: "moderate", // New: 'slow', 'moderate', 'fast'
-    replyRate: "80", // New: '70', '80', '90', '100' (as strings for Select)
-    threadDepth: "3", // New: '1', '2', '3', '5' (as strings for Select)
-    autoAdjustWarmup: true, // New
-    reputationFactors: {
-      bounceRate: 0.3,
-      spamComplaints: 0.3,
-      engagement: 0.4,
-    },
-    authentication: {
-      spf: {
-        enabled: true,
-        record: "v=spf1 ip4:192.168.1.1 ip4:203.0.113.5 ~all",
-        policy: "soft",
-      },
-      dkim: {
-        enabled: true,
-        selector: "default",
-        key: "k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQ...",
-      },
-      dmarc: {
-        enabled: true,
-        policy: "quarantine",
-        percentage: 100,
-        reportEmail: "dmarc-reports@example.com",
-        record: "v=DMARC1; p=quarantine; rua=mailto:dmarc-reports@example.com;",
-      },
-    },
+    name: domainSettings.domain,
+    warmupEnabled: domainSettings.warmup.enabled,
+    dailyIncrease: domainSettings.warmup.dailyIncrease,
+    maxDailyEmails: domainSettings.warmup.maxDailyEmails,
+    initialDailyVolume: domainSettings.warmup.initialDailyVolume,
+    warmupSpeed: domainSettings.warmup.warmupSpeed,
+    replyRate: domainSettings.warmup.replyRate,
+    threadDepth: domainSettings.warmup.threadDepth,
+    autoAdjustWarmup: domainSettings.warmup.autoAdjustWarmup,
+    reputationFactors: domainSettings.reputationFactors,
+    authentication: domainSettings.authentication,
   };
 
   return (
