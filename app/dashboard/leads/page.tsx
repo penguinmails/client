@@ -9,7 +9,7 @@ import { LeadStats } from "@/lib/data/leads";
 import { Suspense } from "react";
 import CSVUploadTab from "@/components/leads/components/CSVUploadTab";
 import ContactsTab from "@/components/leads/components/ContactsTab";
-import { FileText, Upload, Users } from "lucide-react";
+import { FileText, Upload, Mail, Users } from "lucide-react";
 
 async function LeadsPage() {
   const leadsStatsData = await getLeadsStats();
@@ -82,15 +82,23 @@ async function LeadsPage() {
   );
 }
 function LeadsStats({ stats }: { stats: LeadStats }) {
-  return stats.map((stat) => (
-    <StatsCard
-      key={stat.title}
-      title={stat.title}
-      value={stat.value}
-      icon={stat.icon}
-      color={stat.color}
-    />
-  ));
+  const iconMap = {
+    users: Users,
+    mail: Mail,
+  };
+
+  return stats.map((stat) => {
+    const IconComponent = iconMap[stat.icon as keyof typeof iconMap] || Users;
+    return (
+      <StatsCard
+        key={stat.title}
+        title={stat.title}
+        value={stat.value}
+        icon={IconComponent}
+        color={stat.color}
+      />
+    );
+  });
 }
 
 export default LeadsPage;

@@ -1,5 +1,3 @@
-import { Mail, Users } from "lucide-react";
-
 export const leadLists = [
   {
     id: "1",
@@ -25,13 +23,13 @@ export const leadsStats = [
   {
     title: "Total Contacts",
     value: "2,542",
-    icon: Users,
+    icon: "users",
     color: "text-blue-600 bg-blue-100",
   },
   {
     title: "In Campaigns",
     value: "1,847",
-    icon: Mail,
+    icon: "mail",
     color: "bg-purple-100 text-purple-600",
   },
 ];
