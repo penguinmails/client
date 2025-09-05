@@ -4,12 +4,24 @@ import Icon from "@/components/ui/custom/Icon";
 import StatsCard from "@/components/analytics/cards/StatsCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { leadsStats, leadsTabs } from "@/lib/data/leads";
+import { getLeadsStats, getLeadLists } from "./actions";
+import { LeadStats } from "@/lib/data/leads";
 import { Suspense } from "react";
 import CSVUploadTab from "@/components/leads/components/CSVUploadTab";
 import ContactsTab from "@/components/leads/components/ContactsTab";
+import { FileText, Upload, Users } from "lucide-react";
 
-function LeadsPage() {
+async function LeadsPage() {
+  const leadsStatsData = await getLeadsStats();
+  const leadListsData = await getLeadLists();
+
+  const totalContacts = leadListsData.reduce((sum, list) => sum + list.contacts, 0);
+
+  const leadsTabs = [
+    { id: "lists", label: "Lead Lists", count: leadListsData.length, icon: FileText },
+    { id: "upload", label: "Upload CSV", icon: Upload },
+    { id: "contacts", label: "All Contacts", count: totalContacts, icon: Users },
+  ];
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -29,7 +41,7 @@ function LeadsPage() {
         }
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <LeadsStats />
+          <LeadsStats stats={leadsStatsData} />
         </div>
       </Suspense>
       <Card>
@@ -69,8 +81,8 @@ function LeadsPage() {
     </div>
   );
 }
-function LeadsStats() {
-  return leadsStats.map((stat) => (
+function LeadsStats({ stats }: { stats: LeadStats }) {
+  return stats.map((stat) => (
     <StatsCard
       key={stat.title}
       title={stat.title}

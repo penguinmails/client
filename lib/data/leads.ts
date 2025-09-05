@@ -1,4 +1,4 @@
-import { FileText, Mail, Upload, Users } from "lucide-react";
+import { Mail, Users } from "lucide-react";
 
 export const leadLists = [
   {
@@ -35,11 +35,8 @@ export const leadsStats = [
     color: "bg-purple-100 text-purple-600",
   },
 ];
-export const leadsTabs = [
-  { id: "lists", label: "Lead Lists", count: leadLists.length, icon: FileText },
-  { id: "upload", label: "Upload CSV", icon: Upload },
-  { id: "contacts", label: "All Contacts", count: 2542, icon: Users },
-];
+
+export type LeadStats = typeof leadsStats;
 
 export const leadListsData = [
   {
