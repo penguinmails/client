@@ -4,7 +4,7 @@
  * Note: These tests are written for Jest/Vitest.
  */
 
-import { describe, it, expect, beforeEach, jest, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import {
   getBillingInfo,
   updateBillingInfo,
@@ -24,13 +24,10 @@ import {
   calculateOverage,
   projectMonthlyUsage,
   BILLING_ERROR_CODES,
-  type ActionResult,
 } from '../billingActions';
-import { 
+import {
   mockBillingInfo,
   mockUsageMetrics,
-  mockInvoices,
-  subscriptionPlans,
 } from '../../data/billing.mock';
 import * as authUtils from '../../utils/auth';
 
@@ -120,6 +117,7 @@ describe('Billing Server Actions', () => {
 
       const result = await updateBillingInfo({
         paymentMethod: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           type: 'invalid' as any,
           last4: '1234',
           expiryMonth: 12,
@@ -246,12 +244,6 @@ describe('Billing Server Actions', () => {
       jest.spyOn(authUtils, 'getCurrentUserId').mockResolvedValue('user-123');
       jest.spyOn(authUtils, 'checkRateLimit').mockResolvedValue(true);
 
-      // Mock usage that exceeds starter plan limits
-      const mockHighUsage = {
-        ...mockUsageMetrics,
-        emailAccountsActive: 3, // Starter only allows 1
-      };
-      
       // Would need to mock getUsageMetrics to return high usage
       // For this test, we're demonstrating the validation logic
       
@@ -635,6 +627,7 @@ describe('Billing Server Actions', () => {
       
       result = await updateBillingInfo({
         paymentMethod: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           type: 'invalid' as any,
         },
       });

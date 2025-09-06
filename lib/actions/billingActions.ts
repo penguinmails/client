@@ -5,11 +5,10 @@ import {
   getCurrentUserId,
   checkRateLimit,
 } from "../utils/auth";
-import { 
+import {
   mockBillingInfo,
   mockBillingData,
   mockInvoices,
-  mockPaymentMethods,
   mockUsageMetrics,
   subscriptionPlans,
   type BillingInfo,
@@ -17,15 +16,12 @@ import {
   type UsageMetrics,
   type Invoice,
   type SubscriptionPlan,
-  calculateTotalWithTax,
   getUsagePercentage,
-  formatCurrency,
   getDaysUntilRenewal,
 } from "../data/billing.mock";
 import type { BillingAddress } from "../data/settings.mock";
-import type { 
-  BillingData,
-  BillingAndPlanSettings 
+import type {
+  BillingData
 } from "../../types/settings";
 
 // Helper type for deep partial
@@ -405,9 +401,10 @@ export async function updateBillingInfo(
       ...mockBillingInfo,
       userId,
       currentPlan: updates.currentPlan ? {
-        ...mockBillingInfo.currentPlan,
-        ...(updates.currentPlan as any),
-      } : mockBillingInfo.currentPlan,
+       ...mockBillingInfo.currentPlan,
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       ...(updates.currentPlan as any),
+     } : mockBillingInfo.currentPlan,
       paymentMethod: updates.paymentMethod ? {
         ...mockBillingInfo.paymentMethod,
         ...updates.paymentMethod,
@@ -417,9 +414,10 @@ export async function updateBillingInfo(
         ...updates.billingAddress,
       } as BillingAddress : mockBillingInfo.billingAddress,
       usage: updates.usage ? {
-        ...mockBillingInfo.usage,
-        ...(updates.usage as any),
-      } : mockBillingInfo.usage,
+       ...mockBillingInfo.usage,
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       ...(updates.usage as any),
+     } : mockBillingInfo.usage,
       nextBillingDate: updates.nextBillingDate || mockBillingInfo.nextBillingDate,
       billingCycle: updates.billingCycle || mockBillingInfo.billingCycle,
       autoRenew: updates.autoRenew ?? mockBillingInfo.autoRenew,
@@ -491,6 +489,7 @@ export async function getUsageWithCalculations(): Promise<ActionResult<{
     const usageResult = await getUsageMetrics();
     
     if (!usageResult.success) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return usageResult as ActionResult<any>;
     }
     
@@ -527,8 +526,9 @@ export async function updateSubscriptionPlan(
   newPlanId: string
 ): Promise<ActionResult<BillingInfo>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
-    
+
     // Get current billing info and usage
     const billingResult = await getBillingInfo();
     if (!billingResult.success) {
@@ -691,7 +691,9 @@ export async function removePaymentMethod(
   paymentMethodId: string
 ): Promise<ActionResult<{ removed: boolean }>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
+     
     
     // Check if it's the default payment method
     const billingResult = await getBillingInfo();
@@ -792,7 +794,9 @@ export async function downloadInvoice(
   invoiceId: string
 ): Promise<ActionResult<{ url: string }>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
+     
     
     // Verify invoice belongs to user
     const invoice = mockInvoices.find(inv => inv.id === invoiceId);
@@ -827,9 +831,10 @@ export async function downloadInvoice(
  * Cancel subscription
  */
 export async function cancelSubscription(
-  reason?: string
+  _reason?: string
 ): Promise<ActionResult<{ cancelledAt: Date }>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
     
     // Simulate cancellation
@@ -866,7 +871,9 @@ export async function reactivateSubscription(): Promise<
   ActionResult<{ reactivatedAt: Date }>
 > {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
+     
     
     // Get current billing info
     const billingResult = await getBillingInfo();
