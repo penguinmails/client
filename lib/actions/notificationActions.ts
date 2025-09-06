@@ -5,7 +5,7 @@ import {
   getCurrentUserId,
   checkRateLimit,
 } from "@/lib/utils/auth";
-import { 
+import {
   mockNotificationPreferences,
   mockNotificationHistory,
   mockNotificationSchedules,
@@ -17,7 +17,6 @@ import {
   type NotificationHistory,
   type NotificationSchedule,
   type NotificationType,
-  type NotificationChannel,
 } from "../data/notifications.mock";
 import type { 
   NotificationFormValues,
@@ -347,6 +346,7 @@ export async function updateEmailNotifications(
   emailPrefs: DeepPartial<EmailNotificationPreferences>
 ): Promise<ActionResult<EmailNotificationPreferences>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
     
     const validationError = validateEmailPreferences(emailPrefs);
@@ -386,6 +386,7 @@ export async function updateInAppNotifications(
   inAppPrefs: DeepPartial<InAppNotificationPreferences>
 ): Promise<ActionResult<InAppNotificationPreferences>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
     
     const validationError = validateInAppPreferences(inAppPrefs);
@@ -424,6 +425,7 @@ export async function updatePushNotifications(
   pushPrefs: DeepPartial<PushNotificationPreferences>
 ): Promise<ActionResult<PushNotificationPreferences>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
     
     const validationError = validatePushPreferences(pushPrefs);
@@ -526,6 +528,7 @@ export async function markNotificationsAsRead(
   notificationIds: string[]
 ): Promise<ActionResult<{ updated: number }>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
     
     if (!notificationIds || notificationIds.length === 0) {
@@ -682,6 +685,7 @@ export async function deleteNotificationSchedule(
   scheduleId: string
 ): Promise<ActionResult<{ deleted: boolean }>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
     
     if (!scheduleId) {
@@ -806,6 +810,7 @@ export async function bulkUpdateNotificationPreferences(
   }
 ): Promise<ActionResult<NotificationPreferences>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userId = await requireUserId();
     
     // Validate all preference types

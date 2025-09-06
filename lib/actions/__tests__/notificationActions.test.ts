@@ -601,9 +601,9 @@ describe('Notification Server Actions', () => {
       jest.spyOn(authUtils, 'requireUserId').mockResolvedValue('user-123');
 
       const result = await bulkUpdateNotificationPreferences({
-        email: { newReplies: 'invalid' as any },
-        inApp: { emailAccountAlerts: 'invalid' as any },
-        push: { enabled: 'invalid' as any },
+        email: { newReplies: 'invalid' as never },
+        inApp: { emailAccountAlerts: 'invalid' as never },
+        push: { enabled: 'invalid' as never },
       });
 
       expect(result.success).toBe(false);
@@ -627,7 +627,7 @@ describe('Notification Server Actions', () => {
       // Validation error
       jest.spyOn(authUtils, 'requireUserId').mockResolvedValue('user-123');
 
-      const upsertResult = await upsertNotificationSchedule({ type: 'invalid' as any });
+      const upsertResult = await upsertNotificationSchedule({ type: 'invalid' as never });
       expect(upsertResult.success).toBe(false);
       if (!upsertResult.success) {
         expect(upsertResult.code).toBe(NOTIFICATION_ERROR_CODES.VALIDATION_FAILED);
