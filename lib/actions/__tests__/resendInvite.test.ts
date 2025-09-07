@@ -3,17 +3,17 @@ import * as authUtils from '../../utils/auth';
 
 // Mock the auth module
 jest.mock('../../utils/auth', () => ({
-  requireUserId: jest.fn(),
-  hasPermission: jest.fn(),
-  checkRateLimit: jest.fn(),
+  requireUserId: jest.fn<() => Promise<string>>(),
+  hasPermission: jest.fn<(permission: string, userId?: string) => Promise<boolean>>(),
+  checkRateLimit: jest.fn<(identifier: string, limit?: number, windowMs?: number) => Promise<boolean>>(),
 }));
 
 // Mock checkTeamPermission function
-const mockCheckTeamPermission = jest.fn().mockResolvedValue(true);
+const mockCheckTeamPermission = jest.fn<(userId: string, permission: string, resourceId?: string) => Promise<boolean>>().mockResolvedValue(true);
 
 // Mock the teamActions module
 jest.mock('../teamActions', () => {
-  const actual = jest.requireActual('../teamActions');
+  const actual = jest.requireActual('../teamActions') as object;
   return {
     ...actual,
     checkTeamPermission: mockCheckTeamPermission,
@@ -27,8 +27,8 @@ describe('resendInvite', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Setup default mocks
-    (authUtils.requireUserId as jest.Mock).mockResolvedValue('user-123');
-    (authUtils.checkRateLimit as jest.Mock).mockResolvedValue(true);
+    jest.mocked(authUtils.requireUserId).mockResolvedValue('user-123');
+    jest.mocked(authUtils.checkRateLimit).mockResolvedValue(true);
     // Reset checkTeamPermission mock to default (true)
     mockCheckTeamPermission.mockResolvedValue(true);
   });
@@ -55,7 +55,7 @@ describe('resendInvite', () => {
 
   it('should check permission to manage invites', async () => {
     // Use a user without permission (user-789 is a member with limited permissions)
-    (authUtils.requireUserId as jest.Mock).mockResolvedValue('user-789');
+    jest.mocked(authUtils.requireUserId).mockResolvedValue('user-789');
     
     const result = await resendInvite('invite-1');
     

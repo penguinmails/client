@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -35,10 +35,21 @@ import {
   type ProfileError,
 } from "@/lib/actions/profileActions";
 import {
+  getUserSettings,
+  updateUserSettings,
+  ERROR_CODES,
+} from "@/lib/actions/settingsActions";
+import {
   mapNileUserToFormData,
   type ProfileFormData,
   allTimezones,
 } from "@/lib/utils";
+import {
+  setStorageItem,
+  getStorageItem,
+  StorageKeys,
+  type SidebarView,
+} from "@/lib/utils/clientStorage";
 import AvatarSelector from "@/components/settings/profile/AvatarSelector";
 
 // Remove company and keep timezone for preferences section
@@ -54,11 +65,24 @@ const profileSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
+// Interface for server action results with error property
+interface ActionResultWithError {
+  success: boolean;
+  error?: {
+    message?: string;
+    field?: string;
+    type?: string;
+  };
+  [key: string]: unknown;
+}
+
 function ProfileForm() {
   const router = useRouter();
   const { user: authUser, loading: authLoading, updateUser } = useAuth();
   const { isOnline, wasOffline } = useOnlineStatus();
+  const [isPending] = useTransition();
   const [profileLoading, setProfileLoading] = useState(true);
+  const [settingsLoading, setSettingsLoading] = useState(true);
   const [profileError, setProfileError] = useState<ProfileError | null>(null);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [isRetryingProfile, setIsRetryingProfile] = useState(false);
@@ -230,12 +254,54 @@ function ProfileForm() {
       lastName: "",
       email: "",
       avatarUrl: "",
-      timezone: allTimezones[0]?.value || "America/New_York",
-      sidebarView: "expanded",
+      timezone: getStorageItem(StorageKeys.TIMEZONE) || allTimezones[0]?.value || "America/New_York",
+      sidebarView: (getStorageItem(StorageKeys.SIDEBAR_VIEW) === "collapsed" ? "collapsed" : "expanded") as "expanded" | "collapsed",
     },
   });
 
   const { refreshUserData } = useAuth();
+
+  // Fetch user settings from server action
+  const fetchUserSettings = useCallback(async () => {
+    setSettingsLoading(true);
+    try {
+      const result = await getUserSettings();
+      
+      if (result.success && result.data) {
+        
+        // Update form with settings data
+        form.setValue("timezone", result.data.timezone);
+        form.setValue("sidebarView", result.data.sidebarView);
+        
+        // Store preferences in localStorage for immediate access
+        setStorageItem(StorageKeys.TIMEZONE, result.data.timezone);
+        setStorageItem(StorageKeys.SIDEBAR_VIEW, result.data.sidebarView as SidebarView);
+        
+        return true;
+      } else {
+        // Handle error
+        if (!result.success && result.code === ERROR_CODES.AUTH_REQUIRED) {
+          toast.error("Authentication required", {
+            description: "Please log in to access settings.",
+          });
+          router.push("/");
+        } else {
+          toast.error("Failed to load settings", {
+            description: (result as ActionResultWithError).error?.message || "Unable to retrieve your settings.",
+          });
+        }
+        return false;
+      }
+    } catch (error) {
+      console.error("Error fetching user settings:", error);
+      toast.error("Error loading settings", {
+        description: "An unexpected error occurred.",
+      });
+      return false;
+    } finally {
+      setSettingsLoading(false);
+    }
+  }, [form, router]);
 
   // Fetch user profile data on component mount
   useEffect(() => {
@@ -252,10 +318,12 @@ function ProfileForm() {
         form.reset({
           ...form.getValues(),
           ...fallbackFormData,
-          timezone: form.getValues().timezone, // Keep current timezone setting
         });
       }
 
+      // Fetch settings from server action
+      await fetchUserSettings();
+      
       // Then try to fetch from NileDB server action
       await retryFetchProfile();
     };
@@ -308,12 +376,33 @@ function ProfileForm() {
       return;
     }
 
+    // Store UI preferences immediately in localStorage for optimistic update
+    setStorageItem(StorageKeys.TIMEZONE, data.timezone);
+    setStorageItem(StorageKeys.SIDEBAR_VIEW, data.sidebarView as SidebarView);
+
     // Add timeout to the update request
     const timeoutDuration = 10000; // 10 seconds for updates
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutDuration);
 
     try {
+      // Update settings in parallel with profile
+      const settingsUpdatePromise = (async () => {
+        // Update timezone and sidebar view in server settings
+        const settingsUpdate = await updateUserSettings({
+          timezone: data.timezone,
+          sidebarView: data.sidebarView,
+        });
+        
+        if (!settingsUpdate.success) {
+          console.warn("Failed to update settings:", (settingsUpdate as ActionResultWithError).error?.message || "Unknown error");
+          // Don't fail the whole operation if settings update fails
+          // User preferences are already saved in localStorage
+        }
+        
+        return settingsUpdate;
+      })();
+
       // Extract the profile fields for NileDB update
       const profileData: Partial<ProfileFormData> = {
         name: data.name,
@@ -328,13 +417,16 @@ function ProfileForm() {
       );
 
       const updatePromise = updateUserProfile(profileData);
-      const result = (await Promise.race([
-        updatePromise,
-        timeoutPromise,
-      ])) as Awaited<ReturnType<typeof updateUserProfile>>;
+      const [profileResult] = await Promise.all([
+        Promise.race([
+          updatePromise,
+          timeoutPromise,
+        ]) as Promise<Awaited<ReturnType<typeof updateUserProfile>>>,
+        settingsUpdatePromise,
+      ]);
 
-      if (result.success && result.data) {
-        const updatedFormData = mapNileUserToFormData(result.data);
+      if (profileResult.success && profileResult.data) {
+        const updatedFormData = mapNileUserToFormData(profileResult.data);
         form.setValue("name", updatedFormData.name);
         form.setValue("firstName", updatedFormData.firstName);
         form.setValue("lastName", updatedFormData.lastName);
@@ -361,28 +453,29 @@ function ProfileForm() {
         }
 
         toast.success("Profile updated successfully", {
-          description: "Your profile information has been saved.",
+          description: "Your profile information and preferences have been saved.",
         });
-      } else if (result.error) {
+      } else if ((profileResult as ActionResultWithError).error) {
+        const result = profileResult as ActionResultWithError;
         // Handle field-specific errors by setting form errors
-        if (result.error.field) {
+        if (result.error?.field) {
           form.setError(result.error.field as keyof ProfileFormValues, {
             message: result.error.message,
           });
         } else {
           // Handle general errors with toast
           const errorMessage =
-            result.error.message ||
+            result.error?.message ||
             "Failed to update profile. Please try again.";
 
-          if (result.error.type === "auth") {
+          if (result.error?.type === "auth") {
             toast.error("Authentication expired", {
               description: "Redirecting to login page...",
             });
             setTimeout(() => {
               router.push("/");
             }, 2000);
-          } else if (result.error.type === "network") {
+          } else if (result.error?.type === "network") {
             toast.error("Network error", {
               description: "Please check your connection and try again.",
               action: {
@@ -390,7 +483,7 @@ function ProfileForm() {
                 onClick: () => onSubmit(data),
               },
             });
-          } else if (result.error.type === "validation") {
+          } else if (result.error?.type === "validation") {
             toast.error("Validation error", {
               description: errorMessage,
             });
@@ -475,12 +568,14 @@ function ProfileForm() {
       )}
 
       {/* Profile Loading State */}
-      {profileLoading && (
+      {(profileLoading || settingsLoading) && (
         <Alert>
           <Loader2 className="h-4 w-4 animate-spin" />
           <AlertDescription>
             {isRetryingProfile
               ? `Loading your profile... (attempt ${retryCount}/${MAX_RETRIES})`
+              : settingsLoading
+              ? "Loading your settings..."
               : "Loading your profile..."}
           </AlertDescription>
         </Alert>
@@ -758,11 +853,11 @@ function ProfileForm() {
         <div className="flex justify-end pt-4">
           <Button
             type="submit"
-            disabled={profileLoading || submitLoading || !!profileError}
+            disabled={profileLoading || settingsLoading || submitLoading || isPending || !!profileError}
             className="w-fit"
             onClick={form.handleSubmit(onSubmit)}
           >
-            {submitLoading ? (
+            {submitLoading || isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Updating Profile...

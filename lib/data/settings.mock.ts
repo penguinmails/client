@@ -30,6 +30,7 @@ export interface UserSettings {
   userId: string;
   timezone: string;
   companyInfo: CompanyInfo;
+  sidebarView: "expanded" | "collapsed";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -110,6 +111,7 @@ export const mockUserSettings: UserSettings = {
     website: "https://acmecorp.com",
     founded: "2019",
   },
+  sidebarView: "expanded",
   createdAt: new Date("2024-01-15T10:00:00Z"),
   updatedAt: new Date("2024-12-20T15:30:00Z"),
 };
@@ -183,6 +185,7 @@ export const mockUserSettings2: UserSettings = {
     website: "https://techinnovators.co.uk",
     founded: "2021",
   },
+  sidebarView: "collapsed",
   createdAt: new Date("2024-03-10T09:00:00Z"),
   updatedAt: new Date("2024-12-15T14:00:00Z"),
 };
