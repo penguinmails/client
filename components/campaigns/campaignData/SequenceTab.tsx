@@ -1,8 +1,18 @@
+"use client";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { sequenceSteps } from "@/lib/data/campaigns";
+import { getSequenceSteps } from "@/lib/actions/campaignActions";
+import { useState, useEffect } from "react";
 import { Clock, Mail } from "lucide-react";
+import { SequenceStep } from "@/types";
 
 function SequenceTab() {
+  const [sequenceSteps, setSequenceSteps] = useState<SequenceStep[]>([]);
+
+  useEffect(() => {
+    getSequenceSteps().then(setSequenceSteps);
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

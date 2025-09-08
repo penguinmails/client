@@ -1,6 +1,6 @@
 'use server';
 
-import { campaignLeads, campaignsData } from '@/lib/data/campaigns';
+import { campaignLeads, campaignsData, sequenceSteps } from '@/lib/data/campaigns';
 import { Campaign } from '@/types';
 
 export async function getCampaignLeads() {
@@ -64,4 +64,10 @@ export async function getCampaignSendingAccountsAction(companyId?: string | numb
 export async function getTimezonesMockAction() {
   // Mock function for timezones
   return [];
+}
+
+export async function getSequenceSteps() {
+  // In a real implementation, this would fetch from a database
+  // For now, return the static mock data
+  return sequenceSteps;
 }

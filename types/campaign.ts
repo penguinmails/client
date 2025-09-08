@@ -294,3 +294,26 @@ export type RecentReply = {
   time: string;
   type: "positive" | "neutral";
 };
+
+// Sequence step types for sequenceSteps data
+export type SequenceStep = EmailSequenceStep | WaitSequenceStep;
+
+export interface EmailSequenceStep {
+  id: number;
+  type: "email";
+  subject: string;
+  sent: number;
+  opens: number;
+  clicks: number;
+  replies: number;
+  openRate: string;
+  clickRate: string;
+  replyRate: string;
+}
+
+export interface WaitSequenceStep {
+  id: number;
+  type: "wait";
+  duration: string;
+  completed: number;
+}

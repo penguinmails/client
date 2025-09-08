@@ -1,4 +1,4 @@
-import { CampaignStatusEnum, StatsCardData, RecentReply, WarmupSummaryData } from "@/types/campaign";
+import { CampaignStatusEnum, StatsCardData, RecentReply, WarmupSummaryData, SequenceStep } from "@/types/campaign";
 import { Mail, Send, TrendingUp, Users } from "lucide-react";
 
 export const campaignsData = [
@@ -115,7 +115,7 @@ export const campaignsData = [
 ];
 
 
-export const sequenceSteps = [
+export const sequenceSteps: SequenceStep[] = [
   {
     id: 1,
     type: "email",
