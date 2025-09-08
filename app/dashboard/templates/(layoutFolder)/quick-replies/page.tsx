@@ -1,17 +1,24 @@
 import QuickReplyItem from "@/components/templates/quick-replies/quick-replay-item";
 import { Input } from "@/components/ui/input";
-import { initialQuickReplies } from "@/lib/data/template.mock";
-import { Template } from "@/types";
+import { getQuickReplies } from "@/lib/actions/templateActions";
 
-function page() {
+async function page() {
+  const result = await getQuickReplies();
+
+  if (!result.success) {
+    return <div>Error: {result.error}</div>;
+  }
+
+  const quickReplies = result.data;
+
   return (
     <div className="p-4 space-y-4">
       <div>
         <Input placeholder="Search Templates" />
       </div>
       <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-400px)]">
-        {initialQuickReplies.map((template) => (
-          <QuickReplyItem key={template.id} template={template as Template} />
+        {quickReplies.map((template) => (
+          <QuickReplyItem key={template.id} template={template} />
         ))}
       </div>
     </div>

@@ -129,8 +129,57 @@ export async function getTemplateFolders(): Promise<ActionResult<TemplateFolder[
 }
 
 /**
- * Get counts for template tabs
+ * Get quick replies for the authenticated user
  */
+export async function getQuickReplies(): Promise<ActionResult<Template[]>> {
+  try {
+    // Check authentication
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: false,
+        error: "You must be logged in to view quick replies",
+        code: ERROR_CODES.AUTH_REQUIRED,
+      };
+    }
+
+    // Simulate database fetch with mock data
+    // In production, this would fetch from database based on user company
+    await new Promise(resolve => setTimeout(resolve, 100)); // Simulate network delay
+
+    // Filter and map mock data to Template type
+    const quickReplies: Template[] = initialTemplatesMock
+      .filter(mockTemplate => mockTemplate.type === "quick-reply")
+      .map(mapMockToTemplate);
+
+    return {
+      success: true,
+      data: quickReplies,
+    };
+  } catch (error) {
+    console.error("getQuickReplies error:", error);
+
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
+    if (errorMessage.includes("network") || errorMessage.includes("fetch")) {
+      return {
+        success: false,
+        error: "Network error. Please check your connection and try again.",
+        code: ERROR_CODES.NETWORK_ERROR,
+      };
+    }
+
+    return {
+      success: false,
+      error: "Failed to retrieve quick replies",
+      code: ERROR_CODES.INTERNAL_ERROR,
+    };
+  }
+}
+
+/**
+  * Get counts for template tabs
+  */
 export async function getTabCounts(): Promise<ActionResult<Record<string, number>>> {
   try {
     // Check authentication
