@@ -15,11 +15,12 @@ import {
   ChevronDown,
   Eye,
   EyeOff,
+  Loader2,
   Mail,
   MousePointer,
   TrendingUp,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -93,6 +94,9 @@ const CustomTooltip = ({
 function StatsTab() {
   const [timeRange, setTimeRange] = useState<7 | 14 | 30>(14);
   const chartRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<ChartData[]>([]);
 
   const [metrics, setMetrics] = useState<MetricToggle[]>([
     { key: "sent", label: "Emails Sent", color: "#6B7280", visible: true },
@@ -102,7 +106,24 @@ function StatsTab() {
     { key: "bounced", label: "Bounces", color: "#EF4444", visible: true },
   ]);
 
-  const data = generateData(timeRange);
+  // Fetch data when timeRange changes
+  useEffect(() => {
+    const fetchStatsData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await generateData(timeRange);
+        setData(result);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load analytics data");
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStatsData();
+  }, [timeRange]);
 
   const timeRangeOptions = [
     { value: 7, label: "Last 7 days" },
@@ -139,52 +160,90 @@ function StatsTab() {
   const bounceRate =
     totals.sent > 0 ? ((totals.bounced / totals.sent) * 100).toFixed(1) : "0.0";
 
+  // Show error state
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <h3 className="text-lg font-semibold text-gray-900">
+          Campaign Performance
+        </h3>
+        <div className="flex items-center justify-center py-8">
+          <div className="text-center">
+            <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+            <p className="text-red-600 font-medium">Failed to load analytics data</p>
+            <p className="text-gray-500 text-sm mt-2">Please try refreshing the page</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-gray-900">
         Campaign Performance
       </h3>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <KpiCard
-          className="flex-row-reverse justify-end gap-2"
-          title="Total Sent"
-          value={totals.sent.toLocaleString()}
-          icon={Mail}
-          color="bg-gray-100 text-gray-600"
-        />
-        <KpiCard
-          className="flex-row-reverse justify-end gap-2"
-          title="Opens"
-          value={`${totals.opened.toLocaleString()} (${openRate}%)`}
-          icon={Eye}
-          color="bg-blue-100 text-blue-600"
-        />
-        <KpiCard
-          className="flex-row-reverse justify-end gap-2"
-          title="Replies"
-          value={`${totals.replied.toLocaleString()} (${replyRate}%)`}
-          icon={TrendingUp}
-          color="bg-green-100 text-green-600"
-        />
-        <KpiCard
-          className="flex-row-reverse justify-end gap-2"
-          title="Clicks"
-          value={`${totals.clicked.toLocaleString()} (${clickRate}%)`}
-          icon={MousePointer}
-          color="bg-purple-100 text-purple-600"
-        />
-        <KpiCard
-          className="flex-row-reverse justify-end gap-2"
-          title="Bounces"
-          value={`${totals.bounced.toLocaleString()} (${bounceRate}%)`}
-          icon={AlertTriangle}
-          color="bg-red-100 text-red-600"
-        />
-      </div>
+      {/* KPI Cards - Show loading or data */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="bg-gray-100 animate-pulse rounded-lg p-4 h-24" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <KpiCard
+            className="flex-row-reverse justify-end gap-2"
+            title="Total Sent"
+            value={totals.sent.toLocaleString()}
+            icon={Mail}
+            color="bg-gray-100 text-gray-600"
+          />
+          <KpiCard
+            className="flex-row-reverse justify-end gap-2"
+            title="Opens"
+            value={`${totals.opened.toLocaleString()} (${openRate}%)`}
+            icon={Eye}
+            color="bg-blue-100 text-blue-600"
+          />
+          <KpiCard
+            className="flex-row-reverse justify-end gap-2"
+            title="Replies"
+            value={`${totals.replied.toLocaleString()} (${replyRate}%)`}
+            icon={TrendingUp}
+            color="bg-green-100 text-green-600"
+          />
+          <KpiCard
+            className="flex-row-reverse justify-end gap-2"
+            title="Clicks"
+            value={`${totals.clicked.toLocaleString()} (${clickRate}%)`}
+            icon={MousePointer}
+            color="bg-purple-100 text-purple-600"
+          />
+          <KpiCard
+            className="flex-row-reverse justify-end gap-2"
+            title="Bounces"
+            value={`${totals.bounced.toLocaleString()} (${bounceRate}%)`}
+            icon={AlertTriangle}
+            color="bg-red-100 text-red-600"
+          />
+        </div>
+      )}
 
       {/* Chart Container */}
+      {loading ? (
+        <Card ref={chartRef}>
+          <CardContent className="p-6">
+            <div className="h-80 w-full flex items-center justify-center">
+              <div className="text-center">
+                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
+                <p className="text-gray-600">Loading analytics data...</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
       <Card ref={chartRef}>
         <CardContent className="p-6">
           {/* Header with Controls */}
@@ -324,6 +383,7 @@ function StatsTab() {
           </div>
         </CardContent>
       </Card>
+      )}
     </div>
   );
 }

@@ -9,10 +9,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import { DataGranularity, DateRangePreset } from "@/types";
-import { campaignData, mailboxes, metrics } from "@/lib/data/analytics.mock";
+import { DataGranularity, DateRangePreset, AnalyticsMetric, CampaignPerformanceData } from "@/types";
 import { ChevronDown, Mail, Settings, Target } from "lucide-react";
 import { DropDownFilter, Filter } from "../../ui/custom/Filter";
+
+interface MailboxFilter {
+  id: string;
+  name: string;
+}
+
+interface PerformanceFilterProps {
+  campaignData: CampaignPerformanceData[];
+  mailboxes: MailboxFilter[];
+  metrics: AnalyticsMetric[];
+}
 
 const dateRangeOptions = [
   { value: "7d", label: "Last 7 days" },
@@ -28,7 +38,7 @@ const granularityOptions = [
   { value: "month", label: "Monthly" },
 ];
 
-function PerformanceFilter() {
+function PerformanceFilter({ campaignData, mailboxes, metrics }: PerformanceFilterProps) {
   const { filters } = useAnalytics();
   const {
     visibleMetrics,
