@@ -1,4 +1,6 @@
 import type { NotificationFormValues, NotificationSettingsProps } from "../../types/settings";
+import type { Notification } from "../../types/notification";
+import { NotificationType as NotificationTypeEnum } from "../../types/notification";
 
 // Notification Preference Types
 export interface NotificationPreferences {
@@ -476,10 +478,110 @@ export const mockNotificationSchedules: NotificationSchedule[] = [
       timezone: "America/New_York",
     },
     enabled: false,
-  },
-];
-
-// Helper functions
+    },
+  ];
+  
+  // Mock core Notification data for UI components
+  export const mockNotifications: Notification[] = [
+    {
+      id: 1,
+      type: NotificationTypeEnum.REPLY,
+      title: "Sarah Johnson replied to your email",
+      message: "Thanks for reaching out! I'd love to schedule a call...",
+      time: new Date(Date.now() - 10 * 60 * 1000), // 10 minutes ago as Date
+      isRead: false,
+    },
+    {
+      id: 2,
+      type: NotificationTypeEnum.CAMPAIGN,
+      title: "Your campaign 'SaaS Outreach' has completed",
+      message: "847 emails sent with 34.2% open rate",
+      time: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
+      isRead: false,
+    },
+    {
+      id: 3,
+      type: NotificationTypeEnum.WARNING,
+      title: "Email account john@example.com needs attention",
+      message: "Warmup process paused due to deliverability issues",
+      time: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      isRead: false,
+    },
+    {
+      id: 4,
+      type: NotificationTypeEnum.SUCCESS,
+      title: "Domain verification completed",
+      message: "mycompany.com is now ready for sending",
+      time: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
+      isRead: true,
+    },
+    {
+      id: 5,
+      type: NotificationTypeEnum.INFO,
+      title: "Weekly performance report is ready",
+      message: "View your campaign analytics for this week",
+      time: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+      isRead: true,
+    },
+    {
+      id: 6,
+      type: NotificationTypeEnum.CAMPAIGN_COMPLETED,
+      title: "Campaign 'Black Friday Sale' finished",
+      message: "Successfully sent to 5,000 contacts with 98.5% delivery",
+      time: "2 hours ago",
+      isRead: false,
+    },
+    {
+      id: 7,
+      type: NotificationTypeEnum.SECURITY_ALERT,
+      title: "Security Alert: New login detected",
+      message: "A new login to your account from Chrome on Linux",
+      time: "3 hours ago",
+      isRead: false,
+    },
+    {
+      id: 8,
+      type: NotificationTypeEnum.DOMAIN_ISSUE,
+      title: "Domain configuration issue",
+      message: "SPF validation failed for mail.example.com",
+      time: "5 hours ago",
+      isRead: true,
+    },
+    {
+      id: 9,
+      type: NotificationTypeEnum.LEAD_RESPONDED,
+      title: "New prospect responded",
+      message: "john.doe@company.com replied to your outreach",
+      time: "6 hours ago",
+      isRead: false,
+    },
+    {
+      id: 10,
+      type: NotificationTypeEnum.TASK_COMPLETED,
+      title: "Task completed successfully",
+      message: "Lead generation task for 'Tech Startups' completed",
+      time: "8 hours ago",
+      isRead: true,
+    },
+    {
+      id: 11,
+      type: NotificationTypeEnum.QUOTA_EXCEEDED,
+      title: "Monthly email quota exceeded",
+      message: "You have reached 85% of your monthly email limit",
+      time: "1 day ago",
+      isRead: true,
+    },
+    {
+      id: 12,
+      type: NotificationTypeEnum.SYSTEM_MAINTENANCE,
+      title: "Scheduled maintenance completed",
+      message: "Platform upgrade finished successfully",
+      time: "2 days ago",
+      isRead: true,
+    },
+  ];
+  
+  // Helper functions
 export function getNotificationTypeById(id: string): NotificationType | undefined {
   return notificationTypes.find(type => type.id === id);
 }
