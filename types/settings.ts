@@ -14,6 +14,75 @@ export interface BaseEntity extends Omit<CommonBaseEntity, "createdAt" | "update
   updatedAt: Date;
 }
 
+export interface UserProfileData {
+  name: string;
+  email: string;
+  username: string;
+  role: string;
+  avatarUrl?: string;
+}
+
+export interface NotificationData {
+  email: {
+    campaignCompletions: boolean;
+    newReplies: boolean;
+    weeklyReports: boolean;
+    systemAnnouncements: boolean;
+  };
+  inApp: {
+    realTimeCampaignAlerts: boolean;
+    emailAccountAlerts: boolean;
+  };
+}
+
+export interface ComplianceData {
+  autoAddUnsubscribeLink: boolean;
+  unsubscribeText: string;
+  unsubscribeLandingPage: string;
+  companyName: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
+
+export interface BillingData {
+  renewalDate: string;
+  emailAccountsUsed: number;
+  campaignsUsed: number;
+  emailsPerMonthUsed: number;
+  planDetails: {
+    id: string;
+    name: string;
+    isMonthly: boolean;
+    price: number;
+    description: string;
+    maxEmailAccounts: number;
+    maxCampaigns: number;
+    maxEmailsPerMonth: number;
+  };
+  paymentMethod: {
+    lastFour: string;
+    expiry: string;
+    brand: string; // e.g., "Visa"
+  };
+  billingHistory: Array<{
+    date: string;
+    description: string;
+    amount: string;
+    method: string; // e.g., "Visa •••• 4242"
+  }>;
+}
+
+export interface SettingsData {
+  userProfile: UserProfileData;
+  notifications: NotificationData;
+  compliance: ComplianceData;
+  billing: BillingData;
+}
+
 // Company Information
 export interface CompanyInfo {
   name: string;

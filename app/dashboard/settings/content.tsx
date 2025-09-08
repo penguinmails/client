@@ -2,84 +2,15 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SettingsData } from "@/types/settings";
 import AccountSettings from "@/components/settings/account/AccountSettings";
 import AppearanceSettings from "@/components/settings/appearance/AppearanceSettings";
 import NotificationSettings from "@/components/settings/general/NotificationSettings";
 import { ComplianceSettings } from "@/components/settings/general/ComplianceSettings";
 import BillingSettings from "@/components/settings/billing/BillingSettings";
 
-interface UserProfileData {
-  name: string;
-  email: string;
-  username: string;
-  role: string;
-  avatarUrl?: string;
-}
-
-interface NotificationData {
-  email: {
-    campaignCompletions: boolean;
-    newReplies: boolean;
-    weeklyReports: boolean;
-    systemAnnouncements: boolean;
-  };
-  inApp: {
-    realTimeCampaignAlerts: boolean;
-    emailAccountAlerts: boolean;
-  };
-}
-
-interface ComplianceData {
-  autoAddUnsubscribeLink: boolean;
-  unsubscribeText: string;
-  unsubscribeLandingPage: string;
-  companyName: string;
-  addressLine1: string;
-  addressLine2?: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-}
-
-interface BillingData {
-  renewalDate: string;
-  emailAccountsUsed: number;
-  campaignsUsed: number;
-  emailsPerMonthUsed: number;
-  planDetails: {
-    id: string;
-    name: string;
-    isMonthly: boolean;
-    price: number;
-    description: string;
-    maxEmailAccounts: number;
-    maxCampaigns: number;
-    maxEmailsPerMonth: number;
-  };
-  paymentMethod: {
-    lastFour: string;
-    expiry: string;
-    brand: string; // e.g., "Visa"
-  };
-  billingHistory: Array<{
-    date: string;
-    description: string;
-    amount: string;
-    method: string; // e.g., "Visa •••• 4242"
-  }>;
-}
-
-// Mock data structure based on potential server-fetched data
-interface MockSettingsData {
-  userProfile: UserProfileData;
-  notifications: NotificationData;
-  compliance: ComplianceData;
-  billing: BillingData;
-}
-
 interface SettingsContentProps {
-  settingsData: MockSettingsData;
+  settingsData: SettingsData;
 }
 
 export function SettingsContent({ settingsData }: SettingsContentProps) {
