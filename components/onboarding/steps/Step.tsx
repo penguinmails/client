@@ -2,7 +2,7 @@
 
 import { ActionButtons } from "../navigation/ActionButtons";
 import { PromotionAlert } from "../components/PromotionAlert";
-import { OnboardingStep } from "@/context/onboarding-context";
+import { OnboardingStep } from "@/types/onboarding";
 import { VideoTutorial } from "../components/VideoTutorial";
 
 interface StepProps {

@@ -4,7 +4,7 @@ import { useOnboarding } from "@/context/onboarding-context";
 import { ArrowRight, BookOpen, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
-import { OnboardingStep } from "@/context/onboarding-context";
+import { OnboardingStep } from "@/types/onboarding";
 
 interface ActionButtonsProps {
   step: OnboardingStep;

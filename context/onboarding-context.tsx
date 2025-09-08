@@ -1,6 +1,7 @@
 "use client";
 import { onboardingSteps } from "@/lib/data/onboarding.mock";
 import { LucideIcon } from "lucide-react";
+import { OnboardingStep } from "@/types/onboarding";
 import {
   createContext,
   ReactNode,
@@ -9,25 +10,6 @@ import {
   useMemo,
   useState,
 } from "react";
-
-interface OnboardingStep {
-  id: number;
-  title: string;
-  subtitle: string;
-  explanation: string;
-  icon: LucideIcon;
-  color: string;
-  href: string;
-  buttonText: string;
-  kbLink: string;
-  videoId: string;
-  completed: boolean;
-  promotion?: {
-    title: string;
-    description: string;
-    link: string;
-  };
-}
 
 interface OnboardingContextType {
   currentStep: number;
@@ -131,4 +113,3 @@ function useOnboarding() {
 }
 
 export { OnboardingProvider, useOnboarding };
-export type { OnboardingStep };
