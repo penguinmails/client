@@ -29,7 +29,7 @@ export type ActionResult<T> =
     };
 
 // Error codes for better error handling
-export const ERROR_CODES = {
+const ERROR_CODES = {
   // Authentication errors
   AUTH_REQUIRED: "AUTH_REQUIRED",
   UNAUTHORIZED: "UNAUTHORIZED",

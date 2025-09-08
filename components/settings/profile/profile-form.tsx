@@ -37,7 +37,6 @@ import {
 import {
   getUserSettings,
   updateUserSettings,
-  ERROR_CODES,
 } from "@/lib/actions/settingsActions";
 import {
   mapNileUserToFormData,
@@ -280,7 +279,7 @@ function ProfileForm() {
         return true;
       } else {
         // Handle error
-        if (!result.success && result.code === ERROR_CODES.AUTH_REQUIRED) {
+        if (!result.success && result.code === "AUTH_REQUIRED") {
           toast.error("Authentication required", {
             description: "Please log in to access settings.",
           });

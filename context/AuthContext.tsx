@@ -9,6 +9,7 @@ import {
   ProfileActionResponse,
 } from "@/lib/actions/profileActions";
 import { NileUser, mapNileUserToFormData } from "@/lib/utils";
+import { toast } from "sonner";
 
 // NileDB Session interface
 interface SessionData {
@@ -40,6 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInHook = useSignIn({
     onSuccess: (data) => {
+      console.log("[AuthContext] User signed in:", data);
       if (data?.ok) {
         const getUserFromSession = async () => {
           try {
@@ -78,6 +80,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         };
         getUserFromSession();
+      }
+      else {
+        toast.error("Login failed.");
+        setAuthError(new Error("Login failed."));
+        setUser(null);
+        setLoading(false);
       }
     },
     onError: (error: Error) => {
