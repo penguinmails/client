@@ -2,6 +2,9 @@ import QuickReplyItem from "@/components/templates/quick-replies/quick-replay-it
 import { Input } from "@/components/ui/input";
 import { getQuickReplies } from "@/lib/actions/templateActions";
 
+// Force dynamic rendering since this page uses authentication
+export const dynamic = 'force-dynamic';
+
 async function page() {
   const result = await getQuickReplies();
 

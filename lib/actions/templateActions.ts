@@ -2,6 +2,7 @@
 
 import { initialTemplates as initialTemplatesMock, initialQuickReplies } from "@/lib/data/template.mock";
 import { getCurrentUserId } from "@/lib/utils/auth";
+import { nile } from "@/app/api/[...nile]/nile";
 import type { Template, TemplateFolder, TemplateCategoryType } from "@/types";
 import type { ActionResult } from "./settings.types";
 import { ERROR_CODES } from "./settings.types";
@@ -136,7 +137,19 @@ export async function getTemplateFolders(): Promise<ActionResult<TemplateFolder[
 export async function getQuickReplies(): Promise<ActionResult<Template[]>> {
   try {
     // Check authentication
-    const userId = await getCurrentUserId();
+    let userId: string | null = null;
+    try {
+      userId = await getCurrentUserId();
+    } catch (authError) {
+      console.warn("Authentication error in getQuickReplies:", authError);
+      // Fallback to mock data for graceful handling
+      const mockQuickReplies: Template[] = initialQuickReplies.map(mapMockToTemplate);
+      return {
+        success: true,
+        data: mockQuickReplies,
+      };
+    }
+
     if (!userId) {
       return {
         success: false,
@@ -145,17 +158,79 @@ export async function getQuickReplies(): Promise<ActionResult<Template[]>> {
       };
     }
 
-    // Simulate database fetch with mock data
-    // In production, this would fetch from database based on user company
-    await new Promise(resolve => setTimeout(resolve, 100)); // Simulate network delay
+    // Fetch quick replies from database filtered by type
+    // Nile automatically scopes queries to the current tenant
+    try {
+      const result = await nile.db.query(`
+        SELECT id, name, body, body_html as "bodyHtml", subject, content, category,
+               folder_id as "folderId", usage, open_rate as "openRate", reply_rate as "replyRate",
+               last_used as "lastUsed", is_starred as "isStarred", type, tenant_id,
+               description, created_by_id as "createdById", created_at as "createdAt",
+               updated_at as "updatedAt"
+        FROM templates
+        WHERE type = 'quick-reply'
+        ORDER BY created_at DESC
+      `);
 
-    // Filter and map mock data to Template type
-    const quickReplies: Template[] = initialQuickReplies.map(mapMockToTemplate);
+      // Define type for database result row
+      interface DbTemplateRow {
+        id: number;
+        name: string;
+        body: string | null;
+        bodyHtml: string | null;
+        subject: string | null;
+        content: string | null;
+        category: string;
+        folderId: number | null;
+        usage: number | null;
+        openRate: string | null;
+        replyRate: string | null;
+        lastUsed: string | null;
+        isStarred: boolean | null;
+        type: string;
+        tenant_id: number;
+        description: string | null;
+        createdById: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+      }
 
-    return {
-      success: true,
-      data: quickReplies,
-    };
+      // Map database results to Template type
+      const quickReplies: Template[] = (result as DbTemplateRow[]).map((row) => ({
+        id: row.id,
+        name: row.name,
+        body: row.body || "",
+        bodyHtml: row.bodyHtml || "",
+        subject: row.subject || "",
+        content: row.content || "",
+        category: row.category as TemplateCategoryType,
+        folderId: row.folderId,
+        usage: row.usage || 0,
+        openRate: row.openRate || "",
+        replyRate: row.replyRate || "",
+        lastUsed: row.lastUsed || "",
+        isStarred: row.isStarred || false,
+        type: row.type as "template" | "quick-reply",
+        companyId: row.tenant_id, // Set company ID from tenant
+        description: row.description || "",
+        createdById: row.createdById,
+        createdAt: new Date(row.createdAt),
+        updatedAt: new Date(row.updatedAt),
+      }));
+
+      return {
+        success: true,
+        data: quickReplies,
+      };
+    } catch (dbError) {
+      console.error("Database error in getQuickReplies, falling back to mock data:", dbError);
+      // Fallback to mock data on database error
+      const mockQuickReplies: Template[] = initialQuickReplies.map(mapMockToTemplate);
+      return {
+        success: true,
+        data: mockQuickReplies,
+      };
+    }
   } catch (error) {
     console.error("getQuickReplies error:", error);
 

@@ -11,6 +11,9 @@ import CSVUploadTab from "@/components/leads/components/CSVUploadTab";
 import ContactsTab from "@/components/leads/components/ContactsTab";
 import { FileText, Upload, Mail, Users } from "lucide-react";
 
+// Force dynamic rendering since this page uses authentication and headers
+export const dynamic = 'force-dynamic';
+
 async function LeadsPage() {
   const leadsStatsData = await getLeadsStats();
   const leadListsData = await getLeadLists();
