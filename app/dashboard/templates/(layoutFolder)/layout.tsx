@@ -2,14 +2,43 @@ import NavLink from "@/components/ui/custom/NavLink";
 import CreateNewFolderButton from "@/components/templates/create-new-folder-button";
 import ConditionalNewTemplateButton from "@/components/templates/ConditionalNewTemplateButton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { tabs } from "@/lib/data/template.mock";
-function layout({
+import GalleryTab from "@/components/templates/gallery-tab";
+import MyTemplatesTab from "@/components/templates/my-templates-tab";
+import QuickRepliesTab from "@/components/templates/qucik-replies-tab";
+import { Tab } from "@/types/tab";
+import { getTabCounts } from "@/lib/actions/templateActions";
+
+// Tab definitions - UI structure
+const tabs: Tab[] = [
+  {
+    id: "quick-replies",
+    label: "Quick Replies",
+    Component: QuickRepliesTab,
+  },
+  {
+    id: "templates",
+    label: "My Templates",
+    Component: MyTemplatesTab,
+  },
+  {
+    id: "gallery",
+    label: "Gallery",
+    Component: GalleryTab,
+  },
+];
+
+// Force dynamic rendering for authentication checks
+export const dynamic = "force-dynamic";
+async function layout({
   templateFolders,
   children,
 }: {
   templateFolders: React.ReactNode;
   children: React.ReactNode;
 }) {
+  const tabCountsResult = await getTabCounts();
+  const tabCounts = tabCountsResult.success ? tabCountsResult.data : {};
+
   return (
     <div className="space-y-5 flex flex-col h-full">
       <div className="flex justify-between items-center">
@@ -39,7 +68,7 @@ function layout({
                 className="[&.active]:text-blue-600 [&.active]:border-b-2 [&.active]:border-blue-600 p-2 text-gray-400"
                 title={tab.label}
               >
-                {tab.label} ({tab.count})
+                {tab.label} ({tabCounts[tab.id] || 0})
               </NavLink>
             ))}
           </div>

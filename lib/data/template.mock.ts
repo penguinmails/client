@@ -1,8 +1,3 @@
-import GalleryTab from "@/components/templates/gallery-tab";
-import MyTemplatesTab from "@/components/templates/my-templates-tab";
-import QuickRepliesTab from "@/components/templates/qucik-replies-tab";
-import { Tab } from "@/types/tab";
-
 export const initialFolders = [
   {
     id: 1,
@@ -138,23 +133,3 @@ export const initialTemplates = initialFolders
   .flatMap((folder) => folder.children)
   .filter((child) => child.type === "template");
 
-export const tabs: Tab[] = [
-  {
-    id: "quick-replies",
-    label: "Quick Replies",
-    count: initialQuickReplies.length,
-    Component: QuickRepliesTab,
-  },
-  {
-    id: "templates",
-    label: "My Templates",
-    count: initialTemplates.length,
-    Component: MyTemplatesTab,
-  },
-  {
-    id: "gallery",
-    label: "Gallery",
-    count: 0,
-    Component: GalleryTab,
-  },
-];

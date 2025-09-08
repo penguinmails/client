@@ -96,8 +96,8 @@ export async function getTemplates(): Promise<ActionResult<Template[]>> {
 }
 
 /**
- * Get template folders for the authenticated user
- */
+  * Get template folders for the authenticated user
+  */
 export async function getTemplateFolders(): Promise<ActionResult<TemplateFolder[]>> {
   try {
     const userId = await getCurrentUserId();
@@ -123,6 +123,54 @@ export async function getTemplateFolders(): Promise<ActionResult<TemplateFolder[
     return {
       success: false,
       error: "Failed to retrieve template folders",
+      code: ERROR_CODES.INTERNAL_ERROR,
+    };
+  }
+}
+
+/**
+ * Get counts for template tabs
+ */
+export async function getTabCounts(): Promise<ActionResult<Record<string, number>>> {
+  try {
+    // Check authentication
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: false,
+        error: "You must be logged in to view tab counts",
+        code: ERROR_CODES.AUTH_REQUIRED,
+      };
+    }
+
+    // Simulate database fetch
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Calculate counts from mock data (in production, this would come from database)
+    const templates = initialTemplatesMock;
+    const quickReplies = initialTemplatesMock.filter(
+      (template) => template.type === "quick-reply"
+    );
+    const templatesCount = templates.filter(
+      (template) => template.type === "template"
+    ).length;
+    const quickRepliesCount = quickReplies.length;
+
+    const counts = {
+      "quick-replies": quickRepliesCount,
+      "templates": templatesCount,
+      "gallery": 0, // Gallery count is 0 for now
+    };
+
+    return {
+      success: true,
+      data: counts,
+    };
+  } catch (error) {
+    console.error("getTabCounts error:", error);
+    return {
+      success: false,
+      error: "Failed to retrieve tab counts",
       code: ERROR_CODES.INTERNAL_ERROR,
     };
   }
