@@ -982,3 +982,25 @@ export async function addStorage(
     };
   }
 }
+
+export async function getStorageOptions(): Promise<ActionResult<{gb: number; price: number}[]>> {
+  try {
+    // This doesn't require authentication as it's public pricing info
+    return {
+      success: true,
+      data: [
+        { gb: 1, price: 3 },
+        { gb: 2, price: 6 },
+        { gb: 5, price: 15 },
+        { gb: 10, price: 30 },
+      ],
+    };
+  } catch (error) {
+    console.error("getStorageOptions error:", error);
+    return {
+      success: false,
+      error: "Failed to retrieve storage options",
+      code: BILLING_ERROR_CODES.INTERNAL_ERROR,
+    };
+  }
+}

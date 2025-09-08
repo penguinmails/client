@@ -12,8 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUsageWithCalculations } from "@/lib/actions/billingActions";
-import { storageOptions } from "@/lib/data/usage.mock";
+import { getUsageWithCalculations, getStorageOptions } from "@/lib/actions/billingActions";
 import { cn } from "@/lib/utils";
 import { Globe, HardDrive, Mail, Plus, Server, Users } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -82,6 +81,8 @@ function UsageTab() {
   const [usageData, setUsageData] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [storageOptions, setStorageOptions] = useState<{gb: number; price: number}[] | null>(null);
+  const [setLoadingStorage] = useState(true);
 
   const fetchUsageData = async () => {
     try {
@@ -110,8 +111,34 @@ function UsageTab() {
     }
   };
 
+  const fetchStorageOptions = async () => {
+    try {
+      setLoadingStorage(true);
+      const result = await getStorageOptions();
+      if (result.success) {
+        setStorageOptions(result.data);
+      } else {
+        toast.error("Failed to load storage options", {
+          description: result.error,
+        });
+      }
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+      toast.error("Failed to load storage options", {
+        description: errorMessage,
+      });
+    } finally {
+      setLoadingStorage(false);
+    }
+  };
+
   useEffect(() => {
     fetchUsageData();
+  }, []);
+
+  useEffect(() => {
+    fetchStorageOptions();
   }, []);
 
   if (loading) {
@@ -313,7 +340,7 @@ function UsageTab() {
           </AddStorageTrigger>
         </CardHeader>
         <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {storageOptions.map((option) => (
+          {storageOptions && storageOptions.map((option) => (
             <Card
               key={option.gb}
               className="bg-gray-50 rounded-lg p-4 text-center border border-gray-200 hover:border-blue-300 transition-colors cursor-pointer"

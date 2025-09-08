@@ -16,11 +16,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { addStorage } from "@/lib/actions/billingActions";
-import { storageOptions } from "@/lib/data/usage.mock";
+import { addStorage, getStorageOptions } from "@/lib/actions/billingActions";
 import { cn } from "@/lib/utils";
 import { HardDrive, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface AddStorageTriggerProps {
@@ -33,10 +32,10 @@ function AddStorageTrigger({
   onStorageAdded,
 }: AddStorageTriggerProps) {
   const [open, setOpen] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState(
-    storageOptions[0]?.gb || 1
-  );
+  const [selectedAmount, setSelectedAmount] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [storageOptions, setStorageOptions] = useState<{gb: number; price: number}[] | null>(null);
+  const [setLoadingStorage] = useState(true);
 
   const handleSubmit = async () => {
     try {
@@ -71,7 +70,37 @@ function AddStorageTrigger({
     }
   };
 
-  const selectedOption = storageOptions.find(
+  const fetchStorageOptions = async () => {
+    try {
+      setLoadingStorage(true);
+      const result = await getStorageOptions();
+      if (result.success) {
+        setStorageOptions(result.data);
+        // Set default selectedAmount to the first option
+        if (result.data.length > 0) {
+          setSelectedAmount(result.data[0].gb);
+        }
+      } else {
+        toast.error("Failed to load storage options", {
+          description: result.error,
+        });
+      }
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+      toast.error("Failed to load storage options", {
+        description: errorMessage,
+      });
+    } finally {
+      setLoadingStorage(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStorageOptions();
+  }, []);
+
+  const selectedOption = storageOptions?.find(
     (option) => option.gb === selectedAmount
   );
 
@@ -103,7 +132,7 @@ function AddStorageTrigger({
           <div className="space-y-3">
             <Label className="text-sm font-medium">Select storage amount</Label>
             <div className="grid grid-cols-2 gap-3">
-              {storageOptions.map((option) => (
+              {storageOptions && storageOptions.map((option) => (
                 <Button
                   key={option.gb}
                   variant="outline"
