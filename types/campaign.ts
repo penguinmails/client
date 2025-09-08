@@ -45,9 +45,9 @@ export type CampaignMetrics = {
 };
 
 export type Campaign = {
-  id: string;
+  id: string | number;
   name: string;
-  status: CampaignStatus;
+  status?: CampaignStatus | CampaignStatusEnum;
   fromName: string;
   fromEmail: string;
   metrics: CampaignMetrics;

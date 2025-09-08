@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { campaignLeads } from "@/lib/data/campaigns";
+import { getCampaignLeads } from "@/lib/actions/campaignActions";
 import LeadsFilter from "./LeadsFilter";
 
 const getStatusColor = (status: string) => {
@@ -17,7 +17,9 @@ const getStatusColor = (status: string) => {
   }
 };
 
-function LeadsTab() {
+async function LeadsTab() {
+  const campaignLeads = await getCampaignLeads();
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
