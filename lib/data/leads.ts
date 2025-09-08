@@ -34,8 +34,6 @@ export const leadsStats = [
   },
 ];
 
-export type LeadStats = typeof leadsStats;
-
 export const leadListsData = [
   {
     id: 1,
@@ -156,8 +154,6 @@ export const sampleLeads = [
     source: "Conference",
   },
 ] as const;
-
-export type Lead = (typeof sampleLeads)[number];
 
 export const CSV_COLUMNS = [
   { key: "email", label: "Email Address", required: true },

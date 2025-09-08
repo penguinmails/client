@@ -136,3 +136,13 @@ export interface DbLeadListRow {
   contacts: number;
   description: string;
 }
+
+// Lead Stats Type
+export interface LeadStat {
+  title: string;
+  value: string;
+  icon: string;
+  color: string;
+}
+
+export type LeadStats = LeadStat[];

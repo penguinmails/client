@@ -1,6 +1,7 @@
 "use server";
 
-import { leadsStats, leadLists, LeadStats } from "@/lib/data/leads";
+import { leadsStats, leadLists } from "@/lib/data/leads";
+import { LeadStats } from "@/types/clients-leads";
 import { nile } from "@/app/api/[...nile]/nile";
 import { getCurrentUserId } from "@/lib/utils/auth";
 import { DbLeadList, DbLeadListRow } from "@/types/clients-leads";

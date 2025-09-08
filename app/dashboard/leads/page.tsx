@@ -5,7 +5,7 @@ import StatsCard from "@/components/analytics/cards/StatsCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getLeadsStats, getLeadLists } from "./actions";
-import { LeadStats } from "@/lib/data/leads";
+import { LeadStats } from "@/types/clients-leads";
 import { Suspense } from "react";
 import CSVUploadTab from "@/components/leads/components/CSVUploadTab";
 import ContactsTab from "@/components/leads/components/ContactsTab";
