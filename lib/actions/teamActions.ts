@@ -748,7 +748,7 @@ export async function updateTeamSettings(
 /**
  * Helper function to log team activity
  */
-async function logTeamActivity(activity: Omit<TeamActivity, 'id' | 'teamId' | 'timestamp' | 'performedByName'>): Promise<void> {
+async function logTeamActivity(_activity: Omit<TeamActivity, 'id' | 'teamId' | 'timestamp' | 'performedByName'>): Promise<void> {
   try {
     // In a real implementation, this would save to database
   } catch (error) {

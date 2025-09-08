@@ -888,3 +888,97 @@ export async function applyPromoCode(
     };
   }
 }
+
+/**
+ * Add storage to user's account
+ */
+export async function addStorage(
+  storageAmount: number
+): Promise<ActionResult<{ newStorageLimit: number; monthlyCost: number }>> {
+  try {
+    const userId = await requireUserId();
+    
+    // Validate storage amount
+    if (!storageAmount || storageAmount <= 0 || storageAmount > 100) {
+      return {
+        success: false,
+        error: "Storage amount must be between 1 and 100 GB",
+        code: BILLING_ERROR_CODES.VALIDATION_FAILED,
+      };
+    }
+    
+    // Check rate limit
+    const canProceed = await checkRateLimit(`storage:add:${userId}`, 3, 60000);
+    if (!canProceed) {
+      return {
+        success: false,
+        error: "Too many storage addition attempts. Please try again later.",
+        code: BILLING_ERROR_CODES.RATE_LIMIT_EXCEEDED,
+      };
+    }
+    
+    // Get current billing info
+    const billingResult = await getBillingInfo();
+    if (!billingResult.success) {
+      return {
+        success: false,
+        error: "Failed to verify current billing information",
+        code: BILLING_ERROR_CODES.INTERNAL_ERROR,
+      };
+    }
+    
+    // Check payment method
+    if (!billingResult.data.paymentMethod) {
+      return {
+        success: false,
+        error: "Payment method required to add storage",
+        code: BILLING_ERROR_CODES.PAYMENT_REQUIRED,
+      };
+    }
+    
+    // Calculate cost ($3 per GB per month)
+    const monthlyCost = storageAmount * 3;
+    const newStorageLimit = billingResult.data.usage.storageLimit + storageAmount;
+    
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // In production, process payment and update database
+    // const paymentResult = await stripe.charges.create({
+    //   amount: monthlyCost * 100, // Convert to cents
+    //   currency: 'usd',
+    //   customer: billingResult.data.paymentMethod.id,
+    //   description: `Additional storage: ${storageAmount} GB`,
+    // });
+    
+    // await db.billing.update({
+    //   where: { userId },
+    //   data: {
+    //     usage: {
+    //       update: {
+    //         storageLimit: newStorageLimit
+    //       }
+    //     }
+    //   }
+    // });
+    
+    // For now, simulate successful storage addition
+    // Update the mock data (in production this would be in database)
+    mockUsageMetrics.storageLimit = newStorageLimit;
+    
+    return {
+      success: true,
+      data: {
+        newStorageLimit,
+        monthlyCost,
+      },
+    };
+  } catch (error) {
+    console.error("addStorage error:", error);
+    return {
+      success: false,
+      error: "Failed to add storage",
+      code: BILLING_ERROR_CODES.PAYMENT_FAILED,
+    };
+  }
+}

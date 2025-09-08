@@ -22,8 +22,8 @@ import { AlertTriangle, Loader2, RefreshCw, CheckCircle } from "lucide-react";
 import {
   getSimpleNotificationPreferences,
   updateSimpleNotificationPreferences,
-  type SimpleNotificationPreferences,
 } from "@/lib/actions/settingsActions";
+import type { SimpleNotificationPreferences } from "@/lib/actions/settings.types";
 
 const notificationSchema = z.object({
   newReplies: z.boolean(),
@@ -180,10 +180,7 @@ function NotificationsSettings() {
                 onClick: () => onSubmit(data),
               },
             });
-          } else if (
-            result.code === "VALIDATION_FAILED" &&
-            result.field
-          ) {
+          } else if (result.code === "VALIDATION_FAILED" && result.field) {
             // Set field-specific error
             form.setError(result.field as keyof NotificationFormValues, {
               message: result.error,

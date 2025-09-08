@@ -16,24 +16,63 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { addStorage } from "@/lib/actions/billingActions";
 import { storageOptions } from "@/lib/data/usage.mock";
 import { cn } from "@/lib/utils";
-import { HardDrive } from "lucide-react";
+import { HardDrive, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
-function AddStorageTrigger({ children }: { children: React.ReactNode }) {
+interface AddStorageTriggerProps {
+  children: React.ReactNode;
+  onStorageAdded?: () => void;
+}
+
+function AddStorageTrigger({
+  children,
+  onStorageAdded,
+}: AddStorageTriggerProps) {
   const [open, setOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState(
-    storageOptions[0]?.gb || 1,
+    storageOptions[0]?.gb || 1
   );
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
-    console.log("Purchasing storage:", selectedAmount, "GB");
-    setOpen(false);
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+
+      const result = await addStorage(selectedAmount);
+
+      if (result.success) {
+        toast.success("Storage added successfully!", {
+          description: `${selectedAmount} GB has been added to your account for $${result.data.monthlyCost}/month.`,
+        });
+
+        setOpen(false);
+
+        // Call the callback to refresh usage data
+        if (onStorageAdded) {
+          onStorageAdded();
+        }
+      } else {
+        toast.error("Failed to add storage", {
+          description: result.error,
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+      toast.error("Failed to add storage", {
+        description: errorMessage,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const selectedOption = storageOptions.find(
-    (option) => option.gb === selectedAmount,
+    (option) => option.gb === selectedAmount
   );
 
   return (
@@ -73,7 +112,7 @@ function AddStorageTrigger({ children }: { children: React.ReactNode }) {
                     "h-auto p-4 flex-col space-y-1 transition-all",
                     selectedAmount === option.gb
                       ? "border-primary bg-primary/5 text-primary"
-                      : "hover:border-muted-foreground/50",
+                      : "hover:border-muted-foreground/50"
                   )}
                 >
                   <div className="text-lg font-semibold">{option.gb} GB</div>
@@ -106,11 +145,23 @@ function AddStorageTrigger({ children }: { children: React.ReactNode }) {
               variant="outline"
               className="flex-1"
               onClick={() => setOpen(false)}
+              disabled={loading}
             >
               Cancel
             </Button>
-            <Button className="flex-1" onClick={handleSubmit}>
-              Purchase {selectedAmount} GB
+            <Button
+              className="flex-1"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                `Purchase ${selectedAmount} GB`
+              )}
             </Button>
           </div>
         </div>
