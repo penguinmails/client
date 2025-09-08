@@ -142,7 +142,7 @@ describe("Settings Validation Functions", () => {
     });
 
     it("should reject non-boolean values", () => {
-      const invalidPrefs: any = {
+      const invalidPrefs: Record<string, unknown> = {
         newReplies: "not a boolean",
         campaignUpdates: 1,
         weeklyReports: null,
@@ -170,7 +170,7 @@ describe("Settings Validation Functions", () => {
     });
 
     it("should reject invalid enum values", () => {
-      const invalidPrefs: any = {
+      const invalidPrefs: Record<string, unknown> = {
         theme: "invalid-theme",
         sidebarView: "invalid-view",
         dateFormat: "invalid-format",
@@ -231,7 +231,7 @@ describe("Settings Validation Functions", () => {
     });
 
     it("should reject invalid role and status", () => {
-      const invalidMember: any = {
+      const invalidMember: Record<string, unknown> = {
         role: "InvalidRole",
         status: "invalid-status",
       };

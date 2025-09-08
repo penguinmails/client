@@ -564,7 +564,7 @@ export interface SettingsApiError {
   message: string;
   code: string;
   field?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 // ============================================================================
@@ -582,6 +582,7 @@ export function isActionError<T>(result: ActionResult<T>): result is { success: 
 }
 
 // Type guard for UserSettings
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export function isUserSettings(obj: any): obj is UserSettings {
   return (
     obj &&
@@ -597,6 +598,7 @@ export function isUserSettings(obj: any): obj is UserSettings {
 }
 
 // Type guard for NotificationPreferences
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export function isNotificationPreferences(obj: any): obj is NotificationPreferences {
   return (
     obj &&
@@ -612,6 +614,7 @@ export function isNotificationPreferences(obj: any): obj is NotificationPreferen
 }
 
 // Type guard for BillingInfo
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export function isBillingInfo(obj: any): obj is BillingInfo {
   return (
     obj &&
@@ -627,6 +630,7 @@ export function isBillingInfo(obj: any): obj is BillingInfo {
 }
 
 // Type guard for TeamMember
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export function isTeamMember(obj: any): obj is TeamMember {
   return (
     obj &&
@@ -642,6 +646,7 @@ export function isTeamMember(obj: any): obj is TeamMember {
 }
 
 // Type guard for ClientPreferences
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export function isClientPreferences(obj: any): obj is ClientPreferences {
   return (
     obj &&
@@ -654,6 +659,7 @@ export function isClientPreferences(obj: any): obj is ClientPreferences {
 }
 
 // Type guard for CompanyInfo
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export function isCompanyInfo(obj: any): obj is CompanyInfo {
   return (
     obj &&
@@ -667,6 +673,7 @@ export function isCompanyInfo(obj: any): obj is CompanyInfo {
 }
 
 // Type guard for BillingAddress
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export function isBillingAddress(obj: any): obj is BillingAddress {
   return (
     obj &&
@@ -787,7 +794,7 @@ export function validateNotificationPreferences(prefs: Partial<NotificationPrefe
   ];
 
   for (const { key, field } of booleanFields) {
-    const value = (prefs as any)[key];
+    const value = (prefs as Record<string, unknown>)[key];
     if (value !== undefined && typeof value !== "boolean") {
       errors.push({
         field,
