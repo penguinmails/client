@@ -1,86 +1,73 @@
-import TemplateActions from "@/components/templates/template-actions";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { getTemplateById } from "@/lib/actions/templateActions";
-import { ArrowLeft, Star } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import KpiCards from "@/components/dashboard/cards/KpiCards";
+import QuickActions from "@/components/dashboard/actions/QuickActions";
+import RecentRepliesList from "@/components/inbox/RecentReply/RecentReplyList";
+import RecentReplySkeleton from "@/components/inbox/RecentReply/RecentReplySkeleton";
+import StatsCardSkeleton from "@/components/dashboard/cards/KpiCardSkeleton";
+import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
+import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Suspense } from "react";
+import { getStatsCards, getRecentReplies, getWarmupSummaryData } from "@/lib/actions/dashboardActions";
 
-async function page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const templateResult = await getTemplateById(id);
-  if (!templateResult.success || !templateResult.data) {
-    notFound();
-  }
-  const currentTemplate = templateResult.data;
-  const { name, category, content, isStarred, subject } = currentTemplate;
+async function page() {
+  // Fetch data using server actions
+  const statsCards = await getStatsCards();
+  const recentReplies = await getRecentReplies();
+  const warmupSummaryData = await getWarmupSummaryData();
 
   return (
-    <div className="p-3">
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between">
-            <div className="flex  gap-2 items-start">
-              <Link href="/dashboard/templates">
-                <Button
-                  variant="link"
-                  size="icon"
-                  asChild
-                  className="text-gray-400"
-                >
-                  <ArrowLeft className="w-6 h-6" />
-                </Button>
-              </Link>
-              <div className="flex flex-col gap-2">
-                <CardTitle className="text-lg">{name}</CardTitle>
-                <CardDescription>{category}</CardDescription>
-              </div>
-              {isStarred && (
-                <div>
-                  <Button variant="link" size="icon" asChild>
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                  </Button>
-                </div>
-              )}
-            </div>
-            <div>
-              <TemplateActions
-                numberOfShowen={5}
-                templateId={id}
-                type="template"
-              />
-            </div>
+    <div className=" mx-auto  space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-500">
+          Welcome back! Here&apos;s what&apos;s happening with your campaigns.
+        </p>
+      </div>
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <StatsCardSkeleton key={index} />
+            ))}
           </div>
-        </CardHeader>
-        <Separator />
-        <CardContent className="space-y-6">
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">
-              Subject Line
-            </h3>
-            <div className="bg-gray-50 rounded-xl p-4">
-              <p className="text-gray-900">{subject}</p>
-            </div>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">
-              Email Content
-            </h3>
-            <div className="bg-gray-50 rounded-xl p-4">
-              <pre className="text-gray-900 whitespace-pre-wrap font-sans">
-                {content}
-              </pre>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        }
+      >
+        <KpiCards cards={statsCards} />
+      </Suspense>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <Card className="bg-white rounded-xl shadow-sm border border-gray-200 p-0 gap-0">
+            <CardHeader className="p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Recent Replies
+              </h2>
+            </CardHeader>
+            <CardContent className="divide-y divide-gray-200 p-0">
+              <Suspense
+                fallback={
+                  <div className="space-y-0">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <RecentReplySkeleton key={index} />
+                    ))}
+                  </div>
+                }
+              >
+                <RecentRepliesList recentReplies={recentReplies} />
+              </Suspense>
+            </CardContent>
+          </Card>
+        </div>
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Warmup Summary */}
+          <Suspense fallback={<WarmupSummarySkeleton />}>
+            <WarmupSummary data={warmupSummaryData} />
+          </Suspense>
+
+          {/* Quick Actions */}
+          <QuickActions />
+        </div>
+      </div>
     </div>
   );
 }

@@ -152,3 +152,19 @@ export async function getDashboardMockDataAction(
 
   return mockData;
 }
+
+// Import the data from campaigns.ts
+import { statsCards, recentReplies, warmupSummaryData } from "@/lib/data/campaigns";
+import { StatsCardData, RecentReply, WarmupSummaryData } from "@/types/campaign";
+
+export async function getStatsCards(): Promise<StatsCardData[]> {
+  return statsCards;
+}
+
+export async function getRecentReplies(): Promise<RecentReply[]> {
+  return recentReplies;
+}
+
+export async function getWarmupSummaryData(): Promise<WarmupSummaryData> {
+  return warmupSummaryData;
+}
