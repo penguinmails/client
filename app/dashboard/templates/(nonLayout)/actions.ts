@@ -1,5 +1,60 @@
-import { userTemplates, builtInTemplates } from "@/components/templates/mocks";
-import { Template } from "@/types";
+import { initialTemplates } from "@/lib/data/template.mock";
+import { Template, TemplateCategoryType } from "@/types";
+
+// Type for simplified template from consolidated data
+interface ConsolidatedTemplate {
+  id: number;
+  name: string;
+  category: string;
+  subject: string;
+  content: string;
+  description?: string;
+  companyId?: number;
+  createdById?: string;
+  folderId?: number;
+  usage?: number;
+  openRate?: string;
+  replyRate?: string;
+  lastUsed?: string;
+  isStarred?: boolean;
+  type: string; // "template" | "quick-reply"
+}
+
+// Transform consolidated data to full Template format for backward compatibility
+function transformToFullTemplate(template: ConsolidatedTemplate): Template {
+  const baseDate = new Date("2024-02-01");
+  const daysOffset = template.id * 3;
+
+  return {
+    id: template.id,
+    name: template.name,
+    category: template.category as TemplateCategoryType,
+    subject: template.subject,
+    body: template.content?.replace(/\n/g, '\n') || template.content,
+    bodyHtml: template.content?.replace(/\n/g, '<br>') || template.content,
+    description: template.description || `Template for ${template.category}`,
+    createdAt: new Date(baseDate.getTime() + daysOffset * 24 * 60 * 60 * 1000),
+    updatedAt: new Date(Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000),
+    companyId: template.companyId || 1,
+    createdById: template.createdById || "user1",
+    folderId: template.folderId,
+    content: template.content,
+    usage: template.usage,
+    openRate: template.openRate,
+    replyRate: template.replyRate,
+    lastUsed: template.lastUsed,
+    isStarred: template.isStarred,
+    type: template.type as "template" | "quick-reply",
+  };
+}
+
+const userTemplates: Template[] = initialTemplates
+  .filter(template => template.id <= 6)
+  .map(transformToFullTemplate);
+
+const builtInTemplates: Template[] = initialTemplates
+  .filter(template => template.id > 6)
+  .map(transformToFullTemplate);
 
 export async function getTemplates(userId: string): Promise<Template[]> {
   try {
@@ -52,8 +107,13 @@ export async function createTemplate(
     // return template;
 
     // For now, return mock data
+    const userTemplateIds = initialTemplates
+      .filter(template => template.id <= 6)
+      .map(template => template.id);
+    const maxId = Math.max(...userTemplateIds);
+
     const newTemplate: Template = {
-      id: userTemplates.length + 1,
+      id: maxId + 1,
       name: data.name || "",
       category: data.category || "OUTREACH",
       subject: data.subject || "",
@@ -73,7 +133,8 @@ export async function createTemplate(
       isStarred: data.isStarred || false,
       type: data.type || "template",
     };
-    userTemplates.push(newTemplate);
+    // Note: In a real app, this would be saved to database
+    // For now, just return the new template
     return newTemplate;
   } catch (error) {
     console.error("Error creating template:", error);
@@ -96,16 +157,17 @@ export async function updateTemplate(
     // });
     // return template;
 
-    // For now, update mock data
-    const index = userTemplates.findIndex((t) => t.id === id);
-    if (index === -1) return null;
+    // For now, return mock updated data
+    const userTemplateData = userTemplates.find((t) => t.id === id);
+    if (!userTemplateData) return null;
 
-    userTemplates[index] = {
-      ...userTemplates[index],
+    const updatedTemplate: Template = {
+      ...userTemplateData,
       ...data,
       updatedAt: new Date(),
     };
-    return userTemplates[index];
+    // Note: In a real app, this would be saved to database
+    return updatedTemplate;
   } catch (error) {
     console.error("Error updating template:", error);
     return null;
