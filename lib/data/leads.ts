@@ -155,15 +155,6 @@ export const sampleLeads = [
   },
 ] as const;
 
-export const CSV_COLUMNS = [
-  { key: "email", label: "Email Address", required: true },
-  { key: "first_name", label: "First Name", required: true },
-  { key: "last_name", label: "Last Name", required: true },
-  { key: "company", label: "Company Name", required: false },
-  { key: "title", label: "Job Title", required: false },
-  { key: "website", label: "Website", required: false },
-  { key: "phone", label: "Phone Number", required: false },
-];
 
 export const SAMPLE_CSV_DATA = [
   ["Email Address", "First Name", "Last Name", "Company", "Job Title"],

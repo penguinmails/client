@@ -111,6 +111,9 @@ export interface CSVColumn {
   required: boolean;
 }
 
+// CSV Upload Types
+export type CSVRecord = Record<string, string>;
+
 export const CSV_COLUMNS: CSVColumn[] = [
   { key: "email", label: "Email Address", required: true },
   { key: "first_name", label: "First Name", required: true },
