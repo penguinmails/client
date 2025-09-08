@@ -15,13 +15,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { domains } from "@/lib/data/domains.mock";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, Eye, EyeOff, Mail } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-function AddMailboxDetails() {
+interface AddMailboxDetailsProps {
+  domains: Array<{
+    id: number;
+    domain: string;
+    name: string;
+    status: string;
+  }>;
+}
+
+function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
   const form = useFormContext();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

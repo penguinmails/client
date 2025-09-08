@@ -7,9 +7,12 @@ import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Suspense } from "react";
-import { statsCards, recentReplies, warmupSummaryData } from "@/lib/data/campaigns";
+import { getStatsCards, getRecentReplies, getWarmupSummaryData } from "@/lib/actions/dashboardActions";
 
-export default function DashboardContent() {
+export default async function DashboardContent() {
+  const statsCards = await getStatsCards();
+  const recentReplies = await getRecentReplies();
+  const warmupSummaryData = await getWarmupSummaryData();
   return (
     <div className=" mx-auto  space-y-8">
       <div className="space-y-2">
