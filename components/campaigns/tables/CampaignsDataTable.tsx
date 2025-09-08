@@ -53,6 +53,7 @@ import { copyText as t } from "../data/copy";
 import { CampaignResponse, CampaignStatus } from "@/types/campaign";
 import { toast } from "sonner";
 import { useSearchParams, useRouter } from "next/navigation";
+import { deleteCampaign, pauseCampaign, resumeCampaign, duplicateCampaign } from "@/lib/actions/dashboardActions";
 
 function formatRelativeTime(date: Date): string {
   const now = new Date();
@@ -72,8 +73,7 @@ async function handleDeleteCampaign(id: number) {
   // removeCampaign(id);
 
   // Call the server action to delete the campaign
-  // const result = await deleteCampaign(id);
-  const result = { error: null }; // Mock result for demonstration
+  const result = await deleteCampaign(id);
 
   if (result?.error) {
     console.error("Error deleting campaign:", id, "\n", result.error);
@@ -90,8 +90,7 @@ async function handleDeleteCampaign(id: number) {
 
 async function handlePauseCampaign(id: number) {
   // Call the server action to pause the campaign
-  // const result = await pauseCampaign(id);
-  const result = { error: null }; // Mock result for demonstration
+  const result = await pauseCampaign(id);
 
   if (result?.error) {
     console.error("Error pausing campaign:", id, "\n", result.error);
@@ -107,8 +106,7 @@ async function handlePauseCampaign(id: number) {
 
 async function handleResumeCampaign(id: number) {
   // Call the server action to resume the campaign
-  // const result = await resumeCampaign(id);
-  const result = { error: null }; // Mock result for demonstration
+  const result = await resumeCampaign(id);
 
   if (result?.error) {
     console.error("Error resuming campaign:", id, "\n", result.error);
@@ -124,8 +122,7 @@ async function handleResumeCampaign(id: number) {
 
 async function handleDuplicateCampaign(id: number) {
   // Call the server action to duplicate the campaign
-  // const result = await duplicateCampaign(id);
-  const result = { error: null }; // Mock result for demonstration
+  const result = await duplicateCampaign(id);
 
   if (result?.error) {
     console.error("Error duplicating campaign:", id, "\n", result.error);
@@ -134,7 +131,7 @@ async function handleDuplicateCampaign(id: number) {
     });
   } else {
     toast.info("Campaign duplicated", {
-      description: "A copy of the campaign has been created.",
+      description: `A copy of the campaign has been created${result.newCampaignId ? ` (ID: ${result.newCampaignId})` : ''}.`,
     });
   }
 }

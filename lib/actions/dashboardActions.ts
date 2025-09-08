@@ -168,3 +168,87 @@ export async function getRecentReplies(): Promise<RecentReply[]> {
 export async function getWarmupSummaryData(): Promise<WarmupSummaryData> {
   return warmupSummaryData;
 }
+
+// Campaign operation server actions
+export async function deleteCampaign(campaignId: number): Promise<{ error?: string }> {
+  console.log(`Deleting campaign: ${campaignId}`);
+
+  try {
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // In a real implementation, this would call your database/API
+    // e.g., await fetch(`/api/campaigns/${campaignId}`, { method: 'DELETE' });
+
+    // For now, return success (mock implementation)
+    return {};
+  } catch (error) {
+    console.error('Error deleting campaign:', error);
+    return { error: 'Failed to delete campaign' };
+  }
+}
+
+export async function pauseCampaign(campaignId: number): Promise<{ error?: string }> {
+  console.log(`Pausing campaign: ${campaignId}`);
+
+  try {
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    // In a real implementation, this would update the campaign status
+    // e.g., await fetch(`/api/campaigns/${campaignId}/status`, {
+    //   method: 'PATCH',
+    //   body: JSON.stringify({ status: 'PAUSED' }),
+    //   headers: { 'Content-Type': 'application/json' }
+    // });
+
+    return {};
+  } catch (error) {
+    console.error('Error pausing campaign:', error);
+    return { error: 'Failed to pause campaign' };
+  }
+}
+
+export async function resumeCampaign(campaignId: number): Promise<{ error?: string }> {
+  console.log(`Resuming campaign: ${campaignId}`);
+
+  try {
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    // In a real implementation, this would update the campaign status
+    // e.g., await fetch(`/api/campaigns/${campaignId}/status`, {
+    //   method: 'PATCH',
+    //   body: JSON.stringify({ status: 'ACTIVE' }),
+    //   headers: { 'Content-Type': 'application/json' }
+    // });
+
+    return {};
+  } catch (error) {
+    console.error('Error resuming campaign:', error);
+    return { error: 'Failed to resume campaign' };
+  }
+}
+
+export async function duplicateCampaign(campaignId: number): Promise<{ error?: string; newCampaignId?: number }> {
+  console.log(`Duplicating campaign: ${campaignId}`);
+
+  try {
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    // In a real implementation, this would create a copy of the campaign
+    // e.g., const response = await fetch(`/api/campaigns/${campaignId}/duplicate`, {
+    //   method: 'POST'
+    // });
+    // const data = await response.json();
+
+    // For mock implementation, return a new random ID
+    const newCampaignId = Math.floor(Math.random() * 10000) + 1000;
+
+    return { newCampaignId };
+  } catch (error) {
+    console.error('Error duplicating campaign:', error);
+    return { error: 'Failed to duplicate campaign' };
+  }
+}
