@@ -25,11 +25,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { initialFolders } from "@/lib/data/template.mock";
+import { getTemplateFolders } from "@/lib/actions/templateActions";
 import { cn } from "@/lib/utils";
 import { Copy, Edit, FolderX, MoreHorizontal, Star, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import Folders from "./Folder-Structure/Folders";
 import { TemplateFolder } from "@/types";
 
@@ -89,8 +89,19 @@ function TemplateActions({
   const router = useRouter();
   const [showMoveDialog, setShowMoveDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [allFolders, setAllFolders] = useState<TemplateFolder[]>([]);
 
-  const folders = initialFolders.filter((folder) => folder.type === type);
+  useEffect(() => {
+    const fetchFolders = async () => {
+      const result = await getTemplateFolders();
+      if (result.success) {
+        setAllFolders(result.data);
+      }
+    };
+    fetchFolders();
+  }, []);
+
+  const folders = allFolders.filter((folder: TemplateFolder) => folder.type === type);
 
   // Action handlers
   const handleStar = useCallback(() => {

@@ -13,22 +13,34 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useAddTemplateContext } from "@/context/AddTemplateContext";
-import { initialFolders } from "@/lib/data/template.mock";
-import { useState } from "react";
+import { getTemplateFolders } from "@/lib/actions/templateActions";
+import { TemplateFolder } from "@/types";
+import { useState, useEffect } from "react";
 import { X, Plus, ArrowLeft, ArrowRight } from "lucide-react";
 
 function TemplateBasicsStep() {
   const { form, setCurrentStep } = useAddTemplateContext();
   const [newTag, setNewTag] = useState("");
   const [showNewFolderInput, setShowNewFolderInput] = useState(false);
+  const [folders, setFolders] = useState<TemplateFolder[]>([]);
+
+  useEffect(() => {
+    const fetchFolders = async () => {
+      const result = await getTemplateFolders();
+      if (result.success) {
+        setFolders(result.data);
+      }
+    };
+    fetchFolders();
+  }, []);
 
   const watchType = form.watch("type");
   const watchTags = form.watch("tags") || [];
   const watchIsFavorite = form.watch("isFavorite");
 
   // Filter folders based on selected type
-  const availableFolders = initialFolders.filter(
-    (folder) =>
+  const availableFolders = folders.filter(
+    (folder: TemplateFolder) =>
       folder.type ===
       (watchType === "quick-reply" ? "quick-reply" : "template"),
   );
@@ -130,7 +142,7 @@ function TemplateBasicsStep() {
                   <SelectValue placeholder="Select a folder" />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableFolders.map((folder) => (
+                  {availableFolders.map((folder: TemplateFolder) => (
                     <SelectItem key={folder.id} value={folder.name}>
                       {folder.name}
                     </SelectItem>

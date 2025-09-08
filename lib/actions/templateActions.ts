@@ -1,6 +1,6 @@
 "use server";
 
-import { initialTemplates as initialTemplatesMock, initialQuickReplies } from "@/lib/data/template.mock";
+import { initialTemplates as initialTemplatesMock, initialQuickReplies, initialFolders as initialFoldersMock } from "@/lib/data/template.mock";
 import { getCurrentUserId } from "@/lib/utils/auth";
 import { nile } from "@/app/api/[...nile]/nile";
 import type { Template, TemplateFolder, TemplateCategoryType } from "@/types";
@@ -245,9 +245,16 @@ export async function getTemplateFolders(): Promise<ActionResult<TemplateFolder[
     } catch (dbError) {
       console.error("Database error in getTemplateFolders, falling back to mock data:", dbError);
       // Fallback to mock data on database error
+      const mockFolders: TemplateFolder[] = initialFoldersMock.map((folder) => ({
+        ...folder,
+        type: folder.type as "template" | "quick-reply",
+        parentId: undefined,
+        order: undefined,
+        children: folder.children.map(mapMockToTemplate), // Map children to Template type
+      }));
       return {
         success: true,
-        data: [] as TemplateFolder[], // Empty array instead of mock data
+        data: mockFolders as TemplateFolder[],
       };
     }
   } catch (error) {
