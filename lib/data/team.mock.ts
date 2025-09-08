@@ -1,10 +1,9 @@
-import type { TeamMember } from "../../types/settings";
+import type { TeamMember, TeamPermission } from "../../types/team";
 
 // Extended Team Member Type with additional fields
 export interface ExtendedTeamMember extends TeamMember {
   joinedDate: string;
   department?: string;
-  permissions: TeamPermission[];
   twoFactorEnabled: boolean;
   emailVerified: boolean;
   phoneNumber?: string;
@@ -12,8 +11,8 @@ export interface ExtendedTeamMember extends TeamMember {
   bio?: string;
 }
 
-// Team Role Types
-export interface TeamRole {
+// Team Role Definition Types
+export interface TeamRoleDefinition {
   id: string;
   name: TeamMember["role"];
   description: string;
@@ -22,18 +21,18 @@ export interface TeamRole {
   color: string; // For UI display
 }
 
-// Permission Types
-export interface TeamPermission {
+// Permission Definition Types (for UI display)
+export interface TeamPermissionDefinition {
   id: string;
   name: string;
   category: "campaigns" | "domains" | "billing" | "team" | "settings" | "analytics";
   description: string;
 }
 
-// Team Activity Types
-export interface TeamActivity {
+// Team Activity Types (local definition for mock data)
+export interface MockTeamActivity {
   id: string;
-  memberId: number;
+  memberId: string;
   memberName: string;
   action: string;
   target?: string;
@@ -42,8 +41,8 @@ export interface TeamActivity {
   ipAddress?: string;
 }
 
-// Team Invitation Types
-export interface TeamInvitation {
+// Team Invitation Types (local definition for mock data)
+export interface MockTeamInvitation {
   id: string;
   email: string;
   role: TeamMember["role"];
@@ -55,7 +54,7 @@ export interface TeamInvitation {
 }
 
 // Permission definitions
-export const permissions: Record<string, TeamPermission> = {
+export const permissions: Record<string, TeamPermissionDefinition> = {
   // Campaign permissions
   viewCampaigns: {
     id: "perm-1",
@@ -154,131 +153,147 @@ export const permissions: Record<string, TeamPermission> = {
 };
 
 // Role definitions
-export const roles: TeamRole[] = [
+export const roles: TeamRoleDefinition[] = [
   {
-    id: "role-admin",
-    name: "Admin",
-    description: "Full access to all features and settings",
+    id: "role-owner",
+    name: "owner",
+    description: "Full ownership and control of the team",
     level: 4,
     color: "#DC2626", // red
-    permissions: Object.values(permissions), // All permissions
+    permissions: ["all"], // All permissions
   },
   {
-    id: "role-manager",
-    name: "Outreach Manager",
-    description: "Can manage campaigns and view analytics",
+    id: "role-admin",
+    name: "admin",
+    description: "Full access to all features and settings",
     level: 3,
     color: "#2563EB", // blue
     permissions: [
-      permissions.viewCampaigns,
-      permissions.createCampaigns,
-      permissions.editCampaigns,
-      permissions.deleteCampaigns,
-      permissions.viewDomains,
-      permissions.viewTeam,
-      permissions.viewAnalytics,
-      permissions.exportAnalytics,
-      permissions.viewSettings,
-    ],
-  },
-  {
-    id: "role-analyst",
-    name: "Analyst",
-    description: "Can view campaigns and analytics",
-    level: 2,
-    color: "#7C3AED", // purple
-    permissions: [
-      permissions.viewCampaigns,
-      permissions.viewDomains,
-      permissions.viewTeam,
-      permissions.viewAnalytics,
-      permissions.exportAnalytics,
+      "members:read",
+      "members:write",
+      "members:delete",
+      "settings:read",
+      "settings:write",
+      "billing:read",
+      "campaigns:read",
+      "campaigns:write",
+      "domains:read",
+      "domains:write",
     ],
   },
   {
     id: "role-member",
-    name: "Member",
-    description: "Basic access to view campaigns",
-    level: 1,
+    name: "member",
+    description: "Can manage campaigns and view analytics",
+    level: 2,
     color: "#059669", // green
     permissions: [
-      permissions.viewCampaigns,
-      permissions.viewTeam,
+      "members:read",
+      "settings:read",
+      "campaigns:read",
+      "campaigns:write",
+      "domains:read",
+    ],
+  },
+  {
+    id: "role-viewer",
+    name: "viewer",
+    description: "Can view campaigns and analytics",
+    level: 1,
+    color: "#7C3AED", // purple
+    permissions: [
+      "members:read",
+      "settings:read",
+      "campaigns:read",
     ],
   },
 ];
 
-// Mock team members
+// Mock team members (compatible with types/team.ts)
 export const mockTeamMembers: TeamMember[] = [
   {
-    id: 1,
+    id: "member-1",
+    userId: "user-1",
+    teamId: "team-1",
     name: "John Doe",
     email: "john.doe@acmecorp.com",
-    role: "Admin",
+    role: "admin",
     status: "active",
-    lastActive: "2024-12-20T15:30:00Z",
+    joinedAt: new Date("2024-01-15"),
+    lastActiveAt: new Date("2024-12-20T15:30:00Z"),
     avatar: "https://api.dicebear.com/7.x/initials/svg?seed=JD",
+    permissions: ["members:read", "members:write", "settings:read", "settings:write", "campaigns:read", "campaigns:write"],
   },
   {
-    id: 2,
+    id: "member-2",
+    userId: "user-2",
+    teamId: "team-1",
     name: "Sarah Johnson",
     email: "sarah.johnson@acmecorp.com",
-    role: "Outreach Manager",
+    role: "member",
     status: "active",
-    lastActive: "2024-12-20T14:20:00Z",
+    joinedAt: new Date("2024-03-20"),
+    lastActiveAt: new Date("2024-12-20T14:20:00Z"),
     avatar: "https://api.dicebear.com/7.x/initials/svg?seed=SJ",
+    permissions: ["members:read", "settings:read", "campaigns:read", "campaigns:write"],
   },
   {
-    id: 3,
+    id: "member-3",
+    userId: "user-3",
+    teamId: "team-1",
     name: "Michael Chen",
     email: "michael.chen@acmecorp.com",
-    role: "Analyst",
+    role: "viewer",
     status: "active",
-    lastActive: "2024-12-20T10:15:00Z",
+    joinedAt: new Date("2024-06-10"),
+    lastActiveAt: new Date("2024-12-20T10:15:00Z"),
     avatar: "https://api.dicebear.com/7.x/initials/svg?seed=MC",
+    permissions: ["members:read", "settings:read", "campaigns:read"],
   },
   {
-    id: 4,
+    id: "member-4",
+    userId: "user-4",
+    teamId: "team-1",
     name: "Emily Davis",
     email: "emily.davis@acmecorp.com",
-    role: "Member",
+    role: "member",
     status: "active",
-    lastActive: "2024-12-19T16:45:00Z",
+    joinedAt: new Date("2024-08-15"),
+    lastActiveAt: new Date("2024-12-19T16:45:00Z"),
     avatar: "https://api.dicebear.com/7.x/initials/svg?seed=ED",
+    permissions: ["members:read", "settings:read", "campaigns:read", "campaigns:write"],
   },
   {
-    id: 5,
+    id: "member-5",
+    userId: "user-5",
+    teamId: "team-1",
     name: "Robert Wilson",
     email: "robert.wilson@acmecorp.com",
-    role: "Outreach Manager",
+    role: "member",
     status: "inactive",
-    lastActive: "2024-12-10T09:00:00Z",
+    joinedAt: new Date("2024-05-01"),
+    lastActiveAt: new Date("2024-12-10T09:00:00Z"),
     avatar: "https://api.dicebear.com/7.x/initials/svg?seed=RW",
-  },
-  {
-    id: 6,
-    name: "Jessica Martinez",
-    email: "jessica.martinez@acmecorp.com",
-    role: "Member",
-    status: "invited",
-    lastActive: "",
-    avatar: "https://api.dicebear.com/7.x/initials/svg?seed=JM",
+    permissions: ["members:read", "settings:read", "campaigns:read"],
   },
 ];
 
 // Extended mock team members with additional details
 export const mockExtendedTeamMembers: ExtendedTeamMember[] = [
   {
-    id: 1,
+    id: "member-1",
+    userId: "user-1",
+    teamId: "team-1",
     name: "John Doe",
     email: "john.doe@acmecorp.com",
-    role: "Admin",
+    role: "admin",
     status: "active",
-    lastActive: "2024-12-20T15:30:00Z",
+    joinedAt: new Date("2023-01-15"),
+    lastActiveAt: new Date("2024-12-20T15:30:00Z"),
     avatar: "https://api.dicebear.com/7.x/initials/svg?seed=JD",
+    permissions: ["members:read", "members:write", "settings:read", "settings:write", "campaigns:read", "campaigns:write"],
     joinedDate: "2023-01-15",
     department: "Management",
-    permissions: Object.values(permissions),
     twoFactorEnabled: true,
     emailVerified: true,
     phoneNumber: "+1 (555) 123-4567",
@@ -286,16 +301,19 @@ export const mockExtendedTeamMembers: ExtendedTeamMember[] = [
     bio: "Founder and CEO of Acme Corporation",
   },
   {
-    id: 2,
+    id: "member-2",
+    userId: "user-2",
+    teamId: "team-1",
     name: "Sarah Johnson",
     email: "sarah.johnson@acmecorp.com",
-    role: "Outreach Manager",
+    role: "member",
     status: "active",
-    lastActive: "2024-12-20T14:20:00Z",
+    joinedAt: new Date("2023-03-20"),
+    lastActiveAt: new Date("2024-12-20T14:20:00Z"),
     avatar: "https://api.dicebear.com/7.x/initials/svg?seed=SJ",
+    permissions: ["members:read", "settings:read", "campaigns:read", "campaigns:write"],
     joinedDate: "2023-03-20",
     department: "Marketing",
-    permissions: roles.find(r => r.name === "Outreach Manager")?.permissions || [],
     twoFactorEnabled: true,
     emailVerified: true,
     phoneNumber: "+1 (555) 234-5678",
@@ -303,16 +321,19 @@ export const mockExtendedTeamMembers: ExtendedTeamMember[] = [
     bio: "Leading outreach campaigns and email marketing strategies",
   },
   {
-    id: 3,
+    id: "member-3",
+    userId: "user-3",
+    teamId: "team-1",
     name: "Michael Chen",
     email: "michael.chen@acmecorp.com",
-    role: "Analyst",
+    role: "viewer",
     status: "active",
-    lastActive: "2024-12-20T10:15:00Z",
+    joinedAt: new Date("2023-06-10"),
+    lastActiveAt: new Date("2024-12-20T10:15:00Z"),
     avatar: "https://api.dicebear.com/7.x/initials/svg?seed=MC",
+    permissions: ["members:read", "settings:read", "campaigns:read"],
     joinedDate: "2023-06-10",
     department: "Analytics",
-    permissions: roles.find(r => r.name === "Analyst")?.permissions || [],
     twoFactorEnabled: false,
     emailVerified: true,
     phoneNumber: "+1 (555) 345-6789",
@@ -322,10 +343,10 @@ export const mockExtendedTeamMembers: ExtendedTeamMember[] = [
 ];
 
 // Mock team activities
-export const mockTeamActivities: TeamActivity[] = [
+export const mockTeamActivities: MockTeamActivity[] = [
   {
     id: "activity-1",
-    memberId: 1,
+    memberId: "member-1",
     memberName: "John Doe",
     action: "Created campaign",
     target: "Black Friday Sale 2024",
@@ -335,7 +356,7 @@ export const mockTeamActivities: TeamActivity[] = [
   },
   {
     id: "activity-2",
-    memberId: 2,
+    memberId: "member-2",
     memberName: "Sarah Johnson",
     action: "Updated domain settings",
     target: "mail.acmecorp.com",
@@ -345,7 +366,7 @@ export const mockTeamActivities: TeamActivity[] = [
   },
   {
     id: "activity-3",
-    memberId: 3,
+    memberId: "member-3",
     memberName: "Michael Chen",
     action: "Exported analytics",
     target: "Q4 2024 Report",
@@ -355,7 +376,7 @@ export const mockTeamActivities: TeamActivity[] = [
   },
   {
     id: "activity-4",
-    memberId: 1,
+    memberId: "member-1",
     memberName: "John Doe",
     action: "Invited team member",
     target: "jessica.martinez@acmecorp.com",
@@ -365,7 +386,7 @@ export const mockTeamActivities: TeamActivity[] = [
   },
   {
     id: "activity-5",
-    memberId: 2,
+    memberId: "member-2",
     memberName: "Sarah Johnson",
     action: "Paused campaign",
     target: "Holiday Newsletter",
@@ -376,11 +397,11 @@ export const mockTeamActivities: TeamActivity[] = [
 ];
 
 // Mock team invitations
-export const mockTeamInvitations: TeamInvitation[] = [
+export const mockTeamInvitations: MockTeamInvitation[] = [
   {
     id: "invite-1",
     email: "jessica.martinez@acmecorp.com",
-    role: "Member",
+    role: "member",
     invitedBy: "john.doe@acmecorp.com",
     invitedAt: "2024-12-19T16:45:00Z",
     expiresAt: "2024-12-26T16:45:00Z",
@@ -390,7 +411,7 @@ export const mockTeamInvitations: TeamInvitation[] = [
   {
     id: "invite-2",
     email: "david.brown@acmecorp.com",
-    role: "Analyst",
+    role: "viewer",
     invitedBy: "john.doe@acmecorp.com",
     invitedAt: "2024-12-15T10:00:00Z",
     expiresAt: "2024-12-22T10:00:00Z",
@@ -399,7 +420,7 @@ export const mockTeamInvitations: TeamInvitation[] = [
   {
     id: "invite-3",
     email: "lisa.anderson@acmecorp.com",
-    role: "Outreach Manager",
+    role: "member",
     invitedBy: "sarah.johnson@acmecorp.com",
     invitedAt: "2024-12-10T14:30:00Z",
     expiresAt: "2024-12-17T14:30:00Z",
@@ -408,28 +429,27 @@ export const mockTeamInvitations: TeamInvitation[] = [
 ];
 
 // Helper functions
-export function getRoleByName(roleName: TeamMember["role"]): TeamRole | undefined {
+export function getRoleByName(roleName: TeamMember["role"]): TeamRoleDefinition | undefined {
   return roles.find(role => role.name === roleName);
 }
 
 export function getPermissionsForRole(roleName: TeamMember["role"]): TeamPermission[] {
   const role = getRoleByName(roleName);
-  return role?.permissions || [];
+  return (role?.permissions as TeamPermission[]) || [];
 }
 
 export function hasPermission(
   member: TeamMember | ExtendedTeamMember,
-  permissionId: string
+  permission: TeamPermission
 ): boolean {
-  const rolePermissions = getPermissionsForRole(member.role);
-  return rolePermissions.some(p => p.id === permissionId);
+  return member.permissions.includes(permission);
 }
 
 export function getActiveTeamMembers(): TeamMember[] {
   return mockTeamMembers.filter(member => member.status === "active");
 }
 
-export function getTeamMemberById(id: number): TeamMember | undefined {
+export function getTeamMemberById(id: string): TeamMember | undefined {
   return mockTeamMembers.find(member => member.id === id);
 }
 
@@ -457,11 +477,11 @@ export function formatLastActive(lastActive: string): string {
 export const teamStatistics = {
   totalMembers: mockTeamMembers.length,
   activeMembers: mockTeamMembers.filter(m => m.status === "active").length,
-  pendingInvitations: mockTeamMembers.filter(m => m.status === "invited").length,
+  pendingInvitations: mockTeamMembers.filter(m => m.status === "pending").length,
   rolesDistribution: {
-    Admin: mockTeamMembers.filter(m => m.role === "Admin").length,
-    "Outreach Manager": mockTeamMembers.filter(m => m.role === "Outreach Manager").length,
-    Analyst: mockTeamMembers.filter(m => m.role === "Analyst").length,
-    Member: mockTeamMembers.filter(m => m.role === "Member").length,
+    owner: mockTeamMembers.filter(m => m.role === "owner").length,
+    admin: mockTeamMembers.filter(m => m.role === "admin").length,
+    member: mockTeamMembers.filter(m => m.role === "member").length,
+    viewer: mockTeamMembers.filter(m => m.role === "viewer").length,
   },
 };
