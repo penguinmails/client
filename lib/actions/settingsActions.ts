@@ -487,9 +487,6 @@ export async function updateUserTimezone(
   }
 }
 
-/**
- * Update company information
- */
 export async function updateCompanyInfo(
   companyInfo: DeepPartial<CompanyInfo>
 ): Promise<ActionResult<CompanyInfo>> {

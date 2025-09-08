@@ -25,7 +25,7 @@ import {
   getBillingDataForSettings,
   updateBillingInfo,
 } from "@/lib/actions/billingActions";
-import { updateCompanyInfo } from "@/lib/actions/settingsActions";
+import { updateCompanyInfo, getUserSettings } from "@/lib/actions/settingsActions";
 import {
   useServerAction,
   useServerActionWithParams,
@@ -98,10 +98,26 @@ function BillingTab() {
     updateCompanyOptions
   );
 
+  const companyOptions = useMemo(
+    () => ({
+      onError: (error: string) => {
+        toast.error("Failed to load company information", { description: error });
+      },
+    }),
+    []
+  );
+
+  const companyDataAction = useServerAction(
+    getUserSettings,
+    companyOptions
+  );
+  const { execute: loadCompanyData } = companyDataAction;
+
   // Load billing data on component mount
   useEffect(() => {
     loadBilling();
-  }, [loadBilling]);
+    loadCompanyData();
+  }, [loadBilling, loadCompanyData]);
 
   // Handle company name update
   const handleCompanyNameUpdate = async (newName: string) => {
@@ -110,6 +126,8 @@ function BillingTab() {
     await updateCompanyAction.execute({
       name: newName,
     });
+    // Refresh company data after update
+    loadCompanyData();
   };
 
   // Show loading skeleton while data is loading
@@ -251,7 +269,7 @@ function BillingTab() {
               className="text-sm text-blue-600 hover:text-blue-800 underline disabled:opacity-50"
               disabled={updateBillingAction.loading}
               onClick={() => {
-                const currentName = "Acme Corporation"; // TODO: Get from current company data
+                const currentName = companyDataAction.data?.companyInfo.name || "Company";
                 const newCompanyName = prompt(
                   "Enter company name:",
                   currentName
@@ -273,7 +291,7 @@ function BillingTab() {
                       Company Name
                     </label>
                     <p className="font-medium text-gray-900">
-                      Acme Corporation
+                      {companyDataAction.data?.companyInfo.name || "Loading..."}
                     </p>
                   </div>
                 </div>
@@ -281,13 +299,17 @@ function BillingTab() {
                   <label className="text-sm font-medium text-gray-700">
                     Industry
                   </label>
-                  <p className="text-gray-600">Technology Services</p>
+                  <p className="text-gray-600">
+                    {companyDataAction.data?.companyInfo.industry || "Technology Services"}
+                  </p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700">
                     Company Size
                   </label>
-                  <p className="text-gray-600">51-200 employees</p>
+                  <p className="text-gray-600">
+                    {companyDataAction.data?.companyInfo.size || "51-200 employees"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -303,7 +325,9 @@ function BillingTab() {
           <CardContent>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="space-y-1">
-                <p className="font-medium text-gray-900">Acme Corporation</p>
+                <p className="font-medium text-gray-900">
+                  {companyDataAction.data?.companyInfo.name || "Company"}
+                </p>
                 <p className="text-gray-600">123 Business Street</p>
                 <p className="text-gray-600">San Francisco, CA 94105</p>
                 <p className="text-gray-600">United States</p>
