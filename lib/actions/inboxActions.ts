@@ -149,3 +149,67 @@ export async function getConversationsForUI(
 
   return { conversations };
 }
+
+// Get messages for a conversation/conversation-messages component
+export async function getMessages() {
+  const { messageThread } = await import('../data/messages.mock');
+  return [...messageThread] as Array<{
+    id: number;
+    type: "outgoing" | "incoming";
+    sender: string;
+    time: string;
+    content: string;
+  }>;
+}
+
+// Get messages for a specific conversation by ID
+export async function getMessagesByConversationId(conversationId: string | number) {
+  // For now, return the same message thread for all conversations
+  console.log(`Fetching messages for conversation ID: ${conversationId}`);
+  // In the future, this would filter messages by conversationId
+  const { messageThread } = await import('../data/messages.mock');
+  return [...messageThread] as Array<{
+    id: number;
+    type: "outgoing" | "incoming";
+    sender: string;
+    time: string;
+    content: string;
+  }>;
+}
+
+// Add a new message to a conversation
+export async function addMessage(
+  conversationId: string | number,
+  message: {
+    type: "outgoing" | "incoming";
+    sender: string;
+    content: string;
+  }
+): Promise<{
+  id: number;
+  type: "outgoing" | "incoming";
+  sender: string;
+  time: string;
+  content: string;
+}> {
+  const { messageThread } = await import('../data/messages.mock');
+
+  const newMessage = {
+    id: messageThread.length + 1,
+    type: message.type,
+    sender: message.sender,
+    time: new Date().toISOString(),
+    content: message.content,
+  };
+
+  // In a real implementation, this would save to database
+  // For now, it just returns the new message object
+  return newMessage;
+}
+
+// Get message count for a conversation
+export async function getMessageCount(conversationId?: string | number): Promise<number> {
+  console.log(`Fetching message count for conversation ID: ${conversationId}`);
+  const { messageThread } = await import('../data/messages.mock');
+  return messageThread.length;
+}

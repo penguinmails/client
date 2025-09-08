@@ -1,13 +1,15 @@
-import { messageThread } from "@/lib/data/messages.mock";
+import { getMessages } from "@/lib/actions/inboxActions";
 import { getRelativeTime, cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-function ConversationMessages() {
+export default async function ConversationMessages() {
+  const messages = await getMessages();
+
   return (
     <div className="flex-1 p-6 space-y-6 overflow-y-auto bg-muted/30">
-      {messageThread.map((message) => (
+      {messages.map((message) => (
         <div
           key={message.id}
           className={cn(
@@ -54,4 +56,3 @@ function ConversationMessages() {
     </div>
   );
 }
-export default ConversationMessages;
