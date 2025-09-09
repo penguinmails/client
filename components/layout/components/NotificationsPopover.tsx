@@ -7,7 +7,7 @@ import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Bell } from "lucide-react";
 import { useEffect, useState } from 'react';
 import NotificationsList from "./NotificationsList";
-import { getMockNotifications } from '@/lib/actions/notificationsActions';
+import { getNotifications } from '@/lib/actions/notificationsActions';
 // Use server action for notifications data
 function NotificationsPopover() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -15,7 +15,7 @@ function NotificationsPopover() {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      const data = await getMockNotifications();
+      const data = await getNotifications();
       setNotifications(data.notifications);
       setUnreadCount(data.notifications.filter(n => !n.isRead).length);
     };
