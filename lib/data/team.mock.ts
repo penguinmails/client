@@ -1,5 +1,19 @@
 import type { TeamMember, TeamPermission } from "../../types/team";
 
+// Nile User Interface based on API docs
+export interface NileUser {
+  id: string;
+  email: string;
+  name?: string;
+  familyName?: string;
+  givenName?: string;
+  picture?: string;
+  created: string;
+  updated?: string;
+  emailVerified?: boolean;
+  tenants: { id: string }[];
+}
+
 // Extended Team Member Type with additional fields
 export interface ExtendedTeamMember extends TeamMember {
   joinedDate: string;
@@ -472,6 +486,20 @@ export function formatLastActive(lastActive: string): string {
   
   return date.toLocaleDateString();
 }
+
+// Mock Nile User for authentication
+export const mockNileUser: NileUser = {
+  id: 'test-user-123',
+  email: 'test@example.com',
+  name: 'Test User',
+  givenName: 'Test',
+  familyName: 'User',
+  picture: 'https://example.com/avatar.jpg',
+  created: '2023-01-01T00:00:00Z',
+  updated: '2024-01-01T00:00:00Z',
+  emailVerified: true,
+  tenants: [{ id: 'test-tenant-id' }],
+};
 
 // Team statistics
 export const teamStatistics = {
