@@ -8,10 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  getCampaignAnalyticsAction,
-  getUserCampaignsAction,
-} from "@/lib/actions/campaignActions";
 import { ChartData, MetricToggle } from "@/types/campaign";
 import {
   AlertTriangle,
@@ -23,7 +19,7 @@ import {
   MousePointer,
   TrendingUp,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -33,6 +29,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useCampaignStats } from "@/hooks/useCampaignStats";
 
 type TooltipPayloadItem = {
   color: string;
@@ -106,9 +103,7 @@ const CustomTooltip = ({
 function StatsTab() {
   const [timeRange, setTimeRange] = useState<7 | 14 | 30>(14);
   const chartRef = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<ChartData[]>([]);
+  const { data, loading, error } = useCampaignStats(timeRange);
 
   const [metrics, setMetrics] = useState<MetricToggle[]>([
     { key: "sent", label: "Emails Sent", color: "#6B7280", visible: true },
@@ -118,72 +113,7 @@ function StatsTab() {
     { key: "bounced", label: "Bounces", color: "#EF4444", visible: true },
   ]);
 
-  const generateData = async (
-    days: number,
-    userId?: string,
-    companyId?: string
-  ): Promise<ChartData[]> => {
-    try {
-      // Step 1: Get campaigns for this user/company
-      const campaigns = await getUserCampaignsAction(userId, companyId);
-
-      // Step 2: Pass campaigns to analytics function to generate timeseries data
-      const result = await getCampaignAnalyticsAction(campaigns, days);
-      return result.ChartData;
-    } catch (error) {
-      console.error("Failed to fetch campaign analytics data:", error);
-      // Fallback to local mock data generation in case of error
-      const fallbackData: ChartData[] = [];
-      const today = new Date();
-
-      for (let i = days - 1; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(today.getDate() - i);
-
-        const sent = Math.floor(Math.random() * 50) + 15;
-        const opened = Math.floor(sent * (0.25 + Math.random() * 0.35));
-        const clicked = Math.floor(opened * (0.15 + Math.random() * 0.3));
-        const replied = Math.floor(opened * (0.1 + Math.random() * 0.2));
-        const bounced = Math.floor(sent * (0.02 + Math.random() * 0.08));
-
-        fallbackData.push({
-          date: date.toISOString().split("T")[0],
-          sent,
-          opened,
-          replied,
-          bounced,
-          clicked,
-          formattedDate: date.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-          }),
-        });
-      }
-
-      return fallbackData;
-    }
-  };
-
-  // Fetch data when timeRange changes
-  useEffect(() => {
-    const fetchStatsData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const result = await generateData(timeRange);
-        setData(result);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to load analytics data"
-        );
-        setData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStatsData();
-  }, [timeRange]);
+  // Handled by useCampaignStats hook
 
   const timeRangeOptions = [
     { value: 7, label: "Last 7 days" },
