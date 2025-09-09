@@ -14,7 +14,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AnalyticsProvider, useAnalytics } from "@/context/AnalyticsContext";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
+import { getMailboxesAction } from "@/lib/actions/mailboxActions";
+import type { MailboxWarmupData } from "@/types";
 
 function AnalyticsPage() {
   return (
@@ -29,8 +31,32 @@ function AnalyticsContent() {
 
   // For now, use the context data, but we can modify to use real data
   const campaignData = analytics.campaignPerformanceData;
-  const mailboxes = useMemo(() => [{ id: "all", name: "All Mailboxes" }, { id: "john", name: "john@mycompany.com" }, { id: "sarah", name: "sarah@mycompany.com" }, { id: "mike", name: "mike@mycompany.com" }, { id: "lisa", name: "lisa@mycompany.com" }], []);
   const metrics = analytics.metrics;
+
+  const [mailboxesData, setMailboxesData] = useState<MailboxWarmupData[]>([]);
+
+  useEffect(() => {
+    async function fetchMailboxes() {
+      try {
+        const data = await getMailboxesAction();
+        setMailboxesData(data);
+      } catch (error) {
+        console.error("Failed to fetch mailboxes:", error);
+        // Fallback to empty array
+        setMailboxesData([]);
+      }
+    }
+
+    fetchMailboxes();
+  }, []);
+
+  const mailboxes = useMemo(() => {
+    const fetchedMailboxes = mailboxesData.map((mb) => ({
+      id: mb.id,
+      name: mb.email,
+    }));
+    return [{ id: "all", name: "All Mailboxes" }, ...fetchedMailboxes];
+  }, [mailboxesData]);
 
   return (
     <div className="space-y-10">
