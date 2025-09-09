@@ -29,12 +29,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { WarmupChartData } from "@/types";
 
 interface TooltipPayloadItem {
   dataKey: string;
   value: number;
   color?: string;
-  payload?: Record<string, unknown>;
+  payload?: WarmupChartData;
 }
 
 function WarmUpLineChart() {
