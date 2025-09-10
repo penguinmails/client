@@ -9,7 +9,6 @@ import ReviewLaunchStep from "./ReviewLaunchStep";
 
 function AddCampaignForm() {
   const { currentStep } = useAddCampaignContext();
-  return <SequenceBuilderStep />;
   switch (currentStep) {
     case 1:
       return <CampaignDetailsStep />;
