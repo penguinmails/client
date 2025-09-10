@@ -1,5 +1,5 @@
-import { domains, mailboxes } from "@/lib/data/domains.mock";
-import { Globe, Mail, Server, Zap } from "lucide-react";
+import { domains } from "@/lib/data/domains.mock";
+import { Globe, Server } from "lucide-react";
 
 export const getStatusColor = (status: string) => {
   switch (status) {
@@ -20,14 +20,8 @@ export const getStatusColor = (status: string) => {
 };
 
 export const tabs = [
-  { id: "", label: "Domains", count: domains.length, icon: Globe },
-  { id: "mailboxes", label: "Mailboxes", count: mailboxes.length, icon: Mail },
-  {
-    id: "warmup",
-    label: "Warmup Hub",
-    count: mailboxes.filter((m) => m.warmupStatus !== "WARMED").length,
-    icon: Zap,
-  },
+  { id: "domains", label: "Domains", count: domains.length, icon: Globe },
+
   {
     id:"ip-manager", label: "IP Manager", count: 0, icon: Server
   }
