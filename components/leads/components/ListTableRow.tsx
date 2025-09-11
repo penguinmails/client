@@ -1,15 +1,9 @@
-import { leadListsData } from "@/lib/data/leads";
 import { TableCell, TableRow } from "@/components/ui/table";
-import {
-  CheckCircle,
-  Clock,
-  Download,
-  Edit,
-  Eye,
-  Trash2,
-  Users,
-} from "lucide-react";
+import { LeadList } from "@/lib/data/leads";
+import { CheckCircle, Clock, Download, Trash2, Users } from "lucide-react";
 import { Button } from "../../ui/button";
+import EditLeadListButton from "./EditLeadListButton";
+import ShowLeadListItemButton from "./ShowLeadListItemButton";
 const getStatusColor = (status: string) => {
   switch (status) {
     case "used":
@@ -46,9 +40,8 @@ const getStatusLabel = (status: string) => {
   }
 };
 
-function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
+function ListTableRow({ list }: { list: LeadList }) {
   const isUsed = list.status === "used" || list.status === "being-used";
-
   return (
     <TableRow key={list.id}>
       <TableCell>
@@ -85,7 +78,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
       <TableCell>
         <span
           className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-            list.status,
+            list.status
           )}`}
         >
           {getStatusIcon(list.status)}
@@ -107,6 +100,8 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
       </TableCell>
       <TableCell className="text-right">
         <div>
+          <ShowLeadListItemButton list={list} />
+          <EditLeadListButton list={list} />
           <Button
             variant="ghost"
             size="icon"
