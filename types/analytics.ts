@@ -334,7 +334,7 @@ export interface AnalyticsContextState {
   /** Function to fetch analytics for multiple mailboxes */
   fetchMultipleMailboxAnalytics: (mailboxIds: string[], dateRangePreset?: DateRangePreset, granularityLevel?: DataGranularity, userid?: string, companyid?: string) => Promise<Record<string, MailboxAnalyticsData>>;
   /** Function to fetch domains with mailboxes data */
-  fetchDomainsWithMailboxes: (userid?: string, companyid?: string) => Promise<import("/home/israel/personal/code/penguinmails/client/lib/actions/domainsActions").DomainWithMailboxesData[]>;
+  fetchDomainsWithMailboxes: (userid?: string, companyid?: string) => Promise<import("@/lib/actions/domainsActions").DomainWithMailboxesData[]>;
   /** Function to get account performance metrics */
   getAccountMetrics: () => AccountMetrics;
 }
