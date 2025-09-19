@@ -27,15 +27,34 @@ export async function performUpdateCrossDomainAnalyticsMutation(
 }> {
   try {
     const convexHelper = createAnalyticsConvexHelper(convex, "CrossDomainAnalyticsService");
+
+    logger.info("Cross-domain analytics update requested", { data });
+
+    // Use the Convex helper to execute the mutation
     const result = await convexHelper.mutation<{
       mailboxUpdated: string;
       domainUpdated: string;
       domainAnalyticsId: string;
       aggregatedMetrics: PerformanceMetrics;
-    }>(api.crossDomainAnalytics.updateCrossDomainAnalytics, data, {
-      serviceName: "CrossDomainAnalyticsService",
-      methodName: "performUpdateCrossDomainAnalyticsMutation"
-    });
+    }>(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      api.crossDomainAnalytics.mutations.updateCrossDomainAnalytics,
+      {
+        mailboxId: data.mailboxId,
+        domain: data.domain,
+        companyId: data.companyId,
+        date: data.date,
+        mailboxMetrics: data.mailboxMetrics,
+      },
+      {
+        serviceName: "CrossDomainAnalyticsService",
+        methodName: "performUpdateCrossDomainAnalyticsMutation",
+      }
+    );
+
+    logger.info("Cross-domain analytics update successful", { result });
+
     return result;
   } catch (error) {
     logger.error("Update cross-domain analytics failed", { error, data });

@@ -20,7 +20,7 @@
     "convex:deploy": "convex deploy",
     "convex:dashboard": "convex dashboard",
     "build:monitored": "node scripts/build-with-monitoring.js",
-    "validate:performance": "node scripts/validate-performance.js"
+    "validate:performance": "npx tsx scripts/validate-performance.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

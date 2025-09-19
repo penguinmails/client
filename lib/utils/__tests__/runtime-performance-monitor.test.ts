@@ -11,9 +11,11 @@ import {
   getGlobalRuntimeMonitor,
   initializeGlobalRuntimeMonitoring,
   DEFAULT_RUNTIME_THRESHOLDS,
-  RuntimePerformanceThresholds
+  RuntimePerformanceThresholds,
+  PerformanceMetric
 } from '../runtime-performance-monitor';
-import { ConvexQueryMetrics } from '../convex-query-helper';
+
+type TestMetric = Omit<PerformanceMetric, 'timestamp' | 'memoryUsage' | 'cpuUsage'>;
 
 describe('RuntimePerformanceMonitor', () => {
   let monitor: RuntimePerformanceMonitor;
@@ -29,12 +31,10 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should accept custom thresholds', () => {
-      const customThresholds: RuntimePerformanceThresholds = {
-        maxQueryTime: 3000,
-        maxMutationTime: 8000,
-        maxAverageResponseTime: 1500,
+      const customThresholds: Partial<RuntimePerformanceThresholds> = {
+        maxExecutionTime: 3000,
+        maxCompilationTime: 8000,
         minSuccessRate: 90,
-        maxErrorRate: 10,
       };
       
       const customMonitor = new RuntimePerformanceMonitor(customThresholds);
@@ -42,18 +42,19 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should accept custom max metrics history', () => {
-      const customMonitor = new RuntimePerformanceMonitor(DEFAULT_RUNTIME_THRESHOLDS, 500);
+      const customMonitor = new RuntimePerformanceMonitor({}, 500);
       expect(customMonitor).toBeDefined();
     });
   });
 
   describe('metric recording', () => {
     it('should record single metric', () => {
-      const metric: ConvexQueryMetrics = {
+      const metric: TestMetric = {
         executionTime: 1500,
         success: true,
         queryName: 'testQuery',
         service: 'testService',
+        operation: 'query',
       };
       
       monitor.recordMetric(metric);
@@ -62,10 +63,10 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should record multiple metrics', () => {
-      const metrics: ConvexQueryMetrics[] = [
-        { executionTime: 1000, success: true, queryName: 'query1', service: 'service1' },
-        { executionTime: 2000, success: false, queryName: 'query2', service: 'service2', error: 'Test error' },
-        { executionTime: 1500, success: true, queryName: 'query3', service: 'service1' },
+      const metrics: TestMetric[] = [
+        { executionTime: 1000, success: true, queryName: 'query1', service: 'service1', operation: 'query' },
+        { executionTime: 2000, success: false, queryName: 'query2', service: 'service2', error: 'Test error', operation: 'query' },
+        { executionTime: 1500, success: true, queryName: 'query3', service: 'service1', operation: 'query' },
       ];
       
       monitor.recordMetrics(metrics);
@@ -74,7 +75,7 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should limit metrics history to prevent memory leaks', () => {
-      const smallHistoryMonitor = new RuntimePerformanceMonitor(DEFAULT_RUNTIME_THRESHOLDS, 5);
+      const smallHistoryMonitor = new RuntimePerformanceMonitor({}, 5);
       
       // Add 10 metrics (exceeds limit of 5)
       for (let i = 0; i < 10; i++) {
@@ -83,6 +84,7 @@ describe('RuntimePerformanceMonitor', () => {
           success: true,
           queryName: `query${i}`,
           service: 'testService',
+          operation: 'query',
         });
       }
       
@@ -93,12 +95,12 @@ describe('RuntimePerformanceMonitor', () => {
   describe('performance analysis', () => {
     beforeEach(() => {
       // Add test metrics
-      const testMetrics: ConvexQueryMetrics[] = [
-        { executionTime: 1000, success: true, queryName: 'fastQuery', service: 'serviceA' },
-        { executionTime: 2000, success: true, queryName: 'mediumQuery', service: 'serviceA' },
-        { executionTime: 3000, success: false, queryName: 'slowQuery', service: 'serviceB', error: 'Timeout error' },
-        { executionTime: 1500, success: true, queryName: 'fastQuery', service: 'serviceA' },
-        { executionTime: 4000, success: false, queryName: 'verySlowQuery', service: 'serviceB', error: 'Network error' },
+      const testMetrics: TestMetric[] = [
+        { executionTime: 1000, success: true, queryName: 'fastQuery', service: 'serviceA', operation: 'query' },
+        { executionTime: 2000, success: true, queryName: 'mediumQuery', service: 'serviceA', operation: 'query' },
+        { executionTime: 3000, success: false, queryName: 'slowQuery', service: 'serviceB', error: 'Timeout error', operation: 'query' },
+        { executionTime: 1500, success: true, queryName: 'fastQuery', service: 'serviceA', operation: 'query' },
+        { executionTime: 4000, success: false, queryName: 'verySlowQuery', service: 'serviceB', error: 'Network error', operation: 'query' },
       ];
       
       monitor.recordMetrics(testMetrics);
@@ -169,10 +171,10 @@ describe('RuntimePerformanceMonitor', () => {
 
   describe('performance validation', () => {
     it('should validate performance within thresholds', () => {
-      const goodMetrics: ConvexQueryMetrics[] = [
-        { executionTime: 1000, success: true, queryName: 'query1', service: 'service1' },
-        { executionTime: 1200, success: true, queryName: 'query2', service: 'service1' },
-        { executionTime: 800, success: true, queryName: 'query3', service: 'service1' },
+      const goodMetrics: TestMetric[] = [
+        { executionTime: 1000, success: true, queryName: 'query1', service: 'service1', operation: 'query' },
+        { executionTime: 1200, success: true, queryName: 'query2', service: 'service1', operation: 'query' },
+        { executionTime: 800, success: true, queryName: 'query3', service: 'service1', operation: 'query' },
       ];
       
       monitor.recordMetrics(goodMetrics);
@@ -187,10 +189,10 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should detect average response time violations', () => {
-      const slowMetrics: ConvexQueryMetrics[] = [
-        { executionTime: 3000, success: true, queryName: 'slowQuery1', service: 'service1' },
-        { executionTime: 3500, success: true, queryName: 'slowQuery2', service: 'service1' },
-        { executionTime: 4000, success: true, queryName: 'slowQuery3', service: 'service1' },
+      const slowMetrics: TestMetric[] = [
+        { executionTime: 3000, success: true, queryName: 'slowQuery1', service: 'service1', operation: 'query' },
+        { executionTime: 3500, success: true, queryName: 'slowQuery2', service: 'service1', operation: 'query' },
+        { executionTime: 4000, success: true, queryName: 'slowQuery3', service: 'service1', operation: 'query' },
       ];
       
       monitor.recordMetrics(slowMetrics);
@@ -202,12 +204,12 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should detect success rate violations', () => {
-      const failingMetrics: ConvexQueryMetrics[] = [
-        { executionTime: 1000, success: false, queryName: 'query1', service: 'service1', error: 'Error 1' },
-        { executionTime: 1000, success: false, queryName: 'query2', service: 'service1', error: 'Error 2' },
-        { executionTime: 1000, success: false, queryName: 'query3', service: 'service1', error: 'Error 3' },
-        { executionTime: 1000, success: false, queryName: 'query4', service: 'service1', error: 'Error 4' },
-        { executionTime: 1000, success: true, queryName: 'query5', service: 'service1' },
+      const failingMetrics: TestMetric[] = [
+        { executionTime: 1000, success: false, queryName: 'query1', service: 'service1', error: 'Error 1', operation: 'query' },
+        { executionTime: 1000, success: false, queryName: 'query2', service: 'service1', error: 'Error 2', operation: 'query' },
+        { executionTime: 1000, success: false, queryName: 'query3', service: 'service1', error: 'Error 3', operation: 'query' },
+        { executionTime: 1000, success: false, queryName: 'query4', service: 'service1', error: 'Error 4', operation: 'query' },
+        { executionTime: 1000, success: true, queryName: 'query5', service: 'service1', operation: 'query' },
       ];
       
       monitor.recordMetrics(failingMetrics);
@@ -220,9 +222,9 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should detect slow query violations', () => {
-      const verySlowMetrics: ConvexQueryMetrics[] = [
-        { executionTime: 6000, success: true, queryName: 'verySlowQuery', service: 'service1' },
-        { executionTime: 12000, success: true, queryName: 'verySlowMutation', service: 'service1' },
+      const verySlowMetrics: TestMetric[] = [
+        { executionTime: 6000, success: true, queryName: 'verySlowQuery', service: 'service1', operation: 'query' },
+        { executionTime: 12000, success: true, queryName: 'verySlowMutation', service: 'service1', operation: 'mutation' },
       ];
       
       monitor.recordMetrics(verySlowMetrics);
@@ -237,9 +239,9 @@ describe('RuntimePerformanceMonitor', () => {
   describe('time window analysis', () => {
     it('should analyze performance for specific time window', () => {
       // This is a simplified test since we don't have actual timestamps
-      const metrics: ConvexQueryMetrics[] = [
-        { executionTime: 1000, success: true, queryName: 'query1', service: 'service1' },
-        { executionTime: 2000, success: true, queryName: 'query2', service: 'service1' },
+      const metrics: TestMetric[] = [
+        { executionTime: 1000, success: true, queryName: 'query1', service: 'service1', operation: 'query' },
+        { executionTime: 2000, success: true, queryName: 'query2', service: 'service1', operation: 'query' },
       ];
       
       monitor.recordMetrics(metrics);
@@ -252,7 +254,7 @@ describe('RuntimePerformanceMonitor', () => {
 
   describe('utility methods', () => {
     it('should clear metrics', () => {
-      monitor.recordMetric({ executionTime: 1000, success: true, queryName: 'test', service: 'test' });
+      monitor.recordMetric({ executionTime: 1000, success: true, queryName: 'test', service: 'test', operation: 'query' });
       expect(monitor.getMetricsCount()).toBe(1);
       
       monitor.clearMetrics();
@@ -260,11 +262,11 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should update thresholds', () => {
-      monitor.updateThresholds({ maxQueryTime: 3000, minSuccessRate: 90 });
+      monitor.updateThresholds({ maxExecutionTime: 3000, minSuccessRate: 90 });
       
       // Test that new thresholds are applied
-      const slowMetrics: ConvexQueryMetrics[] = [
-        { executionTime: 3500, success: true, queryName: 'slowQuery', service: 'service1' },
+      const slowMetrics: TestMetric[] = [
+        { executionTime: 3500, success: true, queryName: 'slowQuery', service: 'service1', operation: 'query' },
       ];
       
       monitor.recordMetrics(slowMetrics);
@@ -274,16 +276,17 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should export and import metrics', () => {
-      const originalMetrics: ConvexQueryMetrics[] = [
-        { executionTime: 1000, success: true, queryName: 'query1', service: 'service1' },
-        { executionTime: 2000, success: false, queryName: 'query2', service: 'service2', error: 'Test error' },
+      const originalMetrics: TestMetric[] = [
+        { executionTime: 1000, success: true, queryName: 'query1', service: 'service1', operation: 'query' },
+        { executionTime: 2000, success: false, queryName: 'query2', service: 'service2', error: 'Test error', operation: 'query' },
       ];
       
       monitor.recordMetrics(originalMetrics);
       const exportedMetrics = monitor.exportMetrics();
       
       expect(exportedMetrics).toHaveLength(2);
-      expect(exportedMetrics[0]).toEqual(originalMetrics[0]);
+      expect(exportedMetrics[0]).toMatchObject(originalMetrics[0]);
+      expect(exportedMetrics[1]).toMatchObject(originalMetrics[1]);
       
       const newMonitor = new RuntimePerformanceMonitor();
       newMonitor.importMetrics(exportedMetrics);
@@ -311,7 +314,7 @@ describe('RuntimePerformanceMonitor', () => {
 
     it('should create monitor with custom configuration', () => {
       const customMonitor = createRuntimePerformanceMonitor(
-        { maxQueryTime: 3000 },
+        { maxExecutionTime: 3000 },
         500
       );
       expect(customMonitor).toBeInstanceOf(RuntimePerformanceMonitor);
@@ -329,7 +332,7 @@ describe('RuntimePerformanceMonitor', () => {
     });
 
     it('should initialize global runtime monitoring', () => {
-      initializeGlobalRuntimeMonitoring({ maxQueryTime: 4000 }, 200);
+      initializeGlobalRuntimeMonitoring({ maxExecutionTime: 4000 }, 200);
       
       const globalMonitor = getGlobalRuntimeMonitor();
       expect(globalMonitor).toBeInstanceOf(RuntimePerformanceMonitor);

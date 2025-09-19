@@ -12,9 +12,11 @@
  * - Monitor runtime performance impact of helper utility
  */
 
-const { execSync, spawn } = require('child_process');
-const { createPerformanceMonitor } = require('../lib/utils/performance-monitor');
-const path = require('path');
+import { execSync, spawn } from 'child_process';
+// Note: This script uses the legacy performance-monitor for build tracking
+// The new runtime-performance-monitor provides enhanced compilation monitoring
+import { createPerformanceMonitor } from '../lib/utils/performance-monitor.js';
+import { fileURLToPath } from 'url';
 
 /**
  * Execute a command and measure its execution time
@@ -135,6 +137,7 @@ async function buildWithMonitoring() {
           const tscOutput = execSync('npx tsc --noEmit', { encoding: 'utf-8', stdio: 'pipe' });
           tsErrors = parseTscOutput(tscOutput);
         } catch (error) {
+          console.error('[BuildMonitor] Error parsing tsc output:', error);
           tsErrors = 1; // At least one error if tsc failed
         }
       }
@@ -285,11 +288,12 @@ async function buildWithMonitoring() {
 }
 
 // Run the build if this script is executed directly
-if (require.main === module) {
+const __filename = fileURLToPath(import.meta.url);
+if (process.argv[1] === __filename) {
   buildWithMonitoring().catch((error) => {
     console.error('[BuildMonitor] Unexpected error:', error);
     process.exit(1);
   });
 }
 
-module.exports = { buildWithMonitoring };
+export { buildWithMonitoring };

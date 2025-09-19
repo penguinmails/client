@@ -9,8 +9,8 @@ export {
 } from "./queries";
 
 export {
-  // Mutation handlers (none currently)
-  crossDomainMutations,
+  // Mutation handlers
+  updateCrossDomainAnalytics,
 } from "./mutations";
 
 export {

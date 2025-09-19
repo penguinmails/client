@@ -29,7 +29,9 @@ import type {
   SegmentationAnalytics,
   FilteredLeadAnalytics,
   AnalyticsComputeOptions,
-  LeadStatus
+  LeadStatus,
+  TimeSeriesDataPoint,
+  PerformanceMetrics
 } from "./types";
 import {
   validateLeadFilters,
@@ -67,6 +69,8 @@ export async function performLeadListMetricsQuery(
 
   const convexHelper = createAnalyticsConvexHelper(convex, "LeadAnalyticsService");
   const result = await convexHelper.query(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     api.leadAnalytics.getLeadListMetrics,
     {
       leadIds,
@@ -80,9 +84,12 @@ export async function performLeadListMetricsQuery(
   );
 
   // Type status breakdown
+  const rawResult = result as {
+    statusBreakdown: Array<{ status: string; count: number; percentage: number }>;
+  } & Omit<LeadListMetrics, 'statusBreakdown'>;
   const typedResult: LeadListMetrics = {
-    ...result,
-    statusBreakdown: result.statusBreakdown.map(item => ({
+    ...rawResult,
+    statusBreakdown: rawResult.statusBreakdown.map(item => ({
       ...item,
       status: item.status as LeadStatus
     }))
@@ -125,7 +132,7 @@ export async function performLeadEngagementAnalyticsQuery(
       serviceName: "LeadAnalyticsService",
       methodName: "performLeadEngagementAnalyticsQuery",
     }
-  );
+  ) as unknown as (TimeSeriesDataPoint & { leadCount: number })[];
 
   const aggregatedData = await convexHelper.query(
     api.leadAnalytics.getLeadAggregatedAnalytics,
@@ -138,9 +145,9 @@ export async function performLeadEngagementAnalyticsQuery(
       serviceName: "LeadAnalyticsService",
       methodName: "performLeadEngagementAnalyticsQuery",
     }
-  );
+  ) as unknown as { leadId: string; email: string; company?: string; aggregatedMetrics: PerformanceMetrics; }[];
 
-  const totalEngagement = aggregateLeadMetrics(aggregatedData.map(d => ({ aggregatedMetrics: d.aggregatedMetrics })));
+  const totalEngagement = aggregateLeadMetrics(aggregatedData.map((d: { aggregatedMetrics: PerformanceMetrics }) => ({ aggregatedMetrics: d.aggregatedMetrics })));
 
   const engagementTrends = calculateEngagementTrends(timeSeriesData);
 
@@ -178,9 +185,9 @@ export async function performConversionFunnelsQuery(
       serviceName: "LeadAnalyticsService",
       methodName: "performConversionFunnelsQuery",
     }
-  );
+  ) as unknown as { aggregatedMetrics: PerformanceMetrics }[];
 
-  const { funnelSteps, overallConversion } = computeConversionFunnel(leadData.map(l => ({ aggregatedMetrics: l.aggregatedMetrics })));
+  const { funnelSteps, overallConversion } = computeConversionFunnel(leadData.map((l: { aggregatedMetrics: PerformanceMetrics }) => ({ aggregatedMetrics: l.aggregatedMetrics })));
 
   const bottlenecks = identifyFunnelBottlenecks(funnelSteps);
 
@@ -213,10 +220,10 @@ export async function performLeadSourceAnalyticsQuery(
       serviceName: "LeadAnalyticsService",
       methodName: "performLeadSourceAnalyticsQuery",
     }
-  );
+  ) as unknown as { email: string; aggregatedMetrics: PerformanceMetrics }[];
 
   return computeLeadSourceAnalytics(
-    leadData.map(l => ({
+    leadData.map((l: { email: string; aggregatedMetrics: PerformanceMetrics }) => ({
       email: l.email,
       aggregatedMetrics: l.aggregatedMetrics
     }))
@@ -245,10 +252,10 @@ export async function performSegmentationAnalyticsQuery(
       serviceName: "LeadAnalyticsService",
       methodName: "performSegmentationAnalyticsQuery",
     }
-  );
+  ) as unknown as { company?: string; status: LeadStatus; aggregatedMetrics: PerformanceMetrics }[];
 
   return computeSegmentationAnalytics(
-    leadData.map(l => ({
+    leadData.map((l: { company?: string; status: LeadStatus; aggregatedMetrics: PerformanceMetrics }) => ({
       company: l.company,
       status: l.status,
       aggregatedMetrics: l.aggregatedMetrics
@@ -287,9 +294,9 @@ export async function performFilteredAnalyticsQuery(
       serviceName: "LeadAnalyticsService",
       methodName: "performFilteredAnalyticsQuery",
     }
-  );
+  ) as unknown as { aggregatedMetrics: PerformanceMetrics }[];
 
-  const aggregatedMetrics = aggregateLeadMetrics(leadData.map(d => ({ aggregatedMetrics: d.aggregatedMetrics })));
+  const aggregatedMetrics = aggregateLeadMetrics(leadData.map((d: { aggregatedMetrics: PerformanceMetrics }) => ({ aggregatedMetrics: d.aggregatedMetrics })));
 
   const rates = AnalyticsCalculator.calculateAllRates(aggregatedMetrics);
 
@@ -312,7 +319,7 @@ export async function performFilteredAnalyticsQuery(
         serviceName: "LeadAnalyticsService",
         methodName: "performFilteredAnalyticsQuery",
       }
-    );
+    ) as TimeSeriesDataPoint[];
     result.timeSeriesData = timeSeriesData;
   }
 

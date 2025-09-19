@@ -51,7 +51,7 @@ export async function performUpdateAnalyticsMutation(
   try {
     await convexHelper.mutation<void>(
       api.templateAnalytics.updateTemplateAnalytics,
-      payload,
+      payload as unknown as Record<string, unknown>,
       {
         serviceName: "TemplateAnalyticsService",
         methodName: "performUpdateAnalyticsMutation",

@@ -5,12 +5,14 @@
  * to ensure performance monitoring works correctly.
  */
 
-import { 
-  PerformanceMonitor, 
+import {
+  PerformanceMonitor,
   createPerformanceMonitor,
   DEFAULT_PERFORMANCE_THRESHOLDS,
   BuildMetrics,
-  PerformanceThresholds
+  PerformanceThresholds,
+  PerformanceValidation,
+  PerformanceSummary
 } from '../performance-monitor';
 import { writeFileSync, unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
@@ -117,7 +119,7 @@ describe('PerformanceMonitor', () => {
         eslintWarnings: 0,
       };
       
-      const validation = monitor.validatePerformance(metrics);
+      const validation: PerformanceValidation = monitor.validatePerformance(metrics);
       
       expect(validation.overallValid).toBe(true);
       expect(validation.buildTimeValid).toBe(true);
@@ -137,7 +139,7 @@ describe('PerformanceMonitor', () => {
         eslintWarnings: 0,
       };
       
-      const validation = monitor.validatePerformance(metrics);
+      const validation: PerformanceValidation = monitor.validatePerformance(metrics);
       
       expect(validation.overallValid).toBe(false);
       expect(validation.buildTimeValid).toBe(false);
@@ -155,7 +157,7 @@ describe('PerformanceMonitor', () => {
         eslintWarnings: 0,
       };
       
-      const validation = monitor.validatePerformance(metrics);
+      const validation: PerformanceValidation = monitor.validatePerformance(metrics);
       
       expect(validation.overallValid).toBe(false);
       expect(validation.tsErrorsValid).toBe(false);
@@ -173,7 +175,7 @@ describe('PerformanceMonitor', () => {
         eslintWarnings: 5,
       };
       
-      const validation = monitor.validatePerformance(metrics);
+      const validation: PerformanceValidation = monitor.validatePerformance(metrics);
       
       expect(validation.overallValid).toBe(false);
       expect(validation.eslintWarningsValid).toBe(false);
@@ -184,10 +186,10 @@ describe('PerformanceMonitor', () => {
   describe('historical data management', () => {
     it('should save and load metrics', () => {
       monitor.startBuild('test');
-      const metrics1 = monitor.completeBuild(true, 'commit1');
+      monitor.completeBuild(true, 'commit1');
       
       monitor.startBuild('test');
-      const metrics2 = monitor.completeBuild(true, 'commit2');
+      monitor.completeBuild(true, 'commit2');
       
       const historical = monitor.getHistoricalMetrics();
       
@@ -231,7 +233,7 @@ describe('PerformanceMonitor', () => {
       // Save test metrics
       writeFileSync(testMetricsFile, JSON.stringify(testMetrics, null, 2));
       
-      const summary = monitor.getPerformanceSummary();
+      const summary: PerformanceSummary = monitor.getPerformanceSummary();
       
       expect(summary.totalBuilds).toBe(3);
       expect(summary.averageBuildTime).toBeCloseTo(10); // (10+12+8)/3 = 10 seconds
@@ -241,7 +243,7 @@ describe('PerformanceMonitor', () => {
     });
 
     it('should handle empty metrics gracefully', () => {
-      const summary = monitor.getPerformanceSummary();
+      const summary: PerformanceSummary = monitor.getPerformanceSummary();
       
       expect(summary.totalBuilds).toBe(0);
       expect(summary.averageBuildTime).toBe(0);
@@ -272,7 +274,7 @@ describe('PerformanceMonitor', () => {
         eslintWarnings: 0,
       };
       
-      const validation = monitor.validatePerformance(currentMetrics);
+      const validation: PerformanceValidation = monitor.validatePerformance(currentMetrics);
       
       expect(validation.buildTimeIncreaseValid).toBe(true);
       expect(validation.metrics.buildTimeIncrease).toBeCloseTo(10);
@@ -298,7 +300,7 @@ describe('PerformanceMonitor', () => {
         eslintWarnings: 0,
       };
       
-      const validation = monitor.validatePerformance(currentMetrics);
+      const validation: PerformanceValidation = monitor.validatePerformance(currentMetrics);
       
       expect(validation.buildTimeIncreaseValid).toBe(false);
       expect(validation.metrics.buildTimeIncrease).toBeCloseTo(20);

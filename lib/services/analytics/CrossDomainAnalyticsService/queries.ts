@@ -23,7 +23,7 @@ export async function performMailboxDomainJoinedAnalyticsQuery(
 
   const convexHelper = createAnalyticsConvexHelper(convex, "CrossDomainAnalyticsService");
   const result = await convexHelper.query<CrossDomainAnalyticsResult[]>(
-    api.crossDomainAnalytics.getMailboxDomainJoinedAnalytics,
+    api.crossDomainAnalytics.index.getMailboxDomainJoinedAnalytics,
     {
       domainIds,
       mailboxIds,
@@ -56,7 +56,7 @@ export async function performCrossDomainTimeSeriesDataQuery(
 
   const convexHelper = createAnalyticsConvexHelper(convex, "CrossDomainAnalyticsService");
   const result = await convexHelper.query<CrossDomainTimeSeriesDataPoint[]>(
-    api.crossDomainAnalytics.getCrossDomainTimeSeriesAnalytics,
+    api.crossDomainAnalytics.index.getCrossDomainTimeSeriesAnalytics,
     {
       domainIds,
       mailboxIds,
@@ -87,7 +87,7 @@ export async function performMailboxDomainImpactAnalysisQuery(
 
   const convexHelper = createAnalyticsConvexHelper(convex, "CrossDomainAnalyticsService");
   const result = await convexHelper.query<MailboxDomainImpactAnalysis>(
-    api.crossDomainAnalytics.getMailboxDomainImpactAnalysis,
+    api.crossDomainAnalytics.index.getMailboxDomainImpactAnalysis,
     {
       domainId,
       dateRange: effectiveFilters.dateRange,

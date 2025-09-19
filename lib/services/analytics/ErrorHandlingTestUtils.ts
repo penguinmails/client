@@ -65,15 +65,21 @@ export class ErrorHandlingTestUtils {
         
         details[`${targetDomain}_isolation`] = isolationResult;
         
-        if (!isolationResult.isolationSuccessful) {
+        const targetFailed = !isolationResult.results[targetDomain].success;
+        const othersWorking = Object.keys(isolationResult.results)
+          .filter((key: string) => key !== targetDomain)
+          .every((key: string) => isolationResult.results[key as AnalyticsDomain].success);
+        const isolationSuccessful = targetFailed && othersWorking;
+        
+        if (!isolationSuccessful) {
           errors.push(`Domain isolation failed for ${targetDomain}: other domains affected`);
         }
         
-        if (!isolationResult.targetDomainFailed) {
+        if (!targetFailed) {
           errors.push(`Target domain ${targetDomain} should have failed but didn't`);
         }
         
-        if (!isolationResult.otherDomainsWorking) {
+        if (!othersWorking) {
           errors.push(`Other domains stopped working when ${targetDomain} failed`);
         }
       }
@@ -146,7 +152,10 @@ export class ErrorHandlingTestUtils {
         }
         
         // Note: fallbackSuccessful might be false if no cached data exists, which is acceptable
-        if (fallbackResult.cacheAvailable && !fallbackResult.dataRetrieved) {
+        const dataRetrieved = Object.values(fallbackResult.fallbackTests).some(
+          (test: { tested: boolean; fallbackWorked: boolean }) => test.tested && test.fallbackWorked
+        );
+        if (fallbackResult.cacheAvailable && !dataRetrieved) {
           console.warn(`No cached data found for domain ${domain} (this may be expected)`);
         }
       }

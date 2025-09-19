@@ -4,7 +4,7 @@
 
 import { AnalyticsError, AnalyticsErrorType } from "../BaseAnalyticsService";
 import { WarmupStatus } from "@/types/analytics/domain-specific";
-import { convex } from "@/lib/convex";
+import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 import { createAnalyticsConvexHelper } from "@/lib/utils/convex-query-helper";
 import { validateMailboxAnalyticsUpdate, validateWarmupAnalyticsUpdate } from "./validation";
@@ -22,8 +22,10 @@ export async function updateAnalytics(data: MailboxAnalyticsUpdate): Promise<str
   validateMailboxAnalyticsUpdate(data);
 
   try {
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
     const convexHelper = createAnalyticsConvexHelper(convex, "MailboxAnalyticsService");
-    const result = await convexHelper.mutation<string>(api.mailboxAnalytics.updateMailboxAnalytics, {
+    // @ts-expect-error - Convex type instantiation is excessively deep (platform limitation)
+    const result = await convexHelper.mutation<string>(api.mailboxAnalytics.upsertMailboxAnalytics, {
       mailboxId: data.mailboxId,
       email: data.email,
       domain: data.domain,
@@ -73,8 +75,9 @@ export async function updateWarmupAnalytics(data: WarmupAnalyticsUpdate): Promis
   validateWarmupAnalyticsUpdate(data);
 
   try {
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
     const convexHelper = createAnalyticsConvexHelper(convex, "MailboxAnalyticsService");
-    const result = await convexHelper.mutation<string>(api.mailboxAnalytics.updateWarmupAnalytics, {
+    const result = await convexHelper.mutation<string>(api.mailboxAnalytics.upsertWarmupAnalytics, {
       mailboxId: data.mailboxId,
       date: data.date,
       sent: data.sent,
@@ -292,6 +295,7 @@ export async function deleteMailboxAnalytics(mailboxId: string): Promise<void> {
   }
 
   try {
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
     const convexHelper = createAnalyticsConvexHelper(convex, "MailboxAnalyticsService");
     await convexHelper.mutation<void>(api.mailboxAnalytics.deleteMailboxAnalytics, {
       mailboxId,
