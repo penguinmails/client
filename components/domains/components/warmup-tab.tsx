@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getStatusColor } from "@/lib/data/domains";
+import { getStatusColor } from "@/lib/utils/domains";
 import { cn } from "@/lib/utils";
 import {
   AlertTriangle,
@@ -22,7 +22,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
-import { DomainWithMailboxesData } from "@/lib/actions/domainsActions";
+import { DomainWithMailboxesData } from "@/lib/actions/domains";
 import {
   Tooltip,
   TooltipContent,
@@ -155,7 +155,7 @@ function WarmupMailboxesTable({
           <Button variant="ghost" size="icon">
             <Settings className="w-4 h-4" />
           </Button>
-          <Link href="/dashboard/analytics/warmup">
+          <Link href="/dashboard/analytics/mailboxes">
             <Button variant="ghost" size="icon">
               <BarChart3 className="w-4 h-4" />
             </Button>
@@ -319,7 +319,7 @@ function WarmupMailboxesTable({
                           </Button>
                         </Link>
                         <Link
-                          href={`/dashboard/analytics/warmup?domain=${domain.domain}`}
+                          href={`/dashboard/analytics/mailboxes?domain=${domain.domain}`}
                         >
                           <Button variant="ghost" size="icon">
                             <BarChart3 className="w-4 h-4" />

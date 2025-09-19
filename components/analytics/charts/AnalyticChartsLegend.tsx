@@ -1,22 +1,29 @@
 "use client";
 import { useAnalytics } from "@/context/AnalyticsContext";
+import { getVisibleMetrics } from "../config/metrics";
 
 function AnalyticChartsLegend() {
-  const { visibleMetrics, metrics } = useAnalytics();
-  return metrics
-    .filter((m) => visibleMetrics[m.key])
-    .map((metric) => {
-      const Icon = metric.icon;
-      return (
+  const { filters } = useAnalytics();
+  const visibleMetrics = getVisibleMetrics(filters.visibleMetrics);
+
+  return (
+    <div className="flex flex-wrap gap-4">
+      {visibleMetrics.map((metric) => (
         <div key={metric.key} className="flex items-center space-x-2">
           <div
-            className="w-3 h-3 rounded"
+            className="w-3 h-3 rounded-full"
             style={{ backgroundColor: metric.color }}
           />
-          <Icon className={`w-4 h-4 text-[${metric.color}]`} />
-          <span className="text-sm text-gray-600">{metric.label}</span>
+          <span
+            className="text-sm text-muted-foreground"
+            title={metric.tooltip}
+          >
+            {metric.label}
+          </span>
         </div>
-      );
-    });
+      ))}
+    </div>
+  );
 }
+
 export default AnalyticChartsLegend;

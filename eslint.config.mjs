@@ -32,7 +32,8 @@ const eslintConfig = defineConfig([
     "*.lock",
     "package.json",
     "*.yml",
-    "jest.setup.js"
+    "jest.setup.js",
+    "convex/_generated/"
   ]),
   // Next.js and TypeScript configuration
   {

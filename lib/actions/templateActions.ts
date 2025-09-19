@@ -26,7 +26,7 @@ function mapCategoryStringToType(categoryString: string): TemplateCategoryType {
   return categoryMap[categoryString] || "OUTREACH";
 }
 
-// Map mock data to Template type
+// Map mock data to Template type - CLEANED UP: removed stored rates
 function mapMockToTemplate(mockTemplate: MockTemplateType): Template {
   return {
     id: mockTemplate.id,
@@ -38,8 +38,7 @@ function mapMockToTemplate(mockTemplate: MockTemplateType): Template {
     category: mapCategoryStringToType(mockTemplate.category),
     folderId: mockTemplate.folderId || null,
     usage: mockTemplate.usage || 0,
-    openRate: mockTemplate.openRate || "",
-    replyRate: mockTemplate.replyRate || "",
+    // CLEANED UP: Removed stored rates - use TemplateAnalyticsService for analytics
     lastUsed: mockTemplate.lastUsed || "",
     isStarred: mockTemplate.isStarred || false,
     type: mockTemplate.type as "template" | "quick-reply",
@@ -69,9 +68,10 @@ export async function getTemplates(): Promise<ActionResult<Template[]>> {
     // Fetch templates from database
     // Nile automatically scopes queries to the current tenant
     try {
+      // CLEANED UP: Removed stored rate fields - use TemplateAnalyticsService for analytics
       const result = await nile.db.query(`
         SELECT id, name, body, body_html as "bodyHtml", subject, content, category,
-               folder_id as "folderId", usage, open_rate as "openRate", reply_rate as "replyRate",
+               folder_id as "folderId", usage,
                last_used as "lastUsed", is_starred as "isStarred", type, tenant_id,
                description, created_by_id as "createdById", created_at as "createdAt",
                updated_at as "updatedAt"
@@ -79,7 +79,7 @@ export async function getTemplates(): Promise<ActionResult<Template[]>> {
         ORDER BY created_at DESC
       `);
 
-      // Define type for database result row
+      // Define type for database result row - CLEANED UP: removed stored rate fields
       interface DbTemplateRow {
         id: number;
         name: string;
@@ -90,8 +90,6 @@ export async function getTemplates(): Promise<ActionResult<Template[]>> {
         category: string;
         folderId: number | null;
         usage: number | null;
-        openRate: string | null;
-        replyRate: string | null;
         lastUsed: string | null;
         isStarred: boolean | null;
         type: string;
@@ -102,7 +100,7 @@ export async function getTemplates(): Promise<ActionResult<Template[]>> {
         updatedAt: Date;
       }
 
-      // Map database results to Template type
+      // Map database results to Template type - CLEANED UP: removed stored rates
       const templates: Template[] = (result as DbTemplateRow[]).map((row) => ({
         id: row.id,
         name: row.name,
@@ -113,8 +111,7 @@ export async function getTemplates(): Promise<ActionResult<Template[]>> {
         category: row.category as TemplateCategoryType,
         folderId: row.folderId,
         usage: row.usage || 0,
-        openRate: row.openRate || "",
-        replyRate: row.replyRate || "",
+        // CLEANED UP: Removed stored rates - use TemplateAnalyticsService for analytics
         lastUsed: row.lastUsed || "",
         isStarred: row.isStarred || false,
         type: row.type as "template" | "quick-reply",
@@ -310,7 +307,7 @@ export async function getQuickReplies(): Promise<ActionResult<Template[]>> {
     try {
       const result = await nile.db.query(`
         SELECT id, name, body, body_html as "bodyHtml", subject, content, category,
-               folder_id as "folderId", usage, open_rate as "openRate", reply_rate as "replyRate",
+               folder_id as "folderId", usage,
                last_used as "lastUsed", is_starred as "isStarred", type, tenant_id,
                description, created_by_id as "createdById", created_at as "createdAt",
                updated_at as "updatedAt"
@@ -342,7 +339,7 @@ export async function getQuickReplies(): Promise<ActionResult<Template[]>> {
         updatedAt: Date;
       }
 
-      // Map database results to Template type
+      // Map database results to Template type - CLEANED UP: removed stored rates
       const quickReplies: Template[] = (result as DbTemplateRow[]).map((row) => ({
         id: row.id,
         name: row.name,
@@ -353,8 +350,7 @@ export async function getQuickReplies(): Promise<ActionResult<Template[]>> {
         category: row.category as TemplateCategoryType,
         folderId: row.folderId,
         usage: row.usage || 0,
-        openRate: row.openRate || "",
-        replyRate: row.replyRate || "",
+        // CLEANED UP: Removed stored rates - use TemplateAnalyticsService for analytics
         lastUsed: row.lastUsed || "",
         isStarred: row.isStarred || false,
         type: row.type as "template" | "quick-reply",
@@ -419,7 +415,7 @@ export async function getQuickReplyById(id: string): Promise<ActionResult<Templa
     try {
       const result = await nile.db.query(`
         SELECT id, name, body, body_html as "bodyHtml", subject, content, category,
-               folder_id as "folderId", usage, open_rate as "openRate", reply_rate as "replyRate",
+               folder_id as "folderId", usage,
                last_used as "lastUsed", is_starred as "isStarred", type, tenant_id,
                description, created_by_id as "createdById", created_at as "createdAt",
                updated_at as "updatedAt"
@@ -459,7 +455,7 @@ export async function getQuickReplyById(id: string): Promise<ActionResult<Templa
         };
       }
 
-      // Map database result to Template type
+      // Map database result to Template type - CLEANED UP: removed stored rates
       const quickReply: Template = {
         id: row.id,
         name: row.name,
@@ -470,8 +466,7 @@ export async function getQuickReplyById(id: string): Promise<ActionResult<Templa
         category: row.category as TemplateCategoryType,
         folderId: row.folderId,
         usage: row.usage || 0,
-        openRate: row.openRate || "",
-        replyRate: row.replyRate || "",
+        // CLEANED UP: Removed stored rates - use TemplateAnalyticsService for analytics
         lastUsed: row.lastUsed || "",
         isStarred: row.isStarred || false,
         type: row.type as "template" | "quick-reply",

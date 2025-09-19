@@ -85,8 +85,26 @@ export async function getDomainsWithMailboxesData(
       return summary;
     }, { NOT_STARTED: 0, WARMING: 0, WARMED: 0, PAUSED: 0 } as DomainWithMailboxesData['aggregated']['statusSummary']);
 
+    // Ensure domain conforms to Domain interface
+    const domainWithCorrectMetrics: Domain = {
+      ...domain,
+      metrics: domain.metrics ? {
+        total24h: domain.metrics.sent || 0,
+        bounceRate: domain.metrics.bounced && domain.metrics.sent ? (domain.metrics.bounced / domain.metrics.sent) * 100 : 0,
+        spamRate: domain.metrics.spamComplaints && domain.metrics.sent ? (domain.metrics.spamComplaints / domain.metrics.sent) * 100 : 0,
+        openRate: domain.metrics.opened_tracked && domain.metrics.sent ? (domain.metrics.opened_tracked / domain.metrics.sent) * 100 : 0,
+        replyRate: domain.metrics.replied && domain.metrics.sent ? (domain.metrics.replied / domain.metrics.sent) * 100 : 0,
+      } : {
+        total24h: 0,
+        bounceRate: 0,
+        spamRate: 0,
+        openRate: 0,
+        replyRate: 0,
+      }
+    };
+
     return {
-      domain,
+      domain: domainWithCorrectMetrics,
       mailboxes: domainMailboxes,
       aggregated: {
         totalMailboxes,
@@ -137,7 +155,7 @@ export async function getTopAccountsForDomain(domainId: number, limit = 10): Pro
 
 export async function getDomainSettings(domainId: number): Promise<DomainSettings | null> {
   const domain = domains.find(d => d.id === domainId);
-  if (!domain || !domain.authentication || !domain.reputationFactors) {
+  if (!domain || !domain.authentication) {
     return null;
   }
 
@@ -173,7 +191,7 @@ export async function getDomainSettings(domainId: number): Promise<DomainSetting
      threadDepth: domain.threadDepth || "3",
      autoAdjustWarmup: domain.autoAdjustWarmup || false,
    },
-   reputationFactors: domain.reputationFactors,
+   // reputationFactors: domain.reputationFactors, // Property doesn't exist on Domain interface
    provider: DNSProvider.OTHER, // Default since "Google Workspace" doesn't match enum
  };
 }

@@ -66,7 +66,7 @@ export default function EmailAccountForm({
 
   // Helper to display status, ensuring value exists in enum
   const getVerificationStatusText = (
-    statusKey: VerificationStatus | undefined,
+    statusKey: VerificationStatus | undefined
   ) => {
     if (statusKey && copy.enums.verificationStatus[statusKey]) {
       return copy.enums.verificationStatus[statusKey];
@@ -92,12 +92,11 @@ export default function EmailAccountForm({
       toast.error(copy.notifications.error.title, {
         description: copy.notifications.error.description(
           isEditing ? "update" : "create",
-          error instanceof Error ? error.message : "Unknown error",
+          error instanceof Error ? error.message : "Unknown error"
         ),
       });
     }
   };
-
 
   return (
     <Form {...form}>

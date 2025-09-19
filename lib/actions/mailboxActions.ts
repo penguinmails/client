@@ -3,6 +3,11 @@
 import { conversations } from "@/lib/data/Inbox.mock";
 import { mockMailboxes } from "@/lib/data/analytics.mock";
 import { MailboxWarmupData, MailboxAnalyticsData } from "@/types";
+import { mapServiceMailboxToLegacy } from "@/lib/utils/analytics-mappers";
+import type {
+  MailboxPerformanceData as ServiceMailboxPerformanceData,
+  WarmupAnalyticsData as ServiceWarmupAnalyticsData,
+} from "@/lib/services/analytics/MailboxAnalyticsService";
 
 // Server action to fetch mailboxes
 export async function getMailboxesAction(
@@ -67,17 +72,40 @@ export async function getMailboxAnalyticsAction(
     throw new Error(`Mailbox not found: ${mailboxId}`);
   }
 
-  // Generate mock analytics based on mailbox data
-  const analytics: MailboxAnalyticsData = {
+  // Generate mock service-shaped performance and warmup data and map to legacy UI shape
+  const serviceLike = {
     mailboxId,
     warmupProgress: mailbox.warmupProgress,
-    totalWarmups: Math.floor(Math.random() * 500) + 200,
-    spamFlags: Math.floor(Math.random() * 10) + 1,
-    replies: Math.floor(Math.random() * 30) + 5,
     healthScore: mailbox.healthScore,
-    lastUpdated: new Date()
+    // include minimal core metrics to satisfy mappers
+    metrics: {
+      sent: Math.floor(Math.random() * 1000),
+      delivered: Math.floor(Math.random() * 900),
+      opened_tracked: Math.floor(Math.random() * 500),
+      clicked_tracked: Math.floor(Math.random() * 200),
+      replied: Math.floor(Math.random() * 50),
+      bounced: Math.floor(Math.random() * 10),
+      unsubscribed: Math.floor(Math.random() * 5),
+      spamComplaints: Math.floor(Math.random() * 8),
+    },
   };
 
+  const warmupLike = {
+    mailboxId,
+    totalWarmups: Math.floor(Math.random() * 500) + 200,
+    spamComplaints: Math.floor(Math.random() * 10) + 1,
+    replies: Math.floor(Math.random() * 30) + 5,
+  progressPercentage: Math.floor(Math.random() * 100),
+  dailyStats: [],
+  };
+
+  // Cast mock objects to the service types for the mapper call. This keeps the change local
+  // and satisfies the mapper's typed signature while we migrate consumers.
+  const analytics = mapServiceMailboxToLegacy(
+    serviceLike as ServiceMailboxPerformanceData,
+    warmupLike as ServiceWarmupAnalyticsData
+  );
+  // update warmup chart state opportunistically in callers if needed
   return analytics;
 }
 

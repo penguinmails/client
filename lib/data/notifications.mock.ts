@@ -413,8 +413,7 @@ export const mockNotificationHistory: NotificationHistory[] = [
     readAt: "2024-12-17T10:30:00Z",
     metadata: {
       reportPeriod: "2024-12-11 to 2024-12-17",
-      openRate: 24.5,
-      replyRate: 3.2,
+      // CLEANED UP: Removed stored rates - calculate using AnalyticsCalculator
     },
   },
 ];
@@ -437,6 +436,7 @@ export const mockNotificationTemplates: NotificationTemplate[] = [
     type: "campaignCompletions",
     subject: "Campaign '{{campaignName}}' completed successfully",
     body: "Your campaign has finished sending!\n\nCampaign: {{campaignName}}\nTotal contacts: {{totalContacts}}\nSuccessfully sent: {{successCount}}\nOpen rate: {{openRate}}%\nReply rate: {{replyRate}}%\n\nView detailed analytics: {{analyticsLink}}",
+    // CLEANED UP: Variables still include rates for notification templates (calculated at send time)
     variables: ["campaignName", "totalContacts", "successCount", "openRate", "replyRate", "analyticsLink"],
     channels: ["email", "inApp"],
     active: true,
@@ -447,6 +447,7 @@ export const mockNotificationTemplates: NotificationTemplate[] = [
     type: "weeklyReports",
     subject: "Your Weekly PenguinMails Report ({{reportPeriod}})",
     body: "Weekly Performance Summary\n\nPeriod: {{reportPeriod}}\n\nCampaigns sent: {{campaignsSent}}\nTotal emails: {{totalEmails}}\nAverage open rate: {{avgOpenRate}}%\nAverage reply rate: {{avgReplyRate}}%\nNew contacts: {{newContacts}}\n\nTop performing campaign: {{topCampaign}}\n\nView full report: {{reportLink}}",
+    // CLEANED UP: Variables still include rates for notification templates (calculated at send time)
     variables: ["reportPeriod", "campaignsSent", "totalEmails", "avgOpenRate", "avgReplyRate", "newContacts", "topCampaign", "reportLink"],
     channels: ["email"],
     active: true,

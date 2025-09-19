@@ -14,7 +14,13 @@
     "deploy": "npm run build:open-next && npx wrangler deploy",
     "upload": "npm run build:open-next && npx opennextjs-cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "test": "jest"
+    "ai": "GEMINI_SYSTEM_MD=1 gemini",
+    "test": "jest",
+    "convex:dev": "convex dev",
+    "convex:deploy": "convex deploy",
+    "convex:dashboard": "convex dashboard",
+    "build:monitored": "node scripts/build-with-monitoring.js",
+    "validate:performance": "node scripts/validate-performance.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -56,8 +62,10 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tanstack/react-table": "^8.21.3",
     "@types/papaparse": "^5.3.16",
+    "@upstash/redis": "^1.35.3",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
+    "convex": "^1.26.2",
     "date-fns": "^4.1.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.542.0",

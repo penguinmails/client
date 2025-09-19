@@ -12,14 +12,23 @@ import {
   // Legend
 } from "recharts";
 
-// Define the expected data structure for props
+// MIGRATED: Define the expected data structure for props using standardized field names
 interface ChartDataPoint {
   name: string;
-  [key: string]: unknown; // Allow other properties like opens, clicks, etc.
+  [key: string]: unknown; // Allow other properties like opened_tracked, clicked_tracked, etc.
 }
 
 interface CampaignPerformanceChartProps {
   data: ChartDataPoint[];
+}
+
+// Migration note: Canonicalize chart data keys for safety.
+function canonicalizeChartData(data: ChartDataPoint[]): ChartDataPoint[] {
+  return data.map((point) => ({
+    ...point,
+    opened_tracked: point.opened_tracked ?? point.opened ?? 0,
+    clicked_tracked: point.clicked_tracked ?? point.clicked ?? 0,
+  }));
 }
 
 // Custom Tooltip component (remains the same)
@@ -59,6 +68,7 @@ const CustomTooltip = ({
 const CampaignPerformanceChart: React.FC<CampaignPerformanceChartProps> = ({
   data,
 }) => {
+  const safeData = canonicalizeChartData(data);
   return (
     <div className="bg-white shadow rounded-lg p-4 h-96 flex flex-col">
       <h3 className="text-lg font-medium text-gray-900 mb-4">
@@ -66,13 +76,13 @@ const CampaignPerformanceChart: React.FC<CampaignPerformanceChartProps> = ({
       </h3>
       <div className="flex-grow">
         <ResponsiveContainer width="100%" height="100%">
-          {/* Use the data prop */}
+          {/* Use canonicalized data */}
           <LineChart
-            data={data}
+            data={safeData}
             margin={{
               top: 5,
               right: 30,
-              left: 0, // Adjusted left margin
+              left: 0,
               bottom: 5,
             }}
           >
@@ -95,21 +105,21 @@ const CampaignPerformanceChart: React.FC<CampaignPerformanceChartProps> = ({
             {/* <Legend verticalAlign="top" height={36}/> */}
             <Line
               type="monotone"
-              dataKey="opens"
+              dataKey="opened_tracked"
               stroke="#3B82F6"
               strokeWidth={2}
               dot={{ r: 4 }}
               activeDot={{ r: 6 }}
-              name="Opens"
+              name="Opens (Tracked)"
             />
             <Line
               type="monotone"
-              dataKey="clicks"
+              dataKey="clicked_tracked"
               stroke="#60A5FA"
               strokeWidth={2}
               dot={{ r: 4 }}
               activeDot={{ r: 6 }}
-              name="Clicks"
+              name="Clicks (Tracked)"
             />
             <Line
               type="monotone"

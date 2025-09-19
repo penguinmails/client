@@ -1,16 +1,21 @@
 "use client";
 
+// README: Migration note - SequenceTab now treats sequence step metrics as raw
+// PerformanceMetrics-style counts (non-nullable). We defensively guard against
+// missing or zero 'sent' values when computing rates to avoid NaN/Infinity.
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getSequenceSteps } from "@/lib/actions/campaignActions";
 import { useState, useEffect } from "react";
 import { Clock, Mail } from "lucide-react";
-import { SequenceStep } from "@/types";
+import { SequenceStep as SequenceStepType } from "@/types";
 
 function SequenceTab() {
-  const [sequenceSteps, setSequenceSteps] = useState<SequenceStep[]>([]);
+  const [sequenceSteps, setSequenceSteps] = useState<SequenceStepType[]>([]);
 
   useEffect(() => {
-    getSequenceSteps().then(setSequenceSteps);
+    // Defensive: ensure we always set an array
+    getSequenceSteps().then((s) => setSequenceSteps(Array.isArray(s) ? s : []));
   }, []);
 
   return (
@@ -53,28 +58,49 @@ function SequenceTab() {
                 <div className="grid grid-cols-4 gap-4 mt-3">
                   <div className="text-center">
                     <p className="text-lg font-bold text-gray-900">
-                      {step.sent}
+                      {Number(step.sent ?? 0).toLocaleString()}
                     </p>
                     <p className="text-xs text-gray-500">Sent</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-blue-600">
-                      {step.openRate}
-                    </p>
-                    <p className="text-xs text-gray-500">Open Rate</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-purple-600">
-                      {step.clickRate}
-                    </p>
-                    <p className="text-xs text-gray-500">Click Rate</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-green-600">
-                      {step.replyRate}
-                    </p>
-                    <p className="text-xs text-gray-500">Reply Rate</p>
-                  </div>
+                  {/* Defensive rate formatting - avoid division by zero */}
+                  {(() => {
+                    const sent = Number(step.sent ?? 0);
+                    const openPct =
+                      sent > 0
+                        ? (
+                            (Number(step.opened_tracked ?? 0) / sent) *
+                            100
+                          ).toFixed(1)
+                        : "0.0";
+                    const clickPct =
+                      sent > 0
+                        ? (
+                            (Number(step.clicked_tracked ?? 0) / sent) *
+                            100
+                          ).toFixed(1)
+                        : "0.0";
+                    const replyPct =
+                      sent > 0
+                        ? ((Number(step.replied ?? 0) / sent) * 100).toFixed(1)
+                        : "0.0";
+
+                    return (
+                      <>
+                        <div className="text-center">
+                          <p className="text-lg font-bold text-blue-600">{`${openPct}%`}</p>
+                          <p className="text-xs text-gray-500">Open Rate</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-lg font-bold text-purple-600">{`${clickPct}%`}</p>
+                          <p className="text-xs text-gray-500">Click Rate</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-lg font-bold text-green-600">{`${replyPct}%`}</p>
+                          <p className="text-xs text-gray-500">Reply Rate</p>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
               ) : (
                 <p className="text-sm text-gray-500 mt-2">

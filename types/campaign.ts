@@ -259,13 +259,13 @@ interface LeadsList {
 
 export interface CampaignDisplay {
   id: number;
+  openRate?: number;
+  replyRate?: number;
   name: string;
   status: CampaignStatusEnum;
   mailboxes: number;
   leadsSent: number;
   replies: number;
-  openRate: string;
-  replyRate: string;
   lastSent: string;
   createdDate: string;
   assignedMailboxes: string[];
@@ -303,12 +303,13 @@ export interface EmailSequenceStep {
   type: "email";
   subject: string;
   sent: number;
-  opens: number;
-  clicks: number;
-  replies: number;
-  openRate: string;
-  clickRate: string;
-  replyRate: string;
+  delivered: number;
+  opened_tracked: number;
+  clicked_tracked: number;
+  replied: number;
+  bounced: number;
+  unsubscribed: number;
+  spamComplaints: number;
 }
 
 export interface WaitSequenceStep {

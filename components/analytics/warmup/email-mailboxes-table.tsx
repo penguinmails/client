@@ -1,6 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Filter, DropDownFilter, SearchInput } from "@/components/ui/custom/Filter";
+import {
+  Filter,
+  DropDownFilter,
+  SearchInput,
+} from "@/components/ui/custom/Filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,23 +19,29 @@ import {
 import { Mail, Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import {
-  MailboxWarmupData,
-  ProgressiveAnalyticsState
-} from "@/types";
+import { MailboxWarmupData } from "@/types";
+// Migration note: Replaced legacy ProgressiveAnalyticsState with local alias for mailbox analytics state.
+type LocalProgressiveAnalyticsState = Record<
+  string,
+  {
+    data: ReturnType<typeof mapRawToLegacyMailboxData> | null;
+    loading: boolean;
+    error: string | null;
+  }
+>;
+import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
 
 function EmailMailboxesTable() {
-  const {
-    dateRange,
-    fetchMailboxes,
-    fetchMultipleMailboxAnalytics
-  } = useAnalytics();
+  const { dateRange, fetchMailboxes, fetchMultipleMailboxAnalytics } =
+    useAnalytics();
   const [mailboxesLoading, setMailboxesLoading] = useState(true);
   const [mailboxes, setMailboxes] = useState<MailboxWarmupData[]>([]);
   const [mailboxesError, setMailboxesError] = useState<string | null>(null);
 
   // Progressive analytics state mapping
-  const [analyticsState, setAnalyticsState] = useState<ProgressiveAnalyticsState>({});
+  // Use local alias for mailbox analytics state to avoid legacy type dependency.
+  const [analyticsState, setAnalyticsState] =
+    useState<LocalProgressiveAnalyticsState>({});
 
   // Fetch mailboxes using server action
   useEffect(() => {
@@ -60,48 +70,58 @@ function EmailMailboxesTable() {
     const fetchAllAnalytics = async () => {
       try {
         // Initialize loading state for all mailboxes
-        const initialState: ProgressiveAnalyticsState = {};
+        const initialState: LocalProgressiveAnalyticsState = {};
         mailboxes.forEach((mailbox) => {
           initialState[mailbox.id] = { data: null, loading: true, error: null };
         });
         setAnalyticsState(initialState);
 
         // Fetch analytics for all mailboxes using server action
-        const mailboxIds = mailboxes.map(mailbox => mailbox.id);
-        const analyticsResults = await fetchMultipleMailboxAnalytics(
+        const mailboxIds = mailboxes.map((mailbox) => mailbox.id);
+        const analyticsResultsRawUnknown = await fetchMultipleMailboxAnalytics(
           mailboxIds,
           dateRange,
           undefined, // use current granularity
           undefined, // userid
-          undefined  // companyid
+          undefined // companyid
         );
 
         // Update state with the results
-        const newState: ProgressiveAnalyticsState = {};
+        const newState: LocalProgressiveAnalyticsState = {};
         mailboxes.forEach((mailbox) => {
-          const analytics = analyticsResults[mailbox.id];
-          if (analytics) {
-            newState[mailbox.id] = { data: analytics, loading: false, error: null };
+          const raw =
+            analyticsResultsRawUnknown &&
+            typeof analyticsResultsRawUnknown === "object"
+              ? (analyticsResultsRawUnknown as Record<string, unknown>)[
+                  mailbox.id
+                ]
+              : null;
+          const legacy = raw ? mapRawToLegacyMailboxData(raw) : null;
+          if (legacy) {
+            newState[mailbox.id] = {
+              data: legacy,
+              loading: false,
+              error: null,
+            };
           } else {
             newState[mailbox.id] = {
               data: null,
               loading: false,
-              error: "Failed to load analytics"
+              error: "Failed to load analytics",
             };
           }
         });
         setAnalyticsState(newState);
-
       } catch (error) {
         console.error("Failed to fetch mailbox analytics:", error);
 
         // Set error state for all mailboxes
-        const errorState: ProgressiveAnalyticsState = {};
+        const errorState: LocalProgressiveAnalyticsState = {};
         mailboxes.forEach((mailbox) => {
           errorState[mailbox.id] = {
             data: null,
             loading: false,
-            error: "Failed to load analytics"
+            error: "Failed to load analytics",
           };
         });
         setAnalyticsState(errorState);
@@ -123,9 +143,7 @@ function EmailMailboxesTable() {
               <h2 className="text-xl font-semibold text-gray-900">
                 Email Mailboxes
               </h2>
-              <Badge className="bg-primary/20 text-primary">
-                Loading...
-              </Badge>
+              <Badge className="bg-primary/20 text-primary">Loading...</Badge>
             </div>
           </CardTitle>
         </CardHeader>
@@ -133,9 +151,7 @@ function EmailMailboxesTable() {
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-primary mx-auto mb-4 animate-spin" />
-              <p className="text-gray-500">
-                Loading mailboxes...
-              </p>
+              <p className="text-gray-500">Loading mailboxes...</p>
             </div>
           </div>
         </CardContent>
@@ -154,9 +170,7 @@ function EmailMailboxesTable() {
               <h2 className="text-xl font-semibold text-gray-900">
                 Email Mailboxes
               </h2>
-              <Badge className="bg-red-100 text-red-800">
-                Error
-              </Badge>
+              <Badge className="bg-red-100 text-red-800">Error</Badge>
             </div>
           </CardTitle>
         </CardHeader>
@@ -210,7 +224,9 @@ function EmailMailboxesTable() {
               Email Mailboxes
             </h2>
             <Badge className="bg-primary/20 text-primary">
-              {mailboxesLoading ? "Loading..." : `${filteredMailboxes.length} total`}
+              {mailboxesLoading
+                ? "Loading..."
+                : `${filteredMailboxes.length} total`}
             </Badge>
           </div>
         </CardTitle>
@@ -275,7 +291,13 @@ function EmailMailboxesTable() {
                   </TableCell>
                   <TableCell>
                     <Badge
-                      variant={mailbox.status === "active" ? "default" : mailbox.status === "warming" ? "secondary" : "outline"}
+                      variant={
+                        mailbox.status === "active"
+                          ? "default"
+                          : mailbox.status === "warming"
+                            ? "secondary"
+                            : "outline"
+                      }
                       className="capitalize"
                     >
                       {mailbox.status}
@@ -285,7 +307,9 @@ function EmailMailboxesTable() {
                     {analytics?.loading ? (
                       <div className="flex items-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">Loading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading...
+                        </span>
                       </div>
                     ) : analytics?.error ? (
                       <div className="flex items-center space-x-2 text-red-500">
@@ -298,10 +322,14 @@ function EmailMailboxesTable() {
                           <div className="w-16 bg-gray-200 rounded-full h-2">
                             <div
                               className="bg-primary h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${analytics.data.warmupProgress}%` }}
+                              style={{
+                                width: `${analytics.data.warmupProgress}%`,
+                              }}
                             />
                           </div>
-                          <span className="text-sm font-medium">{analytics.data.warmupProgress}%</span>
+                          <span className="text-sm font-medium">
+                            {analytics.data.warmupProgress}%
+                          </span>
                         </div>
                       </>
                     ) : (
@@ -312,7 +340,9 @@ function EmailMailboxesTable() {
                     {analytics?.loading ? (
                       <div className="flex items-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">Loading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading...
+                        </span>
                       </div>
                     ) : analytics?.error ? (
                       <div className="flex items-center space-x-2 text-red-500">
@@ -329,7 +359,9 @@ function EmailMailboxesTable() {
                     {analytics?.loading ? (
                       <div className="flex items-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">Loading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading...
+                        </span>
                       </div>
                     ) : analytics?.error ? (
                       <div className="flex items-center space-x-2 text-red-500">
@@ -337,7 +369,10 @@ function EmailMailboxesTable() {
                         <span className="text-sm">Error</span>
                       </div>
                     ) : (
-                      <Badge variant="outline" className="text-red-600 border-red-300">
+                      <Badge
+                        variant="outline"
+                        className="text-red-600 border-red-300"
+                      >
                         {analytics?.data?.spamFlags || "N/A"}
                       </Badge>
                     )}
@@ -346,7 +381,9 @@ function EmailMailboxesTable() {
                     {analytics?.loading ? (
                       <div className="flex items-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">Loading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading...
+                        </span>
                       </div>
                     ) : analytics?.error ? (
                       <div className="flex items-center space-x-2 text-red-500">

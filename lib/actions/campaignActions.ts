@@ -22,10 +22,11 @@ export async function getUserCampaignsAction(userId?: string, companyId?: string
   return campaignsData;
 }
 
+// DEPRECATED: Use CampaignAnalyticsService.getTimeSeriesData() instead
 export async function getCampaignAnalyticsAction(campaigns: Partial<Campaign>[], days: number) {
-  console.log("Generating campaign analytics:", campaigns, days);
-  // In a real implementation, this would generate analytics from campaign data
-  // For now, generate mock chart data
+  console.log("DEPRECATED: Use CampaignAnalyticsService.getTimeSeriesData() instead:", campaigns, days);
+  // CLEANED UP: This function generates mock data with old field names
+  // Use CampaignAnalyticsService for standardized analytics
   const chartData = [];
   const today = new Date();
 
@@ -34,18 +35,22 @@ export async function getCampaignAnalyticsAction(campaigns: Partial<Campaign>[],
     date.setDate(today.getDate() - i);
 
     const sent = Math.floor(Math.random() * 150) + 20;
-    const opened = Math.floor(sent * (0.25 + Math.random() * 0.4));
-    const clicked = Math.floor(opened * (0.15 + Math.random() * 0.3));
-    const replied = Math.floor(opened * (0.1 + Math.random() * 0.2));
-    const bounced = Math.floor(sent * (0.02 + Math.random() * 0.08));
+    const delivered = Math.floor(sent * (0.95 + Math.random() * 0.04)); // 95-99% delivery
+    const opened_tracked = Math.floor(delivered * (0.25 + Math.random() * 0.4)); // CLEANED UP: standardized field name
+    const clicked_tracked = Math.floor(delivered * (0.15 + Math.random() * 0.3)); // CLEANED UP: standardized field name
+    const replied = Math.floor(delivered * (0.1 + Math.random() * 0.2));
+    const bounced = sent - delivered;
 
     chartData.push({
       date: date.toISOString().split("T")[0],
       sent,
-      opened,
+      delivered, // CLEANED UP: added delivered field
+      opened: opened_tracked, // DEPRECATED: keeping for backward compatibility
+      opened_tracked, // CLEANED UP: standardized field name
+      clicked: clicked_tracked, // DEPRECATED: keeping for backward compatibility
+      clicked_tracked, // CLEANED UP: standardized field name
       replied,
       bounced,
-      clicked,
       formattedDate: date.toLocaleDateString("en-US", {
         day: "numeric",
         month: "short",
@@ -108,8 +113,8 @@ export async function getCampaignsDataAction(companyId: string) {
   const activeCampaigns = mockedCampaigns.filter(
     (c) => c.status === "Running",
   ).length;
-  const emailsSent = mockedCampaigns.reduce((sum, c) => sum + c.progressTotal, 0);
-  const totalReplies = mockedCampaigns.reduce((sum, c) => sum + c.replies, 0);
+  const emailsSent = mockedCampaigns.reduce((sum, c) => sum + c.sent, 0);
+  const totalReplies = mockedCampaigns.reduce((sum, c) => sum + c.replied, 0);
 
   return {
     summary: {

@@ -4,7 +4,20 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useAnalytics } from "@/context/AnalyticsContext";
+import { useAnalytics, useDomainAnalytics } from "@/context/AnalyticsContext";
+import { ChartDataPoint } from "@/types/analytics/ui";
+import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { ANALYTICS_METRICS_CONFIG, getChartConfig } from "../config/metrics";
+import {
+  prepareChartDataFromTimeSeries,
+  convertUIFiltersToDataFilters,
+  formatTooltipValue,
+} from "../utils/chartDataPreparation";
+import {
+  ChartSkeleton,
+  ChartError,
+  ChartEmptyState,
+} from "../components/ChartStates";
 import {
   CartesianGrid,
   Line,
@@ -13,33 +26,63 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useEffect, useState } from "react";
 
 function OverviewLineChart() {
-  const { chartData, visibleMetrics, metrics } = useAnalytics();
+  const { filters, loadingState } = useAnalytics();
+  const { service: campaignService } = useDomainAnalytics("campaigns");
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
 
-  if (chartData.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-80 text-muted-foreground">
-        No data available
-      </div>
-    );
+  // Fetch data when filters change
+  useEffect(() => {
+    async function fetchChartData() {
+      if (!campaignService) return;
+
+      try {
+        // Convert UI filters to data filters using utility
+        const dataFilters = convertUIFiltersToDataFilters(filters);
+
+        // Fetch time series data using the service
+        const timeSeriesData = await campaignService.getTimeSeriesData(
+          filters.selectedCampaigns.length > 0
+            ? filters.selectedCampaigns
+            : undefined,
+          dataFilters
+        );
+
+        // Prepare chart data using utility
+        const formattedData = prepareChartDataFromTimeSeries(timeSeriesData);
+        setChartData(formattedData);
+      } catch (error) {
+        console.error("Failed to fetch chart data:", error);
+        setChartData([]);
+      }
+    }
+
+    fetchChartData();
+  }, [filters, campaignService]);
+
+  // Progressive loading with skeleton
+  if (loadingState.domains.campaigns) {
+    return <ChartSkeleton height="h-80" />;
   }
 
-  // Create chart config for shadcn charts
-  const chartConfig = metrics.reduce(
-    (config, metric) => {
-      config[metric.key] = {
-        label: metric.label,
-        color: metric.color,
-      };
-      return config;
-    },
-    {} as Record<string, { label: string; color: string }>,
-  );
+  // Error handling
+  if (loadingState.errors.campaigns) {
+    return <ChartError error={loadingState.errors.campaigns} height="h-80" />;
+  }
 
-  const visibleMetricKeys = metrics
-    .filter((m) => visibleMetrics[m.key])
-    .map((m) => m.key);
+  if (chartData.length === 0) {
+    return <ChartEmptyState height="h-80" />;
+  }
+
+  // Create chart config using shared configuration
+  const chartConfig = getChartConfig(filters.visibleMetrics);
+
+  // Filter visible metrics based on UI filters
+  const visibleMetricKeys = ANALYTICS_METRICS_CONFIG.filter((m) =>
+    filters.visibleMetrics.includes(m.key)
+  ).map((m) => m.key);
 
   return (
     <div className="h-80">
@@ -61,7 +104,7 @@ function OverviewLineChart() {
               horizontal={true}
             />
             <XAxis
-              dataKey="label"
+              dataKey="name"
               tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
               tickLine={{ stroke: "hsl(var(--border))" }}
               axisLine={{ stroke: "hsl(var(--border))" }}
@@ -72,15 +115,21 @@ function OverviewLineChart() {
               tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
               tickLine={{ stroke: "hsl(var(--border))" }}
               axisLine={{ stroke: "hsl(var(--border))" }}
-              tickFormatter={(value) => value.toLocaleString()}
+              tickFormatter={(value) => AnalyticsCalculator.formatNumber(value)}
             />
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  formatter={(value, name) => [
-                    Number(value).toLocaleString(),
-                    chartConfig[name as string]?.label || name,
-                  ]}
+                  formatter={(value, name) => {
+                    const [formattedValue, label] = formatTooltipValue(
+                      Number(value),
+                      name as string
+                    );
+                    return [
+                      formattedValue,
+                      chartConfig[name as string]?.label || label,
+                    ];
+                  }}
                   labelFormatter={(label) => `Date: ${label}`}
                 />
               }

@@ -9,7 +9,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import { DataGranularity, DateRangePreset, AnalyticsMetric, CampaignPerformanceData } from "@/types";
+import { DataGranularity } from "@/types/analytics/core";
+import { DateRangePreset } from "@/types/analytics/ui";
+import { CampaignAnalytics } from "@/types/analytics/domain-specific";
+import { AnalyticsMetricConfig } from "@/types/analytics/ui";
 import { ChevronDown, Mail, Settings, Target } from "lucide-react";
 import { DropDownFilter, Filter } from "../../ui/custom/Filter";
 
@@ -19,9 +22,9 @@ interface MailboxFilter {
 }
 
 interface PerformanceFilterProps {
-  campaignData: CampaignPerformanceData[];
+  campaignData: CampaignAnalytics[];
   mailboxes: MailboxFilter[];
-  metrics: AnalyticsMetric[];
+  metrics: AnalyticsMetricConfig[];
 }
 
 const dateRangeOptions = [
@@ -38,7 +41,11 @@ const granularityOptions = [
   { value: "month", label: "Monthly" },
 ];
 
-function PerformanceFilter({ campaignData, mailboxes, metrics }: PerformanceFilterProps) {
+function PerformanceFilter({
+  campaignData,
+  mailboxes,
+  metrics,
+}: PerformanceFilterProps) {
   const { filters } = useAnalytics();
   const {
     visibleMetrics,
@@ -62,12 +69,12 @@ function PerformanceFilter({ campaignData, mailboxes, metrics }: PerformanceFilt
 
   // Filter granularity options based on allowed granularities
   const filteredGranularityOptions = granularityOptions.filter((option) =>
-    allowedGranularities.includes(option.value as DataGranularity),
+    (allowedGranularities || []).includes(option.value as DataGranularity)
   );
 
   const handleDateRangeChange = (value: string) => {
-    setDateRange(value as DateRangePreset);
-    setShowCustomDate(value === "custom");
+    setDateRange?.(value as DateRangePreset);
+    setShowCustomDate?.(value === "custom");
   };
 
   return (
@@ -87,14 +94,14 @@ function PerformanceFilter({ campaignData, mailboxes, metrics }: PerformanceFilt
             <Input
               type="date"
               value={customDateStart}
-              onChange={(e) => setCustomDateStart(e.target.value)}
+              onChange={(e) => setCustomDateStart?.(e.target.value)}
               className="w-auto"
             />
             <span className="text-muted-foreground">to</span>
             <Input
               type="date"
               value={customDateEnd}
-              onChange={(e) => setCustomDateEnd(e.target.value)}
+              onChange={(e) => setCustomDateEnd?.(e.target.value)}
               className="w-auto"
             />
           </div>
@@ -105,7 +112,9 @@ function PerformanceFilter({ campaignData, mailboxes, metrics }: PerformanceFilt
           options={filteredGranularityOptions}
           placeholder="Granularity"
           value={granularity}
-          onChange={(value: string) => setGranularity(value as DataGranularity)}
+          onChange={(value: string) =>
+            setGranularity?.(value as DataGranularity)
+          }
         />
 
         {/* Campaign Filter */}
@@ -113,9 +122,9 @@ function PerformanceFilter({ campaignData, mailboxes, metrics }: PerformanceFilt
           icon={<Target className="w-4 h-4" />}
           label="Campaigns"
           title="Filter by Campaign"
-          items={campaignData.map((campaign) => campaign.name)}
+          items={campaignData.map((campaign) => campaign.campaignName)}
           selectedItems={selectedCampaigns}
-          onItemsChange={setSelectedCampaigns}
+          onItemsChange={(items) => setSelectedCampaigns?.(items)}
         />
 
         {/* Mailbox Filter */}
@@ -125,7 +134,7 @@ function PerformanceFilter({ campaignData, mailboxes, metrics }: PerformanceFilt
           title="Filter by Mailbox"
           items={mailboxes.map((mailbox) => mailbox.name)}
           selectedItems={selectedMailboxes}
-          onItemsChange={setSelectedMailboxes}
+          onItemsChange={(items) => setSelectedMailboxes?.(items)}
         />
 
         {/* Metrics Visibility Filter */}
@@ -135,14 +144,13 @@ function PerformanceFilter({ campaignData, mailboxes, metrics }: PerformanceFilt
           title="Show/Hide Metrics"
           items={metrics.map((metric) => metric.label)}
           selectedItems={metrics
-            .filter((metric) => visibleMetrics[metric.key])
+            .filter((metric) => (visibleMetrics || []).includes(metric.key))
             .map((metric) => metric.label)}
-          onItemsChange={(items) => {
-            const newVisibleMetrics = { ...visibleMetrics };
-            metrics.forEach((metric) => {
-              newVisibleMetrics[metric.key] = items.includes(metric.label);
-            });
-            setVisibleMetrics(newVisibleMetrics);
+          onItemsChange={(items: string[]) => {
+            const newVisibleMetrics = metrics
+              .filter((metric) => items.includes(metric.label))
+              .map((metric) => metric.key);
+            setVisibleMetrics?.(newVisibleMetrics);
           }}
         />
       </div>

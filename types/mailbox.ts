@@ -9,13 +9,20 @@ export interface Mailbox {
   reputation: number;
   dailyLimit: number;
   sent: number;
+  delivered: number;
+  opened_tracked: number;
+  clicked_tracked: number;
+  replied: number;
+  bounced: number;
+  unsubscribed: number;
+  spamComplaints: number;
   sent24h: number;
   lastActivity: string;
   lastSync: string;
   warmupProgress: number;
   warmupDays: number;
   totalSent: number;
-  replies: number;
+  replies: number; // Legacy field - use replied instead
   engagement: string;
   spf: boolean;
   dkim: boolean;

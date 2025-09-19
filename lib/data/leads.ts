@@ -48,7 +48,7 @@ export const leadListsData = [
     uploadDate: "2024-01-15",
     bounced: 24,
     tags: ["enterprise", "tech"],
-    performance: { openRate: 34.2, replyRate: 8.6 },
+    // CLEANED UP: Removed stored performance rates - use LeadAnalyticsService
   },
   {
     id: 2,
@@ -59,7 +59,7 @@ export const leadListsData = [
     uploadDate: "2024-01-08",
     bounced: 47,
     tags: ["enterprise", "c-level"],
-    performance: { openRate: 41.7, replyRate: 10.3 },
+    // CLEANED UP: Removed stored performance rates - use LeadAnalyticsService
   },
   {
     id: 3,
@@ -70,7 +70,7 @@ export const leadListsData = [
     uploadDate: "2024-01-01",
     bounced: 14,
     tags: ["smb", "follow-up"],
-    performance: { openRate: 28.9, replyRate: 7.7 },
+    // CLEANED UP: Removed stored performance rates - use LeadAnalyticsService
   },
   {
     id: 4,
@@ -81,7 +81,7 @@ export const leadListsData = [
     uploadDate: "2024-01-20",
     bounced: 0,
     tags: ["healthcare", "prospects"],
-    performance: { openRate: 0, replyRate: 0 },
+    // CLEANED UP: Removed stored performance rates - use LeadAnalyticsService
   },
   {
     id: 5,
@@ -92,7 +92,7 @@ export const leadListsData = [
     uploadDate: "2024-01-22",
     bounced: 0,
     tags: ["education", "institutions"],
-    performance: { openRate: 0, replyRate: 0 },
+    // CLEANED UP: Removed stored performance rates - use LeadAnalyticsService
   },
 ];
 

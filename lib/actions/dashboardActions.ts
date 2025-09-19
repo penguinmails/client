@@ -47,18 +47,23 @@ export interface DashboardMockData {
   upcomingTasks: UpcomingTask[];
 }
 
-// Server action to fetch mock dashboard data
+// DEPRECATED: Use domain-specific analytics services instead
+// This function contains scattered analytics logic that should be replaced with:
+// - CampaignAnalyticsService for campaign performance
+// - MailboxAnalyticsService for email status
+// - AnalyticsService.getOverviewMetrics() for KPI data
 export async function getDashboardMockDataAction(
   companyId: string,
 ): Promise<DashboardMockData> {
-  console.log(`Fetching MOCK dashboard data for company: ${companyId}`);
+  console.log(`DEPRECATED: Use AnalyticsService.getOverviewMetrics() instead for company: ${companyId}`);
 
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 300));
 
-  // Combine all mock data previously found in components
+  // CLEANED UP: This mock data uses old field names - use standardized analytics services
   const mockData: DashboardMockData = {
     kpi: {
+      // DEPRECATED: Use AnalyticsCalculator.formatRateAsPercentage() instead
       openRate: {
         value: "65.4%",
         change: "12% from last week",
@@ -81,6 +86,7 @@ export async function getDashboardMockDataAction(
       },
     },
     campaignPerformance: [
+      // DEPRECATED: Use opened_tracked/clicked_tracked field names
       { name: "Mon", opens: 40, clicks: 24, replies: 10 },
       { name: "Tue", opens: 30, clicks: 13, replies: 8 },
       { name: "Wed", opens: 20, clicks: 18, replies: 5 },
@@ -91,8 +97,8 @@ export async function getDashboardMockDataAction(
     ],
     emailStatus: [
       { name: "Delivered", value: 39 },
-      { name: "Opens", value: 30 },
-      { name: "Clicks", value: 18 },
+      { name: "Opens", value: 30 }, // DEPRECATED: Use "Opened (Tracked)" instead
+      { name: "Clicks", value: 18 }, // DEPRECATED: Use "Clicked (Tracked)" instead
       { name: "Replies", value: 11 },
       { name: "Bounced", value: 2 },
     ],
@@ -101,24 +107,24 @@ export async function getDashboardMockDataAction(
         id: 1,
         name: "Software CEOs Outreach",
         total: 2500,
-        opens: 1625,
-        clicks: 608,
+        opens: 1625, // DEPRECATED: Use opened_tracked
+        clicks: 608, // DEPRECATED: Use clicked_tracked
         replies: 323,
       },
       {
         id: 2,
         name: "Marketing Directors Follow-up",
         total: 1800,
-        opens: 1170,
-        clicks: 432,
+        opens: 1170, // DEPRECATED: Use opened_tracked
+        clicks: 432, // DEPRECATED: Use clicked_tracked
         replies: 216,
       },
       {
         id: 3,
         name: "Startup Founders Introduction",
         total: 1200,
-        opens: 780,
-        clicks: 288,
+        opens: 780, // DEPRECATED: Use opened_tracked
+        clicks: 288, // DEPRECATED: Use clicked_tracked
         replies: 144,
       },
     ],
