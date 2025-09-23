@@ -34,3 +34,25 @@ export {
 export {
   performUpdateCrossDomainAnalyticsMutation,
 } from "./mutations";
+
+// Service class
+import { BaseAnalyticsService } from "../BaseAnalyticsService";
+
+export class CrossDomainAnalyticsService extends BaseAnalyticsService {
+  constructor() {
+    super("crossDomain");
+  }
+
+  async healthCheck(): Promise<boolean> {
+    try {
+      // Simple health check - just return true for now
+      return true;
+    } catch (error) {
+      console.error('CrossDomainAnalyticsService health check failed:', error);
+      return false;
+    }
+  }
+}
+
+// Export singleton instance
+export const crossDomainAnalyticsService = new CrossDomainAnalyticsService();

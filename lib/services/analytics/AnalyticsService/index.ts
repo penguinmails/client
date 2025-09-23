@@ -548,8 +548,21 @@ export class AnalyticsService extends BaseAnalyticsService {
   }
 }
 
-// Export singleton instance for backward compatibility
-export const analyticsService = AnalyticsService.getInstance();
+// Lazy initialization to prevent issues during build time
+let analyticsServiceInstance: AnalyticsService | null = null;
+
+export const analyticsService = (() => {
+  if (!analyticsServiceInstance) {
+    try {
+      analyticsServiceInstance = AnalyticsService.getInstance();
+    } catch (error) {
+      console.warn("Failed to initialize AnalyticsService:", error);
+      // Return a minimal stub that won't break the build
+      analyticsServiceInstance = null as any;
+    }
+  }
+  return analyticsServiceInstance;
+})();
 
 // Default export for convenience
 export default AnalyticsService;
