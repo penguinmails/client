@@ -96,8 +96,8 @@ function UsageTab() {
 
       const result = await getUsageWithCalculations();
 
-      if (result.success) {
-        setUsageData(result.data!);
+      if (result.success && result.data) {
+        setUsageData(result.data);
       } else {
         setError(result.error?.message ?? "Failed to load usage data");
         toast.error("Failed to load usage data", {
@@ -120,8 +120,8 @@ function UsageTab() {
     try {
       setLoadingStorage(true);
       const result = await getStorageOptions();
-      if (result.success) {
-        setStorageOptions(result.data!);
+      if (result.success && result.data) {
+        setStorageOptions(result.data);
       } else {
         toast.error("Failed to load storage options", {
           description: result.error?.message ?? "An error occurred",

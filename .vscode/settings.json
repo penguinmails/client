@@ -42,8 +42,5 @@
   },
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "typescript.preferences.diagnosticSeverityOverrides": {
-    "2578": "warning"
   }
 }
