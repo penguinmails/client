@@ -84,9 +84,9 @@ Wraps the standard build process with comprehensive performance monitoring.
 npm run build:monitored
 ```
 
-### 4. Performance Validation Script (`scripts/validate-performance.js`)
+### 4. Performance Validation Script (`scripts/validate-performance.ts`)
 
-Standalone validation script for CI/CD integration.
+Enhanced validation script using the new CompilationMonitor utility for comprehensive CI/CD integration.
 
 **Features:**
 

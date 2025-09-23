@@ -1,12 +1,15 @@
-"use server";
-
 /**
  * Main billing actions module
- * 
+ *
  * This module provides the primary billing operations including
  * getting billing information, updating billing details, and
  * managing subscription plans.
  */
+
+"use server";
+import 'server-only';
+
+
 
 import { ActionResult } from '../core/types';
 import { ErrorFactory } from '../core/errors';
@@ -87,6 +90,7 @@ export async function getBillingInfo(): Promise<ActionResult<BillingInfo>> {
 export async function updateBillingInfo(
   updates: DeepPartial<BillingInfo>
 ): Promise<ActionResult<BillingInfo>> {
+  
   try {
     // Manual auth check
     await requireAuthUser();
@@ -161,6 +165,7 @@ export async function updateBillingInfo(
  * Get available subscription plans
  */
 export async function getSubscriptionPlans(): Promise<ActionResult<SubscriptionPlan[]>> {
+  
   try {
     // This doesn't require authentication as it's public info
     return {
@@ -178,6 +183,7 @@ export async function getSubscriptionPlans(): Promise<ActionResult<SubscriptionP
 export async function updateSubscriptionPlan(
   newPlanId: string
 ): Promise<ActionResult<BillingInfo>> {
+  
   try {
     // Manual auth check
     await requireAuthUser();
@@ -258,6 +264,7 @@ export async function updateSubscriptionPlan(
 export async function cancelSubscription(
   _reason?: string
 ): Promise<ActionResult<{ cancelledAt: Date }>> {
+  
   try {
     // Manual auth check
     await requireAuthUser();
@@ -303,6 +310,7 @@ export async function cancelSubscription(
  * Reactivate cancelled subscription
  */
 export async function reactivateSubscription(): Promise<ActionResult<{ reactivatedAt: Date }>> {
+  
   try {
     // Manual auth check
     await requireAuthUser();
@@ -356,6 +364,7 @@ export async function reactivateSubscription(): Promise<ActionResult<{ reactivat
  * Get billing data for settings component
  */
 export async function getBillingDataForSettings(): Promise<ActionResult<BillingData>> {
+  
   try {
     // Manual auth check
     await requireAuthUser();
@@ -390,25 +399,10 @@ export async function getBillingDataForSettings(): Promise<ActionResult<BillingD
 
 // Import usage functions for internal use
 import { getUsageMetrics, getUsageWithCalculations } from './usage';
+import { addStorage, getStorageOptions } from './subscriptions';
 
-// Re-export usage functions from usage module
-export { getUsageMetrics, getUsageWithCalculations };
+// Re-export usage functions
+export { getUsageWithCalculations };
 
-// Re-export payment method functions from payment-methods module
-export { 
-  addPaymentMethod, 
-  removePaymentMethod 
-} from './payment-methods';
-
-// Re-export invoice functions from invoices module
-export { 
-  getBillingHistory, 
-  downloadInvoice 
-} from './invoices';
-
-// Re-export subscription functions from subscriptions module
-export { 
-  applyPromoCode, 
-  addStorage, 
-  getStorageOptions 
-} from './subscriptions';
+// Re-export subscription functions
+export { addStorage, getStorageOptions };

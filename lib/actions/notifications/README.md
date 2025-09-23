@@ -196,7 +196,7 @@ The original `notificationActions.ts` file has been updated to re-export all fun
 
 ```typescript
 // Old (still works)
-import { getNotificationPreferences } from "@/lib/actions/notificationActions";
+import { getNotificationPreferences } from "@/lib/actions/notifications";
 
 // New (recommended)
 import { getNotificationPreferences } from "@/lib/actions/notifications";

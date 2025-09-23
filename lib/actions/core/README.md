@@ -621,6 +621,269 @@ while (retryCount < 3) {
 
 ## Examples
 
+### Authentication and Authorization Examples
+
+Here are comprehensive examples showing how to use the authentication and authorization utilities:
+
+#### Simple Authenticated Action
+```typescript
+import {
+  requireAuth,
+  ErrorFactory,
+  createActionResult,
+} from "@/lib/actions/core";
+
+export async function simpleAuthenticatedAction(
+  data: { name: string }
+): Promise<ActionResult<{ id: string; name: string }>> {
+  // Authentication check
+  const authResult = await requireAuth();
+  if (!authResult.success) {
+    return authResult;
+  }
+
+  // Action logic
+  return createActionResult({
+    id: 'generated-id',
+    name: data.name,
+  });
+}
+```
+
+#### Company Context Action
+```typescript
+import {
+  requireAuthWithCompany,
+  createActionResult,
+} from "@/lib/actions/core";
+
+export async function companyContextAction(
+  data: { companyName: string }
+): Promise<ActionResult<{ companyId: string; name: string }>> {
+  // Both user and company context required
+  const authResult = await requireAuthWithCompany();
+  if (!authResult.success) {
+    return authResult;
+  }
+
+  const context = authResult.data;
+  return createActionResult({
+    companyId: context.companyId,
+    name: data.companyName,
+  });
+}
+```
+
+#### Permission-Based Action
+```typescript
+import {
+  withPermission,
+  Permission,
+  createActionResult,
+} from "@/lib/actions/core";
+
+export async function permissionRequiredAction(
+  campaignId: string
+): Promise<ActionResult<{ campaignId: string; status: string }>> {
+  return await withPermission(
+    Permission.UPDATE_CAMPAIGN,
+    async (context) => {
+      return createActionResult({
+        campaignId,
+        status: 'updated',
+      });
+    }
+  );
+}
+```
+
+#### Rate Limiting Examples
+```typescript
+import {
+  withContextualRateLimit,
+  createUserRateLimitKey,
+  RateLimits,
+  getRateLimitConfig,
+} from "@/lib/actions/core";
+
+// User-based rate limiting
+const userLimitedAction = async (userId: string) => {
+  return await withContextualRateLimit(
+    'user_action',
+    'user',
+    { limit: 10, windowMs: 60000 },
+    async () => createActionResult({ message: 'User action completed' })
+  );
+};
+
+// Company-based rate limiting
+const companyLimitedAction = async () => {
+  return await withContextualRateLimit(
+    'company_action',
+    'company',
+    { limit: 100, windowMs: 3600000 },
+    async () => createActionResult({ message: 'Company action completed' })
+  );
+};
+
+// Available rate limit configurations
+const rateLimitExamples = {
+  login: getRateLimitConfig('AUTH_LOGIN'), // 5 per 5 minutes
+  signup: getRateLimitConfig('AUTH_SIGNUP'), // 3 per hour
+  analyticsQuery: getRateLimitConfig('ANALYTICS_QUERY'), // 200 per minute
+  generalWrite: getRateLimitConfig('GENERAL_WRITE'), // 100 per minute
+};
+```
+
+### Core Utilities Usage Examples
+
+#### Complete Action with Validation and Error Handling
+```typescript
+import {
+  ActionResult,
+  requireAuth,
+  Validators,
+  ErrorFactory,
+  withErrorHandling,
+  withRateLimit,
+  createUserRateLimitKey,
+  RateLimits,
+} from "@/lib/actions/core";
+
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+interface UpdateProfileData {
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+export async function updateUserProfile(
+  data: UpdateProfileData
+): Promise<ActionResult<UserProfile>> {
+  // 1. Authentication
+  const authResult = await requireAuth();
+  if (!authResult.success) {
+    return authResult;
+  }
+  const userId = authResult.data!.userId!;
+
+  // 2. Input validation
+  const nameValidation = Validators.name(data.name, 'name');
+  if (!nameValidation.isValid) {
+    return ErrorFactory.validation(
+      nameValidation.errors?.[0]?.message || 'Invalid name',
+      'name'
+    );
+  }
+
+  const emailValidation = Validators.email(data.email, 'email');
+  if (!emailValidation.isValid) {
+    return ErrorFactory.validation(
+      emailValidation.errors?.[0]?.message || 'Invalid email',
+      'email'
+    );
+  }
+
+  let phoneValidationData: string | undefined = undefined;
+  if (data.phone) {
+    const phoneValidation = Validators.phone(data.phone, 'phone');
+    if (!phoneValidation.isValid) {
+      return ErrorFactory.validation(
+        phoneValidation.errors?.[0]?.message || 'Invalid phone',
+        'phone'
+      );
+    }
+    phoneValidationData = phoneValidation.data;
+  }
+
+  // 3. Rate limiting
+  return await withRateLimit(
+    {
+      key: createUserRateLimitKey(userId, 'update-profile'),
+      ...RateLimits.USER_SETTINGS_UPDATE,
+    },
+    async () => {
+      // 4. Business logic with error handling
+      return await withErrorHandling(async () => {
+        // Simulate database update
+        const updatedProfile: UserProfile = {
+          id: userId,
+          name: nameValidation.data!,
+          email: emailValidation.data!,
+          phone: phoneValidationData,
+        };
+
+        // In real implementation, you would update the database
+        return updatedProfile;
+      });
+    }
+  );
+}
+```
+
+#### Simple Validation Action
+```typescript
+import { Validators, ErrorFactory } from "@/lib/actions/core";
+
+export async function validateEmailAddress(
+  email: string
+): Promise<ActionResult<{ valid: boolean; normalized: string }>> {
+  const validation = Validators.email(email, 'email');
+
+  if (!validation.isValid) {
+    return ErrorFactory.validation(
+      validation.errors?.[0]?.message || 'Invalid email',
+      'email'
+    );
+  }
+
+  return {
+    success: true,
+    data: {
+      valid: true,
+      normalized: validation.data!,
+    },
+  };
+}
+```
+
+#### Error Handling Scenarios
+```typescript
+import { ErrorFactory } from "@/lib/actions/core";
+
+export async function demonstrateErrorHandling(
+  scenario: 'auth' | 'validation' | 'rate_limit' | 'server'
+): Promise<ActionResult<string>> {
+  switch (scenario) {
+    case 'auth':
+      return ErrorFactory.authRequired('Please log in to continue');
+
+    case 'validation':
+      return ErrorFactory.validation('Invalid input provided', 'email');
+
+    case 'rate_limit':
+      return ErrorFactory.rateLimit('Too many requests. Please wait.');
+
+    case 'server':
+      return ErrorFactory.internal('Something went wrong on our end');
+
+    default:
+      return {
+        success: true,
+        data: 'All scenarios handled successfully',
+      };
+  }
+}
+```
+
+## Examples
+
 See `convex-integration-examples.ts` for comprehensive examples of:
 
 - Basic Convex operations with error handling

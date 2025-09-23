@@ -45,3 +45,6 @@ npm-debug.log*
 
 # Ignore OpenNext build output
 .open-next
+
+.kiro
+.old

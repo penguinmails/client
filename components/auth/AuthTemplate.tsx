@@ -76,9 +76,7 @@ export function AuthTemplate({
         )}
         {mode === "form" && footer && (
           <CardFooter>
-            <div className="flex flex-col items-center space-y-2">
-              {footer}
-            </div>
+            <div className="flex flex-col items-center space-y-2">{footer}</div>
           </CardFooter>
         )}
       </Card>

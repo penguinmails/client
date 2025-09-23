@@ -116,7 +116,7 @@ function DomainHealthWidget({ domainIds }) {
 ### Server Action Usage
 
 ```typescript
-import { getDomainHealthMetricsAction } from "@/lib/actions/domain.analytics.actions";
+import { getDomainHealthMetricsAction } from "@/lib/actions/analytics/domain-analytics";
 
 // Get domain health metrics
 const healthResult = await getDomainHealthMetricsAction(

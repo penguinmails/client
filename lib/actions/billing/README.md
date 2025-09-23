@@ -212,7 +212,7 @@ The original file is maintained for backward compatibility, but new code should 
 
 ```typescript
 // Old (still works)
-import { getBillingInfo } from "@/lib/actions/billingActions";
+import { getBillingInfo } from "@/lib/actions/billing";
 
 // New (recommended)
 import { getBillingInfo } from "@/lib/actions/billing";

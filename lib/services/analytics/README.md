@@ -1,8 +1,54 @@
-# Analytics Infrastructure Documentation
+# Analytics Services Architecture
 
 ## Overview
 
-This directory contains the complete analytics infrastructure for the domain-driven analytics refactoring. The infrastructure provides standardized types, caching, error handling, and service coordination for all analytics domains.
+This directory contains the complete analytics infrastructure for the domain-driven analytics system. The infrastructure provides standardized types, caching, error handling, and service coordination for all analytics domains.
+
+The analytics system follows a **domain-driven architecture** that separates analytics concerns by domain (campaigns, domains, mailboxes, etc.) into dedicated services. This provides a single source of truth for all analytics data, improves performance, and creates a scalable foundation for future features.
+
+## Core Principles
+
+- **Single Source of Truth**: All analytics types and interfaces are centralized with no duplicate definitions
+- **Data Over UI**: Backend and data layers deal with raw, numeric data; formatting is UI responsibility
+- **Database of Record**: Convex stores raw event logs and aggregated metrics; NileDB handles transactional data
+- **Clarity and Explicitness**: Metric names and calculations are unambiguous (e.g., `openRateOfDelivered` vs generic `rate`)
+
+## Business Context
+
+The analytics system was refactored from a fragmented system with scattered logic, inconsistent data definitions, and heavy reliance on mock data. The new architecture addresses:
+
+- **Scattered Logic**: Analytics calculations were spread across multiple server action files
+- **Inconsistent Data**: Multiple conflicting definitions for the same metrics
+- **Mixed Concerns**: Analytics data mixed into core business objects
+- **Mock Data Dependency**: Heavy reliance on mock data preventing production readiness
+
+## Standardized Metrics
+
+The system uses standardized KPIs across all domains:
+
+### Core Performance Metrics
+
+- **Emails Sent**: Total number of emails sent
+- **Emails Delivered**: Total number of emails successfully delivered
+- **Opens**: Number of unique opens (tracked via pixel)
+- **Clicks**: Number of unique clicks (tracked)
+- **Replies**: Number of unique replies
+- **Bounces**: Number of bounced emails
+- **Unsubscribes**: Number of users who unsubscribed
+- **Spam Complaints**: Number of spam complaints
+
+### Calculated Rate Metrics
+
+- **Delivery Rate**: (Delivered / Sent) \* 100
+- **Open Rate**: (Opens / Delivered) \* 100
+- **Click Rate**: (Clicks / Delivered) \* 100
+- **Reply Rate**: (Replies / Delivered) \* 100
+- **Bounce Rate**: (Bounces / Sent) \* 100
+
+### Domain-Specific Metrics
+
+- **Domain Health/Reputation**: Score representing sending domain health
+- **Mailbox Warmup Analytics**: Warmup progress, emails sent, replies received
 
 ## Architecture
 
@@ -642,6 +688,30 @@ const retryLogic = await testUtils.testRetryLogic();
 | Validation Error    | ❌        | Error message       |
 
 For detailed error handling documentation, see [ERROR_HANDLING_IMPLEMENTATION.md](./ERROR_HANDLING_IMPLEMENTATION.md).
+
+## Documentation Navigation
+
+### Setup and Configuration
+
+- **[Convex Setup Guide](./convex-setup.md)** - Complete Convex configuration for analytics
+- **[Convex Platform Limitations](./convex-limitations.md)** - Known limitations and workarounds
+
+### Development and Maintenance
+
+- **[Troubleshooting Guide](./troubleshooting.md)** - Common issues and solutions
+- **[Testing Strategies](./testing.md)** - Testing patterns and validation approaches
+- **[Migration Lessons](./migration-lessons.md)** - Historical context and lessons learned
+
+### Component Documentation
+
+- **[Mailbox Analytics](./mailbox/README.md)** - Mailbox-specific analytics service
+- **[Template Analytics](./template/README.md)** - Template performance analytics
+- **[Campaign Analytics](./campaign/README.md)** - Campaign analytics service
+
+### Central Hub Documentation
+
+- **[Analytics Architecture Overview](../../docs/analytics/README.md)** - High-level system architecture
+- **[Development Patterns](../../docs/development/README.md)** - General development workflow
 
 ## Future Enhancements
 

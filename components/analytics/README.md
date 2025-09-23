@@ -1,477 +1,639 @@
-# Real-Time Analytics Implementation
+# Analytics Components
 
-This document describes the implementation of real-time analytics updates for both campaign and domain analytics in the analytics domain refactoring project.
+## Overview
 
-## 🚀 Implementation Overview
+This directory contains all React components related to analytics functionality, organized by feature and responsibility. The components follow a domain-driven architecture that separates concerns by analytics domain (campaigns, domains, mailboxes, leads, templates, billing) while maintaining consistent patterns and reusable utilities.
 
-The real-time analytics system provides live updates using Convex subscriptions, React hooks for data management, skeleton loaders for better UX, and optimistic updates for immediate feedback. This implementation covers both campaign and domain analytics with consistent patterns.
+## Architecture
 
-## 📁 Files Created
+### Component Organization
 
-### Core Implementation
+```
+components/analytics/
+├── README.md                    # This file
+├── troubleshooting.md          # Component-specific troubleshooting guide
+├── AnalyticsProviderClient.tsx # Main analytics context provider
+├── ConvexProvider.tsx          # Convex integration provider
+├── actions/                    # Server action components
+├── cards/                      # Analytics card components
+├── charts/                     # Chart and visualization components
+├── components/                 # Shared analytics components
+├── config/                     # Configuration and constants
+├── dashboard/                  # Dashboard-specific components
+├── examples/                   # Example implementations
+├── filters/                    # Filter and control components
+├── hooks/                      # Analytics-specific hooks
+├── monitoring/                 # Performance monitoring components
+├── nav/                        # Navigation components
+├── overview/                   # Overview and summary components
+├── summary/                    # Summary components
+├── utils/                      # Utility functions and helpers
+└── warmup/                     # Warmup-specific components
+```
 
-#### Campaign Analytics (Task 4.3)
+### Domain-Specific Components
 
-- **`hooks/useCampaignAnalytics.ts`** - Real-time React hooks for campaign analytics
-- **`components/analytics/ConvexProvider.tsx`** - Convex provider for real-time capabilities
-- **`components/analytics/components/SkeletonLoaders.tsx`** - Loading states and skeleton components
-- **`components/analytics/components/RealTimeCampaignDashboard.tsx`** - Main dashboard with real-time features
-- **`components/analytics/examples/RealTimeAnalyticsExample.tsx`** - Comprehensive demo component
-- **`components/analytics/__tests__/RealTimeAnalytics.test.tsx`** - Test suite for real-time functionality
+Each analytics domain has its own set of components organized by functionality:
 
-#### Domain Analytics (Task 5.1)
+#### Campaign Analytics Components
 
-- **`hooks/useDomainAnalytics.tsx`** - Real-time React hooks for domain analytics
-- **`components/DomainAnalyticsSkeleton.tsx`** - Domain-specific skeleton loaders
-- **`components/DomainAnalyticsDashboard.tsx`** - Real-time domain health monitoring dashboard
-- **`convex/domainAnalytics.ts`** - Convex functions for domain analytics
-- **`lib/services/analytics/DomainAnalyticsService.ts`** - Domain analytics service
-- **`lib/actions/domain.analytics.actions.ts`** - Server actions for domain analytics
+- **CampaignMetricsCard**: Displays campaign performance metrics
+- **CampaignTimeSeriesChart**: Shows campaign performance over time
+- **SequenceAnalyticsView**: Visualizes email sequence performance
+- **CampaignComparisonTable**: Compares multiple campaigns
 
-## 🔧 Key Features Implemented
+#### Domain Analytics Components
 
-### ✅ Real-Time Convex Subscriptions
+- **DomainHealthCard**: Shows domain reputation and health scores
+- **ReputationTrendChart**: Displays domain reputation trends
+- **AuthenticationStatusGrid**: Shows DNS authentication status
+- **DeliverabilityMetricsPanel**: Domain deliverability insights
 
-#### Campaign Analytics
+#### Mailbox Analytics Components
+
+- **MailboxPerformanceGrid**: Grid view of mailbox performance
+- **WarmupProgressCard**: Mailbox warmup status and progress
+- **HealthScoreIndicator**: Visual health score representation
+- **SendingCapacityChart**: Mailbox sending capacity visualization
+
+#### Template Analytics Components
+
+- **TemplatePerformanceTable**: Template effectiveness metrics
+- **UsageAnalyticsChart**: Template usage patterns
+- **EffectivenessComparison**: A/B testing results (future)
+
+#### Lead Analytics Components
+
+- **LeadEngagementChart**: Lead interaction patterns
+- **ConversionFunnelView**: Lead conversion visualization
+- **SegmentationAnalytics**: Lead segmentation insights
+
+#### Billing Analytics Components
+
+- **UsageMetricsCard**: Current usage vs limits
+- **CostAnalyticsChart**: Cost breakdown and trends
+- **PlanUtilizationView**: Plan feature utilization
+
+## Core Components
+
+### AnalyticsProviderClient
+
+The main context provider that manages analytics state and provides services to child components.
 
 ```typescript
-// Automatic updates when data changes in Convex
-const { data, isLoading } = useCampaignPerformanceMetrics(
+interface AnalyticsContextState {
+  // UI State Management
+  filters: AnalyticsFilters;
+  loading: Record<AnalyticsDomain, boolean>;
+  errors: Record<AnalyticsDomain, string | null>;
+
+  // Filter Management
+  updateFilters: (filters: Partial<AnalyticsFilters>) => void;
+  resetFilters: () => void;
+
+  // Service Access
+  services: AnalyticsService;
+
+  // Cross-domain coordination
+  refreshAll: () => Promise<void>;
+  refreshDomain: (domain: AnalyticsDomain) => Promise<void>;
+}
+```
+
+**Usage Example**:
+
+```typescript
+import { AnalyticsProvider } from '@/components/analytics/AnalyticsProviderClient';
+
+export function AnalyticsDashboard() {
+  return (
+    <AnalyticsProvider>
+      <div className="analytics-dashboard">
+        <AnalyticsFilters />
+        <AnalyticsOverview />
+        <DomainSpecificComponents />
+      </div>
+    </AnalyticsProvider>
+  );
+}
+```
+
+### ConvexProvider
+
+Provides Convex client integration for real-time analytics updates.
+
+```typescript
+export function ConvexProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <ConvexReactClient client={convexClient}>
+      {children}
+    </ConvexReactClient>
+  );
+}
+```
+
+## Component Patterns
+
+### Data Loading Pattern
+
+All analytics components follow a consistent data loading pattern:
+
+```typescript
+export function CampaignMetricsCard({ campaignIds }: { campaignIds?: string[] }) {
+  const { services, filters } = useAnalyticsContext();
+
+  // Use React Query for data fetching with proper caching
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['campaign-metrics', campaignIds, filters],
+    queryFn: () => services.campaigns.getPerformanceMetrics(campaignIds, filters),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+  });
+
+  if (isLoading) {
+    return <MetricsCardSkeleton />;
+  }
+
+  if (error) {
+    return <ErrorCard error={error} onRetry={() => refetch()} />;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Campaign Performance</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <MetricsGrid metrics={data} />
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+### Error Handling Pattern
+
+Components implement consistent error handling with graceful degradation:
+
+```typescript
+export function ErrorCard({
+  error,
+  onRetry,
+  fallbackData
+}: {
+  error: Error;
+  onRetry?: () => void;
+  fallbackData?: any;
+}) {
+  return (
+    <Card className="border-red-200 bg-red-50">
+      <CardContent className="p-6">
+        <div className="flex items-center space-x-2 text-red-600">
+          <AlertCircle className="h-5 w-5" />
+          <span className="font-medium">Unable to load data</span>
+        </div>
+
+        <p className="mt-2 text-sm text-red-600">
+          {error.message || 'An unexpected error occurred'}
+        </p>
+
+        <div className="mt-4 flex space-x-2">
+          {onRetry && (
+            <Button variant="outline" size="sm" onClick={onRetry}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Retry
+            </Button>
+          )}
+
+          {fallbackData && (
+            <Button variant="ghost" size="sm" onClick={() => showFallbackData()}>
+              Show cached data
+            </Button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+### Loading State Pattern
+
+Consistent loading states across all components:
+
+```typescript
+export function MetricsCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="h-6 w-32 bg-gray-200 rounded animate-pulse" />
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="space-y-2">
+                <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
+                <div className="h-8 w-20 bg-gray-200 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+## Shared Components
+
+### AnalyticsFilters
+
+Centralized filter component used across all analytics views:
+
+```typescript
+export function AnalyticsFilters() {
+  const { filters, updateFilters } = useAnalyticsContext();
+
+  return (
+    <div className="flex flex-wrap gap-4 p-4 bg-gray-50 rounded-lg">
+      <DateRangeFilter
+        value={filters.dateRange}
+        onChange={(dateRange) => updateFilters({ dateRange })}
+      />
+
+      <GranularityFilter
+        value={filters.granularity}
+        onChange={(granularity) => updateFilters({ granularity })}
+      />
+
+      <DomainFilter
+        value={filters.domains}
+        onChange={(domains) => updateFilters({ domains })}
+      />
+
+      <CampaignFilter
+        value={filters.campaigns}
+        onChange={(campaigns) => updateFilters({ campaigns })}
+      />
+    </div>
+  );
+}
+```
+
+### MetricsGrid
+
+Reusable metrics display component:
+
+```typescript
+interface MetricsGridProps {
+  metrics: PerformanceMetrics;
+  showRates?: boolean;
+  className?: string;
+}
+
+export function MetricsGrid({ metrics, showRates = true, className }: MetricsGridProps) {
+  const metricItems = [
+    { label: 'Sent', value: metrics.sent, format: 'number' },
+    { label: 'Delivered', value: metrics.delivered, format: 'number' },
+    { label: 'Opened', value: metrics.opened, format: 'number' },
+    { label: 'Clicked', value: metrics.clicked, format: 'number' },
+  ];
+
+  if (showRates) {
+    metricItems.push(
+      { label: 'Open Rate', value: metrics.openRate, format: 'percentage' },
+      { label: 'Click Rate', value: metrics.clickRate, format: 'percentage' }
+    );
+  }
+
+  return (
+    <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4", className)}>
+      {metricItems.map((item) => (
+        <div key={item.label} className="text-center">
+          <div className="text-2xl font-bold text-gray-900">
+            {formatMetricValue(item.value, item.format)}
+          </div>
+          <div className="text-sm text-gray-500">{item.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### TimeSeriesChart
+
+Reusable chart component for time series data:
+
+```typescript
+interface TimeSeriesChartProps {
+  data: TimeSeriesData[];
+  metrics: string[];
+  height?: number;
+  showLegend?: boolean;
+}
+
+export function TimeSeriesChart({
+  data,
+  metrics,
+  height = 300,
+  showLegend = true
+}: TimeSeriesChartProps) {
+  return (
+    <div className="w-full">
+      <ResponsiveContainer width="100%" height={height}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="date"
+            tickFormatter={(date) => formatDate(date)}
+          />
+          <YAxis />
+          <Tooltip
+            labelFormatter={(date) => formatDate(date)}
+            formatter={(value, name) => [formatMetricValue(value), name]}
+          />
+          {showLegend && <Legend />}
+
+          {metrics.map((metric, index) => (
+            <Line
+              key={metric}
+              type="monotone"
+              dataKey={metric}
+              stroke={CHART_COLORS[index % CHART_COLORS.length]}
+              strokeWidth={2}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+```
+
+## Hooks
+
+### useAnalyticsContext
+
+Primary hook for accessing analytics context:
+
+```typescript
+export function useAnalyticsContext() {
+  const context = useContext(AnalyticsContext);
+
+  if (!context) {
+    throw new Error(
+      "useAnalyticsContext must be used within AnalyticsProvider"
+    );
+  }
+
+  return context;
+}
+```
+
+### useAnalyticsQuery
+
+Custom hook for analytics data fetching with consistent patterns:
+
+```typescript
+export function useAnalyticsQuery<T>(
+  queryKey: string[],
+  queryFn: () => Promise<T>,
+  options?: {
+    enabled?: boolean;
+    staleTime?: number;
+    cacheTime?: number;
+    refetchInterval?: number;
+  }
+) {
+  return useQuery({
+    queryKey,
+    queryFn,
+    staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutes default
+    cacheTime: options?.cacheTime ?? 10 * 60 * 1000, // 10 minutes default
+    refetchInterval: options?.refetchInterval,
+    enabled: options?.enabled,
+    retry: (failureCount, error) => {
+      // Don't retry auth errors
+      if (error?.message?.includes("auth")) return false;
+      return failureCount < 3;
+    },
+  });
+}
+```
+
+### useRealTimeAnalytics
+
+Hook for real-time analytics updates using Convex subscriptions:
+
+```typescript
+export function useRealTimeAnalytics(companyId: string) {
+  // Convex subscription for real-time updates
+  const liveData = useQuery(api.analytics.getLiveAnalytics, {
+    companyId,
+  });
+
+  // Track when data was last updated
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+
+  useEffect(() => {
+    if (liveData) {
+      setLastUpdate(new Date());
+    }
+  }, [liveData]);
+
+  return {
+    data: liveData,
+    lastUpdate,
+    isLive: !!liveData,
+  };
+}
+```
+
+## Styling and Theming
+
+### CSS Classes
+
+Components use Tailwind CSS with consistent class patterns:
+
+```typescript
+// Standard card styling
+const cardClasses = "bg-white rounded-lg border border-gray-200 shadow-sm";
+
+// Metric value styling
+const metricValueClasses = "text-2xl font-bold text-gray-900";
+
+// Error state styling
+const errorClasses = "border-red-200 bg-red-50 text-red-600";
+
+// Loading state styling
+const skeletonClasses = "bg-gray-200 rounded animate-pulse";
+```
+
+### Theme Integration
+
+Components support light/dark theme switching:
+
+```typescript
+export function MetricsCard({ className, ...props }: MetricsCardProps) {
+  return (
+    <Card className={cn(
+      "bg-white dark:bg-gray-800",
+      "border-gray-200 dark:border-gray-700",
+      "text-gray-900 dark:text-gray-100",
+      className
+    )}>
+      {/* Card content */}
+    </Card>
+  );
+}
+```
+
+## Performance Considerations
+
+### Memoization
+
+Components use React.memo and useMemo for performance optimization:
+
+```typescript
+export const CampaignMetricsCard = React.memo(function CampaignMetricsCard({
   campaignIds,
   filters,
-  companyId
-);
-```
+}: CampaignMetricsCardProps) {
+  const memoizedFilters = useMemo(
+    () => ({
+      ...filters,
+      campaignIds,
+    }),
+    [filters, campaignIds]
+  );
 
-#### Domain Analytics
-
-```typescript
-// Real-time domain health monitoring
-const { domains, healthMetrics, authenticationStatus, summary, isLoading } =
-  useDomainHealthMonitoring(domainIds);
-```
-
-### ✅ React Hooks for Live Data
-
-#### Campaign Analytics Hooks
-
-- **`useCampaignPerformanceMetrics`** - Real-time campaign performance data
-- **`useCampaignTimeSeriesData`** - Live time series data for charts
-- **`useCampaignAnalyticsOverview`** - Dashboard-level metrics
-- **`useComprehensiveCampaignAnalytics`** - Complete analytics with sequence data
-- **`useCampaignAnalyticsMutations`** - Data update functions
-- **`useOptimisticCampaignAnalytics`** - Optimistic UI updates
-
-#### Domain Analytics Hooks
-
-- **`useDomainAnalytics`** - Core domain analytics with real-time updates
-- **`useDomainHealthMonitoring`** - Real-time domain health and authentication status
-- **`useDomainPerformanceCharts`** - Time series data for domain performance charts
-- **`useDomainAuthenticationDashboard`** - Authentication status monitoring
-
-### ✅ Skeleton Loaders and Progressive Loading
-
-```typescript
-// Different loading states for better UX
-<ProgressiveAnalyticsLoader
-  stage="computing"
-  message="Computing analytics..."
-/>
-```
-
-Available skeleton components:
-
-- `CampaignMetricsCardSkeleton`
-- `AnalyticsChartSkeleton`
-- `KPISummaryCardSkeleton`
-- `SequenceStepSkeleton`
-- `AnalyticsOverviewSkeleton`
-- `ProgressiveAnalyticsLoader`
-
-### ✅ Optimistic Updates
-
-```typescript
-// Immediate UI feedback while syncing with server
-const { updateWithOptimisticUI } = useOptimisticCampaignAnalytics(
-  campaignIds,
-  filters,
-  companyId
-);
-
-await updateWithOptimisticUI(campaignId, {
-  opened_tracked: newOpenCount,
-  clicked_tracked: newClickCount,
+  // Component implementation
 });
 ```
 
-### ✅ Server-Side Heavy Computation
+### Lazy Loading
 
-- Analytics calculations performed in Convex functions
-- Client receives processed data with real-time updates
-- Caching layer with Upstash Redis for performance
-- Progressive loading indicators during computation
-
-## 🎯 Usage Examples
-
-### Basic Real-Time Dashboard
+Large components are lazy loaded to improve initial page load:
 
 ```typescript
-import { RealTimeCampaignDashboard } from "@/components/analytics/components/RealTimeCampaignDashboard";
+const LazyAnalyticsChart = lazy(() => import('./charts/AnalyticsChart'));
 
-function AnalyticsPage() {
-  return (
-    <RealTimeCampaignDashboard
-      campaignIds={["campaign-1", "campaign-2"]}
-      companyId="company-123"
-      initialFilters={{
-        dateRange: {
-          start: "2024-11-01",
-          end: "2024-12-01",
-        },
-      }}
-    />
-  );
-}
-```
-
-### Custom Hook Usage
-
-```typescript
-import { useCampaignPerformanceMetrics } from "@/hooks/useCampaignAnalytics";
-
-function CampaignMetrics({ campaignIds, companyId }) {
-  const { data, isLoading } = useCampaignPerformanceMetrics(
-    campaignIds,
-    undefined,
-    companyId
-  );
-
-  if (isLoading) return <CampaignMetricsCardSkeleton />;
-
+export function AnalyticsDashboard() {
   return (
     <div>
-      {data?.map(campaign => (
-        <div key={campaign.campaignId}>
-          <h3>{campaign.campaignName}</h3>
-          <p>Open Rate: {campaign.displayOpenRate}</p>
-          <p>Health Score: {campaign.healthScore}</p>
-        </div>
-      ))}
+      <Suspense fallback={<ChartSkeleton />}>
+        <LazyAnalyticsChart />
+      </Suspense>
     </div>
   );
 }
 ```
 
-### Real-Time Updates with Optimistic UI
+### Virtual Scrolling
+
+Large data tables use virtual scrolling for performance:
 
 ```typescript
-import { useOptimisticCampaignAnalytics } from "@/hooks/useCampaignAnalytics";
+import { FixedSizeList as List } from 'react-window';
 
-function CampaignActions({ campaignId, companyId }) {
-  const { data, updateWithOptimisticUI } = useOptimisticCampaignAnalytics(
-    [campaignId],
-    undefined,
-    companyId
-  );
-
-  const handleEngagement = async () => {
-    // Immediate UI update, syncs in background
-    await updateWithOptimisticUI(campaignId, {
-      opened_tracked: data[0].opened_tracked + 1,
-      clicked_tracked: data[0].clicked_tracked + Math.random() > 0.5 ? 1 : 0,
-    });
-  };
-
-  return (
-    <button onClick={handleEngagement}>
-      Simulate Engagement
-    </button>
-  );
-}
-```
-
-### Domain Analytics Dashboard
-
-```typescript
-import { DomainAnalyticsDashboard } from "@/components/analytics/components/DomainAnalyticsDashboard";
-
-function DomainsPage() {
-  return (
-    <DomainAnalyticsDashboard
-      domainIds={["domain-1", "domain-2"]}
-    />
-  );
-}
-```
-
-### Domain Health Monitoring
-
-```typescript
-import { useDomainHealthMonitoring } from "@/components/analytics/hooks/useDomainAnalytics";
-
-function DomainHealthWidget({ domainIds }) {
-  const {
-    domains,
-    healthMetrics,
-    authenticationStatus,
-    summary,
-    isLoading,
-  } = useDomainHealthMonitoring(domainIds);
-
-  if (isLoading) return <DomainHealthDashboardSkeleton />;
-
-  return (
-    <div>
-      <h3>Domain Health Summary</h3>
-      <p>Healthy Domains: {summary?.healthyDomains}/{summary?.totalDomains}</p>
-      <p>Authenticated: {summary?.authenticatedDomains}/{summary?.totalDomains}</p>
-
-      {domains?.map(domain => (
-        <div key={domain.domainId}>
-          <h4>{domain.domainName}</h4>
-          <p>Health Score: {domain.healthScore}/100</p>
-          <p>Authentication: SPF:{domain.authentication.spf ? '✓' : '✗'}
-             DKIM:{domain.authentication.dkim ? '✓' : '✗'}
-             DMARC:{domain.authentication.dmarc ? '✓' : '✗'}</p>
-          <p>Delivery Rate: {domain.formattedRates.deliveryRate}</p>
-        </div>
-      ))}
+export function LargeAnalyticsTable({ data }: { data: any[] }) {
+  const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => (
+    <div style={style}>
+      <AnalyticsTableRow data={data[index]} />
     </div>
   );
-}
-```
-
-### Domain Performance Charts
-
-```typescript
-import { useDomainPerformanceCharts } from "@/components/analytics/hooks/useDomainAnalytics";
-
-function DomainPerformanceChart({ domainIds, filters }) {
-  const {
-    timeSeriesData,
-    summary,
-    isTimeSeriesLoading,
-  } = useDomainPerformanceCharts(domainIds, filters);
-
-  if (isTimeSeriesLoading) return <DomainPerformanceChartSkeleton />;
 
   return (
-    <div>
-      <h3>Domain Performance Over Time</h3>
-      {/* Chart component would use timeSeriesData */}
-      <div>
-        {timeSeriesData?.map(point => (
-          <div key={point.date}>
-            {point.label}: {point.metrics.sent} sent, {point.metrics.delivered} delivered
-          </div>
-        ))}
-      </div>
-    </div>
+    <List
+      height={400}
+      itemCount={data.length}
+      itemSize={50}
+      width="100%"
+    >
+      {Row}
+    </List>
   );
 }
 ```
 
-## 🔄 Real-Time Architecture
+## Testing
 
-```mermaid
-graph TB
-    UI[React Components] --> Hooks[Analytics Hooks]
-    Hooks --> Convex[Convex Subscriptions]
-    Convex --> Functions[Convex Functions]
-    Functions --> DB[(Convex Database)]
-    Functions --> Cache[(Upstash Redis)]
+### Component Testing
 
-    Functions --> RealTime[Real-time Updates]
-    RealTime --> UI
-
-    UI --> Mutations[Mutation Hooks]
-    Mutations --> Functions
-
-    subgraph "Client-Side"
-        UI
-        Hooks
-        Skeleton[Skeleton Loaders]
-        Optimistic[Optimistic Updates]
-    end
-
-    subgraph "Server-Side"
-        Functions
-        DB
-        Cache
-        Computation[Heavy Computation]
-    end
-```
-
-## 📊 Performance Features
-
-### Intelligent Caching
-
-- **Cache Keys**: `analytics:campaigns:operation:entities:filters:timestamp`
-- **TTL Management**: Different cache lifetimes for different data types
-- **Automatic Invalidation**: Cache cleared when data updates
-- **Graceful Fallback**: Direct Convex queries when Redis unavailable
-
-### Progressive Loading
+Components include comprehensive tests:
 
 ```typescript
-// Different loading stages for better UX
-<ProgressiveAnalyticsLoader stage="loading" />    // Initial data fetch
-<ProgressiveAnalyticsLoader stage="computing" />  // Server computation
-<ProgressiveAnalyticsLoader stage="finalizing" /> // Final processing
-```
+// __tests__/CampaignMetricsCard.test.tsx
+import { render, screen } from '@testing-library/react';
+import { CampaignMetricsCard } from '../cards/CampaignMetricsCard';
+import { AnalyticsProvider } from '../AnalyticsProviderClient';
 
-### Optimized Queries
-
-- **Filter-First**: Database filtering before analytics computation
-- **Parallel Loading**: Multiple domains load simultaneously
-- **Incremental Updates**: Only changed data triggers re-renders
-- **Request Deduplication**: Prevents duplicate queries
-
-## 🧪 Testing
-
-The implementation includes comprehensive tests covering:
-
-- ✅ Real-time hook functionality
-- ✅ Optimistic updates
-- ✅ Error handling
-- ✅ Loading states
-- ✅ Component rendering
-- ✅ Data transformation
-- ✅ Cache management
-
-Run tests:
-
-```bash
-npm test -- components/analytics/__tests__/RealTimeAnalytics.test.tsx
-```
-
-## 🔧 Configuration
-
-### Quick Setup
-
-**⚠️ Important**: You need to set up Convex first. See `CONVEX_SETUP.md` for detailed instructions.
-
-**Quick Start:**
-
-```bash
-# 1. Install Convex CLI and login
-npx convex login
-
-# 2. Initialize Convex (generates your URL)
-npx convex dev
-
-# 3. Copy the URL to your .env.local
-echo "NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud" >> .env.local
-
-# 4. Start development
-npm run dev
-```
-
-### Environment Variables
-
-```env
-# Required for real-time features
-NEXT_PUBLIC_CONVEX_URL=https://your-convex-deployment.convex.cloud
-
-# Optional for caching
-UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
-UPSTASH_REDIS_REST_TOKEN=your-redis-token
-```
-
-### Convex Provider Setup
-
-```typescript
-// app/layout.tsx or similar
-import { ConvexProvider } from "@/components/analytics/ConvexProvider";
-
-export default function RootLayout({ children }) {
-  return (
-    <html>
-      <body>
-        <ConvexProvider>
-          {children}
-        </ConvexProvider>
-      </body>
-    </html>
+const renderWithProvider = (component: React.ReactElement) => {
+  return render(
+    <AnalyticsProvider>
+      {component}
+    </AnalyticsProvider>
   );
-}
+};
+
+describe('CampaignMetricsCard', () => {
+  it('displays campaign metrics correctly', () => {
+    const mockData = {
+      sent: 1000,
+      delivered: 950,
+      opened: 300,
+      clicked: 50
+    };
+
+    renderWithProvider(<CampaignMetricsCard data={mockData} />);
+
+    expect(screen.getByText('1,000')).toBeInTheDocument();
+    expect(screen.getByText('950')).toBeInTheDocument();
+    expect(screen.getByText('300')).toBeInTheDocument();
+    expect(screen.getByText('50')).toBeInTheDocument();
+  });
+
+  it('shows loading state', () => {
+    renderWithProvider(<CampaignMetricsCard loading />);
+
+    expect(screen.getByTestId('metrics-skeleton')).toBeInTheDocument();
+  });
+
+  it('handles error state', () => {
+    const error = new Error('Failed to load metrics');
+
+    renderWithProvider(<CampaignMetricsCard error={error} />);
+
+    expect(screen.getByText('Unable to load data')).toBeInTheDocument();
+    expect(screen.getByText('Failed to load metrics')).toBeInTheDocument();
+  });
+});
 ```
 
-### Development Scripts
+## Best Practices
 
-```bash
-# Start Convex development server
-npm run convex:dev
+1. **Consistent Patterns**: All components follow the same data loading, error handling, and loading state patterns
 
-# Deploy Convex functions
-npm run convex:deploy
+2. **Type Safety**: Use proper TypeScript interfaces for all props and data structures
 
-# Open Convex dashboard
-npm run convex:dashboard
-```
+3. **Performance**: Implement memoization, lazy loading, and virtual scrolling where appropriate
 
-## 🚨 Error Handling
+4. **Accessibility**: Include proper ARIA labels, keyboard navigation, and screen reader support
 
-The implementation includes robust error handling:
+5. **Error Handling**: Provide graceful error states with retry mechanisms and fallback data
 
-- **Graceful Degradation**: Components work without Convex connection
-- **Retry Logic**: Exponential backoff for failed operations
-- **Fallback States**: Skeleton loaders during errors
-- **User Feedback**: Clear error messages with actionable steps
+6. **Testing**: Write comprehensive tests for all components including edge cases
 
-## 📈 Real-Time Features Demonstrated
+7. **Documentation**: Document component props, usage examples, and integration patterns
 
-### Live Data Updates
+8. **Reusability**: Create shared components and hooks to avoid duplication
 
-- Campaign metrics update automatically when data changes
-- No manual refresh required
-- Real-time indicators show connection status
-- Update timestamps show last data refresh
+9. **Responsive Design**: Ensure components work well on all screen sizes
 
-### Optimistic UI
+10. **Real-time Updates**: Leverage Convex subscriptions for live data updates where appropriate
 
-- Immediate feedback for user actions
-- Background synchronization with server
-- Automatic rollback on errors
-- Smooth user experience
-
-### Progressive Loading
-
-- Skeleton loaders during initial load
-- Different loading states for different operations
-- Smooth transitions between loading and loaded states
-- Performance indicators for heavy computations
-
-## 🔗 Integration with Existing System
-
-The real-time analytics system integrates seamlessly with:
-
-- **Existing Analytics Context**: Can be used alongside current context
-- **Campaign Analytics Service**: Uses established service patterns
-- **Analytics Calculator**: Leverages standardized rate calculations
-- **Type System**: Fully typed with existing analytics interfaces
-
-## 🎯 Requirements Fulfilled
-
-- **7.1**: ✅ Real-time analytics with progressive loading
-- **7.2**: ✅ Server-side heavy computation with client-side real-time updates
-- **14.5**: ✅ Real-time updates via Convex subscriptions
-
-## 🚀 Next Steps
-
-The real-time analytics foundation is now ready for:
-
-1. **Integration with existing dashboard pages**
-2. **Extension to other analytics domains** (domains, mailboxes, etc.)
-3. **Advanced real-time features** (collaborative analytics, live notifications)
-4. **Performance optimization** (query optimization, caching strategies)
-
-## 📚 Additional Resources
-
-- **Convex Documentation**: https://docs.convex.dev/
-- **React Query Patterns**: For additional client-side caching
-- **Real-time Best Practices**: Performance and UX considerations
-- **Analytics Calculator**: `lib/utils/analytics-calculator.ts`
-- **Service Foundation**: `lib/services/analytics/CampaignAnalyticsService.README.md`
-
-This implementation provides a solid foundation for real-time campaign analytics with excellent user experience, performance optimization, and comprehensive error handling.
+This component architecture provides a solid foundation for building scalable, maintainable analytics interfaces while ensuring consistent user experience across all analytics domains.

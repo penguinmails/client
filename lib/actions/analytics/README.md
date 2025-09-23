@@ -177,7 +177,7 @@ if (healthResult.success) {
 
 ```typescript
 // Old pattern with inconsistent error handling
-import { getCurrentUsageMetrics } from "@/lib/actions/billing.analytics.actions";
+import { getCurrentUsageMetrics } from "@/lib/actions/analytics/billing-analytics";
 
 try {
   const usage = await getCurrentUsageMetrics("company-id");

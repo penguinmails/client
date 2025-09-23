@@ -281,7 +281,7 @@ import {
   getMailboxWarmupAnalytics,
   getMailboxHealthScores,
   getMailboxSendingCapacity,
-} from "@/lib/actions/mailbox.analytics.actions";
+} from "@/lib/actions/analytics/mailbox-analytics";
 
 // Get performance metrics with calculated rates
 const performance = await getMailboxPerformanceMetrics(["mailbox-1"], {
@@ -427,7 +427,7 @@ const analytics = useQuery(api.mailboxAnalytics.getMailboxAggregatedAnalytics, {
 ### Migration Function
 
 ```typescript
-import { migrateLegacyMailboxData } from "@/lib/actions/mailbox.analytics.actions";
+import { migrateLegacyMailboxData } from "@/lib/actions/analytics/mailbox-analytics";
 
 const result = await migrateLegacyMailboxData(legacyData);
 console.log(`Migrated: ${result.migrated}, Failed: ${result.failed}`);
