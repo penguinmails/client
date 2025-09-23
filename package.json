@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run convex:codegen && next build",
     "build:dry": "npx opennextjs-cloudflare build --dry-run",
     "build:open-next": "npx opennextjs-cloudflare build",
     "start": "next start",
@@ -19,6 +19,7 @@
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
     "convex:dashboard": "convex dashboard",
+    "convex:codegen": "npx convex codegen",
     "build:monitored": "node scripts/build-with-monitoring.js",
     "validate:performance": "npx tsx scripts/validate-performance.ts",
     "docs:maintenance": "npx tsx scripts/docs-maintenance.ts"
