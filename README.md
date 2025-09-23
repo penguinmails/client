@@ -1,61 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PenguinMails Client
 
-## Getting Started
+A modern email marketing platform built with Next.js, featuring real-time analytics, multi-tenant architecture, and edge deployment. Designed for scalability, performance, and developer experience.
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-## Deploy on Cloudflare (Recommended)
-
-This project is configured for deployment on Cloudflare using the OpenNext adapter for optimal performance.
-
-### Prerequisites
-
-1. Create a Cloudflare API Token with "Edit Cloudflare Workers" permissions
-2. Get your Cloudflare Account ID from your dashboard
-3. Add these as repository secrets:
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID`
-
-### Deployment
-
-The application includes CI/CD setup that automatically deploys to Cloudflare:
-
-- **Push to main**: Deploys to production
-- **Pull Requests**: Deploys preview versions
-- **Manual deployment**: Via GitHub Actions
-
-For more deployment details, see [`.github/workflows/README.md`](./.github/workflows/README.md)
-
-### Local Development
+## \U0001f680 Quick Start
 
 ```bash
 # Install dependencies
@@ -64,63 +11,226 @@ npm install
 # Start development server
 npm run dev
 
-# Preview Cloudflare deployment locally
-npm run preview
-
 # Build for production
 npm run build
-```
-
-### Deployment Scripts
-
-```bash
-# Build Next.js
-npm run build
-
-# Build OpenNext worker
-npm run build:open-next
-
-# Test build without deployment
-npm run build:dry
-
-# Preview locally (Cloudflare runtime)
-npm run preview
 
 # Deploy to Cloudflare
 npm run deploy
-
-# Upload new version (for gradual rollout)
-npm run upload
 ```
 
-### Cloudflare Setup
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-For complete Cloudflare configuration instructions:
+## \U0001f3d7\ufe0f Architecture
 
-- 📖 **Cloudflare Setup Guide**: [`CLOUDFLARE-SETUP.md`](./CLOUDFLARE-SETUP.md)
-- 🔐 **GitHub Secrets Setup**: [`.github/SETUP-SECRETS.md`](./.github/SETUP-SECRETS.md)
-- 📋 **Workflow Documentation**: [`.github/workflows/README.md`](./.github/workflows/README.md)
+### Core Stack
 
-## Current Deployment
+- **Frontend**: Next.js 14 with App Router and TypeScript
+- **Backend**: Convex for real-time data and server functions
+- **Database**: NileDB for multi-tenant data isolation
+- **Authentication**: NileDB integrated auth with role-based permissions
+- **Deployment**: Cloudflare Workers with OpenNext adapter
+- **Styling**: Tailwind CSS with shadcn/ui components
 
-✅ **Status**: Deployed and running
-🔗 **URL**: https://penguin-mails.mailspenguin.workers.dev
+### Key Features
 
-## Deploy on Vercel
+- **Multi-tenant Architecture**: Complete data isolation between organizations
+- **Real-time Analytics**: Live campaign performance tracking and reporting
+- **Edge Deployment**: Global CDN with sub-100ms response times
+- **Type Safety**: End-to-end TypeScript with strict validation
+- **Modern UI**: Responsive design with dark/light mode support
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## \U0001f4da Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Getting Started
 
-<!-- CONTRIBUTORS START -->
-<h2>Contributors</h2>
-<table border='1' cellspacing='0' cellpadding='5'>
-  <thead>
-    <tr><th>Avatar</th><th>Username</th><th>Insights</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/36519478?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Israel-Laguan">Israel-Laguan</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/112190828?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Mhmd0Mhmod">Mhmd0Mhmod</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
-  </tbody>
-</table>
-<!-- CONTRIBUTORS END -->
+- **Development Guide**: [`docs/README.md`](./docs/README.md) - Complete development setup and workflows
+- **Architecture Overview**: [`docs/analytics/README.md`](./docs/analytics/README.md) - System design and data flow
+- **Best Practices**: [`docs/development/README.md`](./docs/development/README.md) - Coding standards and patterns
+
+### Development Resources
+
+- **Authentication Guide**: [`docs/development/authentication.md`](./docs/development/authentication.md) - Auth patterns and security
+- **Testing Strategies**: [`docs/development/testing.md`](./docs/development/testing.md) - Testing approaches and tools
+- **Troubleshooting**: [`docs/development/troubleshooting.md`](./docs/development/troubleshooting.md) - Common issues and solutions
+- **Migration Patterns**: [`docs/development/migration-patterns.md`](./docs/development/migration-patterns.md) - Data migration strategies
+
+### Infrastructure
+
+- **Cloudflare Setup**: [`docs/infrastructure/cloudflare.md`](./docs/infrastructure/cloudflare.md) - Deployment and configuration
+- **Convex Integration**: [`docs/infrastructure/convex.md`](./docs/infrastructure/convex.md) - Backend setup and patterns
+
+## \U0001f6e0\ufe0f Development
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Git for version control
+- [Convex CLI](https://docs.convex.dev/cli) for backend development
+
+### Environment Setup
+
+1. **Clone and install dependencies**:
+
+   ```bash
+   git clone <repository-url>
+   cd penguinmails-client
+   npm install
+   ```
+
+2. **Set up environment variables**:
+
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+3. **Start development services**:
+
+   ```bash
+   # Start Convex backend
+   npm run convex:dev
+
+   # Start Next.js frontend (in another terminal)
+   npm run dev
+   ```
+
+### Available Scripts
+
+```bash
+# Development
+npm run dev              # Start development server
+npm run convex:dev       # Start Convex backend
+npm run convex:dashboard # Open Convex dashboard
+
+# Building
+npm run build            # Build Next.js application
+npm run build:open-next  # Build for Cloudflare Workers
+npm run build:dry        # Test build without deployment
+
+# Testing & Quality
+npm run test             # Run test suite
+npm run lint             # Run ESLint
+npm run typecheck        # Run TypeScript compiler
+
+# Deployment
+npm run preview          # Preview Cloudflare deployment locally
+npm run deploy           # Deploy to Cloudflare Workers
+npm run docs:maintenance # Validate documentation
+```
+
+### Project Structure
+
+```
+\u251c\u2500\u2500 app/                 # Next.js App Router pages and layouts
+\u251c\u2500\u2500 components/          # Reusable UI components
+\u251c\u2500\u2500 lib/                 # Utilities, actions, and business logic
+\u2502   \u251c\u2500\u2500 actions/         # Server actions (modular architecture)
+\u2502   \u251c\u2500\u2500 services/        # Business logic services
+\u2502   \u2514\u2500\u2500 utils/           # Shared utilities
+\u251c\u2500\u2500 convex/              # Convex backend functions and schema
+\u251c\u2500\u2500 types/               # TypeScript type definitions
+\u251c\u2500\u2500 docs/                # Comprehensive documentation
+\u2514\u2500\u2500 scripts/             # Build and maintenance scripts
+```
+
+## \U0001f680 Deployment
+
+### Cloudflare Workers (Recommended)
+
+The application is optimized for Cloudflare Workers with global edge deployment:
+
+```bash
+# Build and deploy
+npm run build:open-next
+npm run deploy
+
+# Preview deployment locally
+npm run preview
+```
+
+**Live Application**: https://penguin-mails.mailspenguin.workers.dev
+
+### CI/CD Pipeline
+
+Automated deployment via GitHub Actions:
+
+- **Production**: Deploys on push to `main` branch
+- **Preview**: Deploys on pull requests
+- **Manual**: Deploy via GitHub Actions workflow
+
+### Environment Configuration
+
+Required environment variables:
+
+```bash
+# Cloudflare
+CLOUDFLARE_API_TOKEN=your-api-token
+CLOUDFLARE_ACCOUNT_ID=your-account-id
+
+# Database & Auth
+DATABASE_URL=your-niledb-url
+NEXTAUTH_SECRET=your-auth-secret
+
+# External Services
+STRIPE_SECRET_KEY=your-stripe-key
+RESEND_API_KEY=your-resend-key
+```
+
+For complete setup instructions, see [`docs/infrastructure/cloudflare.md`](./docs/infrastructure/cloudflare.md).
+
+## \U0001f9ea Testing & Quality
+
+### Testing Strategy
+
+- **Unit Tests**: Component and utility function testing
+- **Integration Tests**: API and database interaction testing
+- **E2E Tests**: Full user workflow testing
+- **Performance Tests**: Load testing and optimization validation
+
+### Code Quality
+
+- **TypeScript**: Strict type checking with zero compilation errors
+- **ESLint**: Code quality and consistency enforcement
+- **Prettier**: Automated code formatting
+- **Husky**: Pre-commit hooks for quality gates
+
+### Performance Monitoring
+
+- **Build Performance**: Sub-15 second build times
+- **Runtime Performance**: <100ms API response times
+- **Bundle Analysis**: Optimized bundle sizes and tree shaking
+- **Core Web Vitals**: Lighthouse performance scoring
+
+## \U0001f91d Contributing
+
+### Development Workflow
+
+1. **Fork** the repository and create a feature branch
+2. **Follow** the coding standards and patterns in [`docs/development/README.md`](./docs/development/README.md)
+3. **Test** your changes with `npm run test` and `npm run typecheck`
+4. **Document** any new features or changes
+5. **Submit** a pull request with a clear description
+
+### Code Standards
+
+- Use TypeScript for all new code
+- Follow the established component and utility patterns
+- Add tests for new functionality
+- Update documentation for user-facing changes
+- Ensure accessibility compliance (WCAG 2.1 AA)
+
+## \U0001f4c4 License & Support
+
+### Documentation Maintenance
+
+- **Automated Validation**: Links, references, and content freshness
+- **Ownership Model**: Clear responsibility assignments per feature area
+- **Regular Updates**: Monthly reviews and quarterly architecture updates
+
+### Getting Help
+
+- **Documentation**: Comprehensive guides in [`docs/`](./docs/) directory
+- **Troubleshooting**: Common issues in [`docs/development/troubleshooting.md`](./docs/development/troubleshooting.md)
+- **Architecture**: System design in [`docs/analytics/README.md`](./docs/analytics/README.md)
+
+Built with \u2764\ufe0f for modern email marketing workflows.

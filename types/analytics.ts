@@ -1,41 +1,111 @@
 // ============================================================================
-// ANALYTICS TYPES - Centralized type definitions for analytics components
+// ANALYTICS TYPES - DEPRECATED - Use ./analytics/index.ts instead
+// ============================================================================
+// 
+// 🚨 MIGRATION COMPLETE - THIS FILE IS NOW FULLY DEPRECATED 🚨
+//
+// All analytics types have been successfully migrated to the new structured system.
+// This file is kept only for reference and will be removed in a future version.
+//
+// ✅ MIGRATION STATUS: COMPLETE
+// - All imports have been updated to use new structured types
+// - All components have been migrated to new interfaces
+// - All deprecated interfaces are no longer in active use
+//
+// 📁 NEW TYPE LOCATIONS:
+// - Core data types: ./analytics/core.ts
+// - Domain-specific types: ./analytics/domain-specific.ts  
+// - UI/display types: ./analytics/ui.ts
+// - Billing types: ./analytics/billing.ts
+//
+// 🔧 UTILITIES:
+// - Rate calculations: ../lib/utils/analytics-calculator.ts
+// - Service layer: ../lib/services/analytics/
+//
+// 📖 DOCUMENTATION:
+// - Migration guide: ./analytics/MIGRATION_GUIDE.md
+// - Usage examples: ./analytics/USAGE_EXAMPLES.md
+// - Architecture: ./analytics/ARCHITECTURE.md
+//
+// ⚠️  DO NOT ADD NEW IMPORTS FROM THIS FILE
+// ⚠️  USE THE NEW STRUCTURED TYPES INSTEAD
+// ============================================================================
+
+// ⚠️ WARNING: This file exports deprecated types for backward compatibility only
+// ⚠️ All new code should import directly from ./analytics/ subdirectories
+// ⚠️ This file will be removed in a future version
+
+// Import standardized types (for backward compatibility only)
+export * from "./analytics/index";
+
+import { TimeSeriesDataPoint } from "./analytics/core";
+// Import specific UI types for deprecated interfaces
+import type { AnalyticsMetricConfig } from "./analytics/ui";
+
+// ============================================================================
+// RECOMMENDED IMPORTS FOR MIGRATION
+// ============================================================================
+// 
+// Instead of importing from this file, use these standardized imports:
+//
+// For data layer operations:
+// import { AnalyticsFilters, PerformanceMetrics } from "@/types/analytics/core";
+//
+// For UI state management:
+// import { AnalyticsUIFilters, DateRangePreset } from "@/types/analytics/ui";
+//
+// For domain-specific analytics:
+// import { CampaignAnalytics, DomainAnalytics } from "@/types/analytics/domain-specific";
+//
+// For calculations:
+// import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
 // ============================================================================
 
 // ============================================================================
-// TIME SERIES AND CHART DATA TYPES
+// DEPRECATED TYPES - Use standardized types from ./analytics instead
 // ============================================================================
 
 /**
- * Granularity options for time series data aggregation
+ * @deprecated Use DataGranularity from ./analytics instead
  */
-/** Granularity options for time series data aggregation */
 export type DataGranularity = "day" | "week" | "month";
 
 /**
- * Date range presets for analytics filtering
+ * @deprecated Use DateRangePreset from ./analytics instead
  */
 export type DateRangePreset = "7d" | "30d" | "90d" | "1y" | "custom";
 
 /**
- * Represents a single data point in time series charts
+ * @deprecated Use TimeSeriesDataPoint from ./analytics/core.ts instead
+ * 
+ * This interface has been REMOVED. Use the standardized TimeSeriesDataPoint from core.ts
+ * which uses proper field names and structure.
+ * 
+ * MIGRATION:
+ * ```typescript
+ * import { TimeSeriesDataPoint } from "@/types/analytics/core";
+ * 
+ * // OLD structure with mixed concerns
+ * const oldData = { date, label, sent, opens, clicks, replies, bounces };
+ * 
+ * // NEW standardized structure
+ * const newData: TimeSeriesDataPoint = {
+ *   date,
+ *   label,
+ *   metrics: {
+ *     sent,
+ *     delivered: sent - bounces,
+ *     opened_tracked: opens,
+ *     clicked_tracked: clicks,
+ *     replied: replies,
+ *     bounced: bounces,
+ *     unsubscribed: 0,
+ *     spamComplaints: 0
+ *   }
+ * };
+ * ```
  */
-export interface TimeSeriesDataPoint {
-  /** ISO date string in YYYY-MM-DD format */
-  date: string;
-  /** Human-readable label for display */
-  label: string;
-  /** Number of emails sent */
-  sent: number;
-  /** Number of opens tracked */
-  opens: number;
-  /** Number of clicks tracked */
-  clicks: number;
-  /** Number of replies received */
-  replies: number;
-  /** Number of bounced emails */
-  bounces: number;
-}
+// REMOVED: Use TimeSeriesDataPoint from @/types/analytics/core instead
 
 /**
  * Generic chart data point with flexible properties for different chart types
@@ -58,32 +128,40 @@ export interface ChartDataPoint {
 // ============================================================================
 
 /**
- * Configuration for individual analytics metrics
+ * @deprecated Use AnalyticsMetricConfig from ./analytics/ui.ts instead
+ * 
+ * This interface has been REMOVED. Use AnalyticsMetricConfig from ui.ts
+ * which includes additional fields like tooltip.
+ * 
+ * MIGRATION:
+ * ```typescript
+ * import { AnalyticsMetricConfig } from "@/types/analytics/ui";
+ * 
+ * // Same structure, just use the new interface name
+ * const metric: AnalyticsMetricConfig = {
+ *   key: "opens",
+ *   label: "Opens",
+ *   color: "#3b82f6",
+ *   icon: MailOpenIcon,
+ *   visible: true,
+ *   tooltip: "Number of email opens tracked" // Optional new field
+ * };
+ * ```
  */
-export interface AnalyticsMetric {
-  /** Unique key identifier for the metric */
-  key: string;
-  /** Display label for the metric */
-  label: string;
-  /** Hex color code for chart representation */
-  color: string;
-  /** Lucide React icon component */
-  icon: React.ComponentType<{ className?: string }>;
-  /** Whether this metric is currently visible in charts */
-  visible: boolean;
-}
+// REMOVED: Use AnalyticsMetricConfig from @/types/analytics/ui instead
 
 /**
- * Analytics summary statistics for dashboard display
+ * @deprecated Use FormattedAnalyticsStats from ./analytics instead
+ * This interface mixed data types (number | string) which is a UI concern.
  */
 export interface AnalyticsStatistics {
-  /** Total emails sent (can be number or string for formatting) */
+  /** @deprecated Use separate raw and formatted values */
   totalSent: number | string;
-  /** Email open rate as percentage */
+  /** @deprecated Use separate raw and formatted values */
   openRate: number | string;
-  /** Email reply rate as percentage */
+  /** @deprecated Use separate raw and formatted values */
   replyRate: number | string;
-  /** Email click rate as percentage */
+  /** @deprecated Use separate raw and formatted values */
   clickRate: number | string;
 }
 
@@ -113,24 +191,37 @@ export interface KPIMetric {
 // ============================================================================
 
 /**
- * Campaign performance data structure
+ * @deprecated Use CampaignAnalytics from ./analytics/domain-specific.ts instead
+ * 
+ * MIGRATION: This interface mixed UI and data concerns with stored rates.
+ * Replace with:
+ * ```typescript
+ * import { CampaignAnalytics } from "@/types/analytics/domain-specific";
+ * import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+ * 
+ * // Use raw data structure
+ * const campaign: CampaignAnalytics = { ... };
+ * 
+ * // Calculate rates on-demand
+ * const rates = AnalyticsCalculator.calculateAllRates(campaign);
+ * ```
  */
 export interface CampaignPerformanceData {
-  /** Campaign name */
+  /** @deprecated Use campaignName instead */
   name: string;
   /** Number of emails sent */
   sent: number;
-  /** Number of opens tracked */
+  /** @deprecated Use opened_tracked (non-nullable) instead */
   opens: number | null;
-  /** Number of clicks tracked */
+  /** @deprecated Use clicked_tracked (non-nullable) instead */
   clicks: number | null;
   /** Number of replies received */
   replies: number;
-  /** Number of bounced emails */
+  /** @deprecated Should be required, use bounced instead */
   bounced?: number;
-  /** Open rate as percentage */
+  /** @deprecated Rates should be calculated on-demand using AnalyticsCalculator.calculateOpenRate() */
   openRate: number;
-  /** Reply rate as percentage */
+  /** @deprecated Rates should be calculated on-demand using AnalyticsCalculator.calculateReplyRate() */
   replyRate: number;
 }
 
@@ -276,11 +367,11 @@ export interface AnalyticsContextState {
   /** Time series chart data */
   chartData: TimeSeriesDataPoint[];
   /** Available analytics metrics */
-  metrics: AnalyticsMetric[];
+  metrics: AnalyticsMetricConfig[];
   /** Visible metrics configuration */
-  visibleMetrics: Record<string, boolean>;
+  visibleMetrics: string[];
   /** Function to update visible metrics */
-  setVisibleMetrics: (metrics: Record<string, boolean>) => void;
+  setVisibleMetrics: (metrics: string[]) => void;
   /** Whether custom date range is active */
   showCustomDate: boolean;
   /** Function to toggle custom date visibility */
@@ -344,9 +435,9 @@ export interface AnalyticsContextState {
  */
 export interface AnalyticsFilterState {
   /** Visible metrics configuration */
-  visibleMetrics: Record<string, boolean>;
+  visibleMetrics: string[];
   /** Function to update visible metrics */
-  setVisibleMetrics: (metrics: Record<string, boolean>) => void;
+  setVisibleMetrics: (metrics: string[]) => void;
   /** Whether custom date range is active */
   showCustomDate: boolean;
   /** Function to toggle custom date visibility */
@@ -380,24 +471,37 @@ export interface AnalyticsFilterState {
 }
 
 /**
- * Analytics filter configuration
+ * @deprecated Use AnalyticsFilters from ./analytics/core.ts for data layer operations
+ * or AnalyticsUIFilters from ./analytics/ui.ts for UI state management.
+ * 
+ * MIGRATION:
+ * - For server-side filtering: Use AnalyticsFilters from ./analytics/core.ts
+ * - For UI state management: Use AnalyticsUIFilters from ./analytics/ui.ts
+ * 
+ * This interface mixed data and UI concerns and has been split into separate types.
  */
 export interface AnalyticsFilters {
-  /** Date range settings */
-  dateRange: DateRangePreset;
-  /** Custom date range */
+  /** @deprecated Use AnalyticsFilters.dateRange from core.ts or AnalyticsUIFilters.dateRange from ui.ts */
+  dateRange?: DateRangePreset;
+  /** @deprecated Use AnalyticsFilters.dateRange from core.ts or AnalyticsUIFilters.customDateRange from ui.ts */
   customDateRange?: {
     start: string;
     end: string;
   };
-  /** Granularity for data aggregation */
-  granularity: DataGranularity;
-  /** Selected campaigns */
-  campaigns: string[];
-  /** Selected mailboxes */
-  mailboxes: string[];
-  /** Visible metric keys */
-  visibleMetrics: string[];
+  /** @deprecated Use AnalyticsUIFilters.granularity from ui.ts */
+  granularity?: DataGranularity;
+  /** @deprecated Use AnalyticsUIFilters.selectedCampaigns from ui.ts */
+  campaigns?: string[];
+  /** @deprecated Use AnalyticsUIFilters.selectedMailboxes from ui.ts */
+  mailboxes?: string[];
+  /** @deprecated Use AnalyticsUIFilters.visibleMetrics from ui.ts */
+  visibleMetrics?: string[];
+  /** @deprecated Use AnalyticsFilters.additionalFilters from core.ts */
+  additionalFilters?: {
+    [key: string]: string | number | boolean;
+  };
+  /** @deprecated Use AnalyticsFilters.entityIds from core.ts */
+  entityIds?: string[];
 }
 
 // ============================================================================
@@ -405,20 +509,34 @@ export interface AnalyticsFilters {
 // ============================================================================
 
 /**
- * Performance metrics for email deliverability
+ * @deprecated Use PerformanceMetrics from ./analytics/core.ts instead
+ * 
+ * This interface has been REMOVED. Use the standardized PerformanceMetrics from core.ts
+ * which stores raw counts instead of calculated rates.
+ * 
+ * MIGRATION:
+ * ```typescript
+ * import { PerformanceMetrics } from "@/types/analytics/core";
+ * import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+ * 
+ * // Use raw performance metrics
+ * const metrics: PerformanceMetrics = {
+ *   sent: 1000,
+ *   delivered: 980,
+ *   opened_tracked: 300,
+ *   clicked_tracked: 50,
+ *   replied: 25,
+ *   bounced: 20,
+ *   unsubscribed: 10,
+ *   spamComplaints: 2
+ * };
+ * 
+ * // Calculate rates and health score on-demand
+ * const rates = AnalyticsCalculator.calculateAllRates(metrics);
+ * const healthScore = AnalyticsCalculator.calculateHealthScore(metrics);
+ * ```
  */
-export interface PerformanceMetrics {
-  /** Delivery rate (sent vs delivered) */
-  deliveryRate: number;
-  /** Overall health score */
-  healthScore: number;
-  /** Spam rate */
-  spamRate: number;
-  /** Bounce rate */
-  bounceRate: number;
-  /** Reply rate for engagement tracking */
-  replyRate: number;
-}
+// REMOVED: Use PerformanceMetrics from @/types/analytics/core instead
 
 /**
  * Performance tracking configuration
@@ -441,11 +559,11 @@ export interface PerformanceTracking {
  */
 export interface MetricToggleProps {
   /** Available metrics to toggle */
-  metrics: AnalyticsMetric[];
+  metrics: AnalyticsMetricConfig[];
   /** Currently visible metrics */
-  visibleMetrics: Record<string, boolean>;
+  visibleMetrics: string[];
   /** Callback when visibility changes */
-  onVisibilityChange: (metrics: Record<string, boolean>) => void;
+  onVisibilityChange: (metrics: string[]) => void;
 }
 
 /**

@@ -4,6 +4,7 @@ import QuickRepliesTab from "@/components/templates/qucik-replies-tab";
 import { Tab, TemplateCategoryType, TemplateUsageLevel } from "@/types";
 
 // Transform userTemplates from components/templates/mocks.ts
+// CLEANED UP: Removed stored rates - use TemplateAnalyticsService for analytics
 const transformedUserTemplates = [
   {
     id: 1,
@@ -13,8 +14,7 @@ const transformedUserTemplates = [
     category: "OUTREACH",
     folderId: 1,
     usage: 150,
-    openRate: "32.1%",
-    replyRate: "6.7%",
+    // CLEANED UP: Removed stored rates - calculate on-demand using AnalyticsCalculator
     lastUsed: "5 hours ago",
     isStarred: false,
     type: "template",
@@ -27,8 +27,7 @@ const transformedUserTemplates = [
     category: "INTRODUCTION",
     folderId: 1,
     usage: 89,
-    openRate: "28.4%",
-    replyRate: "5.6%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "1 day ago",
     isStarred: false,
     type: "template",
@@ -41,8 +40,7 @@ const transformedUserTemplates = [
     category: "FOLLOW_UP",
     folderId: 2,
     usage: 67,
-    openRate: "25.8%",
-    replyRate: "10.2%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "2 days ago",
     isStarred: false,
     type: "template",
@@ -55,8 +53,7 @@ const transformedUserTemplates = [
     category: "MEETING",
     folderId: 1,
     usage: 43,
-    openRate: "22.3%",
-    replyRate: "4.8%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "3 days ago",
     isStarred: false,
     type: "template",
@@ -69,8 +66,7 @@ const transformedUserTemplates = [
     category: "VALUE",
     folderId: 1,
     usage: 38,
-    openRate: "30.5%",
-    replyRate: "7.1%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "4 days ago",
     isStarred: true,
     type: "template",
@@ -83,8 +79,7 @@ const transformedUserTemplates = [
     category: "FOLLOW_UP",
     folderId: 2,
     usage: 25,
-    openRate: "18.9%",
-    replyRate: "3.4%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "1 week ago",
     isStarred: false,
     type: "template",
@@ -92,6 +87,7 @@ const transformedUserTemplates = [
 ];
 
 // Transform builtInTemplates from components/templates/mocks.ts
+// CLEANED UP: Removed stored rates from built-in templates
 const transformedBuiltInTemplates = [
   {
     id: 7,
@@ -101,8 +97,7 @@ const transformedBuiltInTemplates = [
     category: "SAAS",
     folderId: 7,
     usage: 847,
-    openRate: "34.2%",
-    replyRate: "8.6%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "2 hours ago",
     isStarred: true,
     type: "template",
@@ -115,8 +110,7 @@ const transformedBuiltInTemplates = [
     category: "AGENCY",
     folderId: 8,
     usage: 624,
-    openRate: "31.7%",
-    replyRate: "7.4%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "3 hours ago",
     isStarred: false,
     type: "template",
@@ -129,8 +123,7 @@ const transformedBuiltInTemplates = [
     category: "CONSULTING",
     folderId: 9,
     usage: 734,
-    openRate: "29.3%",
-    replyRate: "6.8%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "4 hours ago",
     isStarred: true,
     type: "template",
@@ -143,8 +136,7 @@ const transformedBuiltInTemplates = [
     category: "ECOMMERCE",
     folderId: 10,
     usage: 198,
-    openRate: "26.1%",
-    replyRate: "4.2%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "2 days ago",
     isStarred: false,
     type: "template",
@@ -157,8 +149,7 @@ const transformedBuiltInTemplates = [
     category: "REAL_ESTATE",
     folderId: 11,
     usage: 312,
-    openRate: "27.8%",
-    replyRate: "5.6%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "1 day ago",
     isStarred: false,
     type: "template",
@@ -171,8 +162,7 @@ const transformedBuiltInTemplates = [
     category: "HR",
     folderId: 12,
     usage: 892,
-    openRate: "33.5%",
-    replyRate: "12.3%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "1 hour ago",
     isStarred: true,
     type: "template",
@@ -185,8 +175,7 @@ const transformedBuiltInTemplates = [
     category: "FINANCE",
     folderId: 13,
     usage: 156,
-    openRate: "24.7%",
-    replyRate: "3.8%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "3 days ago",
     isStarred: false,
     type: "template",
@@ -199,8 +188,7 @@ const transformedBuiltInTemplates = [
     category: "HEALTHCARE",
     folderId: 14,
     usage: 267,
-    openRate: "28.9%",
-    replyRate: "6.1%",
+    // CLEANED UP: Removed stored rates
     lastUsed: "5 hours ago",
     isStarred: false,
     type: "template",
@@ -336,8 +324,7 @@ export const initialFolders = [
         category: "Quick Replies",
         folderId: 5,
         usage: 234,
-        openRate: "0%",
-        replyRate: "0%",
+        // CLEANED UP: Removed stored rates (quick replies don't have open/reply rates)
         lastUsed: "3 hours ago",
         isStarred: false,
         type: "quick-reply",
@@ -350,8 +337,7 @@ export const initialFolders = [
         category: "Quick Replies",
         folderId: 5,
         usage: 189,
-        openRate: "0%",
-        replyRate: "0%",
+        // CLEANED UP: Removed stored rates (quick replies don't have open/reply rates)
         lastUsed: "5 hours ago",
         isStarred: true,
         type: "quick-reply",

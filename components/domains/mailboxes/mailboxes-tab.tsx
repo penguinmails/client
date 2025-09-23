@@ -11,13 +11,23 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Mail, Plus, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { MailboxWarmupData, ProgressiveAnalyticsState } from "@/types";
+import { MailboxWarmupData } from "@/types";
+import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
+// Migration note: Using local alias for mailbox analytics state, all mailbox analytics set via mapper.
 import MailboxesFilter from "./MailboxesFilter";
-import { useAddMailboxesContext } from "@/context/AddMailboxesContext";
+
+type LocalProgressiveAnalyticsState = Record<
+  string,
+  {
+    data: ReturnType<typeof mapRawToLegacyMailboxData> | null;
+    loading: boolean;
+    error: string | null;
+  }
+>;
 
 interface MailboxesTabProps {
   mailboxes: MailboxWarmupData[];
-  analyticsState: ProgressiveAnalyticsState;
+  analyticsState: LocalProgressiveAnalyticsState;
   loading: boolean;
   error: string | null;
 }
@@ -96,236 +106,242 @@ function MailboxesTab({
           </div>
         </CardTitle>
         <div className="flex justify-end">
-          <AddMailboxesButton />
+          <Button asChild>
+            <Link
+              href="/dashboard/domains/mailboxes/new"
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4 " />
+              Add Mailbox
+            </Link>
+          </Button>
         </div>
       </CardHeader>
       <MailboxesFilter />
       <CardContent className="p-0">
-        <Table className="table">
-          <TableHeader className="bg-gray-100">
-            <TableRow>
-              <TableHead>Mailbox</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Daily Limit</TableHead>
-              <TableHead>Sent</TableHead>
-              <TableHead>Last Activity</TableHead>
-              <TableHead>Progress</TableHead>
-              <TableHead>Total Warmups</TableHead>
-              <TableHead>Spam Flags</TableHead>
-              <TableHead>Replies</TableHead>
-              <TableHead>Health Score</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {mailboxes.map((mailbox) => {
-              const analytics = analyticsState[mailbox.id];
-              return (
-                <TableRow
-                  key={mailbox.id}
-                  className="hover:bg-gray-50 transition-colors group"
-                >
-                  <TableCell className="px-8 py-6">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors text-lg">
-                        {mailbox.email}
-                      </h3>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Date Created :{" "}
-                        {Intl.DateTimeFormat("en-US").format(
-                          new Date(mailbox.createdAt || "")
-                        )}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        Domain: {mailbox.domain || mailbox.email.split("@")[1]}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-6">
-                    <Badge
-                      variant={
-                        mailbox.status === "active"
-                          ? "default"
-                          : mailbox.status === "warming"
-                            ? "secondary"
-                            : "outline"
-                      }
-                      className="capitalize"
-                    >
-                      {mailbox.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="px-6 py-6">
-                    <div className="flex items-center space-x-2">
-                      <Mail className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm font-medium text-gray-900">
-                        {mailbox.dailyVolume}/day
-                      </span>
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Daily sending limit
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-6">
-                    <div className="space-y-1">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="bg-gray-100 ">
+              <TableRow>
+                <TableHead>Mailbox</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Daily Limit</TableHead>
+                <TableHead>Sent</TableHead>
+                <TableHead>Last Activity</TableHead>
+                <TableHead>Progress</TableHead>
+                <TableHead>Total Warmups</TableHead>
+                <TableHead>Spam Flags</TableHead>
+                <TableHead>Replies</TableHead>
+                <TableHead>Health Score</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {mailboxes.map((mailbox) => {
+                const analytics = analyticsState[mailbox.id];
+                return (
+                  <TableRow
+                    key={mailbox.id}
+                    className="hover:bg-gray-50 transition-colors group"
+                  >
+                    <TableCell className="px-8 py-6">
+                      <div>
+                        <h3 className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors text-lg">
+                          {mailbox.email}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Date Created :{" "}
+                          {Intl.DateTimeFormat("en-US").format(
+                            new Date(mailbox.createdAt || "")
+                          )}
+                        </p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Domain:{" "}
+                          {mailbox.domain || mailbox.email.split("@")[1]}
+                        </p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-6">
+                      <Badge
+                        variant={
+                          mailbox.status === "active"
+                            ? "default"
+                            : mailbox.status === "warming"
+                              ? "secondary"
+                              : "outline"
+                        }
+                        className="capitalize"
+                      >
+                        {mailbox.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="px-6 py-6">
                       <div className="flex items-center space-x-2">
+                        <Mail className="w-4 h-4 text-gray-400" />
                         <span className="text-sm font-medium text-gray-900">
-                          {(
-                            analytics?.data?.totalWarmups || 0
-                          ).toLocaleString()}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          total sent
+                          {mailbox.dailyVolume}/day
                         </span>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-6 text-sm text-gray-500">
-                    {analytics?.data?.lastUpdated
-                      ? analytics.data.lastUpdated.toLocaleString()
-                      : "N/A"}
-                  </TableCell>
-                  <TableCell>
-                    {analytics?.loading ? (
-                      <div className="flex items-center space-x-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">
-                          Loading...
-                        </span>
+                      <div className="text-xs text-gray-500 mt-1">
+                        Daily sending limit
                       </div>
-                    ) : analytics?.error ? (
-                      <div className="flex items-center space-x-2 text-red-500">
-                        <AlertCircle className="w-4 h-4" />
-                        <span className="text-sm">Error</span>
-                      </div>
-                    ) : analytics?.data ? (
-                      <>
+                    </TableCell>
+                    <TableCell className="px-6 py-6">
+                      <div className="space-y-1">
                         <div className="flex items-center space-x-2">
-                          <div className="w-16 bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-primary h-2 rounded-full transition-all duration-300"
-                              style={{
-                                width: `${analytics.data.warmupProgress}%`,
-                              }}
-                            />
-                          </div>
-                          <span className="text-sm font-medium">
-                            {analytics.data.warmupProgress}%
+                          <span className="text-sm font-medium text-gray-900">
+                            {(
+                              analytics?.data?.totalWarmups || 0
+                            ).toLocaleString()}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            total sent
                           </span>
                         </div>
-                      </>
-                    ) : (
-                      <span className="text-sm text-muted-foreground">N/A</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {analytics?.loading ? (
-                      <div className="flex items-center space-x-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-6 text-sm text-gray-500">
+                      {analytics?.data?.lastUpdated
+                        ? analytics.data.lastUpdated.toLocaleString()
+                        : "N/A"}
+                    </TableCell>
+                    <TableCell>
+                      {analytics?.loading ? (
+                        <div className="flex items-center space-x-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm text-muted-foreground">
+                            Loading...
+                          </span>
+                        </div>
+                      ) : analytics?.error ? (
+                        <div className="flex items-center space-x-2 text-red-500">
+                          <AlertCircle className="w-4 h-4" />
+                          <span className="text-sm">Error</span>
+                        </div>
+                      ) : analytics?.data ? (
+                        <>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-16 bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-primary h-2 rounded-full transition-all duration-300"
+                                style={{
+                                  width: `${analytics.data.warmupProgress}%`,
+                                }}
+                              />
+                            </div>
+                            <span className="text-sm font-medium">
+                              {analytics.data.warmupProgress}%
+                            </span>
+                          </div>
+                        </>
+                      ) : (
                         <span className="text-sm text-muted-foreground">
-                          Loading...
+                          N/A
                         </span>
-                      </div>
-                    ) : analytics?.error ? (
-                      <div className="flex items-center space-x-2 text-red-500">
-                        <AlertCircle className="w-4 h-4" />
-                        <span className="text-sm">Error</span>
-                      </div>
-                    ) : (
-                      <span className="text-sm font-medium">
-                        {analytics?.data?.totalWarmups || "N/A"}
-                      </span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {analytics?.loading ? (
-                      <div className="flex items-center space-x-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">
-                          Loading...
-                        </span>
-                      </div>
-                    ) : analytics?.error ? (
-                      <div className="flex items-center space-x-2 text-red-500">
-                        <AlertCircle className="w-4 h-4" />
-                        <span className="text-sm">Error</span>
-                      </div>
-                    ) : (
-                      <Badge
-                        variant="outline"
-                        className="text-red-600 border-red-300"
-                      >
-                        {analytics?.data?.spamFlags || "N/A"}
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {analytics?.loading ? (
-                      <div className="flex items-center space-x-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">
-                          Loading...
-                        </span>
-                      </div>
-                    ) : analytics?.error ? (
-                      <div className="flex items-center space-x-2 text-red-500">
-                        <AlertCircle className="w-4 h-4" />
-                        <span className="text-sm">Error</span>
-                      </div>
-                    ) : (
-                      <span className="text-sm font-medium">
-                        {analytics?.data?.replies || "N/A"}
-                      </span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {analytics?.loading ? (
-                      <div className="flex items-center space-x-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">
-                          Loading...
-                        </span>
-                      </div>
-                    ) : analytics?.error ? (
-                      <div className="flex items-center space-x-2 text-red-500">
-                        <AlertCircle className="w-4 h-4" />
-                        <span className="text-sm">Error</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center space-x-2">
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {analytics?.loading ? (
+                        <div className="flex items-center space-x-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm text-muted-foreground">
+                            Loading...
+                          </span>
+                        </div>
+                      ) : analytics?.error ? (
+                        <div className="flex items-center space-x-2 text-red-500">
+                          <AlertCircle className="w-4 h-4" />
+                          <span className="text-sm">Error</span>
+                        </div>
+                      ) : (
                         <span className="text-sm font-medium">
-                          {analytics?.data?.healthScore || "N/A"}
+                          {analytics?.data?.totalWarmups || "N/A"}
                         </span>
-                        <span className="text-xs text-muted-foreground">%</span>
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell className="px-6 py-6 text-right">
-                    {/* <MailboxActions mailbox={mailbox} /> */}
-                    <Button variant="ghost" size="sm" className="text-primary">
-                      View Details
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {analytics?.loading ? (
+                        <div className="flex items-center space-x-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm text-muted-foreground">
+                            Loading...
+                          </span>
+                        </div>
+                      ) : analytics?.error ? (
+                        <div className="flex items-center space-x-2 text-red-500">
+                          <AlertCircle className="w-4 h-4" />
+                          <span className="text-sm">Error</span>
+                        </div>
+                      ) : (
+                        <Badge
+                          variant="outline"
+                          className="text-red-600 border-red-300"
+                        >
+                          {analytics?.data?.spamFlags || "N/A"}
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {analytics?.loading ? (
+                        <div className="flex items-center space-x-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm text-muted-foreground">
+                            Loading...
+                          </span>
+                        </div>
+                      ) : analytics?.error ? (
+                        <div className="flex items-center space-x-2 text-red-500">
+                          <AlertCircle className="w-4 h-4" />
+                          <span className="text-sm">Error</span>
+                        </div>
+                      ) : (
+                        <span className="text-sm font-medium">
+                          {analytics?.data?.replies || "N/A"}
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {analytics?.loading ? (
+                        <div className="flex items-center space-x-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm text-muted-foreground">
+                            Loading...
+                          </span>
+                        </div>
+                      ) : analytics?.error ? (
+                        <div className="flex items-center space-x-2 text-red-500">
+                          <AlertCircle className="w-4 h-4" />
+                          <span className="text-sm">Error</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium">
+                            {analytics?.data?.healthScore || "N/A"}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            %
+                          </span>
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="px-6 py-6 text-right">
+                      {/* <MailboxActions mailbox={mailbox} /> */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-primary"
+                      >
+                        View Details
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   );
 }
 export default MailboxesTab;
-
-function AddMailboxesButton() {
-  const { setOpen } = useAddMailboxesContext();
-  const handleClick = () => {
-    setOpen(true);
-  };
-  return (
-    <Button onClick={handleClick}>
-      <Plus className="w-4 h-4 " />
-      Add Mailbox
-    </Button>
-  );
-}

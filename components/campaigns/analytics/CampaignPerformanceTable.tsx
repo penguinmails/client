@@ -15,13 +15,86 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
+// NOTE: Migration change: prefer core PerformanceMetrics from the new core types.
+// This component accepts either the legacy display shape (temporary) or the
+// canonical PerformanceMetrics shape. We normalize defensively here to avoid
+// unsafe `as` casts and rely on AnalyticsCalculator for rate calculations.
+import { PerformanceMetrics } from "@/types/analytics/core";
 import { CampaignPerformanceData } from "@/types";
+import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
 
 interface CampaignPerformanceTableProps {
-  data: CampaignPerformanceData[];
+  // Accept either legacy CampaignPerformanceData (precomputed rates)
+  // or the new PerformanceMetrics (raw counts) coming from the analytics context.
+  data: Array<PerformanceMetrics | CampaignPerformanceData>;
 }
 
 function CampaignPerformanceTable({ data }: CampaignPerformanceTableProps) {
+  // Normalized row shape used by the table UI
+  type NormalizedRow = {
+    name: string;
+    sent: number;
+    opens: number | null;
+    clicks: number | null;
+    replies: number;
+    bounced: number;
+    openRate: number; // percent (0..100)
+    replyRate: number; // percent (0..100)
+  };
+
+  const isLegacy = (it: unknown): it is CampaignPerformanceData => {
+    const obj = it as Record<string, unknown> | null;
+    return Boolean(
+      obj && typeof obj.openRate === "number" && typeof obj.name === "string"
+    );
+  };
+
+  const formatPercent = (d: number) => Math.round(d * 1000) / 10; // 1 decimal
+
+  const normalize = (item: unknown): NormalizedRow => {
+    if (isLegacy(item)) {
+      // legacy precomputed rates — keep display values as-is
+      return {
+        name: item.name,
+        sent: Number(item.sent ?? 0),
+        opens: item.opens ?? null,
+        clicks: item.clicks ?? null,
+        replies: Number(item.replies ?? 0),
+        bounced: Number(item.bounced ?? 0),
+        openRate: Number(item.openRate ?? 0),
+        replyRate: Number(item.replyRate ?? 0),
+      };
+    }
+
+    // Treat as core PerformanceMetrics (defensive extraction)
+    // Safely type the item with all possible properties we might access
+    const pm: Partial<PerformanceMetrics & { name?: string; id?: string }> = item || {};
+    const safeMetrics: PerformanceMetrics = {
+      sent: Number(pm.sent ?? 0),
+      delivered: Number(pm.delivered ?? 0),
+      opened_tracked: Number(pm.opened_tracked ?? 0),
+      clicked_tracked: Number(pm.clicked_tracked ?? 0),
+      replied: Number(pm.replied ?? 0),
+      bounced: Number(pm.bounced ?? 0),
+      unsubscribed: Number(pm.unsubscribed ?? 0),
+      spamComplaints: Number(pm.spamComplaints ?? 0),
+    };
+
+    const rates = AnalyticsCalculator.calculateAllRates(safeMetrics);
+
+    return {
+      name: pm.name ?? (typeof pm.id === 'string' ? pm.id : "—"),
+      sent: safeMetrics.sent,
+      opens: safeMetrics.opened_tracked ?? 0,
+      clicks: safeMetrics.clicked_tracked ?? 0,
+      replies: safeMetrics.replied ?? 0,
+      bounced: safeMetrics.bounced ?? 0,
+      openRate: formatPercent(rates.openRate),
+      replyRate: formatPercent(rates.replyRate),
+    };
+  };
+
+  const rows = (data || []).map((d) => normalize(d));
   return (
     <>
       <>
@@ -72,7 +145,7 @@ function CampaignPerformanceTable({ data }: CampaignPerformanceTableProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.map((campaign, index) => (
+                {rows.map((campaign, index) => (
                   <TableRow key={index} className={cn("hover:bg-muted/50")}>
                     <TableCell className="font-medium">
                       {campaign.name}

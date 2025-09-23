@@ -9,8 +9,7 @@ export const campaignsData = [
     mailboxes: 3,
     leadsSent: 847,
     replies: 73,
-    openRate: "34.2%",
-    replyRate: "8.6%",
+    // CLEANED UP: Removed stored rates - use CampaignAnalyticsService for analytics
     lastSent: "2 hours ago",
     createdDate: "2024-01-01",
     assignedMailboxes: [
@@ -32,8 +31,7 @@ export const campaignsData = [
     mailboxes: 5,
     leadsSent: 1203,
     replies: 124,
-    openRate: "41.7%",
-    replyRate: "10.3%",
+    // CLEANED UP: Removed stored rates
     lastSent: "1 day ago",
     createdDate: "2024-01-05",
     assignedMailboxes: [
@@ -57,8 +55,7 @@ export const campaignsData = [
     mailboxes: 2,
     leadsSent: 492,
     replies: 38,
-    openRate: "28.9%",
-    replyRate: "7.7%",
+    // CLEANED UP: Removed stored rates
     lastSent: "4 hours ago",
     createdDate: "2024-01-10",
     assignedMailboxes: ["lisa@mycompany.com", "david@mycompany.com"],
@@ -76,8 +73,7 @@ export const campaignsData = [
     mailboxes: 4,
     leadsSent: 2156,
     replies: 287,
-    openRate: "39.4%",
-    replyRate: "13.3%",
+    // CLEANED UP: Removed stored rates
     lastSent: "1 week ago",
     createdDate: "2023-12-15",
     assignedMailboxes: [
@@ -100,8 +96,7 @@ export const campaignsData = [
     mailboxes: 2,
     leadsSent: 324,
     replies: 45,
-    openRate: "42.1%",
-    replyRate: "13.9%",
+    // CLEANED UP: Removed stored rates
     lastSent: "6 hours ago",
     createdDate: "2024-01-12",
     assignedMailboxes: ["sarah@mycompany.com", "david@mycompany.com"],
@@ -121,12 +116,14 @@ export const sequenceSteps: SequenceStep[] = [
     type: "email",
     subject: "Quick question about {{company}}",
     sent: 847,
-    opens: 289,
-    clicks: 73,
-    replies: 42,
-    openRate: "34.1%",
-    clickRate: "8.6%",
-    replyRate: "5.0%",
+    delivered: 837,
+    opened_tracked: 289, // MIGRATED: standardized field name
+    clicked_tracked: 73, // MIGRATED: standardized field name
+    replied: 42,
+    bounced: 10,
+    unsubscribed: 8,
+    spamComplaints: 2, // MIGRATED: standardized field name
+    // MIGRATED: Rates removed - calculate on-demand using AnalyticsCalculator
   },
   {
     id: 2,
@@ -139,12 +136,14 @@ export const sequenceSteps: SequenceStep[] = [
     type: "email",
     subject: "Following up on my previous email",
     sent: 763,
-    opens: 198,
-    clicks: 31,
-    replies: 18,
-    openRate: "25.9%",
-    clickRate: "4.1%",
-    replyRate: "2.4%",
+    delivered: 758,
+    opened_tracked: 198, // MIGRATED: standardized field name
+    clicked_tracked: 31, // MIGRATED: standardized field name
+    replied: 18,
+    bounced: 5,
+    unsubscribed: 7,
+    spamComplaints: 1, // MIGRATED: standardized field name
+    // MIGRATED: Rates removed - calculate on-demand using AnalyticsCalculator
   },
 ];
 
@@ -263,95 +262,124 @@ export const warmupSummaryData: WarmupSummaryData = {
   needsAttention: 2,
 };
 
-// Define the structure for campaign data based on UI usage
-interface CampaignData {
+// CampaignData interface is defined below as export
+
+// Standardized campaign data structure
+interface StandardizedCampaignData {
+  campaignId: string;
+  campaignName: string;
+  status: "Running" | "Paused" | "Draft" | "Completed";
+  sent: number;
+  totalLeads: number;
+  delivered: number;
+  opened_tracked: number;
+  clicked_tracked: number;
+  replied: number;
+  bounced: number;
+  unsubscribed: number;
+  spamComplaints: number;
+  lastActivity: string;
+}
+
+// Mock data for UI campaigns display - standardized format
+export const mockedCampaigns: StandardizedCampaignData[] = [
+  {
+    campaignId: "1",
+    campaignName: "Software CEOs Outreach",
+    status: "Running",
+    sent: 1285,
+    totalLeads: 2500,
+    delivered: 1260, // sent - bounced
+    opened_tracked: 840,
+    clicked_tracked: 210,
+    replied: 84,
+    bounced: 25,
+    unsubscribed: 12,
+    spamComplaints: 3,
+    lastActivity: "2 hours ago",
+  },
+  {
+    campaignId: "2",
+    campaignName: "Marketing Directors Follow-up",
+    status: "Paused",
+    sent: 1800,
+    totalLeads: 1800,
+    delivered: 1785, // sent - bounced
+    opened_tracked: 1170,
+    clicked_tracked: 432,
+    replied: 216,
+    bounced: 15,
+    unsubscribed: 18,
+    spamComplaints: 2,
+    lastActivity: "Yesterday",
+  },
+  {
+    campaignId: "3",
+    campaignName: "Startup Founders Introduction",
+    status: "Draft",
+    sent: 0,
+    totalLeads: 1200,
+    delivered: 0,
+    opened_tracked: 0,
+    clicked_tracked: 0,
+    replied: 0,
+    bounced: 0,
+    unsubscribed: 0,
+    spamComplaints: 0,
+    lastActivity: "3 days ago",
+  },
+  {
+    campaignId: "4",
+    campaignName: "SaaS Decision Makers",
+    status: "Running",
+    sent: 450,
+    totalLeads: 1500,
+    delivered: 442, // sent - bounced
+    opened_tracked: 280,
+    clicked_tracked: 85,
+    replied: 42,
+    bounced: 8,
+    unsubscribed: 4,
+    spamComplaints: 1,
+    lastActivity: "5 minutes ago",
+  },
+  {
+    campaignId: "5",
+    campaignName: "Enterprise IT Directors",
+    status: "Completed",
+    sent: 2000,
+    totalLeads: 2000,
+    delivered: 1980, // sent - bounced
+    opened_tracked: 1400,
+    clicked_tracked: 600,
+    replied: 320,
+    bounced: 20,
+    unsubscribed: 25,
+    spamComplaints: 5,
+    lastActivity: "1 week ago",
+  },
+];
+
+// Legacy interface for backward compatibility
+export interface CampaignData {
   id: string;
   name: string;
   status: "Running" | "Paused" | "Draft" | "Completed";
   progressCurrent: number;
   progressTotal: number;
+  /** @deprecated Use opened_tracked instead */
   opens: number;
+  /** @deprecated Calculate rate on-demand instead */
   opensPercent: number;
+  /** @deprecated Use clicked_tracked instead */
   clicks: number;
+  /** @deprecated Calculate rate on-demand instead */
   clicksPercent: number;
   replies: number;
+  /** @deprecated Calculate rate on-demand instead */
   repliesPercent: number;
   lastActivity: string;
 }
-
-// Mock data for UI campaigns display
-export const mockedCampaigns: CampaignData[] = [
-  {
-    id: "1",
-    name: "Software CEOs Outreach",
-    status: "Running",
-    progressCurrent: 1285,
-    progressTotal: 2500,
-    opens: 840,
-    opensPercent: 65.4,
-    clicks: 210,
-    clicksPercent: 16.3,
-    replies: 84,
-    repliesPercent: 6.5,
-    lastActivity: "2 hours ago",
-  },
-  {
-    id: "2",
-    name: "Marketing Directors Follow-up",
-    status: "Paused",
-    progressCurrent: 1800,
-    progressTotal: 1800,
-    opens: 1170,
-    opensPercent: 65.0,
-    clicks: 432,
-    clicksPercent: 24.0,
-    replies: 216,
-    repliesPercent: 12.0,
-    lastActivity: "Yesterday",
-  },
-  {
-    id: "3",
-    name: "Startup Founders Introduction",
-    status: "Draft",
-    progressCurrent: 0,
-    progressTotal: 1200,
-    opens: 0,
-    opensPercent: 0,
-    clicks: 0,
-    clicksPercent: 0,
-    replies: 0,
-    repliesPercent: 0,
-    lastActivity: "3 days ago",
-  },
-  {
-    id: "4",
-    name: "SaaS Decision Makers",
-    status: "Running",
-    progressCurrent: 450,
-    progressTotal: 1500,
-    opens: 280,
-    opensPercent: 62.2,
-    clicks: 85,
-    clicksPercent: 18.9,
-    replies: 42,
-    repliesPercent: 9.3,
-    lastActivity: "5 minutes ago",
-  },
-  {
-    id: "5",
-    name: "Enterprise IT Directors",
-    status: "Completed",
-    progressCurrent: 2000,
-    progressTotal: 2000,
-    opens: 1400,
-    opensPercent: 70.0,
-    clicks: 600,
-    clicksPercent: 30.0,
-    replies: 320,
-    repliesPercent: 16.0,
-    lastActivity: "1 week ago",
-  },
-];
 
 // Original CampaignResponse mock data
 export const mockCampaigns: CampaignResponse[] = [
@@ -516,9 +544,7 @@ export const mockCampaignDetail = {
       replies: 144,
     },
   ],
-  openRate: 65.4,
-  clickRate: 16.3,
-  replyRate: 6.5,
+  // CLEANED UP: Removed stored rates - use AnalyticsCalculator for rate calculations
 };
 
 const editMockCampaign: Omit<CampaignResponse, "event" | "clients"> =
@@ -571,10 +597,12 @@ export const mockCampaignEditDetail: CampaignFormValues = {
   createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000),
 };
 
+// DEPRECATED: Use AnalyticsService.getComparativeAnalytics() instead
 export const mockStatsComparison = {
-  openRate: { value: 12.5, trend: "up" },
-  clickRate: { value: 8.2, trend: "up" },
-  replyRate: { value: 15.0, trend: "up" },
+  // CLEANED UP: These stored rates should be calculated using AnalyticsCalculator
+  openRate: { value: 12.5, trend: "up" }, // DEPRECATED: Calculate using AnalyticsCalculator.calculateOpenRate()
+  clickRate: { value: 8.2, trend: "up" }, // DEPRECATED: Calculate using AnalyticsCalculator.calculateClickRate()
+  replyRate: { value: 15.0, trend: "up" }, // DEPRECATED: Calculate using AnalyticsCalculator.calculateReplyRate()
   bounceRate: { value: 35.0, trend: "down" },
 };
 

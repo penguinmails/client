@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import StatsCard from "@/components/analytics/cards/StatsCard";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import { MailboxAnalyticsData } from "@/types/analytics";
+import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
 import { AlertTriangle, Mail, MessageSquare, Zap } from "lucide-react";
 
 interface Mailbox {
@@ -16,13 +16,13 @@ interface Mailbox {
   healthScore: number;
 }
 
-function WarmupStatsOverview({
-  mailbox
-}: {
-  mailbox: Mailbox;
-}) {
+function WarmupStatsOverview({ mailbox }: { mailbox: Mailbox }) {
   const { fetchMailboxAnalytics } = useAnalytics();
-  const [analyticsData, setAnalyticsData] = useState<MailboxAnalyticsData | null>(null);
+  // Keep local state as legacy UI shape using the mapper's return type to avoid directly depending
+  // on legacy type symbols in multiple places.
+  const [analyticsData, setAnalyticsData] = useState<ReturnType<
+    typeof mapRawToLegacyMailboxData
+  > | null>(null); // Migration note: mailbox analytics state always set via mapper, legacy type dependency removed.
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +31,8 @@ function WarmupStatsOverview({
       try {
         setLoading(true);
         const data = await fetchMailboxAnalytics(mailbox.id);
-        setAnalyticsData(data);
+        // Map raw/legacy result into the legacy UI shape explicitly.
+        setAnalyticsData(mapRawToLegacyMailboxData(data ?? {}));
       } catch (err) {
         setError("Failed to load analytics data");
         console.error(err);
@@ -47,7 +48,10 @@ function WarmupStatsOverview({
     return (
       <div className="grid grid-cols-responsive gap-4">
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="animate-pulse bg-gray-200 rounded-lg h-16"></div>
+          <div
+            key={index}
+            className="animate-pulse bg-gray-200 rounded-lg h-16"
+          ></div>
         ))}
       </div>
     );
@@ -78,15 +82,16 @@ function WarmupStatsOverview({
       textColor: "text-blue-600",
     },
     {
-      label: "Total Warmups",
-      value: analyticsData.totalWarmups.toLocaleString(),
+      label: "Total Sent",
+      value: (analyticsData.totalWarmups ?? 0).toLocaleString(),
       icon: MessageSquare,
       color: "bg-green-100 ",
       textColor: "text-green-600",
     },
     {
-      label: "Spam Flags",
-      value: analyticsData.spamFlags.toLocaleString(),
+      label: "Spam Complaints",
+      // legacy field spamFlags maps to spam complaints in UI
+      value: (analyticsData.spamFlags ?? 0).toLocaleString(),
       icon: AlertTriangle,
       color: "bg-red-100 ",
       textColor: "text-red-600",

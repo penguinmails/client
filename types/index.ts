@@ -38,8 +38,64 @@ export * from "./common";
 // Export UI and component prop types
 export * from "./ui";
 
-// Export analytics related types
-export * from "./analytics";
+// Export analytics related types (selectively to avoid conflicts)
+export type {
+  // Non-conflicting analytics types
+  CampaignAnalytics,
+  MailboxAnalytics,
+  LeadAnalytics,
+  TemplateAnalytics,
+  BillingAnalytics,
+  SequenceStepAnalytics,
+  WarmupAnalytics,
+  DailyWarmupStats,
+  // Core analytics types
+  PerformanceMetrics,
+  CalculatedRates,
+  TimeSeriesDataPoint,
+  BaseAnalytics,
+  AnalyticsFilters,
+  AnalyticsComputeOptions,
+  FilteredDataset,
+  DataGranularity,
+  // Mailbox analytics types
+  MailboxWarmupData,
+  MailboxAnalyticsData,
+  ProgressiveAnalyticsState,
+  WarmupChartData,
+  CampaignPerformanceData,
+  // UI analytics types
+  DateRangePreset,
+  AnalyticsUIFilters,
+  AnalyticsMetricConfig,
+  KPIDisplayConfig,
+  ChartDataPoint,
+  SmartInsightDisplay,
+  AnalyticsLoadingState,
+  AnalyticsDomain,
+  MetricToggleProps,
+  DateRangePickerProps,
+  EntityFilterProps,
+  FormattedAnalyticsStats,
+  PerformanceThresholds,
+} from "./analytics";
+
+// Explicit re-exports for analytics types that conflict - use "Analytics" prefixed versions
+export type {
+  DomainAnalytics as AnalyticsDomainAnalytics, // Conflicts with types/domains.ts DomainAnalytics
+} from "./analytics/domain-specific";
+
+export type {
+  CampaignStatus as AnalyticsCampaignStatus, // Conflicts with types/campaign.ts CampaignStatus
+} from "./analytics/domain-specific";
+
+export type {
+  WarmupStatus as AnalyticsWarmupStatus,   // Conflicts with types/mailbox.ts WarmupStatus & domains WarmupStatusType
+} from "./analytics/domain-specific";
+
+export type {
+  LeadStatus as AnalyticsLeadStatus,        // Conflicts with types/clients-leads.ts LeadStatus
+} from "./analytics/domain-specific";
 
 // Export team management related types
 export * from "./team";

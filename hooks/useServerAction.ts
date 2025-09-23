@@ -1,23 +1,12 @@
 import { useState, useCallback } from "react";
+import { ActionResult, ActionError } from "@/lib/actions/core/types";
 
-export type ActionResult<T> = 
-  | {
-      success: true;
-      data: T;
-    }
-  | {
-      success: false;
-      error: string;
-      code?: string;
-      field?: string;
-    };
+export type { ActionResult, ActionError };
 
 export interface ServerActionState<T> {
   data: T | null;
   loading: boolean;
-  error: string | null;
-  code?: string;
-  field?: string;
+  error: ActionError | null;
 }
 
 export interface UseServerActionOptions {
@@ -47,7 +36,7 @@ export function useServerAction<T>(
 
       if (result.success) {
         setState({
-          data: result.data,
+          data: result.data ?? null,
           loading: false,
           error: null,
         });
@@ -57,18 +46,20 @@ export function useServerAction<T>(
         setState({
           data: null,
           loading: false,
-          error: result.error,
-          code: result.code,
-          field: result.field,
+          error: result.error ?? null,
         });
-        options.onError?.(result.error);
+        options.onError?.(result.error?.message ?? "An error occurred");
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      const actionError: ActionError = {
+        type: "server",
+        message: errorMessage,
+      };
       setState({
         data: null,
         loading: false,
-        error: errorMessage,
+        error: actionError,
       });
       options.onError?.(errorMessage);
     }
@@ -131,7 +122,7 @@ export function useServerActionWithParams<T, P>(
 
       if (result.success) {
         setState({
-          data: result.data,
+          data: result.data ?? null,
           loading: false,
           error: null,
         });
@@ -141,18 +132,20 @@ export function useServerActionWithParams<T, P>(
         setState({
           data: null,
           loading: false,
-          error: result.error,
-          code: result.code,
-          field: result.field,
+          error: result.error ?? null,
         });
-        options.onError?.(result.error);
+        options.onError?.(result.error?.message ?? "An error occurred");
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      const actionError: ActionError = {
+        type: "server",
+        message: errorMessage,
+      };
       setState({
         data: null,
         loading: false,
-        error: errorMessage,
+        error: actionError,
       });
       options.onError?.(errorMessage);
     }

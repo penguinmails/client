@@ -7,6 +7,10 @@ import { EmailSecuenceSettingsProps } from "@/types/campaigns";
 import { FileText } from "lucide-react";
 import { SequenceStep } from "../steps/compositions/SequenceStep";
 
+// README: Migration note - EmailSecuenceSettings hasn't required analytics shape
+// changes, but we remove noisy debugging and ensure `steps` is treated as a
+// stable array. We also avoid any explicit `any` casts when checking stepErrors.
+
 export function EmailSecuenceSettings({
   steps,
   templates,
@@ -16,17 +20,16 @@ export function EmailSecuenceSettings({
   stepErrors,
 }: EmailSecuenceSettingsProps) {
   const { handleAddEmailStep, ...restStepActions } = actions;
-  console.log({ stepErrors });
 
   return (
     <>
       <div className="space-y-8">
-        {steps.map((step, index) => (
+        {(steps || []).map((step, index) => (
           <SequenceStep
-            key={index} // Consider using a more stable key if steps can be reordered significantly
+            key={step.id ?? index} // Prefer stable id when available
             step={step}
             index={index}
-            totalSteps={steps.length}
+            totalSteps={(steps || []).length}
             currentEditingStep={currentEditingStep}
             emailBodyRef={emailBodyRef}
             templates={templates}
@@ -45,18 +48,19 @@ export function EmailSecuenceSettings({
           </Button>
         </div>
       </div>
-      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-      {(stepErrors as any)?.message && (
+      {Boolean((stepErrors as unknown as Record<string, unknown>)?.message) && (
         <p className="text-sm font-medium text-destructive mt-2">
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          {(stepErrors as any)?.message}
+          {String((stepErrors as unknown as Record<string, unknown>)?.message)}
         </p>
       )}
-      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-      {(stepErrors as any)?.root?.message && (
+      {Boolean((stepErrors as unknown as Record<string, unknown>)?.root) && (
         <p className="text-sm font-medium text-destructive mt-2">
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          {(stepErrors as any)?.root.message}
+          {String(
+            (
+              (stepErrors as unknown as Record<string, unknown>)
+                ?.root as Record<string, unknown>
+            )?.message ?? ""
+          )}
         </p>
       )}
     </>

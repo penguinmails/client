@@ -3,10 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getStatusColor } from "@/lib/data/domains";
-import { AlertTriangle, Check, Copy, Plus, X } from "lucide-react";
-import Link from "next/link";
-import DeleteDomainDialog from "../dialogs/DeleteDomainDialog";
-import AddDomainButton from "./add-domain-button";
+import { AlertTriangle, Check, Copy, X } from "lucide-react";
 
 export const getRecordIcon = (status: string) => {
   switch (status) {
@@ -44,9 +41,6 @@ interface DomainsTabProps {
 function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
-        <AddDomainButton/>
-      </div>
       {domains.map((domain) => (
         <Card key={domain.id} className="p-6">
           <CardHeader className="flex flex-row items-center justify-between p-0 mb-6">
@@ -74,7 +68,7 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <DeleteDomainDialog domainId={domain.id} />
+              {/* Delete functionality can be added later */}
             </div>
           </CardHeader>
 

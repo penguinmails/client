@@ -19,6 +19,9 @@ import {
 } from "@/components/ui/tooltip";
 import { Calendar, Download, HelpCircle } from "lucide-react";
 import { useAnalytics } from "@/context/AnalyticsContext";
+import { WarmupChartData } from "@/types";
+
+import type { ReactElement } from "react";
 
 const headers = [
   { key: "date", label: "Date", tooltip: null },
@@ -58,7 +61,11 @@ const headers = [
       "Daily score based on how many emails got delivered vs flagged as spam or bounced.",
   },
 ];
-function WarmUpTable({ mailboxId: _mailboxId }: { mailboxId: string }) {
+function WarmUpTable({
+  mailboxId: _mailboxId,
+}: {
+  mailboxId: string;
+}): ReactElement {
   const { warmupChartData } = useAnalytics();
 
   if (!warmupChartData || warmupChartData.length === 0) {
@@ -68,7 +75,9 @@ function WarmUpTable({ mailboxId: _mailboxId }: { mailboxId: string }) {
           <CardTitle>Daily Performance Metrics</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-center text-muted-foreground">No warmup data available</p>
+          <p className="text-center text-muted-foreground">
+            No warmup data available
+          </p>
         </CardContent>
       </Card>
     );
@@ -129,21 +138,21 @@ function WarmUpTable({ mailboxId: _mailboxId }: { mailboxId: string }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {warmupChartData.map((stat) => (
+              {warmupChartData.map((stat: WarmupChartData) => (
                 <TableRow key={stat.date}>
                   <TableCell>{stat.date}</TableCell>
                   <TableCell>{stat.totalWarmups}</TableCell>
                   <TableCell className="text-green-600">
-                    {/* Placeholder - would need to calculate from context */}
-                    -
+                    {/* Placeholder - would need to calculate from context */}-
                   </TableCell>
-                  <TableCell className="text-red-600">{stat.spamFlags}</TableCell>
+                  <TableCell className="text-red-600">
+                    {stat.spamFlags}
+                  </TableCell>
                   <TableCell className="text-blue-600">
                     {stat.replies}
                   </TableCell>
                   <TableCell className="text-orange-600">
-                    {/* Placeholder for bounce - not in WarmupChartData */}
-                    -
+                    {/* Placeholder for bounce - not in WarmupChartData */}-
                   </TableCell>
                   <TableCell>
                     <span className="text-gray-500">

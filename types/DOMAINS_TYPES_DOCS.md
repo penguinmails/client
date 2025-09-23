@@ -6,18 +6,19 @@ Mini documentation for the consolidated domain types system.
 
 ```typescript
 import {
-  Domain,           // Main flexible interface
-  DomainDB,         // Database operations
-  DomainMock,       // Mock/development data
-  DomainUpdate,     // PATCH operations
-  DomainAnalytics,  // Dashboard displays
-  EmailAccount      // Account management
+  Domain, // Main flexible interface
+  DomainDB, // Database operations
+  DomainMock, // Mock/development data
+  DomainUpdate, // PATCH operations
+  DomainAnalytics, // Dashboard displays
+  EmailAccount, // Account management
 } from "@/types";
 ```
 
 ## 🎯 Type Usage Guide
 
 ### Domain (Primary)
+
 - **Use for**: Most domain operations, flexible data sources
 - **Key feature**: Supports both string and enum statuses
 
@@ -25,34 +26,36 @@ import {
 interface Domain {
   id: number;
   domain: string;
-  status: DomainStatus | string;  // 🎯 Flexibile for mocks
-  emailAccounts?: number;         // 📧 Standard field
-  mailboxes?: number;            // 📧 Mock compatibility
-  spf?: boolean | string;        // 🔐 Flexible DNS status
-  dkim?: boolean | string;       // 🔐 Flexible DNS status
-  dmarc?: boolean | string;      // 🔐 Flexible DNS status
+  status: DomainStatus | string; // 🎯 Flexibile for mocks
+  emailAccounts?: number; // 📧 Standard field
+  mailboxes?: number; // 📧 Mock compatibility
+  spf?: boolean | string; // 🔐 Flexible DNS status
+  dkim?: boolean | string; // 🔐 Flexible DNS status
+  dmarc?: boolean | string; // 🔐 Flexible DNS status
   // ... more optional fields
 }
 ```
 
 ### DomainDB (Database)
+
 - **Use for**: Database reads/writes, guaranteed required fields
 - **Required**: `id`, `domain`, `status`, dates, `companyId`, `createdById`
 
 ```typescript
 // Extends Domain with guaranteed presence of key fields
 interface DomainDB extends Domain {
-  id: number;           // Guaranteed
-  domain: string;       // Guaranteed
+  id: number; // Guaranteed
+  domain: string; // Guaranteed
   status: DomainStatus; // Enum (no strings)
-  createdAt: string;    // Guaranteed
-  updatedAt: string;    // Guaranteed
-  companyId: number;    // Guaranteed
-  createdById: string;  // Guaranteed
+  createdAt: string; // Guaranteed
+  updatedAt: string; // Guaranteed
+  companyId: number; // Guaranteed
+  createdById: string; // Guaranteed
 }
 ```
 
 ### DomainMock (Development)
+
 - **Use for**: Test data, component development
 - **Structure**: Simple, hardcoded values
 
@@ -60,50 +63,73 @@ interface DomainDB extends Domain {
 interface DomainMock {
   id: number;
   domain: string;
-  status: string;       // "verified", "pending", etc.
-  mailboxes: number;    // Simple count
+  status: string; // "verified", "pending", etc.
+  mailboxes: number; // Simple count
   records: {
-    spf: string;       // "verified", "pending", "failed"
-    dkim: string;      // "verified", "pending", "failed"
-    dmarc: string;     // "verified", "pending", "failed"
-    mx: string;        // "verified", "pending", "failed"
+    spf: string; // "verified", "pending", "failed"
+    dkim: string; // "verified", "pending", "failed"
+    dmarc: string; // "verified", "pending", "failed"
+    mx: string; // "verified", "pending", "failed"
   };
-  addedDate: string;    // Alternative to createdAt
+  addedDate: string; // Alternative to createdAt
 }
 ```
 
 ### DomainUpdate (PATCH)
+
 - **Use for**: Partial updates to downside complex object changes
 - **Type**: Only updates allowed fields
 
 ```typescript
-type DomainUpdate = Partial<Pick<Domain, Exclude<keyof Domain, 'id' | 'createdAt' | 'updatedAt' | 'companyId' | 'createdById'>>>;
+type DomainUpdate = Partial<
+  Pick<
+    Domain,
+    Exclude<
+      keyof Domain,
+      "id" | "createdAt" | "updatedAt" | "companyId" | "createdById"
+    >
+  >
+>;
 ```
 
 ## 🔧 Type Utilities
 
 ### Union Types
+
 ```typescript
 type DomainOrMock = Domain | DomainMock;
 type DomainOrDB = Domain | DomainDB | DomainMock;
 ```
 
 ### Type Guards
+
 ```typescript
 // Runtime type checking
 export const isDomainMock = (domain: DomainOrMock): domain is DomainMock =>
-  'records' in domain && typeof domain.records === 'object';
+  "records" in domain && typeof domain.records === "object";
 
 export const isDomainDB = (domain: DomainOrDB): domain is DomainDB =>
-  'companyId' in domain && 'createdById' in domain && typeof domain.createdAt === 'string';
+  "companyId" in domain &&
+  "createdById" in domain &&
+  typeof domain.createdAt === "string";
 ```
 
 ## 📋 Enums & Constants
 
 ```typescript
 // Status types
-type DomainStatus = "PENDING" | "VERIFIED" | "SETUP_REQUIRED" | "FAILED" | "DELETED";
-type EmailAccountStatus = "PENDING" | "ACTIVE" | "ISSUE" | "SUSPENDED" | "DELETED";
+type DomainStatus =
+  | "PENDING"
+  | "VERIFIED"
+  | "SETUP_REQUIRED"
+  | "FAILED"
+  | "DELETED";
+type EmailAccountStatus =
+  | "PENDING"
+  | "ACTIVE"
+  | "ISSUE"
+  | "SUSPENDED"
+  | "DELETED";
 type WarmupStatusType = "NOT_STARTED" | "WARMING" | "WARMED" | "PAUSED";
 
 // Verification
@@ -112,7 +138,7 @@ enum VerificationStatus {
   PENDING = "PENDING",
   ERROR = "ERROR",
   NOT_CONFIGURED = "NOT_CONFIGURED",
-  DISABLED = "DISABLED"
+  DISABLED = "DISABLED",
 }
 
 // DNS providers
@@ -157,9 +183,9 @@ const mockDomain: DomainMock = {
     spf: "verified",
     dkim: "verified",
     dmarc: "pending",
-    mx: "verified"
+    mx: "verified",
   },
-  addedDate: "2024-01-15T10:30:00Z"
+  addedDate: "2024-01-15T10:30:00Z",
 };
 ```
 
@@ -180,23 +206,23 @@ const dbDomain: DomainDB = { status: "verified" } // Use enum values
 
 ### Old → New Type Mapping
 
-| Old Path | Old Type | New Type | Notes |
-|----------|----------|----------|--------|
-| `@/types/domain.ts` | `Domain` | `Domain` | Maintained compatibility |
-| `@/types/domain-fixed.ts` | `Domain` | `Domain` | Merged with improvements |
-| `@/types/domain-simple.d.ts` | `Domain` | `Domain` | Union types preserved |
-| `@/types/domains.ts` | `Domain` | `Domain` | Enhanced with flexibility |
+| Old Path                     | Old Type | New Type | Notes                     |
+| ---------------------------- | -------- | -------- | ------------------------- |
+| `@/types/domain.ts`          | `Domain` | `Domain` | Maintained compatibility  |
+| `@/types/domain-fixed.ts`    | `Domain` | `Domain` | Merged with improvements  |
+| `@/types/domain-simple.d.ts` | `Domain` | `Domain` | Union types preserved     |
+| `@/types/domains.ts`         | `Domain` | `Domain` | Enhanced with flexibility |
 
 ### Import Updates
 
 ```typescript
 // Before (conflicting)
-import { Domain } from '@/types/domain';
-import { Domain } from '@/types/domain-fixed';
-import { Domain } from '@/types/domains';
+import { Domain } from "@/types/domain";
+import { Domain } from "@/types/domain-fixed";
+import { Domain } from "@/types/domains";
 
 // After (unified)
-import { Domain, DomainMock, DomainDB } from '@/types';
+import { Domain, DomainMock, DomainDB } from "@/types";
 ```
 
 ## 📊 Validation Schemas
@@ -206,12 +232,12 @@ import { addDomainFormSchema, domainSettingsSchema } from "@/types";
 
 // Domain creation validation
 const createForm = useForm({
-  resolver: zodResolver(addDomainFormSchema)
+  resolver: zodResolver(addDomainFormSchema),
 });
 
 // Domain settings validation
 const settingsForm = useForm({
-  resolver: zodResolver(domainSettingsSchema)
+  resolver: zodResolver(domainSettingsSchema),
 });
 ```
 

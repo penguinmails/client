@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// README: LexicalEditor - no analytics migration needed here. Small tidy:
+// remove explicit `any` usage and prefer DOM types where possible.
 import React, {
   useEffect,
   useRef,
@@ -88,7 +89,7 @@ function CommandHandler() {
         }
         return true;
       },
-      1,
+      1
     );
 
     const unregisterInsertImage = editor.registerCommand(
@@ -97,13 +98,13 @@ function CommandHandler() {
         const selection = $getSelection();
         if (selection) {
           const textNode = $createTextNode(
-            `[Image: ${payload.alt || payload.src}]`,
+            `[Image: ${payload.alt || payload.src}]`
           );
           $insertNodes([textNode]);
         }
         return true;
       },
-      1,
+      1
     );
 
     return () => {
@@ -197,11 +198,21 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(
       <LexicalComposer initialConfig={initialConfig}>
         <LinkClickHandler>
           <div
-            ref={(el) => {
+            ref={(el: HTMLDivElement | null) => {
               if (el) {
-                const composer = el.querySelector("[data-lexical-editor]");
-                if (composer && (composer as any).__lexicalEditor) {
-                  editorRef.current = (composer as any).__lexicalEditor;
+                const composer = el.querySelector(
+                  "[data-lexical-editor]"
+                ) as HTMLElement | null;
+                // __lexicalEditor is an internal property attached to the editor element
+                const lexical =
+                  composer &&
+                  (
+                    composer as unknown as {
+                      __lexicalEditor?: LexicalEditorType;
+                    }
+                  ).__lexicalEditor;
+                if (lexical) {
+                  editorRef.current = lexical;
                 }
               }
             }}
@@ -236,7 +247,7 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(
         </LinkClickHandler>
       </LexicalComposer>
     );
-  },
+  }
 );
 
 LexicalEditor.displayName = "LexicalEditor";

@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   getUsageWithCalculations,
   getStorageOptions,
-} from "@/lib/actions/billingActions";
+} from "@/lib/actions/billing";
 import { cn } from "@/lib/utils";
 import { Globe, HardDrive, Mail, Plus, Server, Users } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -96,12 +96,12 @@ function UsageTab() {
 
       const result = await getUsageWithCalculations();
 
-      if (result.success) {
+      if (result.success && result.data) {
         setUsageData(result.data);
       } else {
-        setError(result.error);
+        setError(result.error?.message ?? "Failed to load usage data");
         toast.error("Failed to load usage data", {
-          description: result.error,
+          description: result.error?.message ?? "An error occurred",
         });
       }
     } catch (err) {
@@ -120,11 +120,11 @@ function UsageTab() {
     try {
       setLoadingStorage(true);
       const result = await getStorageOptions();
-      if (result.success) {
+      if (result.success && result.data) {
         setStorageOptions(result.data);
       } else {
         toast.error("Failed to load storage options", {
-          description: result.error,
+          description: result.error?.message ?? "An error occurred",
         });
       }
     } catch (err) {

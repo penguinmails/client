@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChartData, MetricToggle } from "@/types/campaign";
+import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator"; // MIGRATED: Added for rate calculations
 import {
   AlertTriangle,
   ChevronDown,
@@ -105,11 +106,22 @@ function StatsTab() {
   const chartRef = useRef<HTMLDivElement>(null);
   const { data, loading, error } = useCampaignStats(timeRange);
 
+  // MIGRATED: Updated metrics to use standardized field names
   const [metrics, setMetrics] = useState<MetricToggle[]>([
     { key: "sent", label: "Emails Sent", color: "#6B7280", visible: true },
-    { key: "opened", label: "Opens", color: "#3B82F6", visible: true },
+    {
+      key: "opened",
+      label: "Opens (Tracked)",
+      color: "#3B82F6",
+      visible: true,
+    },
     { key: "replied", label: "Replies", color: "#10B981", visible: true },
-    { key: "clicked", label: "Clicks", color: "#8B5CF6", visible: true },
+    {
+      key: "clicked",
+      label: "Clicks (Tracked)",
+      color: "#8B5CF6",
+      visible: true,
+    },
     { key: "bounced", label: "Bounces", color: "#EF4444", visible: true },
   ]);
 
@@ -129,26 +141,50 @@ function StatsTab() {
     );
   };
 
-  // Calculate totals for percentage stats
+  // MIGRATED: Calculate totals using standardized field names
   const totals = data.reduce(
-    (acc, day) => ({
-      sent: acc.sent + day.sent,
-      opened: acc.opened + day.opened,
-      replied: acc.replied + day.replied,
-      clicked: acc.clicked + day.clicked,
-      bounced: acc.bounced + day.bounced,
-    }),
-    { sent: 0, opened: 0, replied: 0, clicked: 0, bounced: 0 }
+    // Migration note: Use Record<string, number | undefined> for dynamic keys to avoid type errors.
+    (acc, day) => {
+      const d = day as unknown as Record<string, number | undefined>;
+      const sent = d.sent ?? 0;
+      const bounced = d.bounced ?? 0;
+      const delivered = d.delivered ?? sent - bounced;
+      const opened_tracked = d.opened_tracked ?? d.opened ?? 0;
+      const clicked_tracked = d.clicked_tracked ?? d.clicked ?? 0;
+      const replied = d.replied ?? 0;
+      const unsubscribed = d.unsubscribed ?? 0;
+      const spamComplaints = d.spamComplaints ?? 0;
+      return {
+        sent: acc.sent + sent,
+        delivered: acc.delivered + delivered,
+        opened_tracked: acc.opened_tracked + opened_tracked,
+        replied: acc.replied + replied,
+        clicked_tracked: acc.clicked_tracked + clicked_tracked,
+        bounced: acc.bounced + bounced,
+        unsubscribed: acc.unsubscribed + unsubscribed,
+        spamComplaints: acc.spamComplaints + spamComplaints,
+      };
+    },
+    {
+      sent: 0,
+      delivered: 0,
+      opened_tracked: 0,
+      replied: 0,
+      clicked_tracked: 0,
+      bounced: 0,
+      unsubscribed: 0,
+      spamComplaints: 0,
+    }
   );
 
-  const openRate =
-    totals.sent > 0 ? ((totals.opened / totals.sent) * 100).toFixed(1) : "0.0";
-  const replyRate =
-    totals.sent > 0 ? ((totals.replied / totals.sent) * 100).toFixed(1) : "0.0";
-  const clickRate =
-    totals.sent > 0 ? ((totals.clicked / totals.sent) * 100).toFixed(1) : "0.0";
-  const bounceRate =
-    totals.sent > 0 ? ((totals.bounced / totals.sent) * 100).toFixed(1) : "0.0";
+  // MIGRATED: Use AnalyticsCalculator for consistent rate calculations
+  const rates = AnalyticsCalculator.calculateAllRates(totals);
+  const openRate = AnalyticsCalculator.formatRateAsPercentage(rates.openRate);
+  const replyRate = AnalyticsCalculator.formatRateAsPercentage(rates.replyRate);
+  const clickRate = AnalyticsCalculator.formatRateAsPercentage(rates.clickRate);
+  const bounceRate = AnalyticsCalculator.formatRateAsPercentage(
+    rates.bounceRate
+  );
 
   // Show error state
   if (error) {
@@ -199,22 +235,22 @@ function StatsTab() {
           />
           <KpiCard
             className="flex-row-reverse justify-end gap-2"
-            title="Opens"
-            value={`${totals.opened.toLocaleString()} (${openRate}%)`}
+            title="Opens (Tracked)"
+            value={`${totals.opened_tracked.toLocaleString()} (${openRate})`}
             icon={Eye}
             color="bg-blue-100 text-blue-600"
           />
           <KpiCard
             className="flex-row-reverse justify-end gap-2"
             title="Replies"
-            value={`${totals.replied.toLocaleString()} (${replyRate}%)`}
+            value={`${totals.replied.toLocaleString()} (${replyRate})`}
             icon={TrendingUp}
             color="bg-green-100 text-green-600"
           />
           <KpiCard
             className="flex-row-reverse justify-end gap-2"
-            title="Clicks"
-            value={`${totals.clicked.toLocaleString()} (${clickRate}%)`}
+            title="Clicks (Tracked)"
+            value={`${totals.clicked_tracked.toLocaleString()} (${clickRate})`}
             icon={MousePointer}
             color="bg-purple-100 text-purple-600"
           />

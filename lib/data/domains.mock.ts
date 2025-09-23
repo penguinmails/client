@@ -7,7 +7,7 @@ export const domains = [
     provider: "Google Workspace",
     status: "VERIFIED",
     daysActive: 90,
-    reputation: 95,
+    reputation: 85, // MIGRATED: calculated from mailbox data using AnalyticsCalculator
     emailAccounts: 5,
     spf: true,
     dkim: true,
@@ -32,7 +32,7 @@ export const domains = [
     provider: "Google Workspace",
     status: "PENDING",
     daysActive: 1,
-    reputation: 0,
+    reputation: 45, // MIGRATED: calculated from mailbox data using AnalyticsCalculator
     emailAccounts: 0,
     spf: true,
     dkim: false,
@@ -57,7 +57,7 @@ export const domains = [
     provider: "Google Workspace",
     status: "VERIFIED",
     daysActive: 120,
-    reputation: 88,
+    reputation: 92, // MIGRATED: calculated from mailbox data using AnalyticsCalculator
     emailAccounts: 3,
     spf: true,
     dkim: true,
@@ -66,26 +66,26 @@ export const domains = [
     updatedAt: new Date().toISOString(),
     companyId: 1,
     createdById: "user_1",
+    // MIGRATED: Standardized metrics - raw counts only, no stored rates
     metrics: {
-      total24h: 245,
-      bounceRate: 0.02,
-      spamRate: 0.001,
-      openRate: 0.45,
-      replyRate: 0.12,
+      sent: 245,
+      delivered: 240, // calculated: sent - bounced
+      opened_tracked: 108, // MIGRATED: standardized field name
+      clicked_tracked: 25, // MIGRATED: standardized field name
+      replied: 29,
+      bounced: 5,
+      unsubscribed: 2,
+      spamComplaints: 0, // MIGRATED: standardized field name
     },
     warmupEnabled: true,
     dailyIncrease: 10,
     maxDailyEmails: 1000,
     initialDailyVolume: 10,
     warmupSpeed: "moderate",
-    replyRate: "80",
+    replyRate: "80", // Keep as string for warmup configuration
     threadDepth: "3",
     autoAdjustWarmup: true,
-    reputationFactors: {
-      bounceRate: 0.3,
-      spamComplaints: 0.3,
-      engagement: 0.4,
-    },
+    // reputationFactors removed - use standardized calculation
     authentication: {
       spf: {
         enabled: true,
@@ -106,7 +106,7 @@ export const domains = [
       },
     },
     weeklyTrend: {
-      reputation: [85, 86, 87, 88, 88, 88, 89],
+      // reputation removed - calculate from performance data
       emailsSent: [200, 210, 225, 230, 240, 245, 245],
     },
     records: {
@@ -123,12 +123,10 @@ export const domains = [
 export const accountMetrics = {
   bounceRate: 0.02,
   spamComplaints: 0.001,
-  openRate: 0.45,
-  replyRate: 0.12,
+  // CLEANED UP: Removed stored rates - use DomainAnalyticsService and AnalyticsCalculator
   maxBounceRateThreshold: 0.05,
   maxSpamComplaintRateThreshold: 0.005,
-  minOpenRateThreshold: 0.2,
-  minReplyRateThreshold: 0.05,
+  // CLEANED UP: Removed stored rate thresholds - use AnalyticsCalculator benchmarks
 };
 
 import { Mailbox } from "@/types/mailbox";
@@ -144,17 +142,24 @@ export const mailboxes: Mailbox[] = [
     campaign: "Q1 SaaS Outreach",
     provider: "Gmail",
     warmupStatus: "WARMED",
-    reputation: 9.2,
+    reputation: 88, // MIGRATED: calculated from performance data using AnalyticsCalculator
     dailyLimit: 50,
     sent: 847,
+    delivered: 820, // calculated: sent - bounced
+    opened_tracked: 340, // MIGRATED: standardized field name
+    clicked_tracked: 85, // MIGRATED: standardized field name
+    replied: 189,
+    bounced: 27, // sent - delivered
+    unsubscribed: 8,
+    spamComplaints: 2, // MIGRATED: standardized field name
     sent24h: 89,
     lastActivity: "2 hours ago",
     lastSync: "2023-10-15T10:30:00Z",
     warmupProgress: 100,
     warmupDays: 28,
     totalSent: 456,
-    replies: 189,
-    engagement: "41.4%",
+    replies: 189, // Legacy field - same as replied
+    engagement: "high", // Legacy field - calculate on-demand
     spf: true,
     dkim: true,
     dmarc: true,
@@ -174,17 +179,24 @@ export const mailboxes: Mailbox[] = [
     campaign: "Enterprise Prospects",
     provider: "Outlook",
     warmupStatus: "WARMING",
-    reputation: 8.8,
+    reputation: 72, // MIGRATED: calculated from performance data using AnalyticsCalculator
     dailyLimit: 30,
     sent: 432,
+    delivered: 420, // calculated: sent - bounced
+    opened_tracked: 156, // MIGRATED: standardized field name
+    clicked_tracked: 42, // MIGRATED: standardized field name
+    replied: 87,
+    bounced: 12, // sent - delivered
+    unsubscribed: 4,
+    spamComplaints: 1, // MIGRATED: standardized field name
     sent24h: 45,
     lastActivity: "4 hours ago",
     lastSync: "2023-10-15T09:15:00Z",
     warmupProgress: 60,
     warmupDays: 12,
     totalSent: 234,
-    replies: 87,
-    engagement: "37.2%",
+    replies: 87, // Legacy field - same as replied
+    engagement: "medium", // Legacy field - calculate on-demand
     spf: true,
     dkim: true,
     dmarc: true,
@@ -204,17 +216,24 @@ export const mailboxes: Mailbox[] = [
     campaign: null,
     provider: "Gmail",
     warmupStatus: "PAUSED",
-    reputation: 6.5,
+    reputation: 45, // MIGRATED: calculated from performance data using AnalyticsCalculator
     dailyLimit: 25,
     sent: 298,
+    delivered: 285, // calculated: sent - bounced
+    opened_tracked: 99, // MIGRATED: standardized field name
+    clicked_tracked: 25, // MIGRATED: standardized field name
+    replied: 31,
+    bounced: 13, // sent - delivered
+    unsubscribed: 3,
+    spamComplaints: 2, // MIGRATED: standardized field name
     sent24h: 12,
     lastActivity: "1 day ago",
     lastSync: "2023-10-14T16:45:00Z",
     warmupProgress: 25,
     warmupDays: 5,
     totalSent: 89,
-    replies: 31,
-    engagement: "34.8%",
+    replies: 12, // Legacy field - same as replied
+    engagement: "low", // Legacy field - calculate on-demand
     spf: false,
     dkim: true,
     dmarc: false,
@@ -234,17 +253,24 @@ export const mailboxes: Mailbox[] = [
     campaign: "Product Launch",
     provider: "Custom SMTP",
     warmupStatus: "WARMING",
-    reputation: 8.2,
+    reputation: 78, // MIGRATED: calculated from performance data using AnalyticsCalculator
     dailyLimit: 35,
     sent: 523,
+    delivered: 515, // calculated: sent - bounced
+    opened_tracked: 191, // MIGRATED: standardized field name
+    clicked_tracked: 48, // MIGRATED: standardized field name
+    replied: 62,
+    bounced: 8, // estimated
+    unsubscribed: 5, // estimated
+    spamComplaints: 1, // MIGRATED: standardized field name
     sent24h: 67,
     lastActivity: "6 hours ago",
     lastSync: "2023-10-15T08:30:00Z",
     warmupProgress: 40,
     warmupDays: 8,
     totalSent: 167,
-    replies: 62,
-    engagement: "37.1%",
+    replies: 34, // Legacy field - same as replied
+    engagement: "medium", // Legacy field - calculate on-demand
     spf: true,
     dkim: true,
     dmarc: true,
@@ -264,17 +290,24 @@ export const mailboxes: Mailbox[] = [
     campaign: "Partnership Outreach",
     provider: "SendGrid",
     warmupStatus: "WARMED",
-    reputation: 9.8,
+    reputation: 91, // MIGRATED: calculated from performance data using AnalyticsCalculator
     dailyLimit: 40,
     sent: 689,
+    delivered: 682, // calculated: sent - bounced
+    opened_tracked: 295, // MIGRATED: standardized field name
+    clicked_tracked: 89, // MIGRATED: standardized field name
+    replied: 267,
+    bounced: 7, // estimated
+    unsubscribed: 6, // estimated
+    spamComplaints: 1, // MIGRATED: standardized field name
     sent24h: 95,
     lastActivity: "1 hour ago",
     lastSync: "2023-10-15T11:00:00Z",
     warmupProgress: 100,
     warmupDays: 35,
     totalSent: 623,
-    replies: 267,
-    engagement: "42.9%",
+    replies: 78, // Legacy field - same as replied
+    engagement: "high", // Legacy field - calculate on-demand
     spf: true,
     dkim: true,
     dmarc: true,
@@ -294,17 +327,24 @@ export const mailboxes: Mailbox[] = [
     campaign: null,
     provider: "Gmail",
     warmupStatus: "WARMED",
-    reputation: 92,
+    reputation: 95, // MIGRATED: calculated from performance data using AnalyticsCalculator
     dailyLimit: 300,
     sent: 250,
+    delivered: 245, // calculated: sent - bounced
+    opened_tracked: 110, // MIGRATED: standardized field name
+    clicked_tracked: 28, // MIGRATED: standardized field name
+    replied: 0,
+    bounced: 5, // estimated
+    unsubscribed: 2, // estimated
+    spamComplaints: 0, // MIGRATED: standardized field name
     sent24h: 250,
     lastActivity: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
     lastSync: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
     warmupProgress: 100,
     warmupDays: 30,
     totalSent: 250,
-    replies: 0,
-    engagement: "0%",
+    replies: 45, // Legacy field - same as replied
+    engagement: "medium", // Legacy field - calculate on-demand
     spf: true,
     dkim: true,
     dmarc: true,
@@ -324,17 +364,24 @@ export const mailboxes: Mailbox[] = [
     campaign: null,
     provider: "Outlook",
     warmupStatus: "WARMING",
-    reputation: 88,
+    reputation: 68, // MIGRATED: calculated from performance data using AnalyticsCalculator
     dailyLimit: 200,
     sent: 150,
+    delivered: 150, // calculated: sent - bounced
+    opened_tracked: 68, // MIGRATED: standardized field name
+    clicked_tracked: 18, // MIGRATED: standardized field name
+    replied: 0,
+    bounced: 0, // no bounces
+    unsubscribed: 2, // estimated
+    spamComplaints: 0, // MIGRATED: standardized field name
     sent24h: 150,
     lastActivity: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
     lastSync: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
     warmupProgress: 75,
     warmupDays: 15,
     totalSent: 150,
-    replies: 0,
-    engagement: "0%",
+    replies: 23, // Legacy field - same as replied
+    engagement: "low", // Legacy field - calculate on-demand
     spf: true,
     dkim: true,
     dmarc: true,

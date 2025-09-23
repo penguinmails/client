@@ -3,14 +3,12 @@
 import React from "react";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 
-// Define the expected data structure for props
-interface PieChartDataPoint {
-  name: string;
-  value: number;
-}
+import { ChartDataPoint } from "@/types/analytics/ui";
+import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
 
+// Use standardized ChartDataPoint interface
 interface EmailStatusPieChartProps {
-  data: PieChartDataPoint[];
+  data: ChartDataPoint[];
 }
 
 // Colors matching the screenshot (approximate)
@@ -72,9 +70,17 @@ interface CustomTooltipProps {
 
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
   if (active && payload && payload.length) {
+    const value = Number(payload[0].value);
+    const formattedValue =
+      value < 1
+        ? AnalyticsCalculator.formatRateAsPercentage(value / 100)
+        : AnalyticsCalculator.formatNumber(value);
+
     return (
       <div className="bg-white p-2 shadow rounded border border-gray-200">
-        <p className="font-semibold text-sm text-gray-700">{`${payload[0].name} : ${payload[0].value}%`}</p>
+        <p className="font-semibold text-sm text-gray-700">
+          {`${payload[0].name}: ${formattedValue}`}
+        </p>
       </div>
     );
   }
@@ -111,19 +117,28 @@ const EmailStatusPieChart: React.FC<EmailStatusPieChartProps> = ({ data }) => {
           </PieChart>
         </ResponsiveContainer>
       </div>
-      {/* Manual Legend to match screenshot style - Use data prop */}
+      {/* Manual Legend with standardized formatting */}
       <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1">
-        {data.map((entry, index) => (
-          <div key={`legend-${index}`} className="flex items-center text-xs">
-            <span
-              className="w-3 h-3 rounded-full mr-1.5"
-              style={{ backgroundColor: COLORS[index % COLORS.length] }}
-            />
-            <span>
-              {entry.name} {entry.value}%
-            </span>
-          </div>
-        ))}
+        {data.map((entry, index) => {
+          const value =
+            typeof entry.value === "number" ? entry.value : Number(entry.value);
+          const formattedValue =
+            value < 1
+              ? AnalyticsCalculator.formatRateAsPercentage(value / 100)
+              : `${AnalyticsCalculator.formatNumber(value)}%`;
+
+          return (
+            <div key={`legend-${index}`} className="flex items-center text-xs">
+              <span
+                className="w-3 h-3 rounded-full mr-1.5"
+                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              />
+              <span>
+                {entry.name} {formattedValue}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

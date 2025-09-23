@@ -71,6 +71,8 @@ export const generateTimeSeriesData = (
 
     // Adjust base value for longer periods (weeks/months have more activity)
     const baseValue = (100 + Math.random() * 50) * periodLength;
+    const sent = Math.floor(baseValue * (0.8 + Math.random() * 0.4));
+    const delivered = Math.floor(sent * (0.95 + Math.random() * 0.04)); // 95-99% delivery rate
 
     data.push({
       date: date.toISOString().split("T")[0],
@@ -83,11 +85,14 @@ export const generateTimeSeriesData = (
                 month: "short",
                 year: "numeric",
               }),
-      sent: Math.floor(baseValue * (0.8 + Math.random() * 0.4)),
-      opens: Math.floor(baseValue * (0.3 + Math.random() * 0.2)),
-      clicks: Math.floor(baseValue * (0.08 + Math.random() * 0.05)),
-      replies: Math.floor(baseValue * (0.05 + Math.random() * 0.03)),
-      bounces: Math.floor(baseValue * (0.02 + Math.random() * 0.02)),
+      sent,
+      delivered,
+      opened_tracked: Math.floor(delivered * (0.3 + Math.random() * 0.2)), // 30-50% open rate
+      clicked_tracked: Math.floor(delivered * (0.08 + Math.random() * 0.05)), // 8-13% click rate
+      replied: Math.floor(delivered * (0.05 + Math.random() * 0.03)), // 5-8% reply rate
+      bounced: sent - delivered, // Bounced = sent - delivered
+      unsubscribed: Math.floor(delivered * (0.01 + Math.random() * 0.01)), // 1-2% unsubscribe rate
+      spamComplaints: Math.floor(delivered * (0.001 + Math.random() * 0.004)), // 0.1-0.5% spam rate
     });
   }
 
@@ -140,7 +145,7 @@ export const generateWarmupChartData = (
             ? `Week of ${date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
             : date.toLocaleDateString("en-US", { month: "short", year: "numeric" }),
       totalWarmups: Math.floor(baseWarmups * (0.9 + Math.random() * 0.2)),
-      spamFlags: Math.floor(baseWarmups * (0.02 + Math.random() * 0.03)),
+      spamComplaints: Math.floor(baseWarmups * (0.02 + Math.random() * 0.03)), // MIGRATED: standardized field name
       replies: Math.floor(baseWarmups * (0.04 + Math.random() * 0.04)),
     });
   }
@@ -157,35 +162,44 @@ export const metrics = [
     visible: true,
   },
   {
-    key: "opens",
-    label: "Opens",
+    key: "delivered",
+    label: "Delivered",
+    color: "#06B6D4",
+    icon: Mail,
+    visible: true,
+  },
+  {
+    key: "opened_tracked",
+    label: "Opens (Tracked)",
     color: "#8B5CF6",
     icon: Eye,
     visible: true,
   },
   {
-    key: "clicks",
-    label: "Clicks",
+    key: "clicked_tracked",
+    label: "Clicks (Tracked)",
     color: "#F59E0B",
     icon: MousePointer,
     visible: true,
   },
   {
-    key: "replies",
+    key: "replied",
     label: "Replies",
     color: "#10B981",
     icon: Reply,
     visible: true,
   },
   {
-    key: "bounces",
-    label: "Bounces",
+    key: "bounced",
+    label: "Bounced",
     color: "#EF4444",
     icon: AlertTriangle,
     visible: false,
   },
 ];
 
+// MIGRATED: Warmup metrics using standardized field names
+// CLEANED UP: Warmup metrics using standardized field names
 export const warmupMetrics = [
   {
     key: "totalWarmups",
@@ -196,8 +210,8 @@ export const warmupMetrics = [
     tooltip: "Emails we sent from your mailbox as part of the warmup process to improve deliverability.",
   },
   {
-    key: "spamFlags",
-    label: "Spam Flags",
+    key: "spamComplaints", // CLEANED UP: standardized field name (was spamFlags)
+    label: "Spam Complaints",
     color: "#DC2626",
     icon: AlertTriangle,
     visible: true,
@@ -213,57 +227,66 @@ export const warmupMetrics = [
   },
 ];
 
+// CLEANED UP: Warmup chart data using standardized field names
 export const warmupChartData = [
-  { date: "Aug 5", totalWarmups: 245, spamFlags: 3, replies: 12 },
-  { date: "Aug 6", totalWarmups: 267, spamFlags: 2, replies: 18 },
-  { date: "Aug 7", totalWarmups: 289, spamFlags: 5, replies: 15 },
-  { date: "Aug 8", totalWarmups: 312, spamFlags: 1, replies: 22 },
-  { date: "Aug 9", totalWarmups: 298, spamFlags: 4, replies: 19 },
-  { date: "Aug 10", totalWarmups: 334, spamFlags: 2, replies: 25 },
-  { date: "Aug 11", totalWarmups: 356, spamFlags: 3, replies: 28 },
+  { date: "Aug 5", totalWarmups: 245, spamComplaints: 3, replies: 12 }, // CLEANED UP: spamComplaints standardized (was spamFlags)
+  { date: "Aug 6", totalWarmups: 267, spamComplaints: 2, replies: 18 }, // CLEANED UP: spamComplaints standardized (was spamFlags)
+  { date: "Aug 7", totalWarmups: 289, spamComplaints: 5, replies: 15 }, // CLEANED UP: spamComplaints standardized (was spamFlags)
+  { date: "Aug 8", totalWarmups: 312, spamComplaints: 1, replies: 22 }, // CLEANED UP: spamComplaints standardized (was spamFlags)
+  { date: "Aug 9", totalWarmups: 298, spamComplaints: 4, replies: 19 }, // CLEANED UP: spamComplaints standardized (was spamFlags)
+  { date: "Aug 10", totalWarmups: 334, spamComplaints: 2, replies: 25 }, // CLEANED UP: spamComplaints standardized (was spamFlags)
+  { date: "Aug 11", totalWarmups: 356, spamComplaints: 3, replies: 28 }, // CLEANED UP: spamComplaints standardized (was spamFlags)
 ];
 
-// Campaign comparison data
+// CLEANED UP: Campaign comparison data using standardized format
 export const campaignData = [
   {
-    name: "Q1 SaaS Outreach",
-    bounced: 10,
+    campaignId: "q1-saas-outreach",
+    campaignName: "Q1 SaaS Outreach",
     sent: 847,
-    opens: 289,
-    clicks: 73,
-    replies: 42,
-    openRate: 34.1,
-    replyRate: 5.0,
+    delivered: 837, // sent - bounced
+    opened_tracked: 289, // CLEANED UP: standardized field name (was opens)
+    clicked_tracked: 73, // CLEANED UP: standardized field name (was clicks)
+    replied: 42,
+    bounced: 10,
+    unsubscribed: 8,
+    spamComplaints: 2, // CLEANED UP: standardized field name (was spamFlags)
   },
   {
-    name: "Enterprise Prospects",
-    bounced: 5,
+    campaignId: "enterprise-prospects",
+    campaignName: "Enterprise Prospects",
     sent: 1203,
-    opens: 502,
-    clicks: 124,
-    replies: 89,
-    openRate: 41.7,
-    replyRate: 7.4,
+    delivered: 1198, // sent - bounced
+    opened_tracked: 502, // CLEANED UP: standardized field name (was opens)
+    clicked_tracked: 124, // CLEANED UP: standardized field name (was clicks)
+    replied: 89,
+    bounced: 5,
+    unsubscribed: 12,
+    spamComplaints: 1, // CLEANED UP: standardized field name (was spamFlags)
   },
   {
-    name: "SMB Follow-up",
-    bounced: 8,
+    campaignId: "smb-follow-up",
+    campaignName: "SMB Follow-up",
     sent: 492,
-    opens: 142,
-    clicks: 31,
-    replies: 18,
-    openRate: 28.9,
-    replyRate: 3.7,
+    delivered: 484, // sent - bounced
+    opened_tracked: 142, // CLEANED UP: standardized field name (was opens)
+    clicked_tracked: 31, // CLEANED UP: standardized field name (was clicks)
+    replied: 18,
+    bounced: 8,
+    unsubscribed: 5,
+    spamComplaints: 1, // CLEANED UP: standardized field name (was spamFlags)
   },
   {
-    name: "Product Launch",
-    bounced: 12,
+    campaignId: "product-launch",
+    campaignName: "Product Launch",
     sent: 2156,
-    opens: 849,
-    clicks: 287,
-    replies: 156,
-    openRate: 39.4,
-    replyRate: 7.2,
+    delivered: 2144, // sent - bounced
+    opened_tracked: 849, // CLEANED UP: standardized field name (was opens)
+    clicked_tracked: 287, // CLEANED UP: standardized field name (was clicks)
+    replied: 156,
+    bounced: 12,
+    unsubscribed: 21,
+    spamComplaints: 3, // CLEANED UP: standardized field name (was spamFlags)
   },
 ];
 export const campaigns = [

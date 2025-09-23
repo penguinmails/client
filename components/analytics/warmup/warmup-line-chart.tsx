@@ -1,4 +1,5 @@
 "use client";
+import type { ReactElement } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -38,12 +39,16 @@ interface TooltipPayloadItem {
   payload?: WarmupChartData;
 }
 
-function WarmUpLineChart() {
+function WarmUpLineChart(): ReactElement {
   const {
-    visibleWarmupMetrics,
-    setVisibleWarmupMetrics,
-    warmupChartData,
-    warmupMetrics
+    visibleWarmupMetrics = {
+      totalWarmups: true,
+      spamFlags: false,
+      replies: true,
+    },
+    setVisibleWarmupMetrics = () => {},
+    warmupChartData = [],
+    warmupMetrics = [],
   } = useAnalytics();
 
   const toggleMetric = (metric: "totalWarmups" | "spamFlags" | "replies") => {
@@ -53,7 +58,6 @@ function WarmUpLineChart() {
     });
   };
 
-   
   const CustomTooltip = ({
     active,
     payload,
@@ -67,38 +71,42 @@ function WarmUpLineChart() {
       return (
         <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
           <p className="font-medium text-gray-900 mb-2">{label}</p>
-          {payload.map(
-            (
-              entry: TooltipPayloadItem,
-              index: number,
-            ) => (
-              <p key={index} className="text-sm" style={{ color: entry.color }}>
-                <span className="font-semibold">{entry.value}</span>
-                <span className="ml-2 text-gray-600">
-                  {entry.dataKey === "totalWarmups" && "Total Warmups"}
-                  {entry.dataKey === "spamFlags" && "Spam Flags"}
-                  {entry.dataKey === "replies" && "Replies"}
-                </span>
-              </p>
-            ),
-          )}
+          {payload.map((entry: TooltipPayloadItem, index: number) => (
+            <p key={index} className="text-sm" style={{ color: entry.color }}>
+              <span className="font-semibold">{entry.value}</span>
+              <span className="ml-2 text-gray-600">
+                {entry.dataKey === "totalWarmups" && "Total Warmups"}
+                {entry.dataKey === "spamFlags" && "Spam Flags"}
+                {entry.dataKey === "replies" && "Replies"}
+              </span>
+            </p>
+          ))}
         </div>
       );
     }
     return null;
   };
 
-  const footerMetrics = warmupMetrics.map(metric => ({
+  const footerMetrics = warmupMetrics.map((metric) => ({
     key: metric.key,
     label: metric.label,
-    color: metric.key === "totalWarmups" ? "text-blue-600" : metric.key === "spamFlags" ? "text-red-600" : "text-green-600",
+    color:
+      metric.key === "totalWarmups"
+        ? "text-blue-600"
+        : metric.key === "spamFlags"
+          ? "text-red-600"
+          : "text-green-600",
     tooltip: metric.tooltip,
     value: warmupChartData.reduce((sum, d) => {
       switch (metric.key) {
-        case "totalWarmups": return sum + d.totalWarmups;
-        case "spamFlags": return sum + d.spamFlags;
-        case "replies": return sum + d.replies;
-        default: return sum;
+        case "totalWarmups":
+          return sum + d.totalWarmups;
+        case "spamFlags":
+          return sum + d.spamFlags;
+        case "replies":
+          return sum + d.replies;
+        default:
+          return sum;
       }
     }, 0),
   }));
@@ -117,7 +125,9 @@ function WarmUpLineChart() {
 
             <div className="flex items-center space-x-2">
               <Button
-                variant={visibleWarmupMetrics.totalWarmups ? "default" : "outline"}
+                variant={
+                  visibleWarmupMetrics.totalWarmups ? "default" : "outline"
+                }
                 size="sm"
                 onClick={() => toggleMetric("totalWarmups")}
                 className={

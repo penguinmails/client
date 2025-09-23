@@ -14,8 +14,8 @@
 # misc
 .DS_Store
 *.pem
-.kiro
 .eslintcache
+**/_generated
 tasks
 
 # debug
@@ -45,3 +45,6 @@ npm-debug.log*
 
 # Ignore OpenNext build output
 .open-next
+
+.kiro
+old

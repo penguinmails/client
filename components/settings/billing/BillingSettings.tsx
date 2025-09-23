@@ -15,7 +15,7 @@ import { showBillingUpdateSuccess } from "@/components/settings/common/SettingsS
 import { useServerAction } from "@/hooks/useServerAction";
 import {
   getBillingDataForSettings as getBillingInfo,
-} from "@/lib/actions/billingActions";
+} from "@/lib/actions/billing";
 import { Loader2 } from "lucide-react";
 import type { BillingData } from "@/types/settings";
 
@@ -74,7 +74,7 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
   if (billingAction.error && !initialBilling) {
     return (
       <SettingsErrorState
-        error={billingAction.error}
+        error={billingAction.error?.message ?? "Failed to load billing data"}
         errorType="network"
         onRetry={() => billingAction.execute()}
         retryLoading={billingAction.loading}
