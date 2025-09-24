@@ -11,12 +11,11 @@
 
 import { ActionContext, ActionResult, RateLimitConfig } from './types';
 import { ErrorFactory } from './errors';
-import { 
+import {
   requireAuth,
   requireAuthWithCompany,
   requirePermission,
   withContextualRateLimit,
-  validateCompanyIsolation,
   RateLimits,
   createUserRateLimitKey,
   createCompanyRateLimitKey,
@@ -300,20 +299,7 @@ async function checkAuthentication(
   }
 }
 
-/**
- * Apply company isolation validation
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function applyCompanyIsolation(
-  context: ActionContext,
-  resourceCompanyId?: string
-): Promise<ActionResult<void>> {
-  if (!resourceCompanyId || !context.companyId) {
-    return { success: true, data: undefined };
-  }
-
-  return await validateCompanyIsolation(resourceCompanyId, context);
-}
+// Company isolation validation is now handled directly by validateCompanyIsolation from core/auth
 
 /**
  * Main security middleware function

@@ -40,7 +40,7 @@ export async function getCampaignAnalytics(
         return ErrorFactory.validation(firstError.message, firstError.field, firstError.code);
       }
 
-      console.log("DEPRECATED: Use CampaignAnalyticsService.getTimeSeriesData() instead:", campaigns, days);
+      // TODO: Migrate to CampaignAnalyticsService.getTimeSeriesData()
       
       // Generate mock data with standardized field names
       const chartData: CampaignTimeSeriesPoint[] = [];
