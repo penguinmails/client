@@ -21,6 +21,10 @@ import {
   getWarmupSummaryData,
   getCampaignLeads,
   getSequenceSteps,
+  deleteCampaign,
+  pauseCampaign,
+  resumeCampaign,
+  duplicateCampaign,
 } from '../dashboardActions';
 
 export {
@@ -29,6 +33,10 @@ export {
   getWarmupSummaryData,
   getCampaignLeads,
   getSequenceSteps,
+  deleteCampaign,
+  pauseCampaign,
+  resumeCampaign,
+  duplicateCampaign,
 };
 
 /**

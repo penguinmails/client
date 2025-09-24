@@ -37,8 +37,7 @@ function EditLeadListButton({ list }: { list: LeadList }) {
     },
   });
 
-  const { register, handleSubmit, setValue, watch, reset } = form;
-  const watchedValues = watch();
+  const { register, handleSubmit, reset } = form;
 
   const onSubmit = (data: FormData) => {
     console.log("Saving lead list:", data);

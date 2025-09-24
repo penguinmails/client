@@ -178,28 +178,28 @@ describe('Team Permissions', () => {
   });
 
   describe('getEffectivePermissions', () => {
-    it('should return correct permissions for owner', () => {
-      const permissions = getEffectivePermissions('owner');
+    it('should return correct permissions for owner', async () => {
+      const permissions = await getEffectivePermissions('owner');
       expect(permissions).toEqual(['all']);
     });
 
-    it('should return correct permissions for admin', () => {
-      const permissions = getEffectivePermissions('admin');
+    it('should return correct permissions for admin', async () => {
+      const permissions = await getEffectivePermissions('admin');
       expect(permissions).toContain('members:read');
       expect(permissions).toContain('members:write');
       expect(permissions).toContain('settings:read');
       expect(permissions).toContain('settings:write');
     });
 
-    it('should return correct permissions for member', () => {
-      const permissions = getEffectivePermissions('member');
+    it('should return correct permissions for member', async () => {
+      const permissions = await getEffectivePermissions('member');
       expect(permissions).toContain('members:read');
       expect(permissions).toContain('settings:read');
       expect(permissions).not.toContain('members:write');
     });
 
-    it('should return correct permissions for viewer', () => {
-      const permissions = getEffectivePermissions('viewer');
+    it('should return correct permissions for viewer', async () => {
+      const permissions = await getEffectivePermissions('viewer');
       expect(permissions).toContain('members:read');
       expect(permissions).toContain('settings:read');
       expect(permissions).not.toContain('members:write');
@@ -207,69 +207,69 @@ describe('Team Permissions', () => {
   });
 
   describe('roleHasPermission', () => {
-    it('should return true for owner with any permission', () => {
-      const result = roleHasPermission('owner', 'members:write');
+    it('should return true for owner with any permission', async () => {
+      const result = await roleHasPermission('owner', 'members:write');
       expect(result).toBe(true);
     });
 
-    it('should return true for admin with write permissions', () => {
-      const result = roleHasPermission('admin', 'members:write');
+    it('should return true for admin with write permissions', async () => {
+      const result = await roleHasPermission('admin', 'members:write');
       expect(result).toBe(true);
     });
 
-    it('should return false for member with write permissions', () => {
-      const result = roleHasPermission('member', 'members:write');
+    it('should return false for member with write permissions', async () => {
+      const result = await roleHasPermission('member', 'members:write');
       expect(result).toBe(false);
     });
 
-    it('should return true for member with read permissions', () => {
-      const result = roleHasPermission('member', 'members:read');
+    it('should return true for member with read permissions', async () => {
+      const result = await roleHasPermission('member', 'members:read');
       expect(result).toBe(true);
     });
   });
 
   describe('validateRoleChange', () => {
-    it('should allow owner to change any role to any role', () => {
-      const result = validateRoleChange('owner', 'admin', 'member');
+    it('should allow owner to change any role to any role', async () => {
+      const result = await validateRoleChange('owner', 'admin', 'member');
       expect(result.valid).toBe(true);
     });
 
-    it('should not allow changing owner role by non-owner', () => {
-      const result = validateRoleChange('admin', 'owner', 'admin');
+    it('should not allow changing owner role by non-owner', async () => {
+      const result = await validateRoleChange('admin', 'owner', 'admin');
       expect(result.valid).toBe(false);
       expect(result.reason).toContain('owner');
     });
 
-    it('should not allow assigning higher role than current user', () => {
-      const result = validateRoleChange('member', 'viewer', 'admin');
+    it('should not allow assigning higher role than current user', async () => {
+      const result = await validateRoleChange('member', 'viewer', 'admin');
       expect(result.valid).toBe(false);
       expect(result.reason).toContain('higher than your own');
     });
 
-    it('should not allow modifying someone with equal or higher role', () => {
-      const result = validateRoleChange('admin', 'admin', 'member');
+    it('should not allow modifying someone with equal or higher role', async () => {
+      const result = await validateRoleChange('admin', 'admin', 'member');
       expect(result.valid).toBe(false);
       expect(result.reason).toContain('equal or higher role');
     });
 
-    it('should allow valid role changes', () => {
-      const result = validateRoleChange('admin', 'member', 'viewer');
+    it('should allow valid role changes', async () => {
+      const result = await validateRoleChange('admin', 'member', 'viewer');
       expect(result.valid).toBe(true);
     });
   });
 
   describe('hasMinimumOwners', () => {
-    it('should return true when there is at least one owner', () => {
-      const result = hasMinimumOwners();
+    it('should return true when there is at least one owner', async () => {
+      const result = await hasMinimumOwners();
       expect(result).toBe(true);
     });
 
-    it('should return false when excluding the only owner', () => {
-      const result = hasMinimumOwners('member-1');
+    it('should return false when excluding the only owner', async () => {
+      const result = await hasMinimumOwners('member-1');
       expect(result).toBe(false);
     });
 
-    it('should return true when there are multiple owners', () => {
+    it('should return true when there are multiple owners', async () => {
       // Add another owner
       mockTeamMembers.push({
         id: 'member-5',
@@ -284,51 +284,51 @@ describe('Team Permissions', () => {
         permissions: ['all'],
       });
 
-      const result = hasMinimumOwners('member-1');
+      const result = await hasMinimumOwners('member-1');
       expect(result).toBe(true);
     });
   });
 
   describe('isTeamOwner', () => {
-    it('should return true for owner user', () => {
-      const result = isTeamOwner('owner-user');
+    it('should return true for owner user', async () => {
+      const result = await isTeamOwner('owner-user');
       expect(result).toBe(true);
     });
 
-    it('should return false for non-owner user', () => {
-      const result = isTeamOwner('admin-user');
+    it('should return false for non-owner user', async () => {
+      const result = await isTeamOwner('admin-user');
       expect(result).toBe(false);
     });
 
-    it('should return false for non-existent user', () => {
-      const result = isTeamOwner('non-existent');
+    it('should return false for non-existent user', async () => {
+      const result = await isTeamOwner('non-existent');
       expect(result).toBe(false);
     });
   });
 
   describe('isTeamAdminOrHigher', () => {
-    it('should return true for owner', () => {
-      const result = isTeamAdminOrHigher('owner-user');
+    it('should return true for owner', async () => {
+      const result = await isTeamAdminOrHigher('owner-user');
       expect(result).toBe(true);
     });
 
-    it('should return true for admin', () => {
-      const result = isTeamAdminOrHigher('admin-user');
+    it('should return true for admin', async () => {
+      const result = await isTeamAdminOrHigher('admin-user');
       expect(result).toBe(true);
     });
 
-    it('should return false for member', () => {
-      const result = isTeamAdminOrHigher('member-user');
+    it('should return false for member', async () => {
+      const result = await isTeamAdminOrHigher('member-user');
       expect(result).toBe(false);
     });
 
-    it('should return false for viewer', () => {
-      const result = isTeamAdminOrHigher('viewer-user');
+    it('should return false for viewer', async () => {
+      const result = await isTeamAdminOrHigher('viewer-user');
       expect(result).toBe(false);
     });
 
-    it('should return false for non-existent user', () => {
-      const result = isTeamAdminOrHigher('non-existent');
+    it('should return false for non-existent user', async () => {
+      const result = await isTeamAdminOrHigher('non-existent');
       expect(result).toBe(false);
     });
   });

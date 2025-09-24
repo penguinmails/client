@@ -9,9 +9,8 @@
  * - Freshness checking
  */
 
-import { readFileSync, writeFileSync, existsSync, statSync } from 'fs';
-import { join, relative, dirname } from 'path';
-import { execSync } from 'child_process';
+import { readFileSync, existsSync, statSync } from 'fs';
+import { join, dirname } from 'path';
 import { glob } from 'glob';
 
 interface ValidationResult {

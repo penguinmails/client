@@ -558,7 +558,7 @@ export const analyticsService = (() => {
     } catch (error) {
       console.warn("Failed to initialize AnalyticsService:", error);
       // Return a minimal stub that won't break the build
-      analyticsServiceInstance = null as any;
+      analyticsServiceInstance = null;
     }
   }
   return analyticsServiceInstance;

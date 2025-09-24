@@ -14,13 +14,14 @@ import { ActionResult } from '../core/types';
 import { ErrorFactory } from '../core/errors';
 import { withAuth, withContextualRateLimit, RateLimits } from '../core/auth';
 import { getMultipleMailboxAnalyticsAction } from '../legacy/mailboxActions';
+import { MailboxWarmupData } from '@/types';
 
 /**
  * Get mailboxes for the authenticated user
  * TODO: Implement proper mailbox management
  */
-export async function getMailboxesAction(): Promise<ActionResult<unknown[]>> {
-  
+export async function getMailboxesAction(): Promise<ActionResult<MailboxWarmupData[]>> {
+
   return withAuth(async (_context) => {
     return withContextualRateLimit(
       'get-mailboxes',
@@ -31,7 +32,7 @@ export async function getMailboxesAction(): Promise<ActionResult<unknown[]>> {
           // TODO: Implement actual mailbox fetching
           return {
             success: true,
-            data: [],
+            data: [] as MailboxWarmupData[],
           };
         } catch {
           return ErrorFactory.internal('Failed to fetch mailboxes');

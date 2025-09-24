@@ -5,12 +5,6 @@ import AddMailboxesStepper from "@/components/domains/mailboxes/new/AddMailboxes
 import NewMailboxHeaderDetails from "@/components/domains/mailboxes/new/NewMailboxHeaderDetails";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import {
   Dialog,
   DialogClose,
   DialogContent,

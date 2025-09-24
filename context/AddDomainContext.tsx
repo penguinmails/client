@@ -11,14 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Link } from "lucide-react";
 import NewDomainHeaderDetails from "@/components/domains/new/NewDomainHeaderDetails";
 import NewDomainStepper from "@/components/domains/new/NewDomainStepper";
 import NewDomainStep from "@/components/domains/new/NewDomainStep";

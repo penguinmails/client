@@ -383,7 +383,11 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         );
       }
 
-      await analyticsService.refreshAll();
+      if (analyticsService) {
+        await analyticsService.refreshAll();
+      } else {
+        console.warn("AnalyticsService not available, skipping refreshAll");
+      }
 
       // Clear all errors on successful refresh
       setLoadingState((prev) => ({
@@ -422,7 +426,11 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
           {}
         );
 
-        await analyticsService.refreshDomain(domain);
+        if (analyticsService) {
+          await analyticsService.refreshDomain(domain);
+        } else {
+          console.warn("AnalyticsService not available, skipping refreshDomain");
+        }
         setDomainError(domain, null);
       } catch (error) {
         const errorMessage =
@@ -475,7 +483,11 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         );
       }
 
-      await analyticsService.invalidateCache(domain ? [domain] : undefined);
+      if (analyticsService) {
+        await analyticsService.invalidateCache(domain ? [domain] : undefined);
+      } else {
+        console.warn("AnalyticsService not available, skipping invalidateCache");
+      }
     } catch (error) {
       console.error("Failed to invalidate cache:", error);
       throw error;
@@ -553,6 +565,10 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
 
         // Backward-compatible method shims (lightweight wrappers)
         fetchMailboxAnalytics: async (mailboxId: string) => {
+          if (!analyticsService) {
+            console.warn("AnalyticsService not available for fetchMailboxAnalytics");
+            return null;
+          }
           try {
             // Build a minimal default filter inline to avoid protected method access
             const defaultFilter: AnalyticsFilters = {
@@ -600,6 +616,10 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
           _userid?: string,
           _companyid?: string
         ) => {
+          if (!analyticsService) {
+            console.warn("AnalyticsService not available for fetchMultipleMailboxAnalytics");
+            return {} as Record<string, MailboxAnalyticsData>;
+          }
           try {
             const defaultFilter: AnalyticsFilters = {
               dateRange: {
@@ -637,6 +657,10 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
           }
         },
         getAccountMetrics: async (accountId?: string) => {
+          if (!analyticsService) {
+            console.warn("AnalyticsService not available for getAccountMetrics");
+            return null;
+          }
           try {
             // Best-effort: call getDomainPerformance if available
             const defaultFilter: AnalyticsFilters = {
@@ -741,7 +765,7 @@ function useDomainAnalytics(domain: AnalyticsDomain) {
   );
 
   return {
-    service: services[domain as keyof typeof services],
+    service: services ? services[domain as keyof typeof services] : null,
     loading: loadingState.domains[domain],
     error: loadingState.errors[domain],
     executeWithErrorHandling,

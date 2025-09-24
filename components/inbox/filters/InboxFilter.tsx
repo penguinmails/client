@@ -22,7 +22,6 @@ import {
   Tag,
   Trash2,
   TrendingUp,
-  Users,
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";

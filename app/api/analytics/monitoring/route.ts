@@ -5,7 +5,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MonitoringUtils } from "@/lib/services/analytics/monitoring/MonitoringUtils";
 import { requireAuth } from "@/lib/actions/core/auth";
-import { UserRole } from "@/types/auth";
 
 /**
  * GET /api/analytics/monitoring
