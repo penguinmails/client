@@ -1,45 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  getSubscriptionPlan,
-} from "@/lib/actions/billing/subscription-plans";
+import { getSubscriptionPlan } from "@/lib/actions/billing/subscription-plans";
 
 /**
- * Individual Subscription Plan API Endpoints
- * 
- * This API provides endpoints for individual subscription plan operations.
- * Plans are generally public information but still follow secure patterns.
+ * GET /api/billing/subscription-plans/[id] - Get specific subscription plan
  */
-
-interface RouteParams {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-// GET /api/billing/subscription-plans/[id] - Get specific subscription plan
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  let planId = '';
   try {
     const { id } = await params;
-    
-    if (!id) {
+    planId = id;
+
+    if (!planId) {
       return NextResponse.json(
         { error: "Plan ID is required", code: "ID_REQUIRED" },
         { status: 400 }
       );
     }
 
-    const result = await getSubscriptionPlan(id);
-    
+    const result = await getSubscriptionPlan(planId);
+
     if (!result.success) {
       const statusCode = result.code === "PLAN_NOT_FOUND" ? 404 : 400;
-      
+
       return NextResponse.json(
         { error: result.error, code: result.code },
         { status: statusCode }
       );
     }
 
-    // Sanitize plan data (plans are generally safe to expose)
+    // Sanitize plan data
     const sanitizedData = {
       id: result.data.id,
       name: result.data.name,
@@ -66,7 +58,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       data: sanitizedData,
     });
   } catch (error) {
-    console.error(`GET /api/billing/subscription-plans/[id] error:`, error);
+    console.error(`GET /api/billing/subscription-plans/${planId || 'unknown'} error:`, error);
     return NextResponse.json(
       { error: "Internal server error", code: "INTERNAL_ERROR" },
       { status: 500 }
