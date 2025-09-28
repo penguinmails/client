@@ -35,6 +35,9 @@ export async function GET(_request: NextRequest) {
     const result = await getBillingDataForSettings();
     
     if (!result.success) {
+      // WARNING: Non-null assertion operator (!) used on result.error
+      // This can cause runtime errors if result.error is null/undefined
+      // Consider using optional chaining: result.error?.type
       const statusCode = result.error!.type === "auth" ? 401 :
                         result.error!.type === "not_found" ? 404 : 500;
       
