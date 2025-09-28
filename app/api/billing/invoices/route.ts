@@ -45,7 +45,10 @@ export async function GET(request: NextRequest) {
       pagination: {
         limit,
         offset,
-        total: result.data.length, // In production, this would be the total count
+        total: result.data.length, // BUG: This sets total to current page count, not total available invoices
+        // For correct pagination, total should be the total count of ALL available invoices for the user,
+        // not just the count of invoices on the current page (which will always be <= limit).
+        // This requires a separate query to get the total count from the getInvoices action.
       },
     });
   } catch (error) {
