@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   updateSubscriptionPlan,
   cancelSubscription,
-  reactivateSubscription,
 } from "@/lib/actions/billing";
 
 /**
@@ -100,42 +99,3 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-// POST /api/billing/subscription/reactivate - Reactivate subscription
-export async function POST(request: NextRequest) {
-  try {
-    const { pathname } = new URL(request.url);
-    
-    // Check if this is the reactivate endpoint
-    if (pathname.endsWith('/reactivate')) {
-      const result = await reactivateSubscription();
-      
-      if (!result.success) {
-        const statusCode = result.error!.type === "auth" ? 401 :
-                          result.error!.type === "not_found" ? 404 :
-                          result.error!.type === "validation" ? 400 : 500;
-        
-        return NextResponse.json(
-          { error: result.error!.message, code: result.error!.code },
-          { status: statusCode }
-        );
-      }
-
-      return NextResponse.json({
-        success: true,
-        data: result.data,
-        message: "Subscription reactivated successfully",
-      });
-    }
-
-    return NextResponse.json(
-      { error: "Invalid endpoint", code: "INVALID_ENDPOINT" },
-      { status: 404 }
-    );
-  } catch (error) {
-    console.error("POST /api/billing/subscription error:", error);
-    return NextResponse.json(
-      { error: "Internal server error", code: "INTERNAL_ERROR" },
-      { status: 500 }
-    );
-  }
-}
