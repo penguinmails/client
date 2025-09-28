@@ -96,11 +96,16 @@ export async function POST(request: NextRequest) {
 }
 
 // PUT /api/billing - Update company billing information
+// NOTE: This implementation expects billingId in request body, which violates REST conventions
+// where the ID should be part of the URL path (e.g., PUT /api/billing/{id})
+// This also conflicts with the API documentation in README.md which doesn't specify billingId in body
 export async function PUT(request: NextRequest) {
   try {
     const body: UpdateBillingRequest = await request.json();
     const { billingId, ...updateData } = body;
-    
+
+    // TODO: Consider refactoring to use URL path parameter instead of request body
+    // This would align with REST conventions and match the API documentation
     if (!billingId) {
       return NextResponse.json(
         { error: "Billing ID is required", code: "BILLING_ID_REQUIRED" },
