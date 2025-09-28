@@ -24,7 +24,11 @@
     "validate:performance": "npx tsx scripts/validate-performance.ts",
     "docs:maintenance": "npx tsx scripts/docs-maintenance.ts",
     "migrate:billing": "npx tsx scripts/migrate-billing-schema.ts",
-    "migrate:billing:rollback": "npx tsx scripts/migrate-billing-schema.ts --rollback"
+    "migrate:billing:rollback": "npx tsx scripts/migrate-billing-schema.ts --rollback",
+    "validate:niledb": "npx tsx scripts/validate-niledb-config.ts",
+    "validate:niledb:verbose": "npx tsx scripts/validate-niledb-config.ts --verbose",
+    "validate:niledb:staging": "npx tsx scripts/validate-niledb-config.ts --env=staging",
+    "validate:niledb:production": "npx tsx scripts/validate-niledb-config.ts --env=production"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
