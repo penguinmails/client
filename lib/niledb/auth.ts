@@ -71,28 +71,18 @@ export interface UserProfileUpdates {
   preferences?: Partial<UserPreferences>;
 }
 
-// Authentication Errors
-export class AuthenticationError extends Error {
-  constructor(
-    message: string,
-    public code: string = 'AUTH_REQUIRED'
-  ) {
-    super(message);
-    this.name = 'AuthenticationError';
-  }
-}
+// Re-export error classes from the centralized error system
+import { 
+  AuthenticationError,
+  SessionExpiredError,
+  InvalidCredentialsError,
+} from './errors';
 
-export class SessionExpiredError extends AuthenticationError {
-  constructor(message: string = 'Session has expired') {
-    super(message, 'SESSION_EXPIRED');
-  }
-}
-
-export class InvalidCredentialsError extends AuthenticationError {
-  constructor(message: string = 'Invalid credentials provided') {
-    super(message, 'INVALID_CREDENTIALS');
-  }
-}
+export { 
+  AuthenticationError,
+  SessionExpiredError,
+  InvalidCredentialsError,
+};
 
 /**
  * Authentication Service Class

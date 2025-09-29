@@ -11,6 +11,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { performHealthCheck, validateDatabaseConnection } from '@/lib/niledb/health';
 import { getClientInfo } from '@/lib/niledb/client';
+import { createErrorResponse } from '@/lib/niledb/errors';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -46,19 +47,21 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    return NextResponse.json(
-      {
-        status: 'unhealthy',
-        timestamp: new Date().toISOString(),
-        error: error instanceof Error ? error.message : 'Unknown error',
-        checks: {
-          database: { status: 'fail', error: 'Configuration error' },
-          api: { status: 'fail', error: 'Configuration error' },
-          authentication: { status: 'fail', error: 'Configuration error' },
-        },
+    const { body, status } = createErrorResponse(error, {
+      operation: 'health_check',
+    });
+    
+    return NextResponse.json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      error: body.error,
+      code: body.code,
+      checks: {
+        database: { status: 'fail', error: 'Configuration error' },
+        api: { status: 'fail', error: 'Configuration error' },
+        authentication: { status: 'fail', error: 'Configuration error' },
       },
-      { status: 500 }
-    );
+    }, { status });
   }
 }
 

@@ -39,7 +39,11 @@
     "rollback:migration": "npx tsx scripts/rollback-migration.ts",
     "rollback:migration:dry-run": "npx tsx scripts/rollback-migration.ts --dry-run",
     "rollback:migration:complete": "npx tsx scripts/rollback-migration.ts --complete",
-    "test:migration": "jest scripts/__tests__/migration.test.ts"
+    "test:migration": "jest scripts/__tests__/migration.test.ts",
+    "setup:monitoring": "npx tsx scripts/create-monitoring-schema.ts",
+    "test:middleware": "jest lib/niledb/__tests__/enhanced-middleware.test.ts",
+    "test:errors": "jest lib/niledb/__tests__/errors.test.ts",
+    "test:error-handling": "npm run test:middleware && npm run test:errors"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
