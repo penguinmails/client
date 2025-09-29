@@ -25,7 +25,7 @@ const NileConfigSchema = z.object({
   secureCookies: z.boolean().default(true),
   
   // Environment
-  nodeEnv: z.enum(['development', 'staging', 'production']).default('development'),
+  nodeEnv: z.enum(['development', 'staging', 'production', 'test']).default('development'),
   
   // Optional Configuration
   routePrefix: z.string().default('/api'),
@@ -49,7 +49,7 @@ export type NileConfig = z.infer<typeof NileConfigSchema>;
  * Environment-specific configuration
  */
 const getEnvironmentConfig = (): Partial<NileConfig> => {
-  const nodeEnv = (process.env.NODE_ENV || 'development') as 'development' | 'staging' | 'production';
+  const nodeEnv = (process.env.NODE_ENV || 'development') as 'development' | 'staging' | 'production' | 'test';
   
   const baseConfig = {
     nodeEnv,
@@ -94,6 +94,19 @@ const getEnvironmentConfig = (): Partial<NileConfig> => {
           max: 20,
           idleTimeoutMillis: 15000,
           connectionTimeoutMillis: 5000,
+        },
+      };
+      
+    case 'test':
+      return {
+        ...baseConfig,
+        origin: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+        debug: false,
+        secureCookies: false,
+        connectionPool: {
+          max: 2,
+          idleTimeoutMillis: 1000,
+          connectionTimeoutMillis: 2000,
         },
       };
       
@@ -198,8 +211,8 @@ export const getConfigForEnvironment = (env: 'development' | 'staging' | 'produc
   const originalProcessEnv = process.env;
   
   try {
-    // @ts-expect-error - temporarily override process.env for configuration testing
-    process.env = tempEnv;
+    // Temporarily override process.env for configuration testing
+    (process.env as unknown) = tempEnv;
     const config = getEnvironmentConfig();
     return config;
   } finally {
