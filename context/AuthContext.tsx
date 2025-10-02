@@ -307,7 +307,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("SignIn error:", error);
       setAuthError(error);
     },
-    callbackUrl: "/dashboard",
+    callbackUrl: window.location.origin + "/dashboard",
   });
 
   const signUpHook = useSignUp({
@@ -330,47 +330,51 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   // Enhanced mapping function for NileDB user to legacy User format
-  const mapNileUserToLegacyUser = useCallback((nileUser: NileDBUser): User => {
-    const displayName = nileUser.name || nileUser.email.split("@")[0];
+  const mapNileUserToLegacyUser = useCallback(
+    (nileUser: NileDBUser): User => {
+      const displayName = nileUser.name || nileUser.email.split("@")[0];
 
-    // Map role from profile
-    let role = UserRole.USER;
-    if (nileUser.profile?.role === "super_admin") {
-      role = UserRole.SUPER_ADMIN;
-    } else if (nileUser.profile?.role === "admin") {
-      role = UserRole.ADMIN;
-    }
+      // Map role from profile
+      let role = UserRole.USER;
+      if (nileUser.profile?.role === "super_admin") {
+        role = UserRole.SUPER_ADMIN;
+      } else if (nileUser.profile?.role === "admin") {
+        role = UserRole.ADMIN;
+      }
 
-    // Get selected company info
-    const selectedCompany = userCompanies.find(
-      (c) => c.id === selectedCompanyId
-    );
+      // Get selected company info
+      const selectedCompany = userCompanies.find(
+        (c) => c.id === selectedCompanyId
+      );
 
-    return {
-      uid: nileUser.id,
-      email: nileUser.email,
-      displayName,
-      photoURL: nileUser.picture,
-      token: nileUser.id,
-      claims: {
-        name: displayName,
-        role,
-        companyId: selectedCompany?.id || "no-company",
-        companyName: selectedCompany?.name || "No Company Selected",
-        plan: "free", // TODO: Get from tenant billing info
-      },
-      profile: {
-        firstName: nileUser.givenName || "",
-        lastName: nileUser.familyName || "",
-        avatar: nileUser.picture,
-        timezone: (nileUser.profile?.preferences?.timezone as string) || "UTC",
-        language: (nileUser.profile?.preferences?.language as string) || "en",
-        lastLogin: nileUser.profile?.lastLoginAt,
-        createdAt: nileUser.created ? new Date(nileUser.created) : undefined,
-        updatedAt: nileUser.updated ? new Date(nileUser.updated) : undefined,
-      },
-    };
-  }, [userCompanies, selectedCompanyId]);
+      return {
+        uid: nileUser.id,
+        email: nileUser.email,
+        displayName,
+        photoURL: nileUser.picture,
+        token: nileUser.id,
+        claims: {
+          name: displayName,
+          role,
+          companyId: selectedCompany?.id || "no-company",
+          companyName: selectedCompany?.name || "No Company Selected",
+          plan: "free", // TODO: Get from tenant billing info
+        },
+        profile: {
+          firstName: nileUser.givenName || "",
+          lastName: nileUser.familyName || "",
+          avatar: nileUser.picture,
+          timezone:
+            (nileUser.profile?.preferences?.timezone as string) || "UTC",
+          language: (nileUser.profile?.preferences?.language as string) || "en",
+          lastLogin: nileUser.profile?.lastLoginAt,
+          createdAt: nileUser.created ? new Date(nileUser.created) : undefined,
+          updatedAt: nileUser.updated ? new Date(nileUser.updated) : undefined,
+        },
+      };
+    },
+    [userCompanies, selectedCompanyId]
+  );
 
   const login = async (email: string, password: string): Promise<void> => {
     setAuthError(null);
