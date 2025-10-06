@@ -1,29 +1,23 @@
-import NavLink from "@/components/ui/custom/NavLink";
-import CreateNewFolderButton from "@/components/templates/create-new-folder-button";
 import ConditionalNewTemplateButton from "@/components/templates/ConditionalNewTemplateButton";
+import CreateNewFolderButton from "@/components/templates/create-new-folder-button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import GalleryTab from "@/components/templates/gallery-tab";
-import MyTemplatesTab from "@/components/templates/my-templates-tab";
-import QuickRepliesTab from "@/components/templates/qucik-replies-tab";
-import { Tab } from "@/types/tab";
+import NavLink from "@/components/ui/custom/NavLink";
 import { getTabCounts } from "@/lib/actions/templates";
+import { Tab } from "@/types/tab";
 
 // Tab definitions - UI structure
 const tabs: Tab[] = [
   {
     id: "quick-replies",
     label: "Quick Replies",
-    Component: QuickRepliesTab,
   },
   {
     id: "templates",
     label: "My Templates",
-    Component: MyTemplatesTab,
   },
   {
-    id: "gallery",
-    label: "Gallery",
-    Component: GalleryTab,
+    id: "magic",
+    label: "Magic",
   },
 ];
 
