@@ -1,35 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Info,
-  ShoppingCart,
-  Globe,
-  Share2,
-  Minus,
-  Plus,
-  X,
-  CreditCard,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+    CreditCard,
+    Globe,
+    Info,
+    Minus,
+    Plus,
+    Share2,
+    ShoppingCart
+} from "lucide-react";
+import { useState } from "react";
 
 interface IPAddress {
   address: string;
