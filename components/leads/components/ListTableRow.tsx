@@ -69,7 +69,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
             </div>
           )}
           <div className="flex flex-wrap gap-1 mt-2">
-            {list.tags.map((tag, index) => (
+            {list.tags?.map((tag, index) => (
               <span
                 key={index}
                 className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
@@ -84,7 +84,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
         <div className="flex items-center space-x-2">
           <Users className="w-4 h-4 text-gray-400" />
           <span className="text-sm font-medium text-gray-900">
-            {list.contacts.toLocaleString()}
+            {list.contacts?.toLocaleString()}
           </span>
         </div>
       </TableCell>
@@ -107,38 +107,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
           )}
         </div>
       </TableCell>
-      <TableCell>
-        {isUsed ? (
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-blue-600">
-                {("performance" in list &&
-                list.performance &&
-                typeof list.performance === "object" &&
-                "openRate" in list.performance
-                  ? (list.performance as PerformanceMetrics).openRate
-                  : 0) || 0}
-                %
-              </span>
-              <span className="text-xs text-gray-500">open</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-green-600">
-                {("performance" in list &&
-                list.performance &&
-                typeof list.performance === "object" &&
-                "replyRate" in list.performance
-                  ? (list.performance as PerformanceMetrics).replyRate
-                  : 0) || 0}
-                %
-              </span>
-              <span className="text-xs text-gray-500">reply</span>
-            </div>
-          </div>
-        ) : (
-          <span className="text-sm text-gray-500 italic">Not used yet</span>
-        )}
-      </TableCell>
+     
       <TableCell className="text-sm text-gray-500">
         {new Date(list.uploadDate).toLocaleDateString()}
       </TableCell>

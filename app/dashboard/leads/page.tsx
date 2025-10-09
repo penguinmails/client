@@ -18,7 +18,7 @@ async function LeadsPage() {
   const leadsStatsData = await getLeadsStats();
   const leadListsData = await getLeadLists();
 
-  const totalContacts = leadListsData.reduce((sum, list) => sum + list.contacts, 0);
+  const totalContacts = leadListsData.reduce((sum, list) => sum + list?.contacts, 0);
 
   const leadsTabs = [
     { id: "lists", label: "Lead Lists", count: leadListsData.length, icon: FileText },

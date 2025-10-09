@@ -69,7 +69,7 @@ function LeadsSelectionStep() {
                       {list.name}
                     </h4>
                     <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
-                      {list.contacts.toLocaleString()} contacts
+                      {list.contacts?.toLocaleString()} contacts
                     </span>
                   </div>
                   <p className="text-gray-600 mt-1">{list.description}</p>
