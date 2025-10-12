@@ -82,6 +82,7 @@ describe('CompanySettings Interface', () => {
       allowMemberInvites: true,
       requireTwoFactorAuth: false,
       autoApproveMembers: true,
+      notifyOnNewMember: true,
     };
 
     expect(typeof settings.allowMemberInvites).toBe('boolean');
@@ -94,6 +95,7 @@ describe('CompanySettings Interface', () => {
       allowMemberInvites: true,
       requireTwoFactorAuth: true,
       autoApproveMembers: false,
+      notifyOnNewMember: true,
       // Additional settings can be added here
     };
 
@@ -121,6 +123,7 @@ describe('Type Safety Assertions', () => {
         allowMemberInvites: true,
         requireTwoFactorAuth: false,
         autoApproveMembers: true,
+        notifyOnNewMember: true,
       },
     };
 
@@ -175,6 +178,7 @@ describe('Company Type Integration', () => {
         allowMemberInvites: false,
         requireTwoFactorAuth: true,
         autoApproveMembers: false,
+        notifyOnNewMember: false,
       },
     };
 

@@ -10,7 +10,6 @@ scripts/
 │   └── 001_initial_schema.sql
 ├── seed/                # Initial seed data
 │   └── 001_initial_data.sql
-├── test-migrations.ts   # Migration testing utilities
 └── README.md            # This file
 ```
 
@@ -55,22 +54,22 @@ psql -h your-niledb-host -U your-username -d your-database -f scripts/seed/001_i
 
 ## 🧪 Testing Migrations
 
-Run the migration tests to ensure everything works correctly:
+Run existing test suites to ensure migrations work correctly:
 
 ```bash
-# Run migration validation tests
-npm run test:migrations
+# Run database migration tests
+npm run test:migration
 
-# Or run with dry-run mode
-npm run test:migrations -- --dry-run
+# Run comprehensive database tests
+npm run test:comprehensive
 ```
 
-The test script will:
-- ✅ Validate migration file structure
-- ✅ Check Prisma schema compatibility (if applicable)
-- ✅ Test database connectivity
-- ✅ Verify foreign key relationships
-- ✅ Run syntax validation
+The test suites will:
+- ✅ Validate migration file structure and execution
+- ✅ Check Prisma schema compatibility
+- ✅ Test database connectivity and operations
+- ✅ Verify foreign key relationships and constraints
+- ✅ Run comprehensive integration tests
 
 ## 📊 What Gets Created
 

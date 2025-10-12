@@ -3,7 +3,7 @@
  * These tests verify the consolidated User type matches the specification
  */
 
-import { User, UserClaims, UserProfile } from '../auth';
+import { User, UserClaims, UserProfile, Permission } from '../auth';
 
 // Test consolidated User interface structure
 describe('Consolidated User Interface', () => {
@@ -168,7 +168,7 @@ describe('Type Safety Assertions', () => {
         role: 'user' as any,
         tenantId: 'tenant-456',
         companyId: 'company-789',
-        permissions: ['read'],
+        permissions: [Permission.VIEW_USERS],
       },
       profile: {
         firstName: 'Test',

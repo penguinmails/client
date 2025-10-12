@@ -8,6 +8,7 @@
 'use server';
 
 import { z } from 'zod';
+import { randomBytes } from 'crypto';
 import { ActionResult } from '../core/types';
 import { ErrorFactory, withErrorHandling } from '../core/errors';
 import { withFullAuth, RateLimits } from '../core/auth';
@@ -17,6 +18,15 @@ import { checkTeamPermission } from './permissions';
 import { logTeamActivity } from './activity';
 import { validateTeamEmail } from './members';
 import { getTenantService } from '../../niledb/tenant';
+
+/**
+ * Generate a secure temporary password for bulk user invitations
+ */
+function generateSecurePassword(length: number = 12): string {
+  // Generate cryptographically secure random bytes and convert to base64
+  // Slice to ensure exact length, as base64 encoding might be longer
+  return randomBytes(Math.ceil(length * 3 / 4)).toString('base64').slice(0, length);
+}
 
 // Validation schemas
 const addTeamMemberSchema = z.object({
@@ -249,7 +259,9 @@ export async function bulkInviteMembers(
           const validation = await validateTeamEmail(email);
 
           if (validation.success && validation.data?.valid) {
-            const result = await addTeamMember({ email, password: 'tempPassword123!', role });
+            // Generate a unique secure password for each user
+            const temporaryPassword = generateSecurePassword();
+            const result = await addTeamMember({ email, password: temporaryPassword, role });
 
             if (result.success) {
               successful.push(email);
