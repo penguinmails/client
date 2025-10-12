@@ -310,7 +310,9 @@ export default defineSchema({
       v.literal("billing_update"),
       v.literal("system_config"),
       v.literal("role_assignment"),
-      v.literal("permission_grant")
+      v.literal("permission_grant"),
+      v.literal("session_start"),
+      v.literal("session_end")
     ),
     resourceType: v.union(
       v.literal("user"),
@@ -319,7 +321,8 @@ export default defineSchema({
       v.literal("subscription"),
       v.literal("payment"),
       v.literal("role"),
-      v.literal("permission")
+      v.literal("permission"),
+      v.literal("admin_session")
     ),
     resourceId: v.string(),
     tenantId: v.optional(v.string()), // Context tenant (when applicable)

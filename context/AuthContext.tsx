@@ -348,8 +348,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           lastName: nileUser.familyName,
           avatar: nileUser.picture,
           lastLogin: nileUser.profile?.lastLoginAt,
-          createdAt: nileUser.created ? new Date(nileUser.created) : new Date(),
-          updatedAt: nileUser.updated ? new Date(nileUser.updated) : new Date(),
+          createdAt: nileUser.created ? new Date(nileUser.created) : undefined,
+          updatedAt: nileUser.updated ? new Date(nileUser.updated) : undefined,
         },
       };
     },

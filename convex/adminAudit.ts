@@ -30,8 +30,8 @@ export const createAdminSession = mutation({
     // Log session creation
     await ctx.db.insert("admin_audit_log", {
       adminUserId: args.adminUserId,
-      action: "system_config", // Using existing action type
-      resourceType: "user", // Using existing resource type
+      action: "session_start",
+      resourceType: "admin_session",
       resourceId: sessionId,
       ipAddress: args.ipAddress,
       userAgent: args.userAgent,
@@ -76,8 +76,8 @@ export const endAdminSession = mutation({
     // Log session end
     await ctx.db.insert("admin_audit_log", {
       adminUserId: args.adminUserId,
-      action: "system_config", // Using existing action type
-      resourceType: "user", // Using existing resource type
+      action: "session_end",
+      resourceType: "admin_session",
       resourceId: args.sessionId,
       ipAddress: args.ipAddress,
       userAgent: args.userAgent,
@@ -97,7 +97,9 @@ export const logAdminAction = mutation({
       v.literal("billing_update"),
       v.literal("system_config"),
       v.literal("role_assignment"),
-      v.literal("permission_grant")
+      v.literal("permission_grant"),
+      v.literal("session_start"),
+      v.literal("session_end")
     ),
     resourceType: v.union(
       v.literal("user"),
@@ -106,7 +108,8 @@ export const logAdminAction = mutation({
       v.literal("subscription"),
       v.literal("payment"),
       v.literal("role"),
-      v.literal("permission")
+      v.literal("permission"),
+      v.literal("admin_session")
     ),
     resourceId: v.string(),
     tenantId: v.optional(v.string()),

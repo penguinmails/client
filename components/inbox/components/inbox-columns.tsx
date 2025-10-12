@@ -10,9 +10,9 @@ import { InboxColumnAction } from "./inbox-column-action";
 import { showCustomToast } from "@/components/ui/custom/custom-toast";
 import { redirect } from "next/navigation";
 
-const markEmailAsStarredMutarion = async (id: number, starred: boolean) => {
+const markEmailAsStarredMutarion = async (id: number, starred: boolean, user: User | null) => {
   try {
-    const response = await markEmailAsStarredAction(id, starred);
+    const response = await markEmailAsStarredAction(id, starred, user?.id);
     if (!response) {
       throw new Error("Failed to update email starred status");
     }
