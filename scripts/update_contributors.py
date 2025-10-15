@@ -23,15 +23,11 @@ def main():
         else:
             content = ""
 
-        print(f"DEBUG: PR_AUTHOR = {pr_author}")
-        print(f"DEBUG: Content length = {len(content)}")
-        print(f"DEBUG: Start marker found = {start_marker in content}")
-        print(f"DEBUG: End marker found = {end_marker in content}")
+        # Always update contributors list on PR merge, don't skip based on individual author
+        # The original logic was preventing updates when contributors were already listed
 
-        # (Optional) Check if the PR author is already in readme.md
-        if pr_author and f'">{pr_author}</a>' in content:
-            print(f"User {pr_author} is already in README.md. Skipping update.")
-            return
+        # Always update the full contributors list on PR merge
+        # This ensures the list stays current with all repository contributors
 
         # Build the HTML table for contributors
         html_lines = [
