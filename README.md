@@ -274,4 +274,16 @@ For more information, see the [Type Analysis Documentation](./docs/development/t
 Built with ❤️ for modern email marketing workflows.
 
 <!-- CONTRIBUTORS START -->
+<h2>Contributors</h2>
+<table border='1' cellspacing='0' cellpadding='5'>
+  <thead>
+    <tr><th>Avatar</th><th>Username</th><th>Insights</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/36519478?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Israel-Laguan">Israel-Laguan</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/52115726?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/ARenzDev">ARenzDev</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/112190828?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Mhmd0Mhmod">Mhmd0Mhmod</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/229774540?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/penguinmails-dev">penguinmails-dev</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
+  </tbody>
+</table>
 <!-- CONTRIBUTORS END -->
