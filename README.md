@@ -271,4 +271,7 @@ For more information, see the [Type Analysis Documentation](./docs/development/t
 - **Troubleshooting**: Common issues in [`docs/development/troubleshooting.md`](./docs/development/troubleshooting.md)
 - **Architecture**: System design in [`docs/analytics/README.md`](./docs/analytics/README.md)
 
-Built with \u2764\ufe0f for modern email marketing workflows.
+Built with ❤️ for modern email marketing workflows.
+
+<!-- CONTRIBUTORS START -->
+<!-- CONTRIBUTORS END -->
