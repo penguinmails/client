@@ -2,16 +2,14 @@ name: Update Contributors
 
 on:
   workflow_dispatch:
-  pull_request:
+  pull_request_target:
     types: [opened, closed]
     branches:
-      - dev
       - main
-      - "**"
 
 jobs:
   update-contributors:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -22,7 +20,7 @@ jobs:
 
       - name: Get PR author
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
+          if [ "${{ github.event_name }}" == "pull_request_target" ]; then
             pr_author="${{ github.event.pull_request.user.login }}"
             if [ -z "$pr_author" ]; then
                 echo "PR author not found, using default actor: ${{ github.actor }}"
