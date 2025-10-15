@@ -24,6 +24,10 @@ jobs:
       - name: Get current version
         id: get_version
         run: |
+          if [ ! -s version.txt ]; then
+            echo "version.txt is empty or missing, using default version 0.1.0"
+            echo "0.1.0" > version.txt
+          fi
           version=$(< version.txt tr -d '\n')
           echo "Versión actual: $version"
           echo "current_version=$version" >> $GITHUB_OUTPUT
