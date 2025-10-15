@@ -23,10 +23,15 @@ def main():
         else:
             content = ""
 
+        print(f"DEBUG: PR_AUTHOR = {pr_author}")
+        print(f"DEBUG: Content length = {len(content)}")
+        print(f"DEBUG: Start marker found = {start_marker in content}")
+        print(f"DEBUG: End marker found = {end_marker in content}")
+
         # (Optional) Check if the PR author is already in readme.md
         if pr_author and f'">{pr_author}</a>' in content:
-            print(f"User {pr_author} is already in README.md. No changes made.")
-            sys.exit(0)
+            print(f"User {pr_author} is already in README.md. Skipping update.")
+            return
 
         # Build the HTML table for contributors
         html_lines = [
