@@ -1,0 +1,53 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { tenantSettingsSchema } from '@/lib/validations/settings';
+
+// This implementation will fail until the database connection and logic are added
+// GET /api/settings/tenant - Get current tenant's settings
+
+export async function GET(request: NextRequest) {
+  try {
+    // TODO: Implement tenant settings retrieval
+    // - Get tenant ID from authentication context
+    // - Query tenant_settings table
+    // - Return formatted response
+
+    throw new Error('Tenant settings API not implemented');
+  } catch (error: any) {
+    console.error('Error fetching tenant settings:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch tenant settings' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST /api/settings/tenant - Create or update tenant settings
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+
+    // Validate input
+    const validatedData = tenantSettingsSchema.parse(body);
+
+    // TODO: Implement tenant settings creation/update
+    // - Get tenant ID from authentication context
+    // - Check user permissions (super admin only)
+    // - Upsert tenant_settings table
+    // - Return updated settings
+
+    throw new Error('Tenant settings API not implemented');
+  } catch (error: any) {
+    if (error.name === 'ZodError') {
+      return NextResponse.json(
+        { error: 'Invalid input data', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    console.error('Error updating tenant settings:', error);
+    return NextResponse.json(
+      { error: 'Failed to update tenant settings' },
+      { status: 500 }
+    );
+  }
+}

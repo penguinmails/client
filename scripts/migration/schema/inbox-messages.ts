@@ -1,66 +1,100 @@
 /**
- * Inbox Messages Schema Creation Script
+ * Inbox Messages Table Schema - Single Source of Truth
  *
- * Creates the inbox_messages table schema in NileDB.
- * Inbox messages store inbox message data.
+ * This file contains the SQL schema definitions for the inbox_messages table.
+ * Inbox messages store both inbound (from leads) and outbound (from campaign sequences) emails.
  */
 
-import { getMigrationClient } from '../config';
+export const CREATE_INBOX_MESSAGES_TABLE = `
+CREATE TABLE IF NOT EXISTS inbox_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
-export async function createInboxMessagesSchema(): Promise<void> {
-  const nile = getMigrationClient();
+    -- Relationships
+    email_account_id UUID NOT NULL REFERENCES email_accounts(id) ON DELETE CASCADE,
+    campaign_id UUID REFERENCES campaigns(id) ON DELETE SET NULL,
+    lead_id UUID REFERENCES leads(id) ON DELETE SET NULL,
+    parent_message_id UUID REFERENCES inbox_messages(id) ON DELETE SET NULL,
 
-  try {
-    console.log('Creating inbox messages schema...');
+    -- Message direction and type
+    direction VARCHAR(20) NOT NULL CHECK (direction IN ('inbound', 'outbound')),
+    message_type VARCHAR(20) NOT NULL DEFAULT 'email' CHECK (message_type IN ('email', 'reply', 'bounce', 'complaint')),
 
-    // Create inbox_messages table
-    await nile.db.query(`
-      CREATE TABLE IF NOT EXISTS inbox_messages (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
-        "fromEmail" VARCHAR(255) NOT NULL,
-        "toEmail" VARCHAR(255) NOT NULL,
-        subject VARCHAR(500) NOT NULL,
-        content TEXT NOT NULL,
-        "receivedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      );
-    `);
+    -- Email headers
+    from_email VARCHAR(254) NOT NULL,
+    to_email VARCHAR(254) NOT NULL,
+    subject VARCHAR(500),
+    in_reply_to VARCHAR(1000),
 
-    // Create indexes
-    await nile.db.query(`
-      CREATE INDEX IF NOT EXISTS idx_inbox_messages_tenant_id ON inbox_messages(tenant_id);
-      CREATE INDEX IF NOT EXISTS idx_inbox_messages_from_email ON inbox_messages("fromEmail");
-      CREATE INDEX IF NOT EXISTS idx_inbox_messages_to_email ON inbox_messages("toEmail");
-      CREATE INDEX IF NOT EXISTS idx_inbox_messages_received_at ON inbox_messages("receivedAt");
-    `);
+    -- Content
+    content_text TEXT,
+    content_html TEXT,
 
-    console.log('✓ Inbox messages schema created successfully');
-  } catch (error) {
-    console.error('✗ Failed to create inbox messages schema:', error);
-    throw error;
-  }
-}
+    -- Metadata
+    external_message_id VARCHAR(500), -- Provider's message ID
+    provider_status VARCHAR(50), -- Provider-specific status
 
-export async function dropInboxMessagesSchema(): Promise<void> {
-  const nile = getMigrationClient();
+    -- Status tracking
+    status VARCHAR(50) NOT NULL DEFAULT 'received' CHECK (status IN ('received', 'processed', 'failed', 'bounced')),
+    processed_at TIMESTAMP WITH TIME ZONE,
+    error_message TEXT,
 
-  try {
-    console.log('Dropping inbox messages schema...');
+    -- Audit fields
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
-    // Drop indexes
-    await nile.db.query(`
-      DROP INDEX IF EXISTS idx_inbox_messages_tenant_id;
-      DROP INDEX IF EXISTS idx_inbox_messages_from_email;
-      DROP INDEX IF EXISTS idx_inbox_messages_to_email;
-      DROP INDEX IF EXISTS idx_inbox_messages_received_at;
-    `);
+    -- Constraints
+    CHECK (direction = 'inbound' OR campaign_id IS NOT NULL), -- Outbound messages must have campaign
+    CHECK (direction = 'inbound' OR lead_id IS NOT NULL), -- Outbound messages must have lead
+    CHECK (direction = 'outbound' OR parent_message_id IS NOT NULL OR status = 'bounced') -- Inbound messages usually reply to outbound
+);
+`;
 
-    // Drop table
-    await nile.db.query(`DROP TABLE IF EXISTS inbox_messages;`);
+export const CREATE_INBOX_MESSAGES_INDEXES = `
+-- Create indexes for performance
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_email_account_id ON inbox_messages(email_account_id);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_campaign_id ON inbox_messages(campaign_id);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_lead_id ON inbox_messages(lead_id);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_parent_message_id ON inbox_messages(parent_message_id);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_direction ON inbox_messages(direction);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_status ON inbox_messages(status);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_created_at ON inbox_messages(created_at);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_from_email ON inbox_messages(from_email);
+CREATE INDEX IF NOT EXISTS idx_inbox_messages_to_email ON inbox_messages(to_email);
+`;
 
-    console.log('✓ Inbox messages schema dropped successfully');
-  } catch (error) {
-    console.error('✗ Failed to drop inbox messages schema:', error);
-    throw error;
-  }
-}
+export const CREATE_INBOX_MESSAGES_TRIGGERS = `
+-- Create trigger for updated_at
+CREATE OR REPLACE FUNCTION update_inbox_messages_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_inbox_messages_updated_at
+    BEFORE UPDATE ON inbox_messages
+    FOR EACH ROW
+    EXECUTE FUNCTION update_inbox_messages_updated_at();
+`;
+
+export const DROP_INBOX_MESSAGES_TRIGGERS = `
+DROP TRIGGER IF EXISTS trigger_update_inbox_messages_updated_at ON inbox_messages;
+`;
+
+export const DROP_INBOX_MESSAGES_INDEXES = `
+DROP INDEX IF EXISTS idx_inbox_messages_email_account_id;
+DROP INDEX IF EXISTS idx_inbox_messages_campaign_id;
+DROP INDEX IF EXISTS idx_inbox_messages_lead_id;
+DROP INDEX IF EXISTS idx_inbox_messages_parent_message_id;
+DROP INDEX IF EXISTS idx_inbox_messages_direction;
+DROP INDEX IF EXISTS idx_inbox_messages_status;
+DROP INDEX IF EXISTS idx_inbox_messages_created_at;
+DROP INDEX IF EXISTS idx_inbox_messages_from_email;
+DROP INDEX IF EXISTS idx_inbox_messages_to_email;
+`;
+
+export const DROP_INBOX_MESSAGES_TABLE = `
+DROP TABLE IF EXISTS inbox_messages;
+`;
+
