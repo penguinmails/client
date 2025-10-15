@@ -98,3 +98,49 @@ export const DROP_INBOX_MESSAGES_TABLE = `
 DROP TABLE IF EXISTS inbox_messages;
 `;
 
+export async function createInboxMessagesSchema(): Promise<void> {
+  const { getMigrationClient } = await import('../config');
+  const nile = getMigrationClient();
+
+  try {
+    console.log('Creating inbox messages schema...');
+
+    // Execute table creation
+    await nile.db.query(CREATE_INBOX_MESSAGES_TABLE);
+
+    // Execute indexes creation
+    await nile.db.query(CREATE_INBOX_MESSAGES_INDEXES);
+
+    // Execute triggers creation
+    await nile.db.query(CREATE_INBOX_MESSAGES_TRIGGERS);
+
+    console.log('✓ Inbox messages schema created successfully');
+  } catch (error) {
+    console.error('✗ Failed to create inbox messages schema:', error);
+    throw error;
+  }
+}
+
+export async function dropInboxMessagesSchema(): Promise<void> {
+  const { getMigrationClient } = await import('../config');
+  const nile = getMigrationClient();
+
+  try {
+    console.log('Dropping inbox messages schema...');
+
+    // Drop triggers first
+    await nile.db.query(DROP_INBOX_MESSAGES_TRIGGERS);
+
+    // Drop indexes
+    await nile.db.query(DROP_INBOX_MESSAGES_INDEXES);
+
+    // Drop table
+    await nile.db.query(DROP_INBOX_MESSAGES_TABLE);
+
+    console.log('✓ Inbox messages schema dropped successfully');
+  } catch (error) {
+    console.error('✗ Failed to drop inbox messages schema:', error);
+    throw error;
+  }
+}
+

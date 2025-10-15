@@ -30,10 +30,10 @@ const tabs = [
 ];
 
 const themeOptions = [
-  { value: "light", label: "Light", icon: Sun },
-  { value: "dark", label: "Dark", icon: Moon },
-  { value: "system", label: "System", icon: Monitor },
-];
+   { value: "light" as const, label: "Light", icon: Sun },
+   { value: "dark" as const, label: "Dark", icon: Moon },
+   { value: "system" as const, label: "System", icon: Monitor },
+ ];
 
 function Layout({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -57,9 +57,9 @@ function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleThemeChange = (newTheme: string) => {
+  const handleThemeChange = (newTheme: "light" | "dark" | "system") => {
     if (setTheme) {
-      setTheme(newTheme as "light" | "dark" | "auto");
+      setTheme(newTheme === "system" ? "auto" : newTheme);
     }
   };
 

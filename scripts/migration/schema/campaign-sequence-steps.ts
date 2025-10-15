@@ -155,15 +155,6 @@ export async function createCampaignSequenceStepsSchema(): Promise<void> {
     // Execute triggers creation
     await nile.db.query(triggersSQL);
 
-    // Execute table creation
-    await nile.db.query(CREATE_CAMPAIGN_SEQUENCE_STEPS_TABLE);
-
-    // Execute indexes creation
-    await nile.db.query(CREATE_CAMPAIGN_SEQUENCE_STEPS_INDEXES);
-
-    // Execute triggers creation
-    await nile.db.query(CREATE_CAMPAIGN_SEQUENCE_STEPS_TRIGGERS);
-
     console.log('✓ Campaign sequence steps schema created successfully');
   } catch (error) {
     console.error('✗ Failed to create campaign sequence steps schema:', error);

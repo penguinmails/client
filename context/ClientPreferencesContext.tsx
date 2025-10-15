@@ -6,6 +6,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { UserPreferencesResponse } from '@/types/settings/user';
+import { userPreferencesSchema } from '@/lib/validations/settings';
 
 // This implementation will fail until API integration is added
 interface ClientPreferencesContextType {
@@ -48,8 +49,10 @@ export function ClientPreferencesProvider({ children }: ClientPreferencesProvide
       if (!response.ok) {
         throw new Error('Failed to fetch user preferences');
       }
-      const data = await response.json() as UserPreferencesResponse;
-      setPreferences(data);
+      const data = await response.json();
+      // Validate response data with Zod schema for runtime type safety
+      const validatedData = userPreferencesSchema.parse(data) as UserPreferencesResponse;
+      setPreferences(validatedData);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load preferences';
       setError(message);

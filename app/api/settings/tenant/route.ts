@@ -12,7 +12,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     // - Query tenant_settings table
     // - Return formatted response
 
-    throw new Error('Tenant settings API not implemented');
+    return NextResponse.json({ error: 'Tenant settings API not implemented' }, { status: 501 });
   } catch (error: unknown) {
     console.error('Error fetching tenant settings:', error);
     return NextResponse.json(
@@ -23,7 +23,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 }
 
 // POST /api/settings/tenant - Create or update tenant settings
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
 
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     // - Upsert tenant_settings table
     // - Return updated settings
 
-    throw new Error('Tenant settings API not implemented');
+    return NextResponse.json({ error: 'Tenant settings API not implemented' }, { status: 501 });
   } catch (error: unknown) {
     if (error instanceof ZodError) {
       return NextResponse.json(

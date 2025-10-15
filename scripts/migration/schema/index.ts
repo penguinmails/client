@@ -18,6 +18,7 @@ import { createLeadsSchema, dropLeadsSchema } from './leads';
 import { createCampaignSchema, dropCampaignSchema } from './campaign';
 import { createTemplatesSchema, dropTemplatesSchema } from './templates';
 import { createCampaignSequenceStepsSchema, dropCampaignSequenceStepsSchema } from './campaign-sequence-steps';
+import { createInboxMessagesSchema, dropInboxMessagesSchema } from './inbox-messages';
 
 export {
   createTenantSchema,
@@ -48,6 +49,8 @@ export {
   dropCampaignSequenceStepsSchema,
   createTemplatesSchema,
   dropTemplatesSchema,
+  createInboxMessagesSchema,
+  dropInboxMessagesSchema,
 };
 
 /**
@@ -74,6 +77,7 @@ export async function createAllSchemas(): Promise<void> {
   await createLeadsSchema();
   await createCampaignSchema();
   await createCampaignSequenceStepsSchema();
+  await createInboxMessagesSchema();
   await createTemplatesSchema();
 
   console.log('✓ All schemas created successfully');
@@ -87,6 +91,7 @@ export async function dropAllSchemas(): Promise<void> {
 
   // Drop in reverse dependency order
   await dropTemplatesSchema();
+  await dropInboxMessagesSchema();
   await dropCampaignSequenceStepsSchema();
   await dropCampaignSchema();
   await dropLeadsSchema();

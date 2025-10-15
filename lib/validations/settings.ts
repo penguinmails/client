@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 // User Preferences Validation Schema
 export const userPreferencesSchema = z.object({
+  id: z.string(),
   theme: z.enum(['light', 'dark', 'auto']),
   language: z.string().regex(/^[a-z]{2}(-[A-Z]{2})?$/, 'Invalid language format'),
   timezone: z.string().regex(/^[A-Za-z/_+-]+$/, 'Invalid timezone format'),
@@ -9,6 +10,10 @@ export const userPreferencesSchema = z.object({
   pushNotifications: z.boolean(),
   weeklyReports: z.boolean(),
   marketingEmails: z.boolean(),
+  sidebarCollapsed: z.boolean().optional(),
+  tableDensity: z.string().optional(),
+  sidebarView: z.string().optional(),
+  updatedAt: z.string(),
 });
 
 // Company Settings Validation Schema

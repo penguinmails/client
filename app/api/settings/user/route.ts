@@ -5,7 +5,7 @@ import { ZodError } from 'zod';
 // This implementation will fail until the database connection and logic are added
 // GET /api/settings/user - Get current user's preferences
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     // TODO: Implement user preferences retrieval
     // - Get user ID from authentication context
@@ -26,7 +26,7 @@ export async function GET(_request: NextRequest) {
 }
 
 // POST /api/settings/user - Create or update user preferences
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
 

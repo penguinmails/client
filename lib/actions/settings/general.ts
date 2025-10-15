@@ -15,20 +15,10 @@ import { withAuth } from "../core/auth";
 import {
   UserSettings,
   CompanyInfo,
+  GeneralSettings,
   DeepPartial,
   ERROR_CODES
 } from './types';
-
-// Define a local GeneralSettings type for this file since it's not exported elsewhere
-interface GeneralSettings {
-  profile: {
-    name: string;
-    email: string;
-    company: string;
-  };
-  preferences: Record<string, unknown>;
-  appearance: Record<string, unknown>;
-}
 
 // Define mockGeneralSettings locally since it's no longer exported
 const mockGeneralSettings: GeneralSettings = {
