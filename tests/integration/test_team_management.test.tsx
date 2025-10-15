@@ -45,7 +45,7 @@ describe('Team Management Integration Tests', () => {
     test('should create new team successfully', async () => {
       // Mock successful team creation
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/teams' && (options as any)?.method === 'POST') {
+        if (url === '/api/teams' && (options as RequestInit)?.method === 'POST') {
           return Promise.resolve({
             ok: true,
             status: 201,
@@ -97,7 +97,7 @@ describe('Team Management Integration Tests', () => {
     test('should handle team creation errors', async () => {
       // Mock API error
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/teams' && (options as any)?.method === 'POST') {
+        if (url === '/api/teams' && (options as RequestInit)?.method === 'POST') {
           return Promise.resolve({
             ok: false,
             status: 400,
@@ -136,7 +136,7 @@ describe('Team Management Integration Tests', () => {
     test('should add member to team', async () => {
       // Mock team list and member addition
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/teams' && (options as any)?.method === 'GET') {
+        if (url === '/api/teams' && (options as RequestInit)?.method === 'GET') {
           return Promise.resolve({
             ok: true,
             json: () => Promise.resolve({
@@ -149,7 +149,7 @@ describe('Team Management Integration Tests', () => {
             }),
           });
         }
-        if (url === '/api/teams/550e8400-e29b-41d4-a716-446655440002/members' && (options as any)?.method === 'POST') {
+        if (url === '/api/teams/550e8400-e29b-41d4-a716-446655440002/members' && (options as RequestInit)?.method === 'POST') {
           return Promise.resolve({
             ok: true,
             status: 201,
@@ -209,7 +209,7 @@ describe('Team Management Integration Tests', () => {
     test('should remove member from team', async () => {
       // Mock team with members
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/teams' && (options as any)?.method === 'GET') {
+        if (url === '/api/teams' && (options as RequestInit)?.method === 'GET') {
           return Promise.resolve({
             ok: true,
             json: () => Promise.resolve({
@@ -222,7 +222,7 @@ describe('Team Management Integration Tests', () => {
             }),
           });
         }
-        if (url === '/api/teams/550e8400-e29b-41d4-a716-446655440002/members' && (options as any)?.method === 'GET') {
+        if (url === '/api/teams/550e8400-e29b-41d4-a716-446655440002/members' && (options as RequestInit)?.method === 'GET') {
           return Promise.resolve({
             ok: true,
             json: () => Promise.resolve({
@@ -246,7 +246,7 @@ describe('Team Management Integration Tests', () => {
             }),
           });
         }
-        if (url === '/api/teams/550e8400-e29b-41d4-a716-446655440002/members/550e8400-e29b-41d4-a716-446655440005' && (options as any)?.method === 'DELETE') {
+        if (url === '/api/teams/550e8400-e29b-41d4-a716-446655440002/members/550e8400-e29b-41d4-a716-446655440005' && (options as RequestInit)?.method === 'DELETE') {
           return Promise.resolve({
             ok: true,
             status: 204,
@@ -288,7 +288,7 @@ describe('Team Management Integration Tests', () => {
     test('should prevent unauthorized team creation', async () => {
       // Mock insufficient permissions
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/teams' && (options as any)?.method === 'POST') {
+        if (url === '/api/teams' && (options as RequestInit)?.method === 'POST') {
           return Promise.resolve({
             ok: false,
             status: 403,

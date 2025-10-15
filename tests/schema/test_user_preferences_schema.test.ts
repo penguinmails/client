@@ -1,5 +1,4 @@
 import { describe, it, expect } from '@jest/globals';
-import { z } from 'zod';
 
 // This test should FAIL until user_preferences table schema is created
 // Test validates that the user_preferences table exists and has correct structure

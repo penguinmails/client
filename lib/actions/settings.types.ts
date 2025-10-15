@@ -9,8 +9,8 @@ export interface GeneralSettings {
     email: string;
     company: string;
   };
-  preferences: any;
-  appearance: any;
+  preferences: Record<string, unknown>;
+  appearance: Record<string, unknown>;
 }
 
 // Helper type for deep partial

@@ -10,8 +10,8 @@ describe('User Preferences API Contract Tests', () => {
     try {
       // TODO: Make actual API call to test endpoint
       throw new Error('GET /api/settings/user endpoint not implemented');
-    } catch (error: any) {
-      expect(error.message).toBe('GET /api/settings/user endpoint not implemented');
+    } catch (error: unknown) {
+      expect((error as Error).message).toBe('GET /api/settings/user endpoint not implemented');
     }
   });
 
@@ -19,8 +19,8 @@ describe('User Preferences API Contract Tests', () => {
     try {
       // TODO: Test POST endpoint for creating/updating preferences
       throw new Error('POST /api/settings/user endpoint not implemented');
-    } catch (error: any) {
-      expect(error.message).toBe('POST /api/settings/user endpoint not implemented');
+    } catch (error: unknown) {
+      expect((error as Error).message).toBe('POST /api/settings/user endpoint not implemented');
     }
   });
 

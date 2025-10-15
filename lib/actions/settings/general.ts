@@ -26,8 +26,8 @@ interface GeneralSettings {
     email: string;
     company: string;
   };
-  preferences: any;
-  appearance: any;
+  preferences: Record<string, unknown>;
+  appearance: Record<string, unknown>;
 }
 
 // Define mockGeneralSettings locally since it's no longer exported
@@ -162,7 +162,7 @@ export async function updateGeneralSettings(
   return withAuth(async (_context) => {
     return withErrorHandling(async () => {
       // Validate preferences if provided
-      if (settings.preferences?.timezone) {
+      if (settings.preferences?.timezone && typeof settings.preferences.timezone === 'string') {
         if (!isValidTimezone(settings.preferences.timezone)) {
           return ErrorFactory.validation(
             "Invalid timezone",

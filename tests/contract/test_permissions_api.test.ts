@@ -1,5 +1,76 @@
 import { describe, test, expect } from '@jest/globals';
 
+// Permission API Response Types
+interface PermissionCheckResponse {
+  has_permission: boolean;
+  reason?: string;
+  effective_roles: string[];
+}
+
+interface PermissionErrorResponse {
+  error: {
+    code: string;
+    message: string;
+  };
+}
+
+interface UserPermissionsResponse {
+  user_id: string;
+  permissions: {
+    global: Record<string, boolean>;
+    tenant: Record<string, boolean>;
+    company: Record<string, boolean>;
+    team: Record<string, boolean>;
+  };
+  role_assignments: Array<{
+    id: string;
+    user_id: string;
+    role_id: string;
+    scope_type: string;
+    scope_id: string;
+    assigned_by: string;
+    assigned_at: string;
+    role: unknown;
+  }>;
+}
+
+interface RolesListResponse {
+  roles: Array<{
+    id: string;
+    name: string;
+    description?: string;
+    permissions: string[];
+    is_system: boolean;
+    created_at: string;
+  }>;
+}
+
+interface RoleAssignmentsResponse {
+  assignments: Array<{
+    id: string;
+    user_id: string;
+    role_id: string;
+    scope_type: string;
+    scope_id: string;
+    assigned_by: string;
+    assigned_at: string;
+    role: unknown;
+    user: unknown;
+  }>;
+}
+
+interface RoleAssignmentResponse {
+  id: string;
+  user_id: string;
+  role_id: string;
+  scope_type: string;
+  scope_id: string;
+  assigned_by: string;
+  assigned_at: string;
+  role: unknown;
+  user: unknown;
+}
+
 describe('Permissions API Contract Tests', () => {
   const baseUrl = 'http://localhost:3000/api';
 
@@ -19,7 +90,7 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as any;
+      const data = await response.json() as Partial<PermissionCheckResponse>;
       expect(data).toHaveProperty('has_permission');
       expect(typeof data.has_permission).toBe('boolean');
       expect(data).toHaveProperty('reason');
@@ -42,7 +113,7 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(400);
-      const error = await response.json() as any;
+      const error = await response.json() as Partial<PermissionErrorResponse>;
       expect(error).toHaveProperty('error');
       expect(error.error).toHaveProperty('code');
       expect(error.error).toHaveProperty('message');
@@ -62,7 +133,7 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const permissions = await response.json() as any;
+      const permissions = await response.json() as Partial<UserPermissionsResponse>;
       expect(permissions).toHaveProperty('user_id');
       expect(permissions).toHaveProperty('permissions');
       expect(permissions.permissions).toHaveProperty('global');
@@ -86,7 +157,7 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(403);
-      const error = await response.json() as any;
+      const error = await response.json() as Partial<PermissionErrorResponse>;
       expect(error).toHaveProperty('error');
       expect(error.error).toHaveProperty('code');
       expect(error.error).toHaveProperty('message');
@@ -105,11 +176,11 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as any;
+      const data = await response.json() as Partial<RolesListResponse>;
       expect(data).toHaveProperty('roles');
       expect(Array.isArray(data.roles)).toBe(true);
 
-      if (data.roles.length > 0) {
+      if (data.roles && data.roles.length > 0) {
         const role = data.roles[0];
         expect(role).toHaveProperty('id');
         expect(role).toHaveProperty('name');
@@ -135,11 +206,11 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as any;
+      const data = await response.json() as Partial<RoleAssignmentsResponse>;
       expect(data).toHaveProperty('assignments');
       expect(Array.isArray(data.assignments)).toBe(true);
 
-      if (data.assignments.length > 0) {
+      if (data.assignments && data.assignments.length > 0) {
         const assignment = data.assignments[0];
         expect(assignment).toHaveProperty('id');
         expect(assignment).toHaveProperty('user_id');
@@ -165,14 +236,16 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as any;
+      const data = await response.json() as Partial<RoleAssignmentsResponse>;
       expect(data).toHaveProperty('assignments');
       expect(Array.isArray(data.assignments)).toBe(true);
 
       // All returned assignments should be for the specified user
-      data.assignments.forEach((assignment: any) => {
-        expect(assignment.user_id).toBe(userId);
-      });
+      if (data.assignments) {
+        data.assignments.forEach((assignment) => {
+          expect(assignment.user_id).toBe(userId);
+        });
+      }
       // This test will fail initially since the endpoint is not implemented
     });
 
@@ -188,15 +261,17 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as any;
+      const data = await response.json() as Partial<RoleAssignmentsResponse>;
       expect(data).toHaveProperty('assignments');
       expect(Array.isArray(data.assignments)).toBe(true);
 
       // All returned assignments should match the scope
-      data.assignments.forEach((assignment: any) => {
-        expect(assignment.scope_type).toBe(scopeType);
-        expect(assignment.scope_id).toBe(scopeId);
-      });
+      if (data.assignments) {
+        data.assignments.forEach((assignment) => {
+          expect(assignment.scope_type).toBe(scopeType);
+          expect(assignment.scope_id).toBe(scopeId);
+        });
+      }
       // This test will fail initially since the endpoint is not implemented
     });
   });
@@ -218,7 +293,7 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(201);
-      const assignment = await response.json() as any;
+      const assignment = await response.json() as Partial<RoleAssignmentResponse>;
       expect(assignment).toHaveProperty('id');
       expect(assignment).toHaveProperty('user_id');
       expect(assignment).toHaveProperty('role_id');
@@ -250,7 +325,7 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(409);
-      const error = await response.json() as any;
+      const error = await response.json() as Partial<PermissionErrorResponse>;
       expect(error).toHaveProperty('error');
       expect(error.error).toHaveProperty('code');
       expect(error.error).toHaveProperty('message');
@@ -284,7 +359,7 @@ describe('Permissions API Contract Tests', () => {
       });
 
       expect(response.status).toBe(403);
-      const error = await response.json() as any;
+      const error = await response.json() as Partial<PermissionErrorResponse>;
       expect(error).toHaveProperty('error');
       expect(error.error).toHaveProperty('code');
       expect(error.error).toHaveProperty('message');

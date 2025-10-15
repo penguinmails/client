@@ -10,8 +10,8 @@ describe('Company Settings API Contract Tests', () => {
     try {
       // TODO: Make actual API call to test endpoint
       throw new Error('GET /api/settings/company endpoint not implemented');
-    } catch (error: any) {
-      expect(error.message).toBe('GET /api/settings/company endpoint not implemented');
+    } catch (error: unknown) {
+      expect((error as Error).message).toBe('GET /api/settings/company endpoint not implemented');
     }
   });
 
@@ -19,8 +19,8 @@ describe('Company Settings API Contract Tests', () => {
     try {
       // TODO: Test POST endpoint for creating/updating settings
       throw new Error('POST /api/settings/company endpoint not implemented');
-    } catch (error: any) {
-      expect(error.message).toBe('POST /api/settings/company endpoint not implemented');
+    } catch (error: unknown) {
+      expect((error as Error).message).toBe('POST /api/settings/company endpoint not implemented');
     }
   });
 

@@ -44,7 +44,7 @@ const DEFAULT_SETTINGS: InheritedSettings = {
  * Get inherited settings for a user
  * Priority: User → Company → Tenant → Defaults
  */
-export async function getInheritedSettings(userId: string): Promise<InheritedSettings> {
+export async function getInheritedSettings(_userId: string): Promise<InheritedSettings> {
   try {
     // Start with defaults
     const settings = { ...DEFAULT_SETTINGS };
@@ -58,7 +58,7 @@ export async function getInheritedSettings(userId: string): Promise<InheritedSet
     throw new Error('Settings inheritance logic not implemented');
 
     return settings;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error getting inherited settings:', error);
     // Return defaults on error
     return DEFAULT_SETTINGS;
@@ -70,9 +70,9 @@ export async function getInheritedSettings(userId: string): Promise<InheritedSet
  * Ensures that user settings don't exceed company limits, etc.
  */
 export function validateInheritanceRules(
-  userSettings: Partial<InheritedSettings>,
-  companySettings: Partial<InheritedSettings>,
-  tenantSettings: Partial<InheritedSettings>
+  _userSettings: Partial<InheritedSettings>,
+  _companySettings: Partial<InheritedSettings>,
+  _tenantSettings: Partial<InheritedSettings>
 ): { isValid: boolean; errors: string[] } {
   const errors: string[] = [];
 

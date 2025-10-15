@@ -13,7 +13,7 @@ export interface CompanySettings {
   prioritySupport: boolean;
 
   // Flexible settings for future extensions
-  settings?: Record<string, any>;
+  settings?: Record<string, unknown>;
 
   createdAt?: string;
   updatedAt?: string;
@@ -26,7 +26,7 @@ export interface CompanySettingsInput {
   customBranding?: boolean;
   advancedAnalytics?: boolean;
   prioritySupport?: boolean;
-  settings?: Record<string, any>;
+  settings?: Record<string, unknown>;
 }
 
 /**
@@ -37,6 +37,6 @@ export interface CompanySettingsResponse {
   customBranding: boolean;
   advancedAnalytics: boolean;
   prioritySupport: boolean;
-  settings?: Record<string, any>;
+  settings?: Record<string, unknown>;
   updatedAt: string;
 }

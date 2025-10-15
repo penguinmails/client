@@ -1,5 +1,59 @@
 import { describe, test, expect } from '@jest/globals';
 
+// Team API Response Types
+interface TeamResponse {
+  id: string;
+  tenant_id: string;
+  company_id: string;
+  name: string;
+  description?: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface TeamsListResponse {
+  teams: TeamResponse[];
+}
+
+interface TeamMemberResponse {
+  id: string;
+  team_id: string;
+  user_id: string;
+  role_id: string;
+  added_by: string;
+  added_at: string;
+}
+
+interface TeamMembersResponse {
+  members: TeamMemberResponse[];
+}
+
+interface TeamInvitationResponse {
+  id: string;
+  team_id: string;
+  invited_email: string;
+  invited_by: string;
+  role_id: string;
+  token: string;
+  expires_at: string;
+  created_at: string;
+  team?: unknown;
+  role?: unknown;
+}
+
+interface InvitationAcceptResponse {
+  team: unknown;
+  member: unknown;
+}
+
+interface ErrorResponse {
+  error: {
+    code: string;
+    message: string;
+  };
+}
+
 describe('Teams API Contract Tests', () => {
   const baseUrl = 'http://localhost:3000/api';
 
@@ -14,19 +68,21 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as { teams: any[] };
+      const data = await response.json() as Partial<TeamsListResponse>;
       expect(data).toHaveProperty('teams');
-      expect(Array.isArray(data.teams)).toBe(true);
+      if (data.teams) {
+        expect(Array.isArray(data.teams)).toBe(true);
 
-      if (data.teams.length > 0) {
-        const team = data.teams[0];
-        expect(team).toHaveProperty('id');
-        expect(team).toHaveProperty('tenant_id');
-        expect(team).toHaveProperty('company_id');
-        expect(team).toHaveProperty('name');
-        expect(team).toHaveProperty('created_by');
-        expect(team).toHaveProperty('created_at');
-        expect(team).toHaveProperty('updated_at');
+        if (data.teams.length > 0) {
+          const team = data.teams[0];
+          expect(team).toHaveProperty('id');
+          expect(team).toHaveProperty('tenant_id');
+          expect(team).toHaveProperty('company_id');
+          expect(team).toHaveProperty('name');
+          expect(team).toHaveProperty('created_by');
+          expect(team).toHaveProperty('created_at');
+          expect(team).toHaveProperty('updated_at');
+        }
       }
       // This test will fail initially since the endpoint is not implemented
     });
@@ -48,7 +104,7 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(201);
-      const team = await response.json() as any;
+      const team = await response.json() as Partial<TeamResponse>;
       expect(team).toHaveProperty('id');
       expect(team).toHaveProperty('tenant_id');
       expect(team).toHaveProperty('company_id');
@@ -74,7 +130,7 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(400);
-      const error = await response.json() as any;
+      const error = await response.json() as Partial<ErrorResponse>;
       expect(error).toHaveProperty('error');
       expect(error.error).toHaveProperty('code');
       expect(error.error).toHaveProperty('message');
@@ -94,7 +150,7 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const team = await response.json() as any;
+      const team = await response.json() as Partial<TeamResponse>;
       expect(team).toHaveProperty('id');
       expect(team).toHaveProperty('tenant_id');
       expect(team).toHaveProperty('company_id');
@@ -117,7 +173,7 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(404);
-      const error = await response.json() as any;
+      const error = await response.json() as Partial<ErrorResponse>;
       expect(error).toHaveProperty('error');
       expect(error.error).toHaveProperty('code');
       expect(error.error).toHaveProperty('message');
@@ -141,7 +197,7 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const team = await response.json() as any;
+      const team = await response.json() as Partial<TeamResponse>;
       expect(team).toHaveProperty('id');
       expect(team).toHaveProperty('name');
       expect(team.name).toBe('Updated Team Name');
@@ -178,19 +234,21 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as { members: any[] };
+      const data = await response.json() as Partial<TeamMembersResponse>;
       expect(data).toHaveProperty('members');
-      expect(Array.isArray(data.members)).toBe(true);
+      if (data.members) {
+        expect(Array.isArray(data.members)).toBe(true);
 
-      if (data.members.length > 0) {
-        const member = data.members[0];
-        expect(member).toHaveProperty('id');
-        expect(member).toHaveProperty('team_id');
-        expect(member).toHaveProperty('user_id');
-        expect(member).toHaveProperty('role_id');
-        expect(member).toHaveProperty('added_by');
-        expect(member).toHaveProperty('added_at');
-        expect(member.team_id).toBe(teamId);
+        if (data.members.length > 0) {
+          const member = data.members[0];
+          expect(member).toHaveProperty('id');
+          expect(member).toHaveProperty('team_id');
+          expect(member).toHaveProperty('user_id');
+          expect(member).toHaveProperty('role_id');
+          expect(member).toHaveProperty('added_by');
+          expect(member).toHaveProperty('added_at');
+          expect(member.team_id).toBe(teamId);
+        }
       }
       // This test will fail initially since the endpoint is not implemented
     });
@@ -212,7 +270,7 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(201);
-      const member = await response.json() as any;
+      const member = await response.json() as Partial<TeamMemberResponse>;
       expect(member).toHaveProperty('id');
       expect(member).toHaveProperty('team_id');
       expect(member).toHaveProperty('user_id');
@@ -255,7 +313,7 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(201);
-      const invitation = await response.json() as any;
+      const invitation = await response.json() as Partial<TeamInvitationResponse>;
       expect(invitation).toHaveProperty('id');
       expect(invitation).toHaveProperty('team_id');
       expect(invitation).toHaveProperty('invited_email');
@@ -280,7 +338,7 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const invitation = await response.json() as any;
+      const invitation = await response.json() as Partial<TeamInvitationResponse>;
       expect(invitation).toHaveProperty('id');
       expect(invitation).toHaveProperty('team_id');
       expect(invitation).toHaveProperty('invited_email');
@@ -308,7 +366,7 @@ describe('Teams API Contract Tests', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as { team: any; member: any };
+      const data = await response.json() as Partial<InvitationAcceptResponse>;
       expect(data).toHaveProperty('team');
       expect(data).toHaveProperty('member');
       expect(data.team).toHaveProperty('id');

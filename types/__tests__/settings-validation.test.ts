@@ -21,7 +21,11 @@ interface UserSettings {
   id?: string;
   userId: string;
   timezone: string;
-  companyInfo: any;
+  companyInfo: {
+    name: string;
+    industry: string;
+    size: string;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -86,13 +90,6 @@ describe("Settings Validation Functions", () => {
           name: "Test Company",
           industry: "Technology",
           size: "10-50",
-          address: {
-            street: "123 Test St",
-            city: "Test City",
-            state: "TS",
-            zipCode: "12345",
-            country: "Test Country",
-          },
         },
       };
 
@@ -118,13 +115,6 @@ describe("Settings Validation Functions", () => {
           name: "",
           industry: "",
           size: "",
-          address: {
-            street: "123 Test St",
-            city: "Test City",
-            state: "TS",
-            zipCode: "12345",
-            country: "Test Country",
-          },
         },
       };
 

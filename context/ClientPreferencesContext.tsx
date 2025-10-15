@@ -12,7 +12,7 @@ interface ClientPreferencesContextType {
   preferences: UserPreferencesResponse | null;
   theme?: "light" | "dark" | "auto";
   setTheme?: (theme: "light" | "dark" | "auto") => void;
-  updatePreference?: (key: string, value: any) => Promise<void>;
+  updatePreference?: (key: string, value: unknown) => Promise<void>;
   isLoading: boolean;
   error: string | null;
   updatePreferences: (updates: Partial<UserPreferencesResponse>) => Promise<void>;
@@ -50,15 +50,16 @@ export function ClientPreferencesProvider({ children }: ClientPreferencesProvide
       }
       const data = await response.json() as UserPreferencesResponse;
       setPreferences(data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to load preferences');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load preferences';
+      setError(message);
       console.error('Error loading preferences:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updatePreferences = async (updates: Partial<UserPreferencesResponse>) => {
+  const updatePreferences = async (_updates: Partial<UserPreferencesResponse>): Promise<void> => {
     try {
       setError(null);
 
@@ -72,8 +73,9 @@ export function ClientPreferencesProvider({ children }: ClientPreferencesProvide
       // setPreferences(data);
 
       throw new Error('User preferences API not integrated');
-    } catch (err: any) {
-      setError(err.message || 'Failed to update preferences');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to update preferences';
+      setError(message);
       console.error('Error updating preferences:', err);
       throw err;
     }
@@ -84,7 +86,7 @@ export function ClientPreferencesProvider({ children }: ClientPreferencesProvide
     console.log('Setting theme to:', newTheme);
   };
 
-  const updatePreference = async (key: string, value: any) => {
+  const updatePreference = async (key: string, value: unknown) => {
     // This would update a preference when API is integrated
     console.log('Updating preference:', key, value);
   };

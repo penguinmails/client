@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { companySettingsSchema } from '@/lib/validations/settings';
+import { ZodError } from 'zod';
 
 // This implementation will fail until the database connection and logic are added
 // GET /api/settings/company - Get current company's settings
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     // TODO: Implement company settings retrieval
     // - Get company ID from authentication context
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest) {
     // - Return formatted response
 
     throw new Error('Company settings API not implemented');
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching company settings:', error);
     return NextResponse.json(
       { error: 'Failed to fetch company settings' },
@@ -26,8 +27,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Validate input
-    const validatedData = companySettingsSchema.parse(body);
+    // Validate input (data will be used when implementation is complete)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _validatedData = companySettingsSchema.parse(body);
 
     // TODO: Implement company settings creation/update
     // - Get company ID from authentication context
@@ -36,10 +38,10 @@ export async function POST(request: NextRequest) {
     // - Return updated settings
 
     throw new Error('Company settings API not implemented');
-  } catch (error: any) {
-    if (error.name === 'ZodError') {
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid input data', details: error.errors },
+        { error: 'Invalid input data', details: error.issues },
         { status: 400 }
       );
     }

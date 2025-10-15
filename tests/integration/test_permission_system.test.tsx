@@ -4,7 +4,6 @@ import React from 'react';
 
 // Mock components (will be implemented later)
 const PermissionManager = () => <div>Permission Manager</div>;
-const SettingsPanel = () => <div>Settings Panel</div>;
 
 // Mock the Next.js router
 jest.mock('next/navigation', () => ({
@@ -46,7 +45,7 @@ describe('Permission System Integration Tests', () => {
     test('should check user permissions successfully', async () => {
       // Mock successful permission check
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/permissions/check' && (options as any)?.method === 'POST') {
+        if (url === '/api/permissions/check' && (options as RequestInit)?.method === 'POST') {
           return Promise.resolve({
             ok: true,
             status: 200,
@@ -97,7 +96,7 @@ describe('Permission System Integration Tests', () => {
     test('should deny permission for insufficient access', async () => {
       // Mock permission denied
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/permissions/check' && (options as any)?.method === 'POST') {
+        if (url === '/api/permissions/check' && (options as RequestInit)?.method === 'POST') {
           return Promise.resolve({
             ok: true,
             status: 200,
@@ -146,7 +145,7 @@ describe('Permission System Integration Tests', () => {
     test('should assign role to user successfully', async () => {
       // Mock successful role assignment
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/roles/assignments' && (options as any)?.method === 'POST') {
+        if (url === '/api/roles/assignments' && (options as RequestInit)?.method === 'POST') {
           return Promise.resolve({
             ok: true,
             status: 201,
@@ -208,7 +207,7 @@ describe('Permission System Integration Tests', () => {
     test('should list user permissions correctly', async () => {
       // Mock user permissions response
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/permissions/user/550e8400-e29b-41d4-a716-446655440005' && (options as any)?.method === 'GET') {
+        if (url === '/api/permissions/user/550e8400-e29b-41d4-a716-446655440005' && (options as RequestInit)?.method === 'GET') {
           return Promise.resolve({
             ok: true,
             status: 200,
@@ -282,7 +281,7 @@ describe('Permission System Integration Tests', () => {
     test('should list available roles', async () => {
       // Mock roles list
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/roles' && (options as any)?.method === 'GET') {
+        if (url === '/api/roles' && (options as RequestInit)?.method === 'GET') {
           return Promise.resolve({
             ok: true,
             status: 200,
@@ -340,7 +339,7 @@ describe('Permission System Integration Tests', () => {
     test('should remove role assignment', async () => {
       // Mock role assignments list and removal
       (global.fetch as jest.Mock).mockImplementation((url, options) => {
-        if (url === '/api/roles/assignments' && (options as any)?.method === 'GET') {
+        if (url === '/api/roles/assignments' && (options as RequestInit)?.method === 'GET') {
           return Promise.resolve({
             ok: true,
             json: () => Promise.resolve({
@@ -369,7 +368,7 @@ describe('Permission System Integration Tests', () => {
             }),
           });
         }
-        if (url === '/api/roles/assignments/550e8400-e29b-41d4-a716-446655440004' && (options as any)?.method === 'DELETE') {
+        if (url === '/api/roles/assignments/550e8400-e29b-41d4-a716-446655440004' && (options as RequestInit)?.method === 'DELETE') {
           return Promise.resolve({
             ok: true,
             status: 204,

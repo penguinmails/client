@@ -8,6 +8,8 @@ import {
   mergePreferences,
   type ServerUserPreferences,
   type SyncedPreferences,
+  type SidebarView,
+  type TableDensity,
 } from "@/lib/utils/preferenceSync";
 
 interface UsePreferenceSyncOptions {
@@ -54,9 +56,9 @@ export function usePreferenceSync(
           // Update merged preferences
           const merged = mergePreferences(serverPrefs, {
             theme: clientPrefs.sidebarView === "expanded" ? "system" : "system", // This would come from actual client prefs
-            sidebarView: (clientPrefs.sidebarView || "expanded") as any,
+            sidebarView: (clientPrefs.sidebarView || "expanded") as SidebarView,
             sidebarCollapsed: clientPrefs.sidebarCollapsed || false,
-            tableDensity: (clientPrefs.tableDensity || "comfortable") as any,
+            tableDensity: (clientPrefs.tableDensity || "comfortable") as TableDensity,
           });
 
           setSyncedPreferences(merged);
@@ -64,9 +66,9 @@ export function usePreferenceSync(
           // If clientPrefs is not available, set merged preferences with safe defaults
           const merged = mergePreferences(serverPrefs, {
             theme: "system",
-            sidebarView: "expanded",
+            sidebarView: "expanded" as SidebarView,
             sidebarCollapsed: false,
-            tableDensity: "comfortable",
+            tableDensity: "comfortable" as TableDensity,
           });
 
           setSyncedPreferences(merged);
@@ -112,9 +114,9 @@ export function usePreferenceSync(
       if (clientPrefs) {
         const merged = mergePreferences({}, {
           theme: "system", // This would come from actual theme context
-          sidebarView: clientPrefs.sidebarView as any,
+          sidebarView: clientPrefs.sidebarView as SidebarView,
           sidebarCollapsed: clientPrefs.sidebarCollapsed || false,
-          tableDensity: clientPrefs.tableDensity as any,
+          tableDensity: clientPrefs.tableDensity as TableDensity,
         });
 
         setSyncedPreferences(merged);
@@ -133,9 +135,9 @@ export function usePreferenceSync(
     if (!clientLoading && clientPrefs) {
       const merged = mergePreferences({}, {
         theme: "system", // This would come from actual theme context
-        sidebarView: clientPrefs.sidebarView as any,
+        sidebarView: clientPrefs.sidebarView as SidebarView,
         sidebarCollapsed: clientPrefs.sidebarCollapsed || false,
-        tableDensity: clientPrefs.tableDensity as any,
+        tableDensity: clientPrefs.tableDensity as TableDensity,
       });
 
       setSyncedPreferences(merged);

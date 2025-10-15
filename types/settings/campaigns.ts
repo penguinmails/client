@@ -13,7 +13,7 @@ export interface Campaign {
   completedAt?: string;
 
   // Campaign settings - flexible configuration
-  settings?: Record<string, any>;
+  settings?: Record<string, unknown>;
 
   createdAt?: string;
   updatedAt?: string;
@@ -29,7 +29,7 @@ export interface CampaignInput {
   scheduledAt?: string;
 
   // Campaign settings
-  settings?: Record<string, any>;
+  settings?: Record<string, unknown>;
 }
 
 /**
@@ -44,7 +44,7 @@ export interface CampaignResponse {
   completedAt?: string;
 
   // Campaign settings
-  settings: Record<string, any>;
+  settings: Record<string, unknown>;
 
   updatedAt: string;
 }

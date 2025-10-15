@@ -14,28 +14,24 @@ describe('Settings Inheritance Logic Integration Tests', () => {
   });
 
   it('should validate user settings override company defaults', () => {
-    const userSettings = { theme: 'dark', language: 'es' };
-    const companySettings = { theme: 'light', language: 'en', timezone: 'UTC' };
-    const expectedResult = { theme: 'dark', language: 'es', timezone: 'UTC' };
+    const _userSettings = { theme: 'dark', language: 'es' };
 
     // TODO: Test that user settings take precedence over company settings
-    expect(userSettings.theme).toBe('dark');
+    expect(_userSettings.theme).toBe('dark');
   });
 
   it('should validate company settings override tenant defaults', () => {
-    const companySettings = { max_users: 50, max_domains: 10 };
-    const tenantSettings = { max_users: 100, max_domains: 20, default_theme: 'light' };
-    const expectedResult = { max_users: 50, max_domains: 10, default_theme: 'light' };
+    const _companySettings = { max_users: 50, max_domains: 10 };
 
     // TODO: Test that company settings take precedence over tenant settings
-    expect(companySettings.max_users).toBe(50);
+    expect(_companySettings.max_users).toBe(50);
   });
 
   it('should validate fallback to defaults when no settings exist', () => {
-    const defaultSettings = { theme: 'light', language: 'en', timezone: 'UTC' };
+    const _defaultSettings = { theme: 'light', language: 'en', timezone: 'UTC' };
 
     // TODO: Test fallback behavior
-    expect(defaultSettings.theme).toBe('light');
+    expect(_defaultSettings.theme).toBe('light');
   });
 
   it('should validate inheritance respects setting scope boundaries', () => {
