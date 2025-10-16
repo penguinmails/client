@@ -349,7 +349,10 @@ export const validateConfiguration = (): { isValid: boolean; errors: string[] } 
   }
 
   // Validate URL formats
-  if (process.env.NILEDB_API_URL && !process.env.NILEDB_API_URL.startsWith('https://')) {
+
+  const needsProductionSecurity = !['development', 'local', 'test'].includes(process.env.NODE_ENV)
+
+  if (needsProductionSecurity && process.env.NILEDB_API_URL && !process.env.NILEDB_API_URL.startsWith('https://')) {
     errors.push('NILEDB_API_URL must be a valid HTTPS URL');
   }
 

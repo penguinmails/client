@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  niledb:
+    image: ghcr.io/niledatabase/testingcontainer:latest
+    ports:
+      - "5443:5432"
+      - "3000:3000"
+    env_file:
+      - .env.local
+    volumes:
+      - nile_data:/var/lib/postgresql/data
+
+volumes:
+  nile_data:
