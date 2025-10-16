@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
 import { Input } from "@/components/ui/input";
@@ -25,18 +24,20 @@ export default function SignUpFormView() {
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
   const router = useRouter();
-  const { signup } = useAuth();
-  const nileSignUp = useSignUp({
-  onSuccess: () => {
-    toast?.success?.("Account created successfully!");
-     router.push("/dashboard");
-  },
-  onError: (err: any) => {
-    const msg = err?.message || "Signup failed. Please try again.";
-    setError(msg);
-  },
-  createTenant: true,
-});
+    const nileSignUp = useSignUp({
+    onSuccess: () => {
+      toast.success("Account created successfully!");
+      router.push("/dashboard");
+    },
+    onError: (err: unknown) => {
+      let msg = "Signup failed. Please try again.";
+      if (err instanceof Error) {
+        msg = err.message;
+      }
+      setError(msg);
+    },
+    createTenant: true,
+  });
 
   // Initialize react-hook-form
   const {
@@ -68,9 +69,6 @@ export default function SignUpFormView() {
 
     try {
       // Call centralized signup function
-      await signup(data.email, data.password, data.name);
-      router.push("/dashboard");
-      // Call the mutate function returned by useSignUp directly
       nileSignUp({ email: data.email, password: data.password, name: data.name });
     } catch (err: unknown) {
       console.error("Signup failed:", err);
