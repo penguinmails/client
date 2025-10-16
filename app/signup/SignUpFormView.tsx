@@ -10,8 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signupContent } from "./content";
 import type { PasswordStrength } from "@/lib/utils";
+import { useSignUp } from "@niledatabase/react";
+import { toast } from "sonner";
 
 interface FormData {
+  name: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -23,6 +26,17 @@ export default function SignUpFormView() {
     useState<PasswordStrength | null>(null);
   const router = useRouter();
   const { signup } = useAuth();
+  const nileSignUp = useSignUp({
+  onSuccess: () => {
+    toast?.success?.("Account created successfully!");
+     router.push("/dashboard");
+  },
+  onError: (err: any) => {
+    const msg = err?.message || "Signup failed. Please try again.";
+    setError(msg);
+  },
+  createTenant: true,
+});
 
   // Initialize react-hook-form
   const {
@@ -33,6 +47,7 @@ export default function SignUpFormView() {
     setValue,
   } = useForm<FormData>({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -53,8 +68,10 @@ export default function SignUpFormView() {
 
     try {
       // Call centralized signup function
-      await signup(data.email, data.password);
+      await signup(data.email, data.password, data.name);
       router.push("/dashboard");
+      // Call the mutate function returned by useSignUp directly
+      nileSignUp({ email: data.email, password: data.password, name: data.name });
     } catch (err: unknown) {
       console.error("Signup failed:", err);
       if (
@@ -78,6 +95,23 @@ export default function SignUpFormView() {
         <p className="text-sm text-red-600">{error}</p>
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Name Field */}
+        <div className="space-y-2">
+          <Label htmlFor="name">{signupContent.form.name.label}</Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder={signupContent.form.name.placeholder}
+            {...register("name", {
+              required: "Name is required",
+            })}
+            disabled={isSignUpLoading}
+          />
+          {errors.name && (
+            <p className="text-sm text-red-600">{errors.name.message}</p>
+          )}
+        </div>
+
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email">{signupContent.form.email.label}</Label>

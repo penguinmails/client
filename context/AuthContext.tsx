@@ -385,6 +385,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signup = async (
     email: string,
     password: string,
+    name: string,
     _firstName?: string,
     _lastName?: string,
     _companyName?: string
@@ -393,7 +394,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
 
     try {
-      await signUpHook({ email, password });
+      await signUpHook({ email, password, name });
       toast.success("Account created successfully!");
     } catch (error) {
       console.error("Signup error:", error);
