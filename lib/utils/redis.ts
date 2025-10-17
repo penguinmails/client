@@ -1,28 +1,27 @@
 // ============================================================================
-// UPSTASH REDIS CONFIGURATION - Analytics caching infrastructure
+// REDIS CONFIGURATION - Analytics caching infrastructure
 // ============================================================================
-
+"use server";
 import { AnalyticsFilters } from "@/types/analytics/core";
-import { Redis } from "@upstash/redis";
+import Redis from "ioredis";
 
 /**
- * Create Redis client using environment variables.
- * Simplified configuration with graceful degradation.
+ * Create a Redis client using environment variables.
+ * Automatically connects to local Redis in development or to a cloud provider in production.
  */
 function createRedisClient(): Redis | null {
-  const url = process.env.UPSTASH_REDIS_REST_URL ? process.env.UPSTASH_REDIS_REST_URL : "";
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN ? process.env.UPSTASH_REDIS_REST_TOKEN: "";
+  const redisUrl =
+    process.env.REDIS_URL ||
+    (process.env.NODE_ENV === "development" ? "redis://localhost:6379" : "");
 
-  if (!url || !token) {
-    console.warn(
-      "Upstash Redis not configured. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN environment variables."
-    );
+  if (!redisUrl) {
+    console.warn("Redis not configured. Set REDIS_URL environment variable.");
     return null;
   }
 
   try {
-    const client = new Redis({ url, token });
-    console.log("Upstash Redis client configured successfully");
+    const client = new Redis(redisUrl);
+    console.log("Redis client configured successfully");
     return client;
   } catch (error) {
     console.error("Failed to create Redis client:", error);
@@ -50,37 +49,32 @@ export class AnalyticsCache {
     operation: string,
     entityIds: string[] = [],
     filters: AnalyticsFilters,
-    timeWindow: number = 300 // 5 minutes default
+    timeWindow: number = 300
   ): string {
     const entityPart = entityIds.length > 0 ? entityIds.sort().join(",") : "all";
-    const filterPart = Object.keys(filters).length > 0 
-      ? btoa(JSON.stringify(filters)).replace(/[^a-zA-Z0-9]/g, "") 
-      : "nofilters";
-    
-    // Round timestamp to time window for cache efficiency
-    const timestamp = Math.floor(Date.now() / (timeWindow * 1000)) * timeWindow;
-    
+    const filterPart =
+      Object.keys(filters).length > 0
+        ? btoa(JSON.stringify(filters)).replace(/[^a-zA-Z0-9]/g, "")
+        : "nofilters";
+
+    const timestamp =
+      Math.floor(Date.now() / (timeWindow * 1000)) * timeWindow;
+
     return `analytics:${domain}:${operation}:${entityPart}:${filterPart}:${timestamp}`;
   }
 
-  /**
-   * Get cached analytics data.
-   */
   async get<T>(cacheKey: string): Promise<T | null> {
     if (!this.redis) return null;
 
     try {
       const cached = await this.redis.get(cacheKey);
-      return cached ? (cached as T) : null;
+      return cached ? (JSON.parse(cached) as T) : null;
     } catch (error) {
       console.error("Redis get error:", error);
       return null;
     }
   }
 
-  /**
-   * Set cached analytics data with TTL.
-   */
   async set(
     cacheKey: string,
     data: unknown,
@@ -89,7 +83,7 @@ export class AnalyticsCache {
     if (!this.redis) return false;
 
     try {
-      await this.redis.setex(cacheKey, ttlSeconds, JSON.stringify(data));
+      await this.redis.set(cacheKey, JSON.stringify(data), "EX", ttlSeconds);
       return true;
     } catch (error) {
       console.error("Redis set error:", error);
@@ -97,9 +91,6 @@ export class AnalyticsCache {
     }
   }
 
-  /**
-   * Delete cached data by key.
-   */
   async delete(cacheKey: string): Promise<boolean> {
     if (!this.redis) return false;
 
@@ -112,10 +103,6 @@ export class AnalyticsCache {
     }
   }
 
-  /**
-   * Delete multiple cache keys by pattern.
-   * Uses SCAN to find keys matching pattern and deletes them.
-   */
   async deleteByPattern(pattern: string): Promise<number> {
     if (!this.redis) return 0;
 
@@ -131,96 +118,66 @@ export class AnalyticsCache {
     }
   }
 
-  /**
-   * Scan for keys matching a pattern.
-   */
   private async scanKeys(pattern: string): Promise<string[]> {
     if (!this.redis) return [];
 
     const keys: string[] = [];
-    let cursor = 0;
+    let cursor = "0";
 
     do {
       try {
-        const result = await this.redis.scan(cursor, {
-          match: pattern,
-          count: 100,
-        });
-        
-        cursor = Number(result[0]);
-        keys.push(...result[1]);
+        const [nextCursor, foundKeys] = await this.redis.scan(cursor, "MATCH", pattern, "COUNT", 100);
+        cursor = nextCursor;
+        keys.push(...foundKeys);
       } catch (error) {
         console.error("Redis scan error:", error);
         break;
       }
-    } while (cursor !== 0);
+    } while (cursor !== "0");
 
     return keys;
   }
 
-  /**
-   * Invalidate cache for a specific domain.
-   */
   async invalidateDomain(domain: string): Promise<number> {
     const pattern = `analytics:${domain}:*`;
     return await this.deleteByPattern(pattern);
   }
 
-  /**
-   * Invalidate cache for specific entities.
-   */
   async invalidateEntities(domain: string, entityIds: string[]): Promise<number> {
     const entityPart = entityIds.sort().join(",");
     const pattern = `analytics:${domain}:*:${entityPart}:*`;
     return await this.deleteByPattern(pattern);
   }
 
-  /**
-   * Invalidate all analytics cache.
-   */
   async invalidateAll(): Promise<number> {
     const pattern = "analytics:*";
     return await this.deleteByPattern(pattern);
   }
 
-  /**
-   * Get cache statistics.
-   */
   async getStats(): Promise<{
     isAvailable: boolean;
     totalKeys: number;
     analyticsKeys: number;
   }> {
     if (!this.redis) {
-      return {
-        isAvailable: false,
-        totalKeys: 0,
-        analyticsKeys: 0,
-      };
+      return { isAvailable: false, totalKeys: 0, analyticsKeys: 0 };
     }
 
     try {
-      const info = await this.redis.dbsize();
+      const totalKeys = await this.redis.dbsize();
       const analyticsKeys = await this.scanKeys("analytics:*");
 
       return {
         isAvailable: true,
-        totalKeys: info,
+        totalKeys,
         analyticsKeys: analyticsKeys.length,
       };
     } catch (error) {
       console.error("Redis stats error:", error);
-      return {
-        isAvailable: false,
-        totalKeys: 0,
-        analyticsKeys: 0,
-      };
+      return { isAvailable: false, totalKeys: 0, analyticsKeys: 0 };
     }
   }
 
-  /**
-   * Check if Redis is available.
-   */
   isAvailable(): boolean {
     return this.redis !== null;
   }
@@ -230,19 +187,10 @@ export class AnalyticsCache {
  * Cache TTL constants for different types of analytics data.
  */
 export const CACHE_TTL = {
-  // Real-time data (1 minute)
   REAL_TIME: 60,
-  
-  // Recent data (5 minutes)
   RECENT: 300,
-  
-  // Hourly aggregates (15 minutes)
   HOURLY: 900,
-  
-  // Daily aggregates (1 hour)
   DAILY: 3600,
-  
-  // Historical data (24 hours)
   HISTORICAL: 86400,
 } as const;
 
@@ -282,8 +230,5 @@ export const DOMAIN_CACHE_CONFIG = {
   },
 } as const;
 
-// Export singleton instance
 export const analyticsCache = new AnalyticsCache();
-
-// Export Redis client for direct access if needed
 export const redis = createRedisClient();
