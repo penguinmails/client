@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getLoopService } from '@/lib/services/loop';
+import { getAuthService } from '@/lib/niledb/auth';
 import { z } from 'zod';
 
 // Schema for transactional email requests
@@ -13,6 +14,10 @@ const transactionalEmailSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate user session for security
+    const authService = getAuthService();
+    await authService.validateSession();
+
     const body = await request.json();
     const validatedData = transactionalEmailSchema.parse(body);
 

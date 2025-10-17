@@ -49,7 +49,7 @@ class LoopService {
       });
 
       // Some SDK responses don't expose `contactId`; try common keys and fall back safely.
-      const contactId = (response as any).contactId ?? (response as any).id ?? undefined;
+      const contactId = ('contactId' in response ? response.contactId : 'id' in response ? response.id : undefined) as string | undefined;
 
       return {
         success: true,

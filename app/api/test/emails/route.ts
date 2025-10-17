@@ -89,55 +89,6 @@ export async function PATCH(request: Request) {
   }
 }
 
-// Email notification test endpoint
-export async function PUT(request: Request) {
-  try {
-    const body = await request.json();
-    const { email } = body;
-
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
-      return NextResponse.json(
-        { error: 'Valid email address is required' },
-        { status: 400 }
-      );
-    }
-
-    const loopService = getLoopService();
-
-    // Send a simple notification/test email
-    const result = await loopService.sendTransactionalEmail({
-      transactionalId: process.env.LOOP_VERIFICATION_TRANSACTIONAL_ID || 'verification',
-      email,
-      dataVariables: {
-        userName: 'Test User',
-        message: 'This is a test email notification from PenguinMails',
-        timestamp: new Date().toISOString(),
-        verificationToken: 'test-notification-token',
-        verificationUrl: `${process.env.NEXT_PUBLIC_APP_URL}/test-notification`,
-      },
-    });
-
-    return NextResponse.json({
-      success: result.success,
-      message: result.success ? 'Notification email sent successfully' : 'Failed to send notification email',
-      email,
-      contactId: result.contactId,
-      error: result.message,
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error('Notification email error:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to send notification email',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString(),
-      },
-      { status: 500 }
-    );
-  }
-}
 
 // Test endpoint to send different types of emails
 export async function POST(request: Request) {
