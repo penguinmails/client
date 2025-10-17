@@ -10,8 +10,8 @@ import { Redis } from "@upstash/redis";
  * Simplified configuration with graceful degradation.
  */
 function createRedisClient(): Redis | null {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  const url = process.env.UPSTASH_REDIS_REST_URL ? process.env.UPSTASH_REDIS_REST_URL : "";
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN ? process.env.UPSTASH_REDIS_REST_TOKEN: "";
 
   if (!url || !token) {
     console.warn(

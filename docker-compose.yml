@@ -1,6 +1,37 @@
-version: "3.8"
-
 services:
+  convex-backend:
+    # Change this to :${REV} if you want to pin to a specific version
+    image: ghcr.io/get-convex/convex-backend:latest
+    stop_grace_period: 10s
+    stop_signal: SIGINT
+    ports:
+      - "${PORT:-3210}:3210"
+      - "${SITE_PROXY_PORT:-3211}:3211"
+    volumes:
+      - convex_data:/convex/data
+    env_file:
+      - .env.local
+    healthcheck:
+      test: curl -f http://localhost:3210/version || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  convex-dashboard:
+    image: ghcr.io/get-convex/convex-dashboard:latest
+    stop_grace_period: 10s
+    stop_signal: SIGINT
+    ports:
+      - "${DASHBOARD_PORT:-6791}:6791"
+    env_file:
+      - .env.local
+    environment:
+      - NEXT_PUBLIC_DEPLOYMENT_URL=${NEXT_PUBLIC_DEPLOYMENT_URL:-http://127.0.0.1:${PORT:-3210}}
+    depends_on:
+      convex-backend:
+        condition: service_healthy
+
   niledb:
     image: ghcr.io/niledatabase/testingcontainer:latest
     ports:
@@ -11,5 +42,14 @@ services:
     volumes:
       - nile_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+
 volumes:
+  convex_data:
   nile_data:
+  redis_data:
