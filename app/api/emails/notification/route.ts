@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getLoopService } from '@/lib/services/loop';
+import { getAuthService } from '@/lib/niledb/auth';
 import { z } from 'zod';
 
 // Schema for notification email requests
@@ -19,6 +20,10 @@ const notificationEmailSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate user session for security
+    const authService = getAuthService();
+    await authService.validateSession();
+
     const body = await request.json();
     const validatedData = notificationEmailSchema.parse(body);
 
@@ -66,17 +71,20 @@ export async function POST(request: NextRequest) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const email = searchParams.get('email');
-    const message = searchParams.get('message') || 'This is a test notification from PenguinMails';
-    const subject = searchParams.get('subject') || 'Test Notification';
-    const userName = searchParams.get('userName') || 'Test User';
 
-    if (!email || !email.includes('@')) {
+    // Validate email parameter with Zod for consistency
+    const emailValidation = z.string().email({ message: "Valid email parameter is required" }).safeParse(searchParams.get('email'));
+    if (!emailValidation.success) {
       return NextResponse.json(
-        { error: 'Valid email parameter is required' },
+        { error: emailValidation.error.issues[0].message, details: emailValidation.error.issues },
         { status: 400 }
       );
     }
+
+    const email = emailValidation.data;
+    const message = searchParams.get('message') ?? 'This is a test notification from PenguinMails';
+    const subject = searchParams.get('subject') ?? 'Test Notification';
+    const userName = searchParams.get('userName') ?? 'Test User';
 
     const loopService = getLoopService();
     const result = await loopService.sendTestNotificationEmail(email, message, subject, userName);

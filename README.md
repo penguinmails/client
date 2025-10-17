@@ -178,6 +178,10 @@ RESEND_API_KEY=your-resend-key
 
 # Loop Email Service (Transactional Emails)
 LOOP_API_KEY=your-loops-api-key
+LOOP_VERIFICATION_TRANSACTIONAL_ID=your-verification-id
+LOOP_RESET_TRANSACTIONAL_ID=your-password-reset-id
+LOOP_WELCOME_TRANSACTIONAL_ID=your-welcome-id
+LOOP_NOTIFICATION_TRANSACTIONAL_ID=your-notification-id
 ```
 
 For complete setup instructions, see [`docs/infrastructure/cloudflare.md`](./docs/infrastructure/cloudflare.md).
@@ -239,8 +243,8 @@ await loopService.sendNotificationEmail(
 
 #### API Endpoints
 
-- `POST /api/emails/send` - Send transactional emails
-- `POST /api/emails/notification` - Send notification emails
+- `POST /api/emails/send` - Send transactional emails (requires authentication)
+- `POST /api/emails/notification` - Send notification emails (requires authentication)
 - `GET /api/emails/notification` - Test notification email functionality
 - `GET /api/test/emails` - Test email functionality
 
