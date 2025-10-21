@@ -6,12 +6,17 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint . --cache",
+    "typecheck": "tsc --noEmit",
+    "db:start": "docker compose up -d",
+    "db:stop": "docker compose down",
+    "db:logs": "docker compose logs"
   },
   "dependencies": {
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "16.0.0-beta.0"
+    "next": "16.0.0-beta.0",
+    "ioredis": "^5.8.2"
   },
   "devDependencies": {
     "typescript": "^5",
