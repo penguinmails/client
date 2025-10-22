@@ -210,10 +210,16 @@ export default function SignUpFormView() {
         </div>
 
         <div className="space-y-2">
-          <Turnstile
-            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-            onVerify={(token) => setToken(token)}
-          />
+          {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              onVerify={(token) => setToken(token)}
+            />
+          ) : (
+            <p className="text-sm text-destructive">
+              CAPTCHA is not configured. Please contact support.
+            </p>
+          )}
         </div>
 
         <Button type="submit" className="w-full" disabled={isSignUpLoading}>
