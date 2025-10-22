@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { signupContent } from "./content";
 import type { PasswordStrength } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 
+import { Turnstile } from "next-turnstile";
 
 interface FormData {
   name: string;
@@ -23,14 +24,14 @@ export default function SignUpFormView() {
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
   const { signup, error: authError } = useAuth();
+  const [token, setToken] = useState("");
 
   // Initialize react-hook-form
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
-    watch,
-    setValue,
   } = useForm<FormData>({
     defaultValues: {
       name: "",
@@ -52,7 +53,25 @@ export default function SignUpFormView() {
     setError(null);
     setIsSignUpLoading(true);
 
+    // This prevents the form from submitting if the CAPTCHA hasn’t been completed.
+    if (!token) {
+      setError("Please complete the CAPTCHA verification.");
+      return;
+    }
+
     try {
+      // Verify Turnstile token on your backend
+      const verifyRes = await fetch("/api/verify-turnstile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!verifyRes.ok) {
+        throw new Error("Turnstile verification failed");
+      }
+
+      // Proceed with Nile login only if token is valid
       // Call centralized signup function
       await signup(data.email, data.password, data.name);
     } catch (err: unknown) {
@@ -78,9 +97,7 @@ export default function SignUpFormView() {
 
   return (
     <>
-      {error && (
-        <p className="text-sm text-red-600">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Name Field */}
         <div className="space-y-2">
@@ -122,15 +139,10 @@ export default function SignUpFormView() {
 
         {/* Password Field */}
         <div className="space-y-2">
-          <PasswordInput
-            label={signupContent.form.password.label}
-            placeholder={signupContent.form.password.placeholder}
-            showStrengthMeter={true}
-            onStrengthChange={handlePasswordStrengthChange}
-            value={watch("password")}
-            onValueChange={(value) => setValue("password", value)}
-            disabled={isSignUpLoading}
-            {...register("password", {
+          <Controller
+            name="password"
+            control={control}
+            rules={{
               required: "Password is required",
               minLength: {
                 value: 8,
@@ -144,36 +156,64 @@ export default function SignUpFormView() {
                   return true;
                 },
               },
-            })}
+            }}
+            render={({ field }) => (
+              <PasswordInput
+                label={signupContent.form.password.label}
+                placeholder={signupContent.form.password.placeholder}
+                showStrengthMeter={true}
+                onStrengthChange={handlePasswordStrengthChange}
+                value={field.value}
+                onValueChange={field.onChange}
+                disabled={isSignUpLoading}
+                name={field.name}
+                onBlur={field.onBlur}
+                ref={field.ref}
+              />
+            )}
           />
           {errors.password && (
-            <p className="text-sm text-red-600">
-              {errors.password.message}
-            </p>
+            <p className="text-sm text-red-600">{errors.password.message}</p>
           )}
         </div>
 
         {/* Confirm Password Field */}
         <div className="space-y-2">
-          <PasswordInput
-            label={signupContent.form.confirmPassword.label}
-            placeholder={signupContent.form.confirmPassword.placeholder}
-            value={watch("confirmPassword")}
-            onValueChange={(value) => setValue("confirmPassword", value)}
-            disabled={isSignUpLoading}
-            {...register("confirmPassword", {
+          <Controller
+            name="confirmPassword"
+            control={control}
+            rules={{
               required: "Please confirm your password",
               validate: {
                 match: (value: string, { password }: FormData) =>
                   value === password || "Passwords do not match",
               },
-            })}
+            }}
+            render={({ field }) => (
+              <PasswordInput
+                label={signupContent.form.confirmPassword.label}
+                placeholder={signupContent.form.confirmPassword.placeholder}
+                value={field.value}
+                onValueChange={field.onChange}
+                disabled={isSignUpLoading}
+                name={field.name}
+                onBlur={field.onBlur}
+                ref={field.ref}
+              />
+            )}
           />
           {errors.confirmPassword && (
             <p className="text-sm text-red-600">
               {errors.confirmPassword.message}
             </p>
           )}
+        </div>
+
+        <div className="space-y-2">
+          <Turnstile
+            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+            onVerify={(token) => setToken(token)}
+          />
         </div>
 
         <Button type="submit" className="w-full" disabled={isSignUpLoading}>

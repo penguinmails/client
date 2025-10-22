@@ -395,7 +395,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
 
     try {
-      await signUpHook({ email, password, name });
+      const data = { email, password, name };
+      await signUpHook(data);
     } catch (error) {
       console.error("Signup error:", error);
       setLoading(false);
