@@ -1,0 +1,37 @@
+{
+  "Errors": {
+    "403-CAMPAIGNS": "You are not authorized to access this campaign resource.",
+    "401-LOGIN": "Invalid credentials. Please check your username and password.",
+    "500-AUTH": "An unexpected server error occurred during authentication."
+  },
+  "Metadata": {
+      "title": "Penguin Mails - Email Outreach & Domain Warm-up",
+      "description": "Enter the world of Penguin Mails, where every message is a delightful surprise!"
+  },
+  "Login": {
+    "title": "Welcome Back!",
+    "description": "Enter your credentials to access your dashboard.",
+    "email": {
+      "label": "Email",
+      "placeholder": "you@example.com"
+    },
+    "password": {
+      "label": "Password"
+    },
+    "forgotPassword": "Forgot password?",
+    "loginButton": {
+      "default": "Login",
+      "loading": "Logging In..."
+    },
+    "errors": {
+      "title": "Login Failed",
+      "incorrectPassword": "Incorrect password",
+      "userNotFound": "User not found",
+      "generic": "Login failed. Please check your credentials."
+    },
+    "signup": {
+      "text": "Don't have an account?",
+      "link": "Sign Up"
+    }
+  } 
+}
