@@ -11,6 +11,7 @@ import { loginContent } from "./content";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { AuthTemplate } from "@/components/auth/AuthTemplate";
+import { useTranslations } from 'next-intl';
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { login, user } = useAuth();
+  const t = useTranslations('Login');
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,19 +58,19 @@ export default function LoginPage() {
       <AuthTemplate
         mode={mode}
         icon={icon}
-        title={title}
-        description={description}
+        title={t('title')}
+        description={t('description')}
         footer={footer}
         error={mode === "form" ? error : undefined}
       >
         {user ? undefined : (
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{loginContent.email.label}</Label>
+              <Label htmlFor="email">{t('email.label')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder={loginContent.email.placeholder}
+                placeholder={t('email.placeholder')}
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -77,7 +79,7 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">{loginContent.password.label}</Label>
+                <Label htmlFor="password">{t('password.label')}</Label>
                 {/* <Link
                   href="/forgot-password"
                   className="text-sm font-medium text-primary hover:underline underline-offset-4"
@@ -96,8 +98,8 @@ export default function LoginPage() {
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading
-                ? loginContent.loginButton.loading
-                : loginContent.loginButton.default}
+                ? t('loginButton.loading')
+                : t('loginButton.default')}
             </Button>
           </form>
         )}
