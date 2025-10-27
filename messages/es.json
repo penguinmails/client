@@ -1,0 +1,37 @@
+{
+    "Errors": {
+        "403-CAMPAIGNS": "No está autorizado para acceder a este recurso de campaña.",
+        "401-LOGIN": "Credenciales inválidas. Por favor, revise su nombre de usuario y contraseña.",
+        "500-AUTH": "Ocurrió un error inesperado del servidor durante la autenticación."
+    },
+    "Metadata": {
+        "title": "Penguin Mails - Alcance por correo electrónico y calentamiento de dominio",
+        "description": "¡Bienvenido al mundo de Penguin Mails, donde cada mensaje es una sorpresa encantadora!"
+    },
+    "Login": {
+        "title": "¡Bienvenido de nuevo!",
+        "description": "Ingrese sus credenciales para acceder a su panel de control.",
+        "email": {
+            "label": "Correo electrónico",
+            "placeholder": "tu@ejemplo.com"
+        },
+        "password": {
+            "label": "Contraseña"
+        },
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "loginButton": {
+            "default": "Iniciar sesión",
+            "loading": "Iniciando sesión..."
+        },
+        "errors": {
+            "title": "Error de inicio de sesión",
+            "incorrectPassword": "Contraseña incorrecta",
+            "userNotFound": "Usuario no encontrado",
+            "generic": "Error de inicio de sesión. Por favor, verifica tus credenciales."
+        },
+        "signup": {
+            "text": "¿No tienes una cuenta?",
+            "link": "Regístrate"
+        }
+    }
+}
