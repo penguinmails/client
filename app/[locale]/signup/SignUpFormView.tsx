@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signupContent } from "./content";
 import type { PasswordStrength } from "@/lib/utils";
+import { Turnstile } from "next-turnstile";
+import { verifyTurnstileToken } from "./verifyToken";
 
 interface FormData {
   email: string;
@@ -23,6 +25,7 @@ export default function SignUpFormView() {
     useState<PasswordStrength | null>(null);
   const router = useRouter();
   const { signup } = useAuth();
+  const [token, setToken] = useState("");
 
   // Initialize react-hook-form
   const {
@@ -51,8 +54,17 @@ export default function SignUpFormView() {
     setError(null);
     setIsSignUpLoading(true);
 
+    // This prevents the form from submitting if the CAPTCHA hasn’t been completed.
+    if (!token) {
+      setError("Please complete the CAPTCHA verification.");
+      return;
+    }
+
     try {
-      // Call centralized signup function
+       // Verify Turnstile token on your backend
+      await verifyTurnstileToken(token);
+
+      // Proceed with Nile login only if token is valid
       await signup(data.email, data.password);
       router.push("/dashboard");
     } catch (err: unknown) {
@@ -152,6 +164,17 @@ export default function SignUpFormView() {
             <p className="text-sm text-red-600">
               {errors.confirmPassword.message}
             </p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              onVerify={(token) => setToken(token)}
+            />
+          ) : (
+            <p className="text-sm text-destructive">CAPTCHA is not configured. Please contact support.</p>
           )}
         </div>
 
