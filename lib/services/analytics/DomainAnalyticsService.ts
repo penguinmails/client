@@ -12,7 +12,7 @@ import {
 } from "@/types/analytics/core";
 import { DomainAnalytics } from "@/types/analytics/domain-specific";
 import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
-// import { api } from "@/convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
 import { createAnalyticsConvexHelper, ConvexQueryHelper } from "@/lib/utils/convex-query-helper";
 

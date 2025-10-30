@@ -44,7 +44,7 @@ import {
   performUpdateAnalyticsMutation,
   performBatchUpdateAnalyticsMutation
 } from "./mutations";
-// import { api } from "@/convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { createAnalyticsConvexHelper } from "@/lib/utils/convex-query-helper";
 
 /**

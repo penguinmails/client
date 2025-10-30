@@ -7,7 +7,7 @@
  * for type safety and standardized error handling.
  */
 
-// import { api } from '@/convex/_generated/api';
+import { api } from '@/convex/_generated/api';
 import { createAnalyticsConvexHelper } from '@/lib/utils/convex-query-helper';
 import { ConvexHttpClient } from 'convex/browser';
 import { 

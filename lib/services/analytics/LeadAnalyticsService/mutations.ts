@@ -16,7 +16,7 @@
  * - Return Promises of result types
  */
 
-// import { api } from "@/convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
 import { createAnalyticsConvexHelper } from "@/lib/utils/convex-query-helper";
 import type { LeadAnalyticsUpdatePayload } from "./types";
