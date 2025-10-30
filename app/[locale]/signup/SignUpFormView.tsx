@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

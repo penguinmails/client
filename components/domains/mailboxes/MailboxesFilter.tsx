@@ -1,5 +1,9 @@
-import { DropDownFilter, Filter, SearchInput } from "@/components/ui/custom/Filter";
-import { Button } from "@/components/ui/button";
+import {
+  DropDownFilter,
+  Filter,
+  SearchInput,
+} from "@/components/ui/custom/Filter";
+import { Button } from "@/components/ui/button/button";
 
 function MailboxesFilter() {
   return (

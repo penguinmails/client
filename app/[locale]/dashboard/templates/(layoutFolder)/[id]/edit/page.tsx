@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
@@ -48,7 +48,9 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
               <Button variant="outline" asChild>
                 <Link href={`/dashboard/templates/${id}`}>Cancel</Link>
               </Button>
-              <Button type="submit" form="edit-form">Save Changes</Button>
+              <Button type="submit" form="edit-form">
+                Save Changes
+              </Button>
             </div>
           </div>
         </CardHeader>

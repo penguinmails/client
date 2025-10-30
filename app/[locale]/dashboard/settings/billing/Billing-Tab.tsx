@@ -35,7 +35,7 @@ import {
   SettingsErrorBoundary,
   SettingsErrorFallback,
 } from "@/components/settings/SettingsErrorBoundary";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { toast } from "sonner";
 
 function BillingTab() {
@@ -101,16 +101,15 @@ function BillingTab() {
   const companyOptions = useMemo(
     () => ({
       onError: (error: string) => {
-        toast.error("Failed to load company information", { description: error });
+        toast.error("Failed to load company information", {
+          description: error,
+        });
       },
     }),
     []
   );
 
-  const companyDataAction = useServerAction(
-    getUserSettings,
-    companyOptions
-  );
+  const companyDataAction = useServerAction(getUserSettings, companyOptions);
   const { execute: loadCompanyData } = companyDataAction;
 
   // Load billing data on component mount
@@ -263,8 +262,12 @@ function BillingTab() {
                     <CreditCard className="w-5 h-5 text-gray-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">No payment method</p>
-                    <p className="text-sm text-gray-600">Add a payment method to continue</p>
+                    <p className="font-medium text-gray-900">
+                      No payment method
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Add a payment method to continue
+                    </p>
                   </div>
                 </div>
                 <UpdateCardDialogTrigger title="Add Card" />
@@ -284,12 +287,17 @@ function BillingTab() {
               className="text-sm text-blue-600 hover:text-blue-800 underline disabled:opacity-50"
               disabled={updateBillingAction.loading}
               onClick={() => {
-                const currentName = companyDataAction.data?.companyInfo.name || "Company";
+                const currentName =
+                  companyDataAction.data?.companyInfo.name || "Company";
                 const newCompanyName = prompt(
                   "Enter company name:",
                   currentName
                 );
-                if (newCompanyName && newCompanyName.trim() && newCompanyName.trim() !== currentName) {
+                if (
+                  newCompanyName &&
+                  newCompanyName.trim() &&
+                  newCompanyName.trim() !== currentName
+                ) {
                   handleCompanyNameUpdate(newCompanyName.trim());
                 }
               }}
@@ -315,7 +323,8 @@ function BillingTab() {
                     Industry
                   </label>
                   <p className="text-gray-600">
-                    {companyDataAction.data?.companyInfo.industry || "Technology Services"}
+                    {companyDataAction.data?.companyInfo.industry ||
+                      "Technology Services"}
                   </p>
                 </div>
                 <div>
@@ -323,7 +332,8 @@ function BillingTab() {
                     Company Size
                   </label>
                   <p className="text-gray-600">
-                    {companyDataAction.data?.companyInfo.size || "51-200 employees"}
+                    {companyDataAction.data?.companyInfo.size ||
+                      "51-200 employees"}
                   </p>
                 </div>
               </div>

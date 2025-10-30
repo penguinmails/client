@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link"; // Import Link
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -39,7 +39,7 @@ export default function ForgotPasswordPage() {
           } else {
             reject(new Error("Invalid email format"));
           }
-        }, 1500),
+        }, 1500)
       );
 
       console.log("Password reset request successful (simulated)");
@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to send reset link. Please try again.",
+          : "Failed to send reset link. Please try again."
       );
     } finally {
       setIsLoading(false);

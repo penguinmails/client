@@ -6,7 +6,7 @@ import {
   SearchInput,
 } from "@/components/ui/custom/Filter";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -178,11 +178,14 @@ function EmailMailboxesTable() {
           <div className="text-center py-12">
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <p className="text-gray-500 mb-4">{mailboxesError}</p>
-            <Button onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.location.reload();
-              }
-            }} variant="outline">
+            <Button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.location.reload();
+                }
+              }}
+              variant="outline"
+            >
               Try Again
             </Button>
           </div>

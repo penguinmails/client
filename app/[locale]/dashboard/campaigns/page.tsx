@@ -6,7 +6,7 @@ import CampaignsTable, {
 } from "@/components/campaigns/tables/CampaignsTable";
 import StatsCardSkeleton from "@/components/dashboard/cards/StatsCardSkeleton";
 import StatsCards from "@/components/campaigns/reports/StatsCards";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Plus, Send, Mail, Eye, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -22,7 +22,8 @@ interface CampaignsPageProps {
 export default function CampaignsPage({
   searchParams: _searchParams,
 }: CampaignsPageProps) {
-  const { totalSent, openRate, replyRate, clickRate, campaigns } = useAnalytics();
+  const { totalSent, openRate, replyRate, clickRate, campaigns } =
+    useAnalytics();
 
   const stats = [
     {
@@ -39,19 +40,19 @@ export default function CampaignsPage({
     },
     {
       title: "Open Rate",
-      value: openRate + '%',
+      value: openRate + "%",
       icon: Eye,
       color: "text-orange-500  bg-orange-100",
     },
     {
       title: "Click Rate",
-      value: clickRate + '%',
+      value: clickRate + "%",
       icon: TrendingUp,
       color: "bg-green-100 text-green-600",
     },
     {
       title: "Reply Rate",
-      value: replyRate + '%',
+      value: replyRate + "%",
       icon: Users,
       color: "text-pink-600 bg-pink-100",
     },

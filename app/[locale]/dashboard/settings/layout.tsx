@@ -3,7 +3,7 @@
 import Icon from "@/components/ui/custom/Icon";
 import NavLink from "@/components/settings/general/nav-link";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useClientPreferences } from "@/context/ClientPreferencesContext";
 import {
   Bell,
@@ -30,10 +30,10 @@ const tabs = [
 ];
 
 const themeOptions = [
-   { value: "light" as const, label: "Light", icon: Sun },
-   { value: "dark" as const, label: "Dark", icon: Moon },
-   { value: "system" as const, label: "System", icon: Monitor },
- ];
+  { value: "light" as const, label: "Light", icon: Sun },
+  { value: "dark" as const, label: "Dark", icon: Moon },
+  { value: "system" as const, label: "System", icon: Monitor },
+];
 
 function Layout({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);

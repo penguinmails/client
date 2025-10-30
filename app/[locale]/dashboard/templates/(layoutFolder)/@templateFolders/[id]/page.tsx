@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardDescription,
@@ -83,9 +83,7 @@ function Default() {
             </Button>
           </Link>
         </div>
-        <div className="text-red-500 text-center p-4">
-          {error}
-        </div>
+        <div className="text-red-500 text-center p-4">{error}</div>
       </div>
     );
   }

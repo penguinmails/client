@@ -8,7 +8,7 @@ import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { allTimezones, calculateMaxEmails, cn } from "@/lib/utils";
 import { Calendar, Check, ChevronsUpDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Command,
   CommandEmpty,
@@ -60,7 +60,7 @@ function ScheduleSettingStep() {
     } else {
       setValue(
         "schedule.days",
-        currentDays.filter((d) => d !== day),
+        currentDays.filter((d) => d !== day)
       );
     }
   };
@@ -261,7 +261,7 @@ function ScheduleSettingStep() {
                           "mr-2 h-4 w-4",
                           timezoneValue === zone.value
                             ? "opacity-100"
-                            : "opacity-0",
+                            : "opacity-0"
                         )}
                       />
                       {zone.label}

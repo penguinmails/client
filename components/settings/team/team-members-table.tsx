@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Table,
   TableBody,
@@ -150,7 +150,14 @@ function EditMemberDialog({
 interface AddMemberDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAdd: (data: { email: string; password: string; role: TeamRole; name?: string; givenName?: string; familyName?: string }) => void;
+  onAdd: (data: {
+    email: string;
+    password: string;
+    role: TeamRole;
+    name?: string;
+    givenName?: string;
+    familyName?: string;
+  }) => void;
   loading: boolean;
 }
 
@@ -266,7 +273,10 @@ function AddMemberDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleAdd} disabled={loading || !email.trim() || !password.trim()}>
+          <Button
+            onClick={handleAdd}
+            disabled={loading || !email.trim() || !password.trim()}
+          >
             {loading && <RefreshCw className="w-4 h-4 mr-2 animate-spin" />}
             Create Account
           </Button>
@@ -342,8 +352,14 @@ function TeamMembersTable() {
   );
 
   const addMemberAction = useServerActionWithParams(
-    (data: { email: string; password: string; role: TeamRole; name?: string; givenName?: string; familyName?: string }) =>
-      addTeamMember(data),
+    (data: {
+      email: string;
+      password: string;
+      role: TeamRole;
+      name?: string;
+      givenName?: string;
+      familyName?: string;
+    }) => addTeamMember(data),
     {
       onSuccess: () => {
         toast({
@@ -487,7 +503,14 @@ function TeamMembersTable() {
     }
   };
 
-  const handleAddMember = (data: { email: string; password: string; role: TeamRole; name?: string; givenName?: string; familyName?: string }) => {
+  const handleAddMember = (data: {
+    email: string;
+    password: string;
+    role: TeamRole;
+    name?: string;
+    givenName?: string;
+    familyName?: string;
+  }) => {
     addMemberAction.execute(data);
   };
 

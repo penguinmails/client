@@ -52,7 +52,8 @@ export const secondary: Story = {
   args: {
     variant: 'secondary',
     size: 'sm',
-    asChild: true
+    asChild: false,
+    children: 'Secondary Button',
   },
 };
 

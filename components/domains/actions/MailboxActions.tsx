@@ -4,7 +4,7 @@ import { Settings } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AlertDialogDelete from "@/components/ui/custom/AlertDialogDelete";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Dialog,
   DialogClose,
@@ -76,7 +76,7 @@ const updateMailboxSchema = z
     {
       message: "Passwords don't match",
       path: ["confirmPassword"],
-    },
+    }
   );
 
 type updateMailboxValuesType = z.infer<typeof updateMailboxSchema>;

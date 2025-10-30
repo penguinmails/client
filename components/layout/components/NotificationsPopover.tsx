@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { PopoverContent } from "@/components/ui/popover";
 import { Notification } from "@/types/notification";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
@@ -17,9 +17,7 @@ function NotificationsPopover() {
     const fetchNotifications = async () => {
       const data = await getNotifications();
       setNotifications(data.notifications);
-      setUnreadCount(
-        data.notifications.filter((n) => !n.isRead).length
-      );
+      setUnreadCount(data.notifications.filter((n) => !n.isRead).length);
     };
     fetchNotifications();
   }, []);

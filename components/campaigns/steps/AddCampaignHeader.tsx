@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import useBack from "@/hooks/use-back";
 import { ArrowLeft } from "lucide-react";
@@ -12,7 +12,7 @@ function AddCampaignHeader({ children }: { children?: React.ReactNode }) {
       <div className="bg-white border-b border-gray-200 px-8 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Button size={"icon"} onClick={back} variant="ghost" >
+            <Button size={"icon"} onClick={back} variant="ghost">
               <ArrowLeft />
             </Button>
             <div>

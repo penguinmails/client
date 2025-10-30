@@ -1,6 +1,15 @@
 import type { Preview } from '@storybook/nextjs-vite'
+import '@/app/[locale]/globals.css';
+import nextIntl from './next-intl';
 
 const preview: Preview = {
+  initialGlobals: {
+        locale: 'en',
+        locales: {
+            en: 'English',
+            es: 'Español',
+        },
+    },
   parameters: {
     controls: {
       matchers: {
@@ -14,7 +23,9 @@ const preview: Preview = {
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
       test: 'todo'
-    }
+    },
+
+    nextIntl,
   },
 };
 

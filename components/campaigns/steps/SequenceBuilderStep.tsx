@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
@@ -55,7 +55,7 @@ function SequenceBuilderStep() {
         issues.push({
           type: "consecutive_emails",
           stepIndex: i + 1,
-          message: `Step ${i + 2}: Two emails in a row without a wait step may cause delivery issues`
+          message: `Step ${i + 2}: Two emails in a row without a wait step may cause delivery issues`,
         });
       }
     }
