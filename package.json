@@ -45,7 +45,9 @@
     "test:all": "npm run test:services && npm run test:api-routes && npm run test:ui-components && npm run test:system",
     "test:critical": "npx tsx lib/niledb/__tests__/run-comprehensive-tests.ts --suites=unit-auth,unit-tenant,unit-company,migration-validation,api-integration,comprehensive-integration,end-to-end --fail-fast",
     "test:quick": "npx tsx lib/niledb/__tests__/run-comprehensive-tests.ts --suites=unit-auth,unit-tenant,unit-company --parallel",
-    "type-analysis": "npx tsx scripts/type-analysis/cli/analyze-types.ts"
+    "type-analysis": "npx tsx scripts/type-analysis/cli/analyze-types.ts",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -113,8 +115,13 @@
     "zod": "^4.1.5"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.1.2",
     "@eslint/eslintrc": "^3",
     "@next/eslint-plugin-next": "^15.5.2",
+    "@storybook/addon-a11y": "^10.0.0",
+    "@storybook/addon-docs": "^10.0.0",
+    "@storybook/addon-onboarding": "^10.0.0",
+    "@storybook/addon-vitest": "^10.0.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
@@ -128,14 +135,21 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-storybook": "^10.0.0",
     "jest": "^30.1.3",
     "jest-environment-jsdom": "^30.1.2",
     "node-fetch": "^3.3.2",
     "prettier": "3.6.2",
+    "storybook": "^10.0.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.1",
     "tw-animate-css": "^1.3.7",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@storybook/nextjs-vite": "^10.0.0",
+    "vitest": "^4.0.4",
+    "playwright": "^1.56.1",
+    "@vitest/browser-playwright": "^4.0.4",
+    "@vitest/coverage-v8": "^4.0.4"
   }
 }

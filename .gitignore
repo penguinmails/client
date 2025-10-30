@@ -51,3 +51,6 @@ npm-debug.log*
 .specify
 old
 specs
+
+*storybook.log
+storybook-static
