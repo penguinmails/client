@@ -354,6 +354,7 @@ Built with ❤️ for modern email marketing workflows.
     <tr><td><img src="https://avatars.githubusercontent.com/u/53250640?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/yodit93">yodit93</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
     <tr><td><img src="https://avatars.githubusercontent.com/u/112190828?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Mhmd0Mhmod">Mhmd0Mhmod</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
     <tr><td><img src="https://avatars.githubusercontent.com/u/229774540?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/penguinmails-dev">penguinmails-dev</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
+    <tr><td><img src="https://avatars.githubusercontent.com/u/241014428?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/ajrenz531-boop">ajrenz531-boop</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
   </tbody>
 </table>
 <!-- CONTRIBUTORS END -->
