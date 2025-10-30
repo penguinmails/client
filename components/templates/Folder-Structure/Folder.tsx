@@ -10,7 +10,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { ContextMenuSeparator } from "@radix-ui/react-context-menu";
 import {
   Edit2,
@@ -76,7 +76,7 @@ function Folder({
                 <Folder key={child.id} folder={child as TemplateFolder} />
               ) : (
                 showFiles && <File key={child.id} file={child as Template} />
-              ),
+              )
             )}
           </AccordionContent>
         </AccordionItem>

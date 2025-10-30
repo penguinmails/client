@@ -16,7 +16,7 @@
  * - Return Promises of typed analytics data
  */
 
-import { api } from "@/convex/_generated/api";
+// import { api } from "@/convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
 import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
 import { createAnalyticsConvexHelper } from "@/lib/utils/convex-query-helper";

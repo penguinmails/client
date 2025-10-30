@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { useState } from "react";
 
 function Filter({
@@ -22,7 +22,7 @@ function Filter({
     <div
       className={cn(
         "flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0 lg:space-x-4 p-4 bg-white border rounded-lg shadow-sm",
-        className,
+        className
       )}
     >
       {children}

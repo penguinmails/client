@@ -21,7 +21,7 @@
  */
 
 import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+// import { api } from "@/convex/_generated/api";
 import { AnalyticsError, AnalyticsErrorType } from "../BaseAnalyticsService";
 import { createAnalyticsConvexHelper } from "@/lib/utils/convex-query-helper";
 import type {

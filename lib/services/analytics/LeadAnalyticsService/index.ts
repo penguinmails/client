@@ -42,7 +42,7 @@ import {
   performUpdateAnalyticsMutation
 } from "./mutations";
 import { CACHE_TTL } from "@/lib/utils/redis";
-import { api } from "@/convex/_generated/api";
+// import { api } from "@/convex/_generated/api";
 import { createAnalyticsConvexHelper } from "@/lib/utils/convex-query-helper";
 
 /**

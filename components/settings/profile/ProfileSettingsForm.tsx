@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { Label } from "../../ui/label";

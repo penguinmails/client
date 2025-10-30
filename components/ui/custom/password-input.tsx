@@ -8,7 +8,7 @@ import {
   debounce,
   type PasswordStrength,
 } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Button } from "@/components/ui/button/button";
 import { Label } from "@/components/ui/label";
 import { PasswordStrengthMeter } from "./password-strength-meter";

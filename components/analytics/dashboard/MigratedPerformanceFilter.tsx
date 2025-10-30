@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import {
   Popover,

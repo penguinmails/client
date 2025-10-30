@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, User } from "lucide-react";
 import { LandingLayout } from "@/components/landing/LandingLayout";
