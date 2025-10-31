@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-
+import { withTests } from "@storybook/addon-jest";
+import results from '../../../.jest-test-results.json';
 import { Button } from "./button";
 
 const meta = {
   title: "components/ui/button",
   component: Button,
+  decorators: [withTests({ results })],
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -30,7 +32,7 @@ export const Default: Story = {
   },
 };
 
-export const destructive: Story = {
+export const Destructive: Story = {
   args: {
     labelKey: "label",
     variant: "destructive",
@@ -41,7 +43,7 @@ export const destructive: Story = {
   },
 };
 
-export const outline: Story = {
+export const Outline: Story = {
   args: {
     variant: "outline",
     size: "sm",
@@ -49,7 +51,7 @@ export const outline: Story = {
   },
 };
 
-export const secondary: Story = {
+export const Secondary: Story = {
   args: {
     variant: "secondary",
     size: "sm",
@@ -58,7 +60,7 @@ export const secondary: Story = {
   },
 };
 
-export const ghost: Story = {
+export const Ghost: Story = {
   args: {
     variant: "ghost",
     size: "sm",
@@ -66,7 +68,7 @@ export const ghost: Story = {
   },
 };
 
-export const link: Story = {
+export const Link: Story = {
   args: {
     variant: "link",
     size: "sm",

@@ -1,11 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
- 
+import { withTests } from "@storybook/addon-jest";
+import results from '../../../.jest-test-results.json';
 import { Input } from './input';
+
  
 const meta = {
     title: 'components/ui/input',
     component: Input,
     tags: ['autodocs'],
+    decorators: [withTests({ results })],
     parameters: {
         docs: {
             description: {

@@ -46,6 +46,7 @@
     "test:critical": "npx tsx lib/niledb/__tests__/run-comprehensive-tests.ts --suites=unit-auth,unit-tenant,unit-company,migration-validation,api-integration,comprehensive-integration,end-to-end --fail-fast",
     "test:quick": "npx tsx lib/niledb/__tests__/run-comprehensive-tests.ts --suites=unit-auth,unit-tenant,unit-company --parallel",
     "type-analysis": "npx tsx scripts/type-analysis/cli/analyze-types.ts",
+    "test:generate-output": "jest --json --outputFile=.jest-test-results.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -118,6 +119,7 @@
     "@chromatic-com/storybook": "^4.1.2",
     "@eslint/eslintrc": "^3",
     "@next/eslint-plugin-next": "^15.5.2",
+    "@storybook/addon-jest": "^9.1.12",
     "@storybook/nextjs": "^9.1.16",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.8.0",

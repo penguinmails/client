@@ -54,3 +54,4 @@ specs
 
 *storybook.log
 storybook-static
+.jest-test-results.json

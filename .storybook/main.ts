@@ -6,6 +6,7 @@ const config: StorybookConfig = {
   ],
   "addons": [
     'storybook-next-intl',
+    '@storybook/addon-jest'
   ],
   "framework": {
     "name": "@storybook/nextjs",
