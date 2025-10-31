@@ -54,7 +54,7 @@ jobs:
       #     CI: true
 
       - name: Run build
-        run: echo CONVEX_DEPLOYMENT=${{ secrets.CONVEX_DEPLOYMENT }} && npm run build
+        run: echo "$CONVEX_DEPLOYMENT=${{ secrets.CONVEX_DEPLOYMENT }}" && CONVEX_DEPLOYMENT=production:clean-aardvark-139 npm run build
         env:
           NILEDB_API_URL: ${{ secrets.NILEDB_API_URL }}
           NILEDB_USER: ${{ secrets.NILEDB_USER }}
