@@ -54,7 +54,7 @@ jobs:
       #     CI: true
 
       - name: Run build
-        run: CONVEX_DEPLOY_KEY=${{ secrets.CONVEX_DEPLOY_KEY }} npx convex dev --once && npm run build
+        run: CONVEX_DEPLOY_KEY='${{ secrets.CONVEX_DEPLOY_KEY }}' npx convex dev --once && npm run build
         env:
           NILEDB_API_URL: ${{ secrets.NILEDB_API_URL }}
           NILEDB_USER: ${{ secrets.NILEDB_USER }}
