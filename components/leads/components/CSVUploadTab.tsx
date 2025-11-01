@@ -87,7 +87,7 @@ function FileUploadZone({
       />
 
       <Card
-        className="border-2 border-dashed border-gray-300 hover:border-primary hover:bg-muted/50 transition-all cursor-pointer"
+        className="border-2 border-dashed border-border hover:border-primary hover:bg-muted/50 transition-all cursor-pointer"
         onDrop={(e) => {
           e.preventDefault();
           handleFileChange(e.dataTransfer.files[0]);

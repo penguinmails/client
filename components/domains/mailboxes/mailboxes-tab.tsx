@@ -45,7 +45,7 @@ function MailboxesTab({
           <CardTitle>
             <div className="flex items-center space-x-2">
               <Mail className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-foreground">
                 All Mailboxes
               </h2>
               <Badge className="bg-primary/20 text-primary">Loading...</Badge>
@@ -56,7 +56,7 @@ function MailboxesTab({
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-primary mx-auto mb-4 animate-spin" />
-              <p className="text-gray-500">Loading mailboxes...</p>
+              <p className="text-muted-foreground">Loading mailboxes...</p>
             </div>
           </div>
         </CardContent>
@@ -71,17 +71,19 @@ function MailboxesTab({
           <CardTitle>
             <div className="flex items-center space-x-2">
               <Mail className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-foreground">
                 All Mailboxes
               </h2>
-              <Badge className="bg-red-100 text-red-800">Error</Badge>
+              <Badge className="bg-red-100 dark:bg-red-500/20 text-red-800 dark:text-red-400">
+                Error
+              </Badge>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-12">
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <p className="text-gray-500 mb-4">{error}</p>
+            <p className="text-muted-foreground mb-4">{error}</p>
             <Button onClick={() => window.location.reload()} variant="outline">
               Try Again
             </Button>
@@ -97,7 +99,7 @@ function MailboxesTab({
         <CardTitle>
           <div className="flex items-center space-x-2">
             <Mail className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-foreground">
               All Mailboxes
             </h2>
             <Badge className="bg-primary/20 text-primary">
