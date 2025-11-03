@@ -23,6 +23,7 @@ export default function ResetPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+  const [isTokenValidating, setIsTokenValidating] = useState(true);
   const [tokenError, setTokenError] = useState<string | null>(null);
 
   // Validate token on mount
@@ -64,6 +65,8 @@ export default function ResetPasswordPage() {
         console.error('Token validation error:', err);
         setTokenValid(false);
         setTokenError('Failed to validate reset token');
+      } finally {
+        setIsTokenValidating(false);
       }
     };
 
@@ -122,6 +125,24 @@ export default function ResetPasswordPage() {
       [field]: e.target.value
     }));
   };
+
+  // Show loading state while validating token
+  if (isTokenValidating) {
+    return (
+      <LandingLayout>
+        <AuthTemplate
+          mode="form"
+          icon={Loader2}
+          title="Validating Reset Link..."
+          description="Please wait while we validate your password reset link."
+        >
+          <div className="flex justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </AuthTemplate>
+      </LandingLayout>
+    );
+  }
 
   // Show error if token is invalid
   if (tokenValid === false) {

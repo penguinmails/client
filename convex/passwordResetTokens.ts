@@ -15,9 +15,7 @@ export const createToken = mutation({
       .filter((q) => q.lt(q.field("expiresAt"), Date.now()))
       .collect()
       .then((expiredTokens) => {
-        expiredTokens.forEach(async (token) => {
-          await ctx.db.delete(token._id);
-        });
+        return Promise.all(expiredTokens.map((token) => ctx.db.delete(token._id)));
       });
 
     return await ctx.db.insert("passwordResetTokens", {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ConvexHttpClient } from 'convex/browser';
 import { getAuthService } from '@/lib/niledb/auth';
 import { z } from 'zod';
+import { validateToken } from '@/lib/auth/passwordResetTokenUtils';
 
 const resetPasswordSchema = z.object({
   token: z.string().min(1),
@@ -21,30 +22,7 @@ export async function POST(request: NextRequest) {
     const validatedData = resetPasswordSchema.parse(body);
 
     // Validate token
-    const tokenInfo = await (convex as any).query('passwordResetTokens:validateToken', {
-      token: validatedData.token,
-    });
-
-    if (!tokenInfo) {
-      return NextResponse.json(
-        { error: 'Invalid reset token' },
-        { status: 400 }
-      );
-    }
-
-    if (tokenInfo.expired) {
-      return NextResponse.json(
-        { error: 'Reset token has expired' },
-        { status: 400 }
-      );
-    }
-
-    if (tokenInfo.used) {
-      return NextResponse.json(
-        { error: 'Reset token has already been used' },
-        { status: 400 }
-      );
-    }
+    const tokenInfo = await validateToken(convex, validatedData.token);
 
     // Update password using NileDB auth service
     const authService = getAuthService();
@@ -72,6 +50,13 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid request data', details: error.issues },
+        { status: 400 }
+      );
+    }
+
+    if (error instanceof Error && error.message.includes('token')) {
+      return NextResponse.json(
+        { error: error.message },
         { status: 400 }
       );
     }

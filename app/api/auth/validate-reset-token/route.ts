@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { api } from '@/convex/_generated/api';
 import { ConvexHttpClient } from 'convex/browser';
 import { z } from 'zod';
+import { validateToken } from '@/lib/auth/passwordResetTokenUtils';
 
 const validateTokenSchema = z.object({
   token: z.string().min(1),
@@ -15,30 +16,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = validateTokenSchema.parse(body);
 
-    const tokenInfo = await (convex as any).query('passwordResetTokens:validateToken', {
-      token: validatedData.token,
-    });
-
-    if (!tokenInfo) {
-      return NextResponse.json(
-        { error: 'Invalid reset token' },
-        { status: 400 }
-      );
-    }
-
-    if (tokenInfo.expired) {
-      return NextResponse.json(
-        { error: 'Reset token has expired' },
-        { status: 400 }
-      );
-    }
-
-    if (tokenInfo.used) {
-      return NextResponse.json(
-        { error: 'Reset token has already been used' },
-        { status: 400 }
-      );
-    }
+    await validateToken(convex, validatedData.token);
 
     // Token is valid
     return NextResponse.json({
@@ -52,6 +30,13 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid request data', details: error.issues },
+        { status: 400 }
+      );
+    }
+
+    if (error instanceof Error && error.message.includes('token')) {
+      return NextResponse.json(
+        { error: error.message },
         { status: 400 }
       );
     }
