@@ -63,7 +63,7 @@ const eslintConfig = defineConfig([
       reportUnusedDisableDirectives: "warn",
     },
   },
-  ...(storybook.configs["flat/recommended"] as any[] || []),
+  ...storybook.configs['flat/recommended'],
 ]);
 
 export default eslintConfig;
