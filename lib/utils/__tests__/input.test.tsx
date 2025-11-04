@@ -24,9 +24,9 @@ describe("Input component", () => {
   });
 
   it("renders with the correct type", () => {
-    render(<CustomInput type="password" />);
+    render(<CustomInput type="email" />);
     const input = screen.getByRole("textbox");
-    expect(input).toHaveAttribute("type", "password");
+    expect(input).toHaveAttribute("type", "email");
   });
 
   it("updates value on user input", () => {
