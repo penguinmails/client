@@ -48,14 +48,22 @@ export async function POST(request: NextRequest) {
     // Token is valid, mark it as used
     const tokenMarked = await markTokenAsUsed(validatedData.token);
     if (!tokenMarked) {
-      console.warn('Failed to mark token as used, but continuing with verification');
+      console.error(`Critical: Failed to mark token as used: ${validatedData.token}`);
+      return NextResponse.json({
+        success: false,
+        error: 'Verification process failed. Please try again.'
+      }, { status: 500 });
     }
 
     // Update user verification status
     if (tokenValidation.email) {
       const userUpdated = await updateUserVerificationStatus(tokenValidation.email);
       if (!userUpdated) {
-        console.warn('Failed to update user verification status, but continuing with verification');
+        console.error(`Critical: Failed to update verification status for email: ${tokenValidation.email}`);
+        return NextResponse.json({
+          success: false,
+          error: 'Verification process failed. Please try again.'
+        }, { status: 500 });
       }
     }
 

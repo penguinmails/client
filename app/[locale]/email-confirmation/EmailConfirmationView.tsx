@@ -98,13 +98,18 @@ export function EmailConfirmationView({ email }: EmailConfirmationViewProps) {
         <Button
           variant="outline"
           onClick={handleResendEmail}
-          disabled={isResending}
+          disabled={isResending || countdown > 0}
           className="w-full"
         >
           {isResending ? (
             <>
               <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
               Sending...
+            </>
+          ) : countdown > 0 ? (
+            <>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Resend in {countdown}s
             </>
           ) : (
             <>
@@ -118,10 +123,10 @@ export function EmailConfirmationView({ email }: EmailConfirmationViewProps) {
           Didn&apos;t receive the email? Check your spam folder or{" "}
           <button
             onClick={handleResendEmail}
-            disabled={isResending}
+            disabled={isResending || countdown > 0}
             className="text-primary underline hover:no-underline disabled:opacity-50"
           >
-            click here to resend
+            {countdown > 0 ? `click here to resend in ${countdown}s` : 'click here to resend'}
           </button>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { CheckCircle, XCircle, RefreshCw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LandingLayout } from "@/components/landing/LandingLayout";
 import { AuthTemplate } from "@/components/auth/AuthTemplate";
+import { toast } from "sonner";
 
 interface VerificationResult {
   success: boolean;
@@ -101,14 +102,20 @@ export default function VerifyEmailPage() {
 
       if (response.ok && data.success) {
         // Show success message and redirect to email confirmation
-        alert("A new verification link has been sent to your email.");
+        toast.success("A new verification link has been sent to your email.", {
+          duration: 4000,
+        });
         router.push('/email-confirmation');
       } else {
-        alert(data.error || "Failed to resend verification email. Please try again.");
+        toast.error(data.error || "Failed to resend verification email. Please try again.", {
+          duration: 4000,
+        });
       }
     } catch (error) {
       console.error('Error resending verification email:', error);
-      alert("Failed to resend verification email. Please try again.");
+      toast.error("Failed to resend verification email. Please try again.", {
+        duration: 4000,
+      });
     } finally {
       setIsResending(false);
     }

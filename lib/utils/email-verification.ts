@@ -1,6 +1,9 @@
 /**
  * Email verification utilities for handling token management
  * without requiring Convex client in API routes
+ * 
+ * This module interacts with the email_verification_tokens table
+ * which is managed by Convex through the schema definition.
  */
 
 import { getDatabaseService } from '@/lib/niledb';
@@ -21,6 +24,9 @@ export function getVerificationTokenExpiry(): number {
 
 /**
  * Store verification token in database
+ * 
+ * This function assumes the email_verification_tokens table exists
+ * and is managed through Convex schema migrations.
  */
 export async function storeVerificationToken(
   email: string, 
@@ -30,56 +36,21 @@ export async function storeVerificationToken(
   try {
     const dbService = getDatabaseService();
     
-    // Try to store in Convex-compatible format if available
-    try {
-      // For now, we'll use a simple in-memory or database storage
-      // In production, you might want to use Redis or a dedicated token service
-      await dbService.queryCrossTenant(
-        `INSERT INTO email_verification_tokens (email, token, expires_at, used, created_at)
-         VALUES ($1, $2, $3, false, NOW())
-         ON CONFLICT (email) DO UPDATE SET
-           token = EXCLUDED.token,
-           expires_at = EXCLUDED.expires_at,
-           used = false,
-           created_at = NOW()`,
-        [email, token, new Date(expiresAt).toISOString()]
-      );
-      return true;
-    } catch (dbError) {
-      console.warn('Failed to store token in database:', dbError);
-      
-      // Fallback: try creating the table if it doesn't exist
-      try {
-        await dbService.queryCrossTenant(`
-          CREATE TABLE IF NOT EXISTS email_verification_tokens (
-            id SERIAL PRIMARY KEY,
-            email VARCHAR(255) NOT NULL,
-            token VARCHAR(255) NOT NULL,
-            expires_at TIMESTAMP NOT NULL,
-            used BOOLEAN DEFAULT false,
-            created_at TIMESTAMP DEFAULT NOW(),
-            used_at TIMESTAMP,
-            UNIQUE(email)
-          )
-        `);
-        
-        // Retry the insert
-        await dbService.queryCrossTenant(
-          `INSERT INTO email_verification_tokens (email, token, expires_at, used, created_at)
-           VALUES ($1, $2, $3, false, NOW())
-           ON CONFLICT (email) DO UPDATE SET
-             token = EXCLUDED.token,
-             expires_at = EXCLUDED.expires_at,
-             used = false,
-             created_at = NOW()`,
-          [email, token, new Date(expiresAt).toISOString()]
-        );
-        return true;
-      } catch (createError) {
-        console.error('Failed to create verification tokens table:', createError);
-        return false;
-      }
-    }
+    // Insert or update token for email (upsert operation)
+    // Using Convex-compatible schema structure
+    await dbService.queryCrossTenant(
+      `INSERT INTO email_verification_tokens (email, token, expiresAt, used, createdAt, usedAt)
+       VALUES ($1, $2, $3, false, $4, NULL)
+       ON CONFLICT (email) DO UPDATE SET
+         token = EXCLUDED.token,
+         expiresAt = EXCLUDED.expiresAt,
+         used = false,
+         createdAt = EXCLUDED.createdAt,
+         usedAt = NULL`,
+      [email, token, expiresAt, Date.now()]
+    );
+    
+    return true;
   } catch (error) {
     console.error('Error storing verification token:', error);
     return false;
@@ -102,7 +73,7 @@ export async function validateVerificationToken(
     const dbService = getDatabaseService();
     
     const result = await dbService.queryCrossTenant(
-      `SELECT email, expires_at, used, used_at 
+      `SELECT email, expiresAt, used, usedAt 
        FROM email_verification_tokens 
        WHERE token = $1`,
       [token]
@@ -114,15 +85,14 @@ export async function validateVerificationToken(
 
     const tokenData = result.rows[0] as {
       email: string;
-      expires_at: string;
+      expiresAt: number;
       used: boolean;
-      used_at?: string;
+      usedAt?: number;
     };
-    const now = new Date();
-    const expiresAt = new Date(tokenData.expires_at);
+    const now = Date.now();
 
     // Check if token is expired
-    if (now > expiresAt) {
+    if (now > tokenData.expiresAt) {
       return { valid: false, expired: true, email: tokenData.email, error: 'Token expired' };
     }
 
@@ -147,9 +117,9 @@ export async function markTokenAsUsed(token: string): Promise<boolean> {
     
     await dbService.queryCrossTenant(
       `UPDATE email_verification_tokens 
-       SET used = true, used_at = NOW() 
-       WHERE token = $1`,
-      [token]
+       SET used = true, usedAt = $1 
+       WHERE token = $2`,
+      [Date.now(), token]
     );
     
     return true;

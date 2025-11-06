@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { signupContent } from "./content";
 import type { PasswordStrength } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 import { Turnstile } from "next-turnstile";
 
@@ -110,8 +111,10 @@ export default function SignUpFormView() {
         ? "Account created successfully! Check your email for a verification link to activate your account."
         : "Account created successfully! We'll send you a verification link shortly.";
 
-      // Show temporary success message before redirect
-      alert(successMessage);
+      // Show success toast notification
+      toast.success(successMessage, {
+        duration: 4000,
+      });
 
       // Redirect to email confirmation
       router.push("/email-confirmation");
