@@ -334,11 +334,9 @@ function DynamicAccountsForm() {
 
 ## 🔗 Related Components
 
-- [Form](./core/form.md) - Form wrapper and validation
-- [Input](./core/input.md) - Text input fields
-- [Select](./core/select.md) - Dropdown selections
-- [Button](./core/button.md) - Form actions
-- [Card](./core/card.md) - Layout container
+- [Input](../core/input.md) - Text input fields
+- [Button](../core/button.md) - Form actions
+- [Card](../core/card.md) - Layout container
 
 ## 🔧 Dependencies
 

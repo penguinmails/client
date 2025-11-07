@@ -8,7 +8,6 @@ This directory contains comprehensive documentation for all components in the Pe
 - **[Custom Components](./custom/)** - Application-specific components
 - **[Design System](./design-system/)** - Design guidelines and principles
 - **[Examples](./examples/)** - Usage examples and patterns
-- **[Guidelines](./guidelines/)** - Best practices and conventions
 
 ## 🎯 Usage
 
@@ -63,4 +62,4 @@ Our design system is built on:
 
 ---
 
-*This documentation is maintained alongside the codebase and should be updated when components are modified.*
+_This documentation is maintained alongside the codebase and should be updated when components are modified._

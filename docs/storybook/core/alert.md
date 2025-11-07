@@ -155,7 +155,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 // For use within forms or content
 <Alert>
   <AlertDescription>
-    <strong>Note:</strong> Changes you make here will affect all users in your organization.
+    **Note:** Changes you make here will affect all users in your organization.
   </AlertDescription>
 </Alert>
 ```

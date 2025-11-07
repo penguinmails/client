@@ -79,7 +79,7 @@ Components use these design tokens from our theme:
 ### Import Pattern
 
 ```tsx
-import { ComponentName } from '@/components/ui/component-name'
+import { Button } from '@/components/ui/button'
 ```
 
 ### Best Practices

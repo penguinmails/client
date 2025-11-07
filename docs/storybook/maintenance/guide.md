@@ -26,25 +26,25 @@ This guide provides comprehensive instructions for maintaining, updating, and ex
 
 ```markdown
 docs/storybook/
-├── README.md                     # Main documentation index
-├── core/                         # Core UI components
-│   ├── README.md
-│   ├── button.md
-│   ├── card.md
-│   ├── input.md
-│   ├── alert.md
-│   ├── badge.md
-│   ├── avatar.md
-│   └── dialog.md
-├── custom/                       # Custom application components
-│   ├── TenantCompanySelector.md
-│   └── CampaignDetailsForm.md
-├── design-system/               # Design system guidelines
-│   └── guidelines.md
-├── examples/                    # Usage examples
-│   └── best-practices.md
-└── maintenance/                 # This guide
-    └── guide.md
+├── README.md # Main documentation index
+├── core/ # Core UI components
+│ ├── README.md
+│ ├── button.md
+│ ├── card.md
+│ ├── input.md
+│ ├── alert.md
+│ ├── badge.md
+│ ├── avatar.md
+│ └── dialog.md
+├── custom/ # Custom application components
+│ ├── TenantCompanySelector.md
+│ └── CampaignDetailsForm.md
+├── design-system/ # Design system guidelines
+│ └── guidelines.md
+├── examples/ # Usage examples
+│ └── best-practices.md
+└── maintenance/ # This guide
+└── guide.md
 ```
 
 ## 🆕 Adding New Components
@@ -66,7 +66,7 @@ docs/storybook/
 
 #### Core Components Template
 
-```markdown
+````markdown
 # [Component Name] Component
 
 [Brief description of the component's purpose and functionality]
@@ -77,20 +77,20 @@ docs/storybook/
 
 ## 📋 Props Table
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| Prop       | Type       | Default        | Description             |
+| ---------- | ---------- | -------------- | ----------------------- |
 | `propName` | `PropType` | `defaultValue` | Description of the prop |
 
 ## 💡 Usage Examples
 
 ### Basic Usage
-```tsx
-import { ComponentName } from '@/components/ui/component-name'
 
-<ComponentName>
-  Content
-</ComponentName>
+```tsx
+import { ComponentName } from "@/components/ui/component-name";
+
+<ComponentName>Content</ComponentName>;
 ```
+````
 
 ### Advanced Usage
 
@@ -122,8 +122,8 @@ import { ComponentName } from '@/components/ui/component-name'
 
 ## 📋 Props Table
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| Prop       | Type       | Default        | Description             |
+| ---------- | ---------- | -------------- | ----------------------- |
 | `propName` | `PropType` | `defaultValue` | Description of the prop |
 
 ## 💡 Usage Examples
@@ -140,15 +140,15 @@ import { ComponentName } from '@/components/ui/component-name'
 [How it integrates with other components]
 ```
 
-- ♿ Accessibility
+### ♿ Accessibility
 
 [Accessibility features]
 
-- 🎯 Design Guidelines
+### 🎯 Design Guidelines
 
 [Usage guidelines and patterns]
 
-- 🔗 Related Components
+### 🔗 Related Components
 
 [Related component documentation]
 
@@ -162,6 +162,7 @@ import { ComponentName } from '@/components/ui/component-name'
 
 ```markdown
 ### [Component Category]
+
 - **[Component Name](./component-name.md)** - Description of component
 ```
 
@@ -261,7 +262,7 @@ When updating design system guidelines:
    ```bash
    # Test TypeScript compilation
    npx tsc --noEmit
-   
+
    # Test component imports
    npm run lint
    ```
@@ -458,4 +459,4 @@ npm run deploy-docs
 
 ---
 
-*This maintenance guide should be updated whenever documentation processes change to ensure the team has current and accurate information.*
+_This maintenance guide should be updated whenever documentation processes change to ensure the team has current and accurate information._

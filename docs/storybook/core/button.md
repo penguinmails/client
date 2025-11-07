@@ -7,7 +7,7 @@ The Button component is a fundamental interactive element in our design system, 
 ### Primary Button
 
 - **Default**: Primary action button with brand colors
-- **Secondary**: Secondary action with muted styling  
+- **Secondary**: Secondary action with muted styling
 - **Destructive**: For dangerous actions like delete/cancel
 - **Outline**: Bordered button for less prominent actions
 - **Ghost**: Minimal styling for subtle actions
@@ -22,14 +22,14 @@ The Button component is a fundamental interactive element in our design system, 
 
 ## 📋 Props Table
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `"default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link"` | `"default"` | Visual style variant |
-| `size` | `"default" \| "sm" \| "lg" \| "icon"` | `"default"` | Size of the button |
-| `asChild` | `boolean` | `false` | Render as child component using Slot |
-| `className` | `string` | `undefined` | Additional CSS classes |
-| `disabled` | `boolean` | `false` | Disable button interaction |
-| `type` | `string` | `button` | HTML button type attribute |
+| Prop        | Type                                                                          | Default     | Description                          |
+| ----------- | ----------------------------------------------------------------------------- | ----------- | ------------------------------------ |
+| `variant`   | `"default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link"` | `"default"` | Visual style variant                 |
+| `size`      | `"default" \| "sm" \| "lg" \| "icon"`                                         | `"default"` | Size of the button                   |
+| `asChild`   | `boolean`                                                                     | `false`     | Render as child component using Slot |
+| `className` | `string`                                                                      | `undefined` | Additional CSS classes               |
+| `disabled`  | `boolean`                                                                     | `false`     | Disable button interaction           |
+| `type`      | `string`                                                                      | `button`    | HTML button type attribute           |
 
 ## 💡 Usage Examples
 
@@ -121,4 +121,3 @@ import { Plus, Download, Settings } from 'lucide-react'
 
 - [Badge](./badge.md) - For status indicators
 - [Dialog](./dialog.md) - For modal actions
-- [Form](./form.md) - For form submissions

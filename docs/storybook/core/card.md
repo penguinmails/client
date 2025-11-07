@@ -225,4 +225,3 @@ import { Button } from '@/components/ui/button'
 - [Button](./button.md) - For card actions
 - [Avatar](./avatar.md) - For user profile cards
 - [Badge](./badge.md) - For status indicators
-- [Switch](./switch.md) - For settings toggles
