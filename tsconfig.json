@@ -32,6 +32,12 @@
       ],
       "@settings/*": [
         "./types/settings/*"
+      ],
+      "@design-system/*": [
+        "./design-system/*"
+      ],
+      "@design-system": [
+        "./design-system/index.ts"
       ]
     }
   },
