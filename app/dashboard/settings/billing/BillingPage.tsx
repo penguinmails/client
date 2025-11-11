@@ -6,9 +6,12 @@ import {
   getBillingDataForSettings,
 } from "@/lib/actions/billing";
 import { useServerAction } from "@/hooks/useServerAction";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
+import { toast } from "sonner";
+import { createStripeCheckoutSession } from "@/lib/utils/checkoutUtils";
 
 // Simple loading skeleton component
 function BillingLoadingSkeleton() {
@@ -85,6 +88,20 @@ export default function BillingSettingsPage() {
 
   const billingData = billingDataAction.data;
 
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+
+  // Handler to create a Stripe Checkout Session for a selected plan and open the returned URL
+  const handleCheckoutForPlan = async (plan?: any) => {
+    try {
+      setIsCheckoutLoading(true);
+      await createStripeCheckoutSession(plan);
+    } catch (err) {
+      console.error('Error Stripe Checkout session:', err);
+    } finally {
+      setIsCheckoutLoading(false);
+    }
+  };
+
   // Company billing data - now from API based on billing model
   const companyBilling = {
     currentPlanName: billingData.planDetails.name, // Dynamic from billing data
@@ -121,13 +138,9 @@ export default function BillingSettingsPage() {
             </div>
             <div className="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
               {planType === "FREE" ? (
-                <Link
-                  href={config.stripe.checkoutUrl} // Link to upgrade checkout
-                  target="_blank" // Open Stripe in new tab
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Upgrade Plan
-                </Link>
+                <div className="w-48">
+                  <ChangePlanTrigger title={"Upgrade Plan"} onSelectPlan={handleCheckoutForPlan} isLoading={isCheckoutLoading} />
+                </div>
               ) : (
                 <Link
                   href={config.stripe.portalUrl} // Link to Stripe Customer Portal
