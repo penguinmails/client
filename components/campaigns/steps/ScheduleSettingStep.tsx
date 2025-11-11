@@ -103,7 +103,7 @@ function ScheduleSettingStep() {
             {daysOfWeek.map((day) => (
               <div
                 key={day.value}
-                className="flex flex-col items-center space-y-2 p-3 border border-gray-200 rounded-xl hover:bg-gray-50"
+                className="flex flex-col items-center space-y-2 p-3 border border-gray-200 dark:border-border rounded-xl hover:bg-gray-50 dark:hover:bg-muted/50"
               >
                 <Checkbox
                   id={day.value}

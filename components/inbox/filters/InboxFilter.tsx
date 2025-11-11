@@ -195,7 +195,7 @@ function InboxFilter() {
                     "w-full justify-between h-auto py-2.5 px-3",
                     selectedFilter === filter.id
                       ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                      : "text-gray-700"
+                      : "text-gray-700 dark:text-muted-foreground"
                   )}
                 >
                   <div className="flex items-center space-x-3">
@@ -259,7 +259,9 @@ function InboxFilter() {
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Time</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-foreground">
+                  Time
+                </span>
               </div>
               <Select value={timeFilter} onValueChange={setTimeFilter}>
                 <SelectTrigger className="w-full">

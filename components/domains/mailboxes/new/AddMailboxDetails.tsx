@@ -113,7 +113,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
+                <FormLabel className="text-sm font-medium text-gray-700 dark:text-foreground">
                   Password *
                 </FormLabel>
                 <div className="relative">
@@ -133,7 +133,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 h-5 w-5 p-0"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-foreground h-5 w-5 p-0"
                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -156,7 +156,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
+                <FormLabel className="text-sm font-medium text-gray-700 dark:text-foreground">
                   Confirm Password *
                 </FormLabel>
                 <div className="relative">
@@ -177,7 +177,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 h-5 w-5 p-0"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-foreground h-5 w-5 p-0"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="w-5 h-5" />

@@ -113,7 +113,7 @@ function MailboxAssignmentStep() {
                     </div>
                   </div>
                   <div className="flex items-center space-x-4 mt-2">
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-muted-foreground">
                       Reputation: {mailbox.reputation}
                     </span>
                     <div

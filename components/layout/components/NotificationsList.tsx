@@ -52,7 +52,7 @@ function NotificationsList({
 
       {/* Footer */}
       {notifications.length > 0 && (
-        <div className="p-3 border-t border-gray-200 bg-gray-50">
+        <div className="p-3 border-t border-gray-200 dark:border-border bg-gray-50 dark:bg-muted/30">
           <button className="w-full text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors">
             View all notifications
           </button>

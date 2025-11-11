@@ -282,8 +282,8 @@ function FilePreview({
           </div>
 
           {/* Add Custom Column */}
-          <div className="mt-4 p-4 border border-dashed border-gray-300 rounded-lg">
-            <h5 className="font-medium text-sm mb-3 text-gray-700">
+          <div className="mt-4 p-4 border border-dashed border-gray-300 dark:border-border rounded-lg">
+            <h5 className="font-medium text-sm mb-3 text-gray-700 dark:text-foreground">
               Add Custom Merge Tag
             </h5>
             <div className="flex gap-2">

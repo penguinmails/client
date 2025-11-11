@@ -123,7 +123,7 @@ function MailboxesTab({
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-gray-100 ">
+            <TableHeader className="bg-gray-100 dark:bg-muted">
               <TableRow>
                 <TableHead>Mailbox</TableHead>
                 <TableHead>Status</TableHead>
@@ -144,11 +144,11 @@ function MailboxesTab({
                 return (
                   <TableRow
                     key={mailbox.id}
-                    className="hover:bg-gray-50 transition-colors group"
+                    className="hover:bg-gray-50 dark:hover:bg-muted/30 transition-colors group"
                   >
                     <TableCell className="px-8 py-6">
                       <div>
-                        <h3 className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors text-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-foreground cursor-pointer hover:text-blue-600 transition-colors text-lg">
                           {mailbox.email}
                         </h3>
                         <p className="text-sm text-gray-500 mt-1">
@@ -180,7 +180,7 @@ function MailboxesTab({
                     <TableCell className="px-6 py-6">
                       <div className="flex items-center space-x-2">
                         <Mail className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-gray-900 dark:text-foreground">
                           {mailbox.dailyVolume}/day
                         </span>
                       </div>
@@ -191,7 +191,7 @@ function MailboxesTab({
                     <TableCell className="px-6 py-6">
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-gray-900 dark:text-foreground">
                             {(
                               analytics?.data?.totalWarmups || 0
                             ).toLocaleString()}
