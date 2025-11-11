@@ -5,8 +5,8 @@ export interface BreakpointTokens {
   sm: number;
   md: number;
   lg: number;
-  xl: string;
-  '2xl': string;
+  xl: number;
+  '2xl': number;
   description: string;
 }
 
@@ -42,8 +42,8 @@ export const breakpoints: BreakpointTokens = {
   sm: 640,    // 40rem
   md: 768,    // 48rem
   lg: 1024,   // 64rem
-  xl: '80rem', // 1280px
-  '2xl': '96rem', // 1536px
+  xl: 1280,   // 80rem
+  '2xl': 1536, // 96rem
   description: 'Responsive breakpoints based on Tailwind CSS'
 };
 
@@ -174,9 +174,6 @@ export const responsiveConfig = {
 export const breakpointHelpers = {
   // Media queries in TypeScript
   getMediaQuery: (breakpoint: keyof BreakpointTokens): string => {
-    if (typeof breakpoints[breakpoint] === 'string') {
-      return `min-width: ${breakpoints[breakpoint]}`;
-    }
     return `min-width: ${breakpoints[breakpoint]}px`;
   },
   
@@ -188,8 +185,8 @@ export const breakpointHelpers = {
     if (width < breakpoints.sm) return 'xs';
     if (width < breakpoints.md) return 'sm';
     if (width < breakpoints.lg) return 'md';
-    if (width < parseInt(breakpoints.xl.replace('rem', '')) * 16) return 'lg';
-    if (width < parseInt(breakpoints['2xl'].replace('rem', '')) * 16) return 'xl';
+    if (width < breakpoints.xl) return 'lg';
+    if (width < breakpoints['2xl']) return 'xl';
     return '2xl';
   },
   
@@ -198,9 +195,7 @@ export const breakpointHelpers = {
     if (typeof window === 'undefined') return true;
     
     const width = window.innerWidth;
-    const bp = breakpoints[breakpoint];
-    const bpValue = typeof bp === 'string' ? parseInt(bp.replace('rem', '')) * 16 : bp;
-    
+    const bpValue: number = (breakpoints as any)[breakpoint];
     return width >= bpValue;
   }
 };
@@ -254,8 +249,8 @@ export const generateBreakpointCSSVariables = (): Record<string, string> => {
     '--breakpoint-sm': `${breakpoints.sm}px`,
     '--breakpoint-md': `${breakpoints.md}px`,
     '--breakpoint-lg': `${breakpoints.lg}px`,
-    '--breakpoint-xl': breakpoints.xl,
-    '--breakpoint-2xl': breakpoints['2xl']
+    '--breakpoint-xl': `${breakpoints.xl}px`,
+    '--breakpoint-2xl': `${breakpoints['2xl']}px`
   };
 };
 

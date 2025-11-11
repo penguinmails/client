@@ -20,10 +20,19 @@ export * from './primitives';
 // CONVENIENCE FUNCTIONS
 // ================================
 
-// Quick initialization
+// Import actual initialization logic from foundations
+import { initializeFoundations } from './foundations';
+
+// Quick initialization - delegates to foundations manager
 export const initDesignSystem = (theme: 'light' | 'dark' = 'light') => {
   console.log('🎨 Design System Penguin Mails initialized');
-  return { theme };
+  const foundationsManager = initializeFoundations(theme);
+  return {
+    theme,
+    foundationsManager,
+    cssApplied: true,
+    timestamp: new Date().toISOString()
+  };
 };
 
 // ================================

@@ -47,15 +47,15 @@ This document defines the coding conventions, naming standards, and best practic
 ```typescript
 // Component props interfaces
 interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'outline';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "outline";
+  size?: "sm" | "md" | "lg";
   disabled?: boolean;
   children: React.ReactNode;
 }
 
 // Type definitions
-type ThemeMode = 'light' | 'dark';
-type SpacingScale = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type ThemeMode = "light" | "dark";
+type SpacingScale = "xs" | "sm" | "md" | "lg" | "xl";
 type ColorPalette = Record<string, ColorScale>;
 
 // Utility types
@@ -77,8 +77,8 @@ export { Button, Card, Input };
 export default DesignSystem;
 
 // Re-exports
-export * from './tokens';
-export { designTokens } from './managers';
+export * from "./tokens";
+export { designTokens } from "./foundations";
 ```
 
 ### React Components
@@ -104,8 +104,6 @@ export const Button: React.FC<ButtonProps> = ({
   className,
   ...props
 }) => {
-  const config = getComponentsConfig();
-  
   return (
     <Box
       as="button"
@@ -129,11 +127,11 @@ export default Button;
 
 ```md
 Button/
-├── Button.tsx           # Main component
-├── Button.styles.ts     # Styles (if separated)
-├── Button.test.tsx      # Tests
-├── Button.stories.tsx   # Storybook stories
-└── index.ts            # Component exports
+├── Button.tsx # Main component
+├── Button.styles.ts # Styles (if separated)
+├── Button.test.tsx # Tests
+├── Button.stories.tsx # Storybook stories
+└── index.ts # Component exports
 ```
 
 ## 📱 Responsive Design
@@ -154,7 +152,7 @@ Button/
 .component {
   /* Base styles */
   display: block;
-  
+
   /* Responsive styles */
   @media (min-width: 768px) {
     .md\:component {
@@ -180,16 +178,16 @@ const responsiveProps = {
 const lightTheme = {
   colors: {
     primary: {
-      50: '#eff6ff',
-      500: '#3b82f6',
-      900: '#1e3a8a'
-    }
+      50: "#eff6ff",
+      500: "#3b82f6",
+      900: "#1e3a8a",
+    },
   },
   spacing: {
-    xs: '0.25rem',
-    sm: '0.5rem',
-    md: '1rem'
-  }
+    xs: "0.25rem",
+    sm: "0.5rem",
+    md: "1rem",
+  },
 };
 
 const darkTheme = {
@@ -197,8 +195,8 @@ const darkTheme = {
   colors: {
     primary: {
       // Dark theme values
-    }
-  }
+    },
+  },
 };
 ```
 
@@ -213,9 +211,9 @@ const generateCSSVariables = (theme: ThemeTokens): string => {
         .map(([shade, value]) => {
           return `--ds-color-${category}-${shade}: ${value};`;
         })
-        .join('\n');
+        .join("\n");
     })
-    .join('\n');
+    .join("\n");
 };
 ```
 
@@ -240,7 +238,7 @@ import { colors, spacing } from '../tokens';
 
 describe('Design Tokens', () => {
   it('has valid color values', () => {
-    expect(colors.primary.light).toMatch(/^rgb\(/);
+    expect(colors.primary.light).toMatch(/^oklch\(/);
   });
 });
 ```
@@ -252,37 +250,44 @@ describe('Design Tokens', () => {
 ```typescript
 /**
  * Button component for triggering actions
- * 
+ *
  * @param variant - Visual style variant
  * @param size - Size of the button
  * @param disabled - Whether the button is disabled
  * @param children - Button content
  * @returns JSX button element
  */
-export const Button: React.FC<ButtonProps> = ({ variant = 'primary', ...props }) => {
+export const Button: React.FC<ButtonProps> = ({
+  variant = "primary",
+  ...props
+}) => {
   // Implementation
 };
 ```
 
 ### README Structure
 
-```markdown
+````markdown
 # Component Name
 
 ## Description
+
 Brief description of the component.
 
 ## Props
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
+
+| Name    | Type   | Default   | Description    |
+| ------- | ------ | --------- | -------------- |
 | variant | string | 'default' | Visual variant |
 
 ## Examples
+
 ```typescript
 <Component variant="primary">
   Content
 </Component>
 ```
+````
 
 ## Tokens Used
 
@@ -295,12 +300,12 @@ Brief description of the component.
 
 ```typescript
 // Lazy import components
-const Button = lazy(() => import('./Button'));
-const Card = lazy(() => import('./Card'));
+const Button = lazy(() => import("./Button"));
+const Card = lazy(() => import("./Card"));
 
 // Tree shaking friendly exports
-export { Button } from './Button';
-export { Card } from './Card';
+export { Button } from "./Button";
+export { Card } from "./Card";
 ```
 
 ### Optimization

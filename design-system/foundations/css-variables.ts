@@ -135,9 +135,10 @@ export class CSSVariablesGenerator {
       }
       
       Object.entries(group.variables).forEach(([key, value]) => {
+        const varName = key.replace(/^--/, '');
         const cssKey = this.config.prefix
-          ? `${this.config.prefix}-${key}`
-          : key;
+          ? `${this.config.prefix}-${varName}`
+          : `--${varName}`;
         css += `  ${cssKey}: ${value};\n`;
       });
       
@@ -168,9 +169,10 @@ export class CSSVariablesGenerator {
     let css = ':root {\n';
     
     Object.entries(variables).forEach(([key, value]) => {
+      const varName = key.replace(/^--/, '');
       const cssKey = this.config.prefix
-        ? `${this.config.prefix}-${key}`
-        : `--${key}`;
+        ? `${this.config.prefix}-${varName}`
+        : `--${varName}`;
       css += `  ${cssKey}: ${value};\n`;
     });
     
@@ -184,9 +186,10 @@ export class CSSVariablesGenerator {
     scss += '// Generated automatically from design tokens\n\n';
     
     Object.entries(variables).forEach(([key, value]) => {
+      const varName = key.replace(/^--/, '');
       const scssKey = this.config.prefix
-        ? `$${this.config.prefix}-${key}`
-        : `$${key.replace(/^--/, '')}`;
+        ? `$${this.config.prefix}-${varName}`
+        : `$${varName}`;
       scss += `${scssKey}: ${value};\n`;
     });
     
@@ -275,20 +278,22 @@ export const CSS_TEMPLATES = {
   },
   
   // Color variables only
-  colors: (theme: 'light' | 'dark' = 'light') => {
-    const generator = new CSSVariablesGenerator();
-    const groups = generator.generateByCategory();
-    const colorGroup = groups.find(g => g.category === 'colors');
-    
-    if (!colorGroup) return '';
-    
-    let css = ':root {\n';
-    Object.entries(colorGroup.variables).forEach(([key, value]) => {
-      css += `  --color-${key}: ${value};\n`;
-    });
-    css += '}\n';
-    return css;
-  },
+colors: (theme: 'light' | 'dark' = 'light') => {
+  const generator = new CSSVariablesGenerator();
+  const groups = generator.generateByCategory();
+  const colorGroup = groups.find(g => g.category === 'colors');
+  
+  if (!colorGroup) return '';
+  
+  let css = ':root {\n';
+  Object.entries(colorGroup.variables).forEach(([key, value]) => {
+    const varName = key.replace(/^--/, '');
+    const cssKey = `--color-${varName}`;
+    css += `  ${cssKey}: ${value};\n`;
+  });
+  css += '}\n';
+  return css;
+},
   
   // Variables for Tailwind CSS
   tailwind: () => {

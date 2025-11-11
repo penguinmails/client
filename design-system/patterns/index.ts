@@ -98,15 +98,15 @@ export const patternsManager = PatternsManager.getInstance();
 
 // Convenience functions
 export const getPatternsConfig = () => patternsManager.getConfig();
-export const updatePatternsConfig = (config: any) => patternsManager.updateConfig(config);
-export const generateFormPatternClasses = (variant: string, props: any) =>
+export const updatePatternsConfig = (config:  Partial<typeof patternsConfig>) => patternsManager.updateConfig(config);
+export const generateFormPatternClasses = (variant: string, props: Record<string, any>) =>
   patternsManager.generateFormPatternClasses(variant, props);
-export const generateLayoutPatternClasses = (type: string, props: any) =>
+export const generateLayoutPatternClasses = (type: string, props: Record<string, any>) =>
   patternsManager.generateLayoutPatternClasses(type, props);
-export const generateNavigationPatternClasses = (orientation: string, props: any) =>
+export const generateNavigationPatternClasses = (orientation: string, props: Record<string, any>) =>
   patternsManager.generateNavigationPatternClasses(orientation, props);
 
-const _default = {
+const patternsDefaultExport  = {
   patternsManager,
   getPatternsConfig,
   updatePatternsConfig,
@@ -116,4 +116,4 @@ const _default = {
   patternsConfig
 };
 
-export default _default;
+export default patternsDefaultExport ;

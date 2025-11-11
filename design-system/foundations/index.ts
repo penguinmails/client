@@ -81,7 +81,7 @@ export class FoundationsManager {
     return this.themeManager.getResolvedMode();
   }
   
-  public generateFrameworkCSS(framework: 'tailwind' | 'styled-components' | 'emotion'): string {
+  public generateFrameworkCSS(framework: 'tailwind' | 'styled-components'): string {
     switch (framework) {
       case 'tailwind':
         return CSS_TEMPLATES.tailwind();
@@ -90,6 +90,7 @@ export class FoundationsManager {
         return CSS_TEMPLATES.styledComponents(this.themeManager.getResolvedMode());
       
       default:
+        // Fallback to basic CSS custom properties
         return this.cssGenerator.generateCustomProperties(this.themeManager.getResolvedMode());
     }
   }

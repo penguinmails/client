@@ -207,7 +207,10 @@ export const getBorderToken = (type: keyof BorderTokens): string => {
   return borderTokens[type];
 };
 
-export const getComponentRadius = (component: keyof typeof componentRadius, size: keyof typeof componentRadius.button): string => {
+export const getComponentRadius = <C extends keyof typeof componentRadius>(
+  component: C,
+  size: keyof typeof componentRadius[C]
+): string => {
   return (componentRadius[component] as any)[size];
 };
 

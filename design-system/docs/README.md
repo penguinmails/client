@@ -46,61 +46,41 @@ design-system/
 │   └── index.ts
 │
 ├── primitives/              # Base primitive components
-│   ├── Box/                 # Basic container
-│   ├── Text/                # Text component
-│   ├── Heading/             # Headings
-│   ├── Stack/               # Stacked layouts
-│   ├── Grid/                # Grid system
+│   ├── Box/                 # Basic container (implemented)
 │   └── index.ts
 │
-├── components/              # Composite components
-│   ├── Button/              # Buttons with variants
-│   ├── Input/               # Input fields
-│   ├── Card/                # Cards
-│   ├── Badge/               # Badges
-│   └── index.ts
+├── components/              # Composite components (placeholder)
+│   └── index.ts             # No components implemented yet
 │
-├── patterns/                # Composition patterns
-│   ├── forms/               # Form patterns
-│   ├── layouts/             # Common layouts
-│   ├── navigation/          # Navigation patterns
-│   └── index.ts
+├── patterns/                # Composition patterns (placeholder)
+│   └── index.ts             # No patterns implemented yet
 │
 ├── hooks/                   # Design system hooks
-│   ├── useTheme.ts         # Hook for theme
-│   ├── useBreakpoint.ts    # Hook for responsive
-│   ├── useToken.ts         # Hook to access tokens
-│   └── index.ts
+│   └── index.ts             # Hooks infrastructure (no useTheme hook)
 │
-├── utils/                   # System utilities
-│   ├── cn.ts               # Class name merger
-│   ├── responsive.ts       # Responsive helpers
-│   ├── variants.ts         # Variants system
-│   └── index.ts
+├── utils/                   # System utilities (placeholder)
+│   └── index.ts             # No utilities implemented yet
 │
 └── docs/                    # Documentation
     ├── README.md           # This file
-    ├── TOKENS.md           # Tokens guide
-    ├── COMPONENTS.md       # Components guide
     ├── MIGRATION.md        # Migration guide
-    ├── CONVENTIONS.md      # Code conventions
-    └── EXAMPLES.md         # Usage examples
+    └── (additional docs pending)
 ```
 
 ## 🚀 Installation
 
-The design system is already integrated into the project. To use the tokens:
+The design system is already integrated into the project. To use the available components:
 
 ```typescript
 // Import tokens
 import { colors, spacing, typography } from '@/design-system/tokens';
 
-// Import hooks
-import { useTheme, useToken } from '@/design-system/hooks';
+// Import theme management
+import { useTheme } from '@/design-system/foundations';
 
-// Import primitives
-import { Box, Button } from '@/design-system/primitives';
-import { Button as DSButton } from '@/design-system/components/Button';
+// Import available primitives
+import { Box } from '@/design-system/primitives';
+// Note: Box is currently the only implemented primitive
 ```
 
 ## 💡 Basic Usage
@@ -134,27 +114,24 @@ setFoundationsTheme('dark');
 ### Components
 
 ```typescript
-import { Box, Container } from '@/design-system/primitives';
+import { Box, Container, Section } from '@/design-system';
 
 function MyComponent() {
   return (
     <Container>
-      <Box
-        padding="1rem"
-        bgColor="primary"
-        textColor="primaryForeground"
-        display="flex"
-        justify="center"
-        align="center"
-        rounded="md"
-        shadow="md"
-        hover={{
-          backgroundColor: "secondary",
-          transform: "scale(1.02)"
-        }}
-      >
-        Content styled with the design system
-      </Box>
+      <Section padding="lg" margin="md">
+        <Box
+          display="flex"
+          justify="center"
+          align="center"
+          padding="md"
+          backgroundColor="primary"
+          color="primaryForeground"
+          borderRadius="md"
+        >
+          Content styled with the design system
+        </Box>
+      </Section>
     </Container>
   );
 }
@@ -251,30 +228,30 @@ Base container with full layout system:
 <Box
   display="flex"
   direction="row"
-  justify="space-between"
+  justify="center"
   align="center"
-  padding="1rem"
-  margin="0.5rem"
-  gap="1rem"
-  rounded="md"
-  shadow="sm"
-  bgColor="card"
-  textColor="foreground"
-  // Interactive states
-  hover={{
-    backgroundColor: "secondary",
-    transform: "translateY(-2px)"
-  }}
-  focus={{
-    outline: "2px solid var(--color-primary)"
-  }}
-  // Responsive
-  sm={{ padding: "0.5rem" }}
-  md={{ padding: "1rem" }}
-  lg={{ padding: "1.5rem" }}
+  padding="md"
+  margin="sm"
+  gap="md"
+  borderRadius="md"
+  backgroundColor="primary"
+  color="primaryForeground"
+  className="hover:bg-primary/90 transition-colors"
 >
   Content
 </Box>
+```
+
+#### Container & Section
+
+Predefined layout components:
+
+```typescript
+<Container>
+  <Section padding="lg" margin="md">
+    <Box>Sectioned content</Box>
+  </Section>
+</Container>
 ```
 
 ## 📱 Responsive
@@ -354,17 +331,16 @@ The design system includes accessibility considerations:
 ## 📦 Export Structure
 
 ```typescript
-// Main exports
+// Current available exports
 export { colors, spacing, typography, shadows, borders, breakpoints, animations, zIndex } from './tokens';
-export { themeManager, initializeFoundations, setFoundationsTheme } from './foundations';
+export { themeManager, initializeFoundations, setFoundationsTheme, useTheme } from './foundations';
 export { Box, Container, Section } from './primitives';
-export { Button, Input, Card, Badge } from './components';
 
-// Utilities
-export { cn, generateResponsiveClasses, calculateSpacing } from './utils';
-
-// Hooks
-export { useTheme, useToken, useBreakpoint } from './hooks';
+// Placeholder exports (components ready for implementation)
+export { } from './components';  // No components yet
+export { } from './patterns';     // No patterns yet
+export { } from './hooks';        // Infrastructure only
+export { } from './utils';        // No utilities yet
 ```
 
 ## 🎯 Conventions
@@ -384,9 +360,8 @@ export { useTheme, useToken, useBreakpoint } from './hooks';
 
 ## 📚 Additional Documentation
 
-- [Tokens Guide](TOKENS.md) - Full details on design tokens
-- [Components Guide](COMPONENTS.md) - Component documentation
 - [Migration Guide](MIGRATION.md) - How to migrate existing code
+- Additional documentation files pending implementation
 - [Conventions](CONVENTIONS.md) - Code and style conventions
 - [Examples](EXAMPLES.md) - Use cases and practical examples
 

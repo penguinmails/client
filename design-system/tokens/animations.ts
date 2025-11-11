@@ -225,7 +225,7 @@ export const keyframes: Record<string, KeyframesToken> = {
       opacity: '1'
     },
     '100%': {
-      transform: 'var(--driftX, 20px), var(--driftY, -20px)',
+      transform: 'translate(var(--driftX, 20px), var(--driftY, -20px))',
       opacity: '0'
     }
   },

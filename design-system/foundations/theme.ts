@@ -1,8 +1,6 @@
 // Theme system for Penguin Mails design-system
 // Light/dark themes configuration and state management
 
-import type { DesignTokens } from '../tokens';
-
 // Types for themes
 export type ThemeName = 'light' | 'dark' | 'auto';
 export type ThemeMode = 'light' | 'dark';
@@ -153,6 +151,7 @@ export class ThemeManager {
   private currentTheme: ThemeName = 'light';
   private listeners: Set<(theme: ThemeName) => void> = new Set();
   private mediaQuery: MediaQueryList | null = null;
+  private mediaQueryListener: ((event: MediaQueryListEvent) => void) | null = null;
   
   private constructor() {
     this.initializeAutoTheme();
@@ -165,18 +164,24 @@ export class ThemeManager {
     return ThemeManager.instance;
   }
   
+  // Handler for media query changes
+  private handleMediaQueryChange = (event: MediaQueryListEvent) => {
+    if (this.currentTheme === 'auto') {
+      this.applyTheme('auto');
+    }
+  };
+  
   // Initialize automatic theme detection
   private initializeAutoTheme(): void {
     if (typeof window === 'undefined') return;
     
     this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
+    // Store the listener reference for proper cleanup
+    this.mediaQueryListener = this.handleMediaQueryChange;
+    
     // Listen to system preferences changes
-    this.mediaQuery.addEventListener('change', () => {
-      if (this.currentTheme === 'auto') {
-        this.applyTheme('auto');
-      }
-    });
+    this.mediaQuery.addEventListener('change', this.mediaQueryListener);
     
     // Apply initial theme
     this.applyTheme(this.currentTheme);
@@ -279,8 +284,13 @@ export class ThemeManager {
   
   // Clean up resources
   public destroy(): void {
-    // We cannot easily remove anonymous event listeners
-    // Listeners will be cleaned up when page is reloaded
+    // Remove media query event listener to prevent memory leaks
+    if (this.mediaQuery && this.mediaQueryListener) {
+      this.mediaQuery.removeEventListener('change', this.mediaQueryListener);
+      this.mediaQueryListener = null;
+    }
+    
+    // Clear theme change listeners
     this.listeners.clear();
   }
 }

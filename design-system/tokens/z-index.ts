@@ -128,6 +128,7 @@ export const layers: LayerConfig = {
 export const componentZIndex = {
   // Dashboard layout
   dashboard: {
+    default: zIndex.base,  // Explicit default
     sidebar: zIndex.docked,
     header: zIndex.sticky,
     content: zIndex.base,
@@ -136,6 +137,7 @@ export const componentZIndex = {
   
   // Email management
   email: {
+    default: zIndex.base,  // Explicit default
     list: zIndex.base,
     detail: zIndex.base,
     compose: zIndex.modal,
@@ -144,6 +146,7 @@ export const componentZIndex = {
   
   // Existing UI components
   editor: {
+    default: zIndex.base,  // Explicit default
     content: zIndex.base,
     toolbar: zIndex.sticky,
     dropdown: zIndex.dropdown,
@@ -152,6 +155,7 @@ export const componentZIndex = {
   
   // Notification system
   notifications: {
+    default: zIndex.toast,  // Explicit default
     container: zIndex.toast,
     item: zIndex.toast,
     overlay: zIndex.overlay
@@ -159,6 +163,7 @@ export const componentZIndex = {
   
   // Project-specific sidebar
   sidebar: {
+    default: zIndex.base,  // Explicit default
     background: zIndex.base,
     content: zIndex.base,
     header: zIndex.sticky,
@@ -167,6 +172,7 @@ export const componentZIndex = {
   
   // Floating elements (floating emails)
   floating: {
+    default: zIndex.overlay,  // Explicit default
     mail: zIndex.overlay,
     animation: zIndex.overlay
   }
@@ -250,21 +256,21 @@ export const getLayerZIndex = (layer: keyof LayerConfig): number => {
 };
 
 export const getComponentZIndex = (component: keyof typeof componentZIndex, variant?: string): number => {
-  if (variant && typeof componentZIndex[component] === 'object') {
-    return (componentZIndex[component] as any)[variant];
+  const componentConfig = componentZIndex[component];
+  
+  if (typeof componentConfig === 'object' && componentConfig !== null) {
+    // If variant is specified, try to get it
+    if (variant && variant in componentConfig) {
+      return (componentConfig as any)[variant];
+    }
+    
+    // If no variant, return explicit default
+    if ('default' in componentConfig) {
+      return (componentConfig as any).default;
+    }
   }
   
-  // If no variant, return default component value
-  const componentValue = componentZIndex[component];
-  if (typeof componentValue === 'number') {
-    return componentValue;
-  }
-  
-  // If it's an object without specified variant, return first value
-  if (typeof componentValue === 'object') {
-    return Object.values(componentValue)[0] as number;
-  }
-  
+  // Fallback to base z-index
   return zIndex.base;
 };
 

@@ -98,7 +98,7 @@ export const hooksManager = HooksManager.getInstance();
 
 // Convenience functions
 export const getHooksConfig = () => hooksManager.getConfig();
-export const updateHooksConfig = (config: any) => hooksManager.updateConfig(config);
+export const updateHooksConfig = (config: Partial<typeof hooksConfig>) => hooksManager.updateConfig(config);
 export const getCachedToken = (key: string) => hooksManager.getCachedToken(key);
 export const setCachedToken = (key: string, value: any) => hooksManager.setCachedToken(key, value);
 export const clearTokenCache = () => hooksManager.clearTokenCache();

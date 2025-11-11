@@ -61,10 +61,10 @@ export const calculateSpacing = (value: number | string, baseUnit = '4px'): stri
 };
 
 // Color utility
-export const getColor = (colorName: string, isDark = false, theme: 'light' | 'dark' = 'light'): string => {
-  const actualTheme = isDark ? 'dark' : theme;
-  // This would typically integrate with the color tokens
-  return `var(--color-${colorName}-${actualTheme})`;
+export const getColor = (colorName: string): string => {
+  // The design system handles themes via CSS variable scoping
+  // Same variable name is used for all themes, defined in different scopes
+  return `var(--design-system-color-${colorName})`;
 };
 
 // Variant generator utility

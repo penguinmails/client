@@ -11,13 +11,13 @@ This guide provides instructions for migrating existing code to use the Design S
 // Import the complete design system
 import designSystem from './design-system';
 
-// Initialize the design system
-designSystem.initDesignSystem('light');
+// Initialize the design system with real initialization
+const { foundationsManager } = designSystem.initDesignSystem('light');
 
 // Import specific modules
 import { colors, spacing, typography } from './design-system/tokens';
-import { Box, Button } from './design-system/primitives';
-import { useTheme } from './design-system/hooks';
+import { Box } from './design-system/primitives';
+import { useTheme } from './design-system/foundations';
 ```
 
 ### Basic Usage Examples
@@ -37,17 +37,20 @@ const buttonStyle = {
 #### Using Components
 
 ```typescript
-import { Box, Button, Card } from './design-system';
+import { Box } from './design-system/primitives';
+import { Container, Section } from './design-system';
 
 function MyComponent() {
   return (
-    <Card>
-      <Box padding="lg" margin="md">
-        <Button variant="primary" size="md">
-          Click me
-        </Button>
-      </Box>
-    </Card>
+    <Container>
+      <Section padding="lg" margin="md">
+        <Box display="flex" justify="center" padding="md">
+          <button className="bg-primary text-primary-foreground px-4 py-2 rounded">
+            Click me
+          </button>
+        </Box>
+      </Section>
+    </Container>
   );
 }
 ```
@@ -55,14 +58,18 @@ function MyComponent() {
 #### Using Hooks
 
 ```typescript
-import { useTheme, useToken } from './design-system/hooks';
+import { useTheme } from './design-system/foundations';
 
 function ThemeAwareComponent() {
-  const { theme, setTheme } = useTheme();
-  const primaryColor = useToken('colors', 'primary', theme);
+  const { theme, setTheme, isDark } = useTheme();
   
   return (
-    <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+    <button
+      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+      className={`px-4 py-2 rounded ${
+        isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'
+      }`}
+    >
       Switch to {theme === 'light' ? 'dark' : 'light'} mode
     </button>
   );
@@ -92,17 +99,22 @@ function ThemeAwareComponent() {
 #### After (Design System)
 
 ```typescript
-import { Box, Button } from './design-system';
+import { Box } from './design-system/primitives';
 
 function MyButton() {
   return (
-    <Button
-      variant="primary"
-      size="md"
-      className="my-button"
+    <Box
+      display="inline-flex"
+      align="center"
+      justify="center"
+      padding="sm"
+      backgroundColor="blue-500"
+      color="white"
+      borderRadius="sm"
+      className="hover:bg-blue-600 transition-colors"
     >
       Click me
-    </Button>
+    </Box>
   );
 }
 ```
@@ -138,14 +150,14 @@ const containerStyle = {
 #### Before (Custom Component)
 
 ```typescript
-function CustomInput({ value, onChange, placeholder }) {
+function CustomContainer({ children, className, style }) {
   return (
-    <input
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="custom-input"
-    />
+    <div
+      className={`custom-container ${className || ''}`}
+      style={{ padding: '1rem', margin: '0.5rem', ...style }}
+    >
+      {children}
+    </div>
   );
 }
 ```
@@ -153,16 +165,18 @@ function CustomInput({ value, onChange, placeholder }) {
 #### After (Design System Component)
 
 ```typescript
-import { Input } from './design-system';
+import { Box } from './design-system/primitives';
 
-function CustomInput(props) {
+function CustomContainer({ children, className, ...props }) {
   return (
-    <Input
-      variant="default"
-      size="md"
-      className="custom-input"
+    <Box
+      padding="md"
+      margin="sm"
+      className={className}
       {...props}
-    />
+    >
+      {children}
+    </Box>
   );
 }
 ```
@@ -199,8 +213,8 @@ function CustomInput(props) {
    - Theme switching functionality
 2. **Hook integration**:
    - `useTheme` for theme management
-   - `useToken` for token access
-   - `useBreakpoint` for responsive behavior
+   - Direct access to tokens via imports
+   - Custom hook implementation for responsive behavior
 
 ### Phase 4: Advanced Features
 
@@ -227,7 +241,7 @@ const theme = {
 // After: Design system theme
 import { initializeFoundations, setFoundationsTheme } from './design-system/foundations';
 
-initializeFoundations('light');
+const { foundationsManager } = initializeFoundations('light');
 setFoundationsTheme('dark');
 ```
 
@@ -252,14 +266,14 @@ import { breakpoints } from './design-system/tokens';
 
 ```typescript
 import { render } from '@testing-library/react';
-import { Box, Button } from './design-system';
+import { Box } from './design-system/primitives';
 
-test('Button renders correctly', () => {
+test('Box component renders correctly', () => {
   const { container } = render(
-    <Button variant="primary">Click me</Button>
+    <Box padding="md" backgroundColor="blue-500">Content</Box>
   );
   
-  expect(container.firstChild).toHaveClass('ds-button', 'ds-button--primary');
+  expect(container.firstChild).toHaveClass('bg-blue-500', 'p-4');
 });
 ```
 
@@ -284,18 +298,14 @@ test('Design tokens are valid', () => {
 
 ### Issue 2: Missing Dependencies
 
-**Problem**: Components depend on missing design tokens
+**Problem**: Components depend on missing design tokens or wrong import paths
 **Solution**:
 
 ```typescript
-// Ensure all required tokens are imported
-import { 
-  colors, 
-  spacing, 
-  typography, 
-  shadows, 
-  borders 
-} from './design-system/tokens';
+// Import from correct paths
+import { colors, spacing, typography } from './design-system/tokens';
+import { Box } from './design-system/primitives';
+import { useTheme } from './design-system/foundations';
 ```
 
 ### Issue 3: TypeScript Errors
@@ -307,7 +317,6 @@ import {
 ```typescript
 // Import types explicitly
 import { type BoxProps } from './design-system/primitives/Box';
-import { type ButtonProps } from './design-system/components/Button';
 ```
 
 ### Issue 4: Performance Issues
@@ -318,11 +327,11 @@ import { type ButtonProps } from './design-system/components/Button';
 
 ```typescript
 // Import specific modules only
-import { Button } from './design-system/components';
+import { Box } from './design-system/primitives';
 import { spacing } from './design-system/tokens';
 
-// Use tree shaking
-import { Button, Card, Input } from './design-system/components';
+// Use tree shaking (only what's available)
+import { Box, Container, Section } from './design-system';
 ```
 
 ## 📋 Migration Checklist

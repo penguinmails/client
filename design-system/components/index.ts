@@ -102,10 +102,11 @@ export const componentsManager = ComponentsManager.getInstance();
 
 // Convenience functions
 export const getComponentsConfig = () => componentsManager.getConfig();
-export const updateComponentsConfig = (config: any) => componentsManager.updateConfig(config);
-export const generateComponentClasses = (componentName: string, props: any) =>
+export const updateComponentsConfig = (config: Partial<typeof componentsConfig>) =>
+  componentsManager.updateConfig(config);
+export const generateComponentClasses = (componentName: string, props: Record<string, any>) =>
   componentsManager.generateComponentClasses(componentName, props);
-export const applyResponsiveProps = (props: any) =>
+export const applyResponsiveProps = (props: Record<string, any>) =>
   componentsManager.applyResponsiveProps(props);
 
 const exportedComponents = {

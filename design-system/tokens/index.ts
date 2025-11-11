@@ -49,9 +49,3 @@ export const initializeDesignSystem = (theme: 'light' | 'dark' = 'light') => {
   console.log('🎨 Design System Penguin Mails initialized');
   return designTokens;
 };
-
-// Simplified default export
-const defaultExport = {
-  // The exports are handled automatically by the export * above
-};
-export default defaultExport;

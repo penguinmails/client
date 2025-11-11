@@ -248,13 +248,24 @@ export const getColor = (color: keyof typeof colors, isDark: boolean = false): s
 export const generateColorCSSVariables = (isDark: boolean = false): Record<string, string> => {
   const variables: Record<string, string> = {};
   
-  Object.entries(colors).forEach(([key, value]) => {
-    if (typeof value === 'object' && 'light' in value) {
-      const cssValue = getColor(key as keyof typeof colors, isDark) || '';
-      variables[`--color-${key}`] = cssValue;
-    }
-  });
+  const processColors = (colorObject: any, baseKey: string = '') => {
+    Object.entries(colorObject).forEach(([key, value]) => {
+      const currentKey = baseKey ? `${baseKey}-${key}` : key;
+      
+      // If it's a color token (has light/dark properties)
+      if (typeof value === 'object' && value !== null && 'light' in value && typeof value.light === 'string') {
+        const colorToken = value as ColorToken;
+        const cssValue = isDark ? colorToken.dark : colorToken.light;
+        variables[`--color-${currentKey}`] = cssValue;
+      }
+      // If it's a nested object, recurse
+      else if (typeof value === 'object' && value !== null) {
+        processColors(value, currentKey);
+      }
+    });
+  };
   
+  processColors(colors);
   return variables;
 };
 
