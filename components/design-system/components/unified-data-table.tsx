@@ -188,7 +188,7 @@ export function UnifiedDataTable<TData>({
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
                 .map((column) => (
-                  <DropdownMenuItem key={column.id} className="capitalize">
+                  <DropdownMenuItem key={column.id}>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"
@@ -286,11 +286,9 @@ export function UnifiedDataTable<TData>({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
       )}
-      <CardContent className="p-0">
+      <CardContent className="space-y-4 px-6">
         {renderToolbar()}
-        <div className="px-6">
-          {renderTable()}
-        </div>
+        {renderTable()}
         {renderPagination()}
       </CardContent>
     </Card>

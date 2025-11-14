@@ -14,13 +14,14 @@ Consolidates all StatsCard variants (StatsCard, MigratedStatsCard, KpiCard, etc.
 
 ```tsx
 import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
+import { Send, Eye, TrendingUp } from "lucide-react";
 
 // Basic usage
 <UnifiedStatsCard
   title="Total Campaigns"
   value="42"
   icon={Send}
-  color="bg-primary text-primary-foreground"
+  color="primary"
 />
 
 // With trends and benchmarks
@@ -28,7 +29,7 @@ import { UnifiedStatsCard } from "@/components/design-system/components/unified-
   title="Open Rate"
   value="24.5%"
   icon={Eye}
-  color="bg-green-100 text-green-700"
+  color="success"
   trend="up"
   change="+2.1% from last month"
   benchmark={true}
@@ -39,7 +40,8 @@ import { UnifiedStatsCard } from "@/components/design-system/components/unified-
 // Different sizes and variants
 <UnifiedStatsCard
   size="lg"
-  variant="success"
+  color="success"
+  variant="highlighted"
   title="Health Score"
   value="85/100"
   icon={TrendingUp}
@@ -51,9 +53,9 @@ import { UnifiedStatsCard } from "@/components/design-system/components/unified-
 - `title`: Card title
 - `value`: Display value
 - `icon`: Lucide icon component
-- `color`: Tailwind color classes
+- `color`: "primary" | "secondary" | "success" | "warning" | "error" | "info"
 - `size`: "sm" | "default" | "lg"
-- `variant`: "default" | "highlighted" | "error" | "success"
+- `variant`: "default" | "highlighted" | "muted"
 - `trend`: "up" | "down" | "stable"
 - `change`: Change description
 - `benchmark`: Show target/benchmark status

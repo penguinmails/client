@@ -9,13 +9,14 @@ Display KPI cards in a responsive grid layout.
 ```tsx
 import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
 import { DashboardLayout } from "@/components/design-system/components/dashboard-layout";
+import { Send, Eye } from "lucide-react";
 
 const stats = [
   {
     title: "Total Campaigns",
     value: "42",
     icon: Send,
-    color: "bg-blue-100 text-blue-700",
+    color: "info",
     trend: "up" as const,
     change: "+12% from last month",
   },
@@ -23,7 +24,7 @@ const stats = [
     title: "Open Rate",
     value: "24.5%",
     icon: Eye,
-    color: "bg-green-100 text-green-700",
+    color: "success",
     trend: "up" as const,
     change: "+2.1% from last month",
     benchmark: true,
@@ -54,13 +55,22 @@ Display tabular data with search, filtering, and row actions.
 import { UnifiedDataTable } from "@/components/design-system/components/unified-data-table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2, ArrowUpDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+// Utility function for date formatting
+const formatDate = (date: string | Date) => {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(new Date(date));
+};
 
 const columns = [
   {
@@ -144,6 +154,16 @@ import { UnifiedStatsCard } from "@/components/design-system/components/unified-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Edit, Play } from "lucide-react";
+
+// Utility function for date formatting
+const formatDate = (date: string | Date) => {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(new Date(date));
+};
 
 function CampaignDetailPage({ campaign, stats }) {
   const breadcrumbs = [
@@ -266,39 +286,40 @@ Show skeleton loaders during data fetching.
 ```tsx
 import { DashboardLayout } from "@/components/design-system/components/dashboard-layout";
 import { UnifiedDataTable } from "@/components/design-system/components/unified-data-table";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ArrowUpDown } from "lucide-react";
+
+// Define columns (from the data table pattern above)
+const columns = [
+  {
+    accessorKey: "name",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Name <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("name")}</div>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <Badge
+        variant={row.getValue("status") === "active" ? "default" : "secondary"}
+      >
+        {row.getValue("status")}
+      </Badge>
+    ),
+  },
+];
 
 function CampaignsPage({ loading, campaigns }) {
-  if (loading) {
-    return (
-      <DashboardLayout title="Campaigns">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rounded-lg border p-6">
-              <div className="flex items-center justify-between">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-6 w-6 rounded" />
-              </div>
-              <Skeleton className="h-8 w-16 mt-2" />
-              <Skeleton className="h-3 w-20 mt-2" />
-            </div>
-          ))}
-        </div>
-
-        <div className="rounded-md border">
-          <div className="p-4">
-            <Skeleton className="h-10 w-full" />
-          </div>
-          <div className="space-y-2 p-4">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full" />
-            ))}
-          </div>
-        </div>
-      </DashboardLayout>
-    );
-  }
-
   return (
     <DashboardLayout title="Campaigns">
       <UnifiedDataTable
@@ -307,6 +328,7 @@ function CampaignsPage({ loading, campaigns }) {
         title="Campaigns"
         searchable={true}
         filterable={true}
+        loading={loading}
       />
     </DashboardLayout>
   );
