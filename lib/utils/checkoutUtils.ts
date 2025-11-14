@@ -10,7 +10,6 @@ import { toast } from "sonner";
  */
 export async function createStripeCheckoutSession(plan: Plan): Promise<void> {
 	try {
-		console.log('[billing] starting checkout for plan', plan);
 		const body: Record<string, unknown> = {};
 
 		// If the plan payload contains an explicit price id, send it.
@@ -18,7 +17,6 @@ export async function createStripeCheckoutSession(plan: Plan): Promise<void> {
 
 		if (plan?.id) body.planId = plan.id;
 
-		console.log('[billing] checkout payload', body);
 		const res = await fetch('/api/stripe/subscription/checkout-session', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -26,7 +24,6 @@ export async function createStripeCheckoutSession(plan: Plan): Promise<void> {
 		});
 
 		const data = await res.json();
-		console.log('[billing] checkout response', res.status, data);
 		if (!res.ok) throw new Error(data.error || 'Failed to create checkout session');
 
 		if (data.url) {

@@ -20,7 +20,7 @@ import {
   AlertTriangle,
   RefreshCw,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import {
   getBillingDataForSettings,
   updateBillingInfo,
@@ -37,11 +37,10 @@ import {
 } from "@/components/settings/SettingsErrorBoundary";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { createStripeCheckoutSession } from "@/lib/utils/checkoutUtils";
-import { Plan } from "@/types/settings/plans";
+import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 
 function BillingTab() {
-  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+  const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
 
   // Memoized options to keep stable references
   const billingOptions = useMemo(
@@ -132,18 +131,6 @@ function BillingTab() {
     });
     // Refresh company data after update
     loadCompanyData();
-  };
-
-  // Handler to create a Stripe Checkout Session for a selected plan and open the returned URL
-  const handleCheckoutForPlan = async (plan: Plan) => {
-    try {
-      setIsCheckoutLoading(true);
-      await createStripeCheckoutSession(plan);
-    } catch (err) {
-      console.error('Error Stripe Checkout session:', err);
-    } finally {
-      setIsCheckoutLoading(false);
-    }
   };
 
   // Show loading skeleton while data is loading

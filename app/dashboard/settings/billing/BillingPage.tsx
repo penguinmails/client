@@ -12,6 +12,7 @@ import { AlertTriangle, RefreshCw } from "lucide-react";
 import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
 import { toast } from "sonner";
 import { createStripeCheckoutSession } from "@/lib/utils/checkoutUtils";
+import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 
 // Simple loading skeleton component
 function BillingLoadingSkeleton() {
@@ -87,20 +88,7 @@ export default function BillingSettingsPage() {
   }
 
   const billingData = billingDataAction.data;
-
-  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
-
-  // Handler to create a Stripe Checkout Session for a selected plan and open the returned URL
-  const handleCheckoutForPlan = async (plan?: any) => {
-    try {
-      setIsCheckoutLoading(true);
-      await createStripeCheckoutSession(plan);
-    } catch (err) {
-      console.error('Error Stripe Checkout session:', err);
-    } finally {
-      setIsCheckoutLoading(false);
-    }
-  };
+  const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
 
   // Company billing data - now from API based on billing model
   const companyBilling = {
