@@ -38,6 +38,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { createStripeCheckoutSession } from "@/lib/utils/checkoutUtils";
+import { Plan } from "@/types/settings/plans";
 
 function BillingTab() {
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
@@ -134,7 +135,7 @@ function BillingTab() {
   };
 
   // Handler to create a Stripe Checkout Session for a selected plan and open the returned URL
-  const handleCheckoutForPlan = async (plan?: any) => {
+  const handleCheckoutForPlan = async (plan: Plan) => {
     try {
       setIsCheckoutLoading(true);
       await createStripeCheckoutSession(plan);

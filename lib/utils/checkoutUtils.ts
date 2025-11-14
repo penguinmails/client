@@ -1,3 +1,4 @@
+import { Plan } from "@/types/settings/plans";
 import { toast } from "sonner";
 
 /**
@@ -7,13 +8,13 @@ import { toast } from "sonner";
  * @param plan - Optional plan object containing price and/or id. If price is present, it's used as price. If id is present, it's used as planId.
  * @returns Promise that resolves when the checkout URL is opened successfully, or rejects on error.
  */
-export async function createStripeCheckoutSession(plan?: any): Promise<void> {
+export async function createStripeCheckoutSession(plan: Plan): Promise<void> {
 	try {
 		console.log('[billing] starting checkout for plan', plan);
 		const body: Record<string, unknown> = {};
 
 		// If the plan payload contains an explicit price id, send it.
-		if (plan?.price) body.price = plan.price;
+		if (plan?.priceMonthly) body.price = plan.priceMonthly;
 
 		if (plan?.id) body.planId = plan.id;
 

@@ -2,19 +2,24 @@ import { NextResponse, NextRequest } from 'next/server';
 import { stripeApi } from '@/lib/stripe/stripe-server';
 import { nile } from '@/app/api/[...nile]/nile';
 
+interface NileUser {
+  id: string;
+  companyId?: number;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { planId, price } = body || {};
 
     // Get authenticated user and derive company context
-    const user = await nile.users.getSelf();
+    const user: NileUser = await nile.users.getSelf();
     if (user instanceof Response) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    const userId = (user as any).id as string;
-    const companyId = (user as any).companyId as number | undefined;
+    const userId = user.id;
+    const companyId = user.companyId;
     const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings/billing?success=true`;
     const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings/billing?canceled=true`;
 
@@ -30,9 +35,9 @@ export async function POST(request: NextRequest) {
           },
           product_data: {
             name: `plan ${planId}`,
-            unit_label: 'suscription',
+            unit_label: 'subscription',
           },
-          unit_amount: price * 100,
+          unit_amount: price,
         },
       }],
       // Attach company and plan metadata so webhook handlers can reconcile
