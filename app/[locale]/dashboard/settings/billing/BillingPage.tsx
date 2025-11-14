@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
 import { toast } from "sonner";
-import { createStripeCheckoutSession } from "@/lib/utils/checkoutUtils";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 
 // Simple loading skeleton component
@@ -29,6 +28,8 @@ function BillingLoadingSkeleton() {
 }
 
 export default function BillingSettingsPage() {
+  const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
+
   // Server action hooks for billing data
   const billingOptions = {
     onError: (error: string) => {
@@ -86,7 +87,6 @@ export default function BillingSettingsPage() {
   }
 
   const billingData = billingDataAction.data;
-  const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
 
   // Company billing data - now from API based on billing model
   const companyBilling = {
