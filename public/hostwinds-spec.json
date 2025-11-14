@@ -53,7 +53,7 @@
           "port_uuid": { "type": "string" },
           "main_ip": { "type": "string" },
           "private_ip": { "type": "string" },
-          "ips": { "type": "array", "nullable": true }, 
+          "ips": { "type": "array", "items": { "type": "string" }, "nullable": true },
           "items": { "type": "string" },
           "upgrade_available": { "type": "integer" },
           "is_suspended": { "type": "integer" },
