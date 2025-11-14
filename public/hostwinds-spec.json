@@ -12,13 +12,6 @@
     }
   ],
   "components": {
-    "securitySchemes": {
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-API-Key"
-      }
-    },
     "schemas": {
       "Image": {
         "type": "object",
@@ -53,7 +46,7 @@
           "port_uuid": { "type": "string" },
           "main_ip": { "type": "string" },
           "private_ip": { "type": "string" },
-          "ips": { "type": "array", "items": { "type": "string" }, "nullable": true },
+          "ips": { "type": "array", "items": { "type": "string" }, "nullable": true }, 
           "items": { "type": "string" },
           "upgrade_available": { "type": "integer" },
           "is_suspended": { "type": "integer" },
@@ -187,7 +180,7 @@
               },
               "percent": { "type": "integer" },
               "rid": { "type": "integer" },
-              "mtotal": { "type": ["string", "number"] },
+              "mtotal": { "oneOf": [{ "type": "string" }, { "type": "number" }] },
               "pricing": {
                 "type": "object",
                 "properties": {
@@ -255,12 +248,6 @@
           }
         }
       },
-      "BillingCyclePrices": {
-        "type": "object",
-        "properties": {
-          "success": { "type": "object", "additionalProperties": true }
-        }
-      },
       "ServerCharts": {
         "type": "object",
         "properties": {
@@ -273,7 +260,7 @@
           }
         }
       },
-      "VNCResponse": {
+      "ActionLogTableResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -353,17 +340,11 @@
       }
     }
   },
-  "security": [
-    {
-      "ApiKeyAuth": []
-    }
-  ],
   "paths": {
     "get_instances": {
       "post": {
         "summary": "Get all VPS instances",
         "description": "Retrieve a list of VPS instances for the account (optionally filter by location_id).",
-        "security": [{ "ApiKeyAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -402,7 +383,6 @@
       "post": {
         "summary": "Get instance details",
         "description": "Get full details for a single instance by serviceid.",
-        "security": [{ "ApiKeyAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -442,7 +422,6 @@
       "post": {
         "summary": "Get lightweight instance ids list",
         "description": "Returns a compact list of instance ids and hostnames for listing and selection.",
-        "security": [{ "ApiKeyAuth": [] }],
         "requestBody": { 
           "required": true, 
           "content": { 
@@ -486,7 +465,6 @@
       "post": {
         "summary": "Get a list of valid instance ips",
         "description": "Returns a compact list of instance ips.",
-        "security": [{ "ApiKeyAuth": [] }],
         "requestBody": { 
           "required": true, 
           "content": { 
@@ -494,7 +472,7 @@
               "schema": { 
                 "type": "object", 
                 "properties": { 
-                  "action": { "type": "string", "example": "get_instance_ids" }, 
+                  "action": { "type": "string", "example": "get_instance_ips" }, 
                   "API": { "type": "string" }, 
                   "serviceid": { "type": "integer" }, 
                   "location_id": { "type": "integer" } 
@@ -528,7 +506,6 @@
       "post": {
         "summary": "Create (add) a new instance",
         "description": "Create a new VPS instance. Uses templates/pricing from get_price_list.",
-        "security": [{ "ApiKeyAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -647,7 +624,7 @@
               } 
             } 
           } 
-      },
+        },
         "responses": { 
           "200": { 
             "description": "Price list", 
@@ -674,7 +651,7 @@
         "summary": "Apply paid upgrade to server (may require migration and reboot)",
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "upgrade_server" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "disk": { "type": "integer" }, "upgrade_drive_type": { "type": "integer", "example": 0 } }, "required": ["API", "action", "serviceid"] } } } } },
         "responses": { "200": { "description": "Upgrade in progress", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
-      },
+    },
     "confirm_upgrade": {
       "post": {
         "summary": "Confirm an upgrade after status RESIZED",
@@ -734,15 +711,15 @@
     "get_vnc": {
       "post": {
         "summary": "Get VNC / action log entries (DataTables format)",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_vnc" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["action", "serviceid"] } } } },
-        "responses": { "200": { "description": "VNC/log entries", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/VNCResponse" } } } } }
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_vnc" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API","action", "serviceid"] } } } },
+        "responses": { "200": { "description": "VNC/log entries", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionLogTableResponse" } } } } }
       }
     },
     "get_serial": {
       "post": {
         "summary": "Get serial console access details",
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_serial" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
-        "responses": { "200": { "description": "Serial console details",  "content": { "application/json": { "schema": { "$ref": "#/components/schemas/VNCResponse" } } } }}
+        "responses": { "200": { "description": "Serial console details",  "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionLogTableResponse" } } } }}
       }
     },
     "set_main_ip": {
@@ -795,6 +772,6 @@
         "responses": { "200": { "description": "SMTP filters", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SMTPFilters" } } } } }
       }
     }
-  }   
+  }  
 }
 

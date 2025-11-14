@@ -8,7 +8,7 @@ const specUrl = '/hostwinds-spec.json';
 
 export default function HostwindsApiDocsPage() {
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="p-5">
       <h1>Hostwinds API Documentation</h1>
       <SwaggerUI 
         url={specUrl} 
