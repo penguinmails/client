@@ -75,7 +75,7 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
             last_payment_amount = $3,
             updated_at = CURRENT_TIMESTAMP
            WHERE company_id = $4 AND tenant_id = CURRENT_TENANT_ID()`,
-          ['active', (invoice as any).status === 'paid' ? Date.now() / 1000 : Date.now() / 1000, (invoice as any).amount_paid || (invoice as any).amount_remaining || 0, Number(resolvedCompanyId)]
+          ['active', invoice.status_transitions.paid_at ?? invoice.created, invoice.amount_paid, Number(resolvedCompanyId)]
         );
       } catch (dbErr) {
         console.error('Failed to update company_billing on invoice.paid:', dbErr);
