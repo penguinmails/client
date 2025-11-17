@@ -17,7 +17,6 @@ export function useStripeCheckout() {
 	 */
 	const handleCheckoutForPlan = async (plan: Plan) => {
 		try {
-			console.log({ planing: plan })
 			setIsCheckoutLoading(true);
 			await createStripeCheckoutSession(plan);
 		} catch (err) {

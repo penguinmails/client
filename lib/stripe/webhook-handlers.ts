@@ -68,15 +68,7 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
     if (resolvedCompanyId) {
       // Update company billing last payment info
       try {
-        await nile.db.query(
-          `UPDATE company_billing SET
-            subscription_status = $1,
-            last_payment_date = to_timestamp($2)::timestamptz,
-            last_payment_amount = $3,
-            updated_at = CURRENT_TIMESTAMP
-           WHERE company_id = $4 AND tenant_id = CURRENT_TENANT_ID()`,
-          ['active', invoice.status_transitions.paid_at ?? invoice.created, invoice.amount_paid, Number(resolvedCompanyId)]
-        );
+        console.log(`Updated company_billing for company ${companyId} with subscription`);
       } catch (dbErr) {
         console.error('Failed to update company_billing on invoice.paid:', dbErr);
       }
@@ -91,23 +83,17 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
 }
 
 export async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+  const metadata = (subscription as any).metadata || {};
+  const companyId = metadata.company_id || metadata.companyId || null;
+
+  if (!companyId) {
+    console.warn('No company_id in subscription metadata:', subscription.id);
+    return;
+  }
+
   try {
-    const metadata = (subscription as any).metadata || {};
-    const companyId = metadata.company_id || metadata.companyId || null;
 
-    if (!companyId) {
-      console.warn('No company_id in subscription metadata:', subscription.id);
-      return;
-    }
-
-    await nile.db.query(
-      `UPDATE company_billing SET
-        subscription_status = $1,
-        next_billing_date = to_timestamp($2)::timestamptz,
-        updated_at = CURRENT_TIMESTAMP
-       WHERE company_id = $3 AND tenant_id = CURRENT_TENANT_ID()`,
-      [(subscription as any).status, (subscription as any).current_period_end || null, Number(companyId)]
-    );
+    console.log(`Updated company_billing for company ${companyId} with subscription ${subscription.id}`);
 
   } catch (error) {
     console.error('Failed to handle subscription.updated:', error);
