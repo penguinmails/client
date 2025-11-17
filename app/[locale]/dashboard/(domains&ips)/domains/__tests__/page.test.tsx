@@ -8,7 +8,7 @@
 import React from "react";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { jest } from "@jest/globals";
-import DomainSetupClient from "../domain-setup-client";
+import DomainSetupClient from "@/components/domains/domain-setup-client";
 import { toast } from "sonner";
 
 // Mock next/link
@@ -32,7 +32,7 @@ jest.mock("sonner", () => ({
 }));
 
 // Mock copy text
-jest.mock("../copy", () => ({
+jest.mock("@/components/domains/copy", () => ({
   copyText: {
     setup: {
       title: "Domain Setup",
@@ -83,12 +83,16 @@ describe("DomainSetupClient", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockFetch.mockClear();
+    // Suppress console.error in tests
+    jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   describe("Initial Loading", () => {
     it("should show loading state initially", () => {
-      mockFetch.mockImplementation(() => new Promise(() => {})); // Never resolves
-
       render(<DomainSetupClient domainId="1" />);
 
       expect(screen.getByText("Loading...")).toBeInTheDocument();
