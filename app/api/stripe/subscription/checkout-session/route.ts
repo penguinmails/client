@@ -7,6 +7,11 @@ interface NileUser {
   companyId?: number;
 }
 
+const CHECKOUT_STATUS = {
+  SUCCESS: 'success',
+  CANCELED: 'canceled',
+};
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -20,8 +25,8 @@ export async function POST(request: NextRequest) {
 
     const userId = user.id;
     const companyId = user.companyId;
-    const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings/billing?success=true`;
-    const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings/billing?canceled=true`;
+    const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings/billing?checkout=${CHECKOUT_STATUS.SUCCESS}`;
+    const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings/billing?checkout=${CHECKOUT_STATUS.CANCELED}`;
 
     const session = await stripeApi.checkout.sessions.create({
       mode: 'subscription',

@@ -38,9 +38,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import CheckoutDialog from "@/components/settings/billing/checkout-dialog";
 
 function BillingTab() {
   const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const checkout = searchParams.get("checkout");
 
   // Memoized options to keep stable references
   const billingOptions = useMemo(
@@ -131,6 +138,13 @@ function BillingTab() {
     // Refresh company data after update
     loadCompanyData();
   };
+
+  useEffect(() => {
+    if (typeof checkout === 'string')
+      setTimeout(() => {
+        router.push(pathname);
+      }, 2000);
+  }, [checkout]);
 
   // Show loading skeleton while data is loading
   if (billingDataAction.loading && !billingDataAction.data) {
@@ -233,6 +247,12 @@ function BillingTab() {
             <ChangePlanTrigger title="Change Plan" onSelectPlan={handleCheckoutForPlan} isLoading={isCheckoutLoading} />
           </CardFooter>
         </Card>
+
+        <CheckoutDialog
+          isModalOpen={typeof checkout === 'string'}
+          checkout={checkout}
+          setIsModalOpen={() => router.push(pathname)}
+        />
 
         {/* Payment Method Card */}
         <Card>
