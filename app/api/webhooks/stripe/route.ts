@@ -4,18 +4,24 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripeApi } from '@/lib/stripe/stripe-server';
 import { handleCheckoutSessionCompleted, handleInvoicePaid, handleSubscriptionUpdated } from '@/lib/stripe/webhook-handlers';
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SIGNING_SECRET!;
+const endpointSecret = process.env.STRIPE_WEBHOOK_SIGNING_SECRET;
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text();
-    const sig = (await headers()).get('stripe-signature')!;
+    const sig = (await headers()).get('stripe-signature');
+
+    if (!endpointSecret) {
+      throw new Error('STRIPE_WEBHOOK_SIGNING_SECRET is not set in environment variables.');
+    }
+
+    if (!sig) {
+      return NextResponse.json({ error: 'Missing stripe-signature header' }, { status: 400 });
+    }
 
     let event: Stripe.Event;
 
     try {
-      console.log({ endpointSecret });
-      console.log({ sig });
       event = stripeApi.webhooks.constructEvent(body, sig, endpointSecret);
     } catch (err) {
       console.error('Webhook signature verification failed:', err);
