@@ -1,5 +1,5 @@
 "use client";
-import KpiCard from "@/components/analytics/cards/StatsCard";
+import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -228,40 +228,35 @@ function StatsTab() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Total Sent"
             value={totals.sent.toLocaleString()}
             icon={Mail}
-            color="bg-gray-100 dark:bg-muted text-gray-600 dark:text-muted-foreground"
+            color="secondary"
           />
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Opens (Tracked)"
             value={`${totals.opened_tracked.toLocaleString()} (${openRate})`}
             icon={Eye}
-            color="bg-blue-100 text-blue-600"
+            color="info"
           />
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Replies"
             value={`${totals.replied.toLocaleString()} (${replyRate})`}
             icon={TrendingUp}
-            color="bg-green-100 text-green-600"
+            color="success"
           />
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Clicks (Tracked)"
             value={`${totals.clicked_tracked.toLocaleString()} (${clickRate})`}
             icon={MousePointer}
-            color="bg-purple-100 text-purple-600"
+            color="warning"
           />
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Bounces"
             value={`${totals.bounced.toLocaleString()} (${bounceRate}%)`}
             icon={AlertTriangle}
-            color="bg-red-100 text-red-600"
+            color="error"
           />
         </div>
       )}
