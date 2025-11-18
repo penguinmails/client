@@ -160,6 +160,7 @@ export const createNileConfig = (): NileConfig => {
  */
 function extractDatabaseIdFromUrl(apiUrl: string): string {
   if (!apiUrl) return '';
+  if(['development', 'local', 'test'].includes(process.env.NODE_ENV)) return 'test';
   
   // Extract from URL like: https://us-west-2.api.thenile.dev/v2/databases/01988a31-7e7a-7bc7-a089-92bc09d501d4
   const match = apiUrl.match(/\/databases\/([a-zA-Z0-9-]+)(?:\/|$)/);
