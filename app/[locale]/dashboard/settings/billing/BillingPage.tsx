@@ -4,11 +4,10 @@ import Link from "next/link";
 import { config } from "@/lib/config";
 import { getBillingDataForSettings } from "@/lib/actions/billing";
 import { useServerAction } from "@/hooks/useServerAction";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
-import { toast } from "sonner";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 
 // Simple loading skeleton component

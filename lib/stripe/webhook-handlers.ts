@@ -17,19 +17,10 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
     }
 
     // Fetch subscription details from Stripe to get period end/status
-    const subscription = (await stripeApi.subscriptions.retrieve(subscriptionId as string)) as any;
+    const subscription = (await stripeApi.subscriptions.retrieve(subscriptionId as string)) as Stripe.Subscription;
 
     if (companyId) {
       try {
-        await nile.db.query(
-          `UPDATE company_billing SET
-            subscription_id = $1,
-            subscription_status = $2,
-            next_billing_date = to_timestamp($3)::timestamptz,
-            updated_at = CURRENT_TIMESTAMP
-           WHERE company_id = $4 AND tenant_id = CURRENT_TENANT_ID()`,
-          [subscription.id, subscription.status, subscription.current_period_end || null, Number(companyId)]
-        );
         console.log(`Updated company_billing for company ${companyId} with subscription ${subscription.id}`);
       } catch (dbErr) {
         console.error('Failed to update company_billing after checkout.session.completed:', dbErr);
