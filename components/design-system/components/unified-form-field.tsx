@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-  Controller,
   type ControllerProps,
   type FieldPath,
   type FieldValues,
@@ -25,7 +24,6 @@ import {
   FormMessage,
   FormDescription,
   FormField,
-  useFormField,
 } from "@/components/ui/form";
 
 /**
@@ -52,7 +50,6 @@ export interface TextFormFieldProps<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends BaseFormFieldProps<TFieldValues, TName> {
   inputType?: "text" | "email" | "password" | "number" | "tel" | "url";
-  defaultValue?: string;
   onValueChange?: (value: string) => void;
 }
 
@@ -67,7 +64,6 @@ export interface SelectFormFieldProps<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends BaseFormFieldProps<TFieldValues, TName> {
   options: SelectFormFieldOption[];
-  defaultValue?: string;
   onValueChange?: (value: string) => void;
 }
 
@@ -75,126 +71,7 @@ export interface CheckboxFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends BaseFormFieldProps<TFieldValues, TName> {
-  defaultValue?: boolean;
   onCheckedChange?: (checked: boolean) => void;
-}
-
-/**
- * Main component that handles all form field types
- */
-function FormFieldContent<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({
-  type,
-  label,
-  description,
-  placeholder,
-  disabled = false,
-  required = false,
-  className,
-  options,
-  inputType = "text",
-  onValueChange,
-  onCheckedChange,
-}: {
-  type: FormFieldType;
-  label: string;
-  description?: string;
-  placeholder?: string;
-  disabled?: boolean;
-  required?: boolean;
-  className?: string;
-  options?: SelectFormFieldOption[];
-  inputType?: "text" | "email" | "password" | "number" | "tel" | "url";
-  onValueChange?: (value: string) => void;
-  onCheckedChange?: (checked: boolean) => void;
-}) {
-  const { error } = useFormField();
-
-  const renderField = (field: any) => {
-    const hasError = !!error;
-
-    switch (type) {
-      case "select":
-        return (
-          <Select
-            value={field.value || ""}
-            onValueChange={(value) => {
-              field.onChange(value);
-              onValueChange?.(value);
-            }}
-            disabled={disabled}
-          >
-            <FormControl>
-              <SelectTrigger
-                className={cn(
-                  "transition-colors",
-                  hasError &&
-                    "border-destructive focus-visible:ring-destructive/20",
-                  !hasError && "border-input focus-visible:ring-ring/50"
-                )}
-              >
-                <SelectValue placeholder={placeholder} />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              {options?.map((option) => (
-                <SelectItem
-                  key={option.value}
-                  value={option.value}
-                  disabled={option.disabled}
-                >
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-
-      case "checkbox":
-        return (
-          <Checkbox
-            checked={field.value || false}
-            onCheckedChange={(checked) => {
-              field.onChange(checked);
-              onCheckedChange?.(!!checked);
-            }}
-            disabled={disabled}
-            className={cn(
-              "transition-colors",
-              hasError &&
-                "border-destructive focus-visible:ring-destructive/20",
-              !hasError && "border-input focus-visible:ring-ring/50"
-            )}
-          />
-        );
-
-      case "text":
-      default:
-        return (
-          <Input
-            type={inputType}
-            placeholder={placeholder}
-            disabled={disabled}
-            required={required}
-            value={field.value || ""}
-            onChange={(e) => {
-              field.onChange(e.target.value);
-              onValueChange?.(e.target.value);
-            }}
-            className={cn(
-              "transition-colors",
-              hasError &&
-                "border-destructive focus-visible:ring-destructive/20",
-              !hasError && "border-input focus-visible:ring-ring/50"
-            )}
-          />
-        );
-    }
-  };
-
-  return <>{renderField}</>;
 }
 
 /**
@@ -226,14 +103,13 @@ export function UnifiedFormField<
   onValueChange?: (value: string) => void;
   onCheckedChange?: (checked: boolean) => void;
 }) {
-  const { error } = useFormField();
-  const hasError = !!error;
-
   return (
     <FormField
       control={control}
       name={name}
-      render={({ field }) => {
+      render={({ field, fieldState }) => {
+        const hasError = !!fieldState.error;
+
         const commonClasses = cn(
           "transition-colors",
           hasError && "border-destructive focus-visible:ring-destructive/20",

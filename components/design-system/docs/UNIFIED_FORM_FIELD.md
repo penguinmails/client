@@ -5,6 +5,7 @@ A standardized FormField component that provides consistent styling, validation,
 ## 🎯 Overview
 
 The `UnifiedFormField` component consolidates form field implementations into a single, reusable component that:
+
 - Uses design tokens for consistent styling
 - Supports multiple field types (text, select, checkbox)
 - Includes automatic error state handling
@@ -17,7 +18,7 @@ The `UnifiedFormField` component consolidates form field implementations into a 
 
 - **`UnifiedFormField`** - Generic component that supports all field types
 - **`TextFormField`** - Convenience component for text inputs
-- **`SelectFormField`** - Convenience component for select dropdowns  
+- **`SelectFormField`** - Convenience component for select dropdowns
 - **`CheckboxFormField`** - Convenience component for checkboxes
 
 ### Types and Interfaces
@@ -44,7 +45,7 @@ import { TextFormField } from "@/components/design-system/components/unified-for
   inputType="email"
   description="We'll use this for account verification"
   required
-/>
+/>;
 ```
 
 ### Select Dropdown
@@ -55,7 +56,7 @@ import { SelectFormField } from "@/components/design-system/components/unified-f
 const roleOptions = [
   { value: "user", label: "User" },
   { value: "admin", label: "Administrator" },
-  { value: "moderator", label: "Moderator" }
+  { value: "moderator", label: "Moderator" },
 ];
 
 <SelectFormField
@@ -66,7 +67,7 @@ const roleOptions = [
   options={roleOptions}
   description="Select your role in the system"
   required
-/>
+/>;
 ```
 
 ### Checkbox
@@ -80,7 +81,7 @@ import { CheckboxFormField } from "@/components/design-system/components/unified
   label="I agree to the terms and conditions"
   description="You must agree to our terms before proceeding"
   required
-/>
+/>;
 ```
 
 ### Unified Component Usage
@@ -99,6 +100,12 @@ import { UnifiedFormField } from "@/components/design-system/components/unified-
 />
 
 // Select field
+const countryOptions = [
+  { value: "us", label: "United States" },
+  { value: "ca", label: "Canada" },
+  { value: "mx", label: "Mexico" }
+];
+
 <UnifiedFormField
   name="country"
   control={form.control}
@@ -123,42 +130,43 @@ import { UnifiedFormField } from "@/components/design-system/components/unified-
 
 ### Base Props (All Field Types)
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | `string` | ✅ | Field name for form registration |
-| `control` | `Control` | ✅ | React Hook Form control object |
-| `label` | `string` | ✅ | Field label text |
-| `description` | `string` | ❌ | Helper text displayed below field |
-| `placeholder` | `string` | ❌ | Placeholder text |
-| `disabled` | `boolean` | ❌ | Disable the field (default: `false`) |
-| `required` | `boolean` | ❌ | Mark field as required (default: `false`) |
-| `className` | `string` | ❌ | Additional CSS classes |
+| Prop          | Type      | Required | Description                               |
+| ------------- | --------- | -------- | ----------------------------------------- |
+| `name`        | `string`  | ✅       | Field name for form registration          |
+| `control`     | `Control` | ✅       | React Hook Form control object            |
+| `label`       | `string`  | ✅       | Field label text                          |
+| `description` | `string`  | ❌       | Helper text displayed below field         |
+| `placeholder` | `string`  | ❌       | Placeholder text                          |
+| `disabled`    | `boolean` | ❌       | Disable the field (default: `false`)      |
+| `required`    | `boolean` | ❌       | Mark field as required (default: `false`) |
+| `className`   | `string`  | ❌       | Additional CSS classes                    |
 
 ### Text Field Props
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `inputType` | `"text" \| "email" \| "password" \| "number" \| "tel" \| "url"` | ❌ | HTML input type (default: `"text"`) |
-| `onValueChange` | `(value: string) => void` | ❌ | Callback when value changes |
+| Prop            | Type                                                            | Required | Description                         |
+| --------------- | --------------------------------------------------------------- | -------- | ----------------------------------- |
+| `inputType`     | `"text" \| "email" \| "password" \| "number" \| "tel" \| "url"` | ❌       | HTML input type (default: `"text"`) |
+| `onValueChange` | `(value: string) => void`                                       | ❌       | Callback when value changes         |
 
 ### Select Field Props
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `options` | `SelectFormFieldOption[]` | ✅ | Array of select options |
-| `onValueChange` | `(value: string) => void` | ❌ | Callback when value changes |
+| Prop            | Type                      | Required | Description                 |
+| --------------- | ------------------------- | -------- | --------------------------- |
+| `options`       | `SelectFormFieldOption[]` | ✅       | Array of select options     |
+| `onValueChange` | `(value: string) => void` | ❌       | Callback when value changes |
 
 ### Checkbox Field Props
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `onCheckedChange` | `(checked: boolean) => void` | ❌ | Callback when checked state changes |
+| Prop              | Type                         | Required | Description                         |
+| ----------------- | ---------------------------- | -------- | ----------------------------------- |
+| `onCheckedChange` | `(checked: boolean) => void` | ❌       | Callback when checked state changes |
 
 ## 🎨 Design Tokens
 
 The component uses the following design tokens for styling:
 
 ### Colors
+
 - `border-input` - Default border color
 - `border-destructive` - Error state border color
 - `text-destructive` - Error state text color
@@ -167,11 +175,13 @@ The component uses the following design tokens for styling:
 - `focus-visible:ring-destructive/20` - Error focus ring color
 
 ### Spacing
+
 - `space-y-2` - Default spacing between elements
 - `ml-1`, `ml-6` - Label and description indentation
 - `p-3`, `px-3`, `py-2` - Internal padding
 
 ### Typography
+
 - `text-sm font-medium leading-none` - Label typography
 - `text-sm` - Description and error text
 - `text-muted-foreground` - Description text color
@@ -181,19 +191,23 @@ The component uses the following design tokens for styling:
 The component automatically handles form validation errors through React Hook Form integration:
 
 ### Visual Indicators
+
 - **Border Color**: Red border (`border-destructive`) when field has errors
 - **Label Color**: Red label text (`text-destructive`) when field has errors
 - **Focus Ring**: Red focus ring (`focus-visible:ring-destructive/20`) when field has errors
 - **Error Message**: Red text below field showing validation message
 
 ### Accessibility
+
 - `aria-invalid="true"` automatically added to invalid fields
 - Error messages linked via `aria-describedby` for screen readers
 - Proper focus management for keyboard navigation
 
 ```tsx
 // Error states are handled automatically through React Hook Form
-const { formState: { errors } } = useForm();
+const {
+  formState: { errors },
+} = useForm();
 
 <TextFormField
   name="email"
@@ -202,7 +216,7 @@ const { formState: { errors } } = useForm();
   placeholder="Enter your email"
   required
   // Error styling is automatic when validation fails
-/>
+/>;
 ```
 
 ## 🔌 React Hook Form Integration
@@ -213,14 +227,24 @@ const { formState: { errors } } = useForm();
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { TextFormField, SelectFormField } from "@/components/design-system/components/unified-form-field";
+import {
+  TextFormField,
+  SelectFormField,
+} from "@/components/design-system/components/unified-form-field";
 
 // Define validation schema
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email"),
-  role: z.string().min(1, "Please select a role")
+  role: z.string().min(1, "Please select a role"),
 });
+
+// Role options for the form
+const roleOptions = [
+  { value: "user", label: "User" },
+  { value: "admin", label: "Administrator" },
+  { value: "moderator", label: "Moderator" },
+];
 
 function MyForm() {
   const form = useForm({
@@ -228,8 +252,8 @@ function MyForm() {
     defaultValues: {
       name: "",
       email: "",
-      role: ""
-    }
+      role: "",
+    },
   });
 
   const onSubmit = (data) => {
@@ -244,7 +268,7 @@ function MyForm() {
         label="Full Name"
         required
       />
-      
+
       <TextFormField
         name="email"
         control={form.control}
@@ -252,7 +276,7 @@ function MyForm() {
         inputType="email"
         required
       />
-      
+
       <SelectFormField
         name="role"
         control={form.control}
@@ -260,8 +284,8 @@ function MyForm() {
         options={roleOptions}
         required
       />
-      
-      <Button type="submit">Submit</Button>
+
+      <button type="submit">Submit</button>
     </form>
   );
 }
@@ -287,6 +311,12 @@ const form = useForm({
 });
 
 // Fields work automatically with validation
+const countries = [
+  { value: "us", label: "United States" },
+  { value: "ca", label: "Canada" },
+  { value: "mx", label: "Mexico" }
+];
+
 <TextFormField name="firstName" control={form.control} label="First Name" required />
 <TextFormField name="age" control={form.control} label="Age" inputType="number" required />
 <CheckboxFormField name="newsletter" control={form.control} label="Subscribe to newsletter" />
@@ -298,9 +328,17 @@ const form = useForm({
 ### From Direct UI Components
 
 **Before:**
+
 ```tsx
 import { Input } from "@/components/ui/input";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 
 <FormField
   control={form.control}
@@ -314,10 +352,11 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
       <FormMessage />
     </FormItem>
   )}
-/>
+/>;
 ```
 
 **After:**
+
 ```tsx
 import { TextFormField } from "@/components/design-system/components/unified-form-field";
 
@@ -327,7 +366,7 @@ import { TextFormField } from "@/components/design-system/components/unified-for
   label="Email"
   placeholder="Enter email"
   inputType="email"
-/>
+/>;
 ```
 
 ### Benefits of Migration
@@ -343,17 +382,23 @@ import { TextFormField } from "@/components/design-system/components/unified-for
 Example test implementation:
 
 ```tsx
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { TextFormField } from "@/components/design-system/components/unified-form-field";
 
 describe("TextFormField", () => {
-  const TestWrapper = ({ children }) => {
-    const form = useForm();
-    return <form>{children({ control: form.control, formState: form.formState })}</form>;
-  };
-
   it("renders label and input", () => {
+    const TestWrapper = ({ children }) => {
+      const form = useForm();
+      return (
+        <form>
+          {children({ control: form.control, formState: form.formState })}
+        </form>
+      );
+    };
+
     render(
       <TestWrapper>
         {({ control }) => (
@@ -371,25 +416,36 @@ describe("TextFormField", () => {
     expect(screen.getByPlaceholderText("Test placeholder")).toBeInTheDocument();
   });
 
-  it("displays error message when field is invalid", () => {
-    render(
-      <TestWrapper>
-        {({ control, formState }) => {
-          // Set up error state
-          formState.errors.test = { message: "Test error" };
-          
-          return (
-            <TextFormField
-              name="test"
-              control={control}
-              label="Test Label"
-            />
-          );
-        }}
-      </TestWrapper>
-    );
+  it("displays error message when field is invalid after submission", async () => {
+    const schema = z.object({
+      test: z.string().min(1, "Test error"),
+    });
 
-    expect(screen.getByText("Test error")).toBeInTheDocument();
+    const TestWrapper = () => {
+      const form = useForm({
+        resolver: zodResolver(schema),
+        defaultValues: { test: "" },
+      });
+
+      return (
+        <form onSubmit={form.handleSubmit(() => {})}>
+          <TextFormField
+            name="test"
+            control={form.control}
+            label="Test Label"
+          />
+          <button type="submit">Submit</button>
+        </form>
+      );
+    };
+
+    render(<TestWrapper />);
+
+    fireEvent.click(screen.getByRole("button", { name: /submit/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Test error")).toBeInTheDocument();
+    });
   });
 });
 ```
@@ -431,6 +487,13 @@ describe("TextFormField", () => {
     filterByCategory(value);
   }}
 />
+
+// Example categories data
+const categories = [
+  { value: "tech", label: "Technology" },
+  { value: "design", label: "Design" },
+  { value: "business", label: "Business" }
+];
 ```
 
 ### Disabled State
@@ -447,7 +510,7 @@ describe("TextFormField", () => {
 
 ## 🎨 Component Architecture
 
-```
+```md
 UnifiedFormField
 ├── TextFormField (convenience wrapper)
 ├── SelectFormField (convenience wrapper)
