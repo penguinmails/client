@@ -119,6 +119,68 @@ const columns = [
 - `onRowSelect`: Callback for row selection
 - `renderActions`: Function to render row actions
 
+### UnifiedFormField
+
+Consolidates all form field implementations (text inputs, select dropdowns, and checkboxes) into a single component with consistent styling and error handling.
+
+```tsx
+import { TextFormField, SelectFormField, CheckboxFormField } from "@/components/design-system/components/unified-form-field";
+
+// Text input field
+<TextFormField
+  name="email"
+  control={form.control}
+  label="Email Address"
+  placeholder="john.doe@example.com"
+  inputType="email"
+  description="We'll use this for account verification"
+  required
+/>
+
+// Select dropdown field
+const roleOptions = [
+  { value: "user", label: "User" },
+  { value: "admin", label: "Administrator" },
+  { value: "moderator", label: "Moderator" }
+];
+
+<SelectFormField
+  name="role"
+  control={form.control}
+  label="User Role"
+  placeholder="Choose a role"
+  options={roleOptions}
+  description="Select your role in the system"
+  required
+/>
+
+// Checkbox field
+<CheckboxFormField
+  name="agreeToTerms"
+  control={form.control}
+  label="I agree to the terms and conditions"
+  description="You must agree to our terms before proceeding"
+  required
+/>
+```
+
+**Props:**
+
+- `name`: Field name for form registration
+- `control`: React Hook Form control object
+- `label`: Field label text
+- `description`: Helper text displayed below field
+- `placeholder`: Placeholder text
+- `disabled`: Disable the field (default: `false`)
+- `required`: Mark field as required (default: `false`)
+- `className`: Additional CSS classes
+
+**Type-specific props:**
+
+- `TextFormField`: `inputType`, `onValueChange`
+- `SelectFormField`: `options`, `onValueChange`
+- `CheckboxFormField`: `onCheckedChange`
+
 ### DashboardLayout
 
 Provides consistent dashboard layout structure using existing Sidebar component.
@@ -239,6 +301,9 @@ All design system components depend on existing UI components:
 - `components/ui/button` - Button variants and sizes
 - `components/ui/badge` - Status indicators and badges
 - `components/ui/input` - Form inputs
+- `components/ui/select` - Select components
+- `components/ui/checkbox` - Checkbox component
+- `components/ui/form` - Form field components
 - `components/ui/breadcrumb` - Navigation breadcrumbs
 - `components/layout/DashboardSidebar` - Sidebar navigation
 
