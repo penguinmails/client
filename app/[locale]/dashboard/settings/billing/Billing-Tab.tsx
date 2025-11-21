@@ -37,8 +37,18 @@ import {
 } from "@/components/settings/SettingsErrorBoundary";
 import { Button } from "@/components/ui/button/button";
 import { toast } from "sonner";
+import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import CheckoutDialog from "@/components/settings/billing/checkout-dialog";
 
 function BillingTab() {
+  const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const checkout = searchParams.get("checkout");
+
   // Memoized options to keep stable references
   const billingOptions = useMemo(
     () => ({
@@ -128,6 +138,13 @@ function BillingTab() {
     // Refresh company data after update
     loadCompanyData();
   };
+
+  useEffect(() => {
+    if (typeof checkout === 'string')
+      setTimeout(() => {
+        router.push(pathname);
+      }, 2000);
+  }, [checkout]);
 
   // Show loading skeleton while data is loading
   if (billingDataAction.loading && !billingDataAction.data) {
@@ -227,9 +244,15 @@ function BillingTab() {
             </div>
           </CardContent>
           <CardFooter className="ml-auto">
-            <ChangePlanTrigger title="Change Plan" />
+            <ChangePlanTrigger title="Change Plan" onSelectPlan={handleCheckoutForPlan} isLoading={isCheckoutLoading} />
           </CardFooter>
         </Card>
+
+        <CheckoutDialog
+          isModalOpen={typeof checkout === 'string'}
+          checkout={checkout}
+          setIsModalOpen={() => router.push(pathname)}
+        />
 
         {/* Payment Method Card */}
         <Card>
@@ -238,17 +261,17 @@ function BillingTab() {
           </CardHeader>
           <CardContent>
             {billingData.paymentMethod ? (
-              <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-white p-2 rounded-lg border">
-                    <CreditCard className="w-5 h-5 text-gray-600" />
+                  <div className="bg-white dark:bg-card p-2 rounded-lg border dark:border-border">
+                    <CreditCard className="w-5 h-5 text-gray-600 dark:text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-foreground">
                       {billingData.paymentMethod.brand} ending in{" "}
                       {billingData.paymentMethod.lastFour}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-muted-foreground">
                       Expires {billingData.paymentMethod.expiry}
                     </p>
                   </div>
@@ -256,10 +279,10 @@ function BillingTab() {
                 <UpdateCardDialogTrigger title="Update Card" />
               </div>
             ) : (
-              <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-white p-2 rounded-lg border">
-                    <CreditCard className="w-5 h-5 text-gray-600" />
+                  <div className="bg-white dark:bg-card p-2 rounded-lg border dark:border-border">
+                    <CreditCard className="w-5 h-5 text-gray-600 dark:text-muted-foreground" />
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">
@@ -306,20 +329,20 @@ function BillingTab() {
             </button>
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-gray-700 dark:text-foreground">
                       Company Name
                     </label>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-foreground">
                       {companyDataAction.data?.companyInfo.name || "Loading..."}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-sm font-medium text-gray-700 dark:text-foreground">
                     Industry
                   </label>
                   <p className="text-gray-600">
@@ -328,7 +351,7 @@ function BillingTab() {
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-sm font-medium text-gray-700 dark:text-foreground">
                     Company Size
                   </label>
                   <p className="text-gray-600">
@@ -348,15 +371,21 @@ function BillingTab() {
             <EditAddressTrigger title="Edit Address" />
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
               <div className="space-y-1">
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-gray-900 dark:text-foreground">
                   {companyDataAction.data?.companyInfo.name || "Company"}
                 </p>
-                <p className="text-gray-600">123 Business Street</p>
-                <p className="text-gray-600">San Francisco, CA 94105</p>
-                <p className="text-gray-600">United States</p>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-gray-600 dark:text-muted-foreground">
+                  123 Business Street
+                </p>
+                <p className="text-gray-600 dark:text-muted-foreground">
+                  San Francisco, CA 94105
+                </p>
+                <p className="text-gray-600 dark:text-muted-foreground">
+                  United States
+                </p>
+                <p className="text-sm text-gray-500 dark:text-muted-foreground mt-2">
                   VAT ID: US123456789
                 </p>
               </div>
@@ -377,7 +406,7 @@ function BillingTab() {
         {/* Loading overlay for updates */}
         {updateBillingAction.loading && (
           <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-2">
+            <div className="bg-white dark:bg-card p-4 rounded-lg shadow-lg flex items-center space-x-2">
               <RefreshCw className="h-4 w-4 animate-spin" />
               <span>Updating billing information...</span>
             </div>

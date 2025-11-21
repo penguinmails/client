@@ -106,15 +106,15 @@ function InboxFilter() {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Icon className="w-4 h-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">{title}</span>
+            <Icon className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-foreground">{title}</span>
           </div>
           {selectedItems.length > 0 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => clearMultiSelect(setSelectedItems)}
-              className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+              className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
             >
               <X className="w-3 h-3" />
             </Button>
@@ -259,7 +259,9 @@ function InboxFilter() {
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Time</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-foreground">
+                  Time
+                </span>
               </div>
               <Select value={timeFilter} onValueChange={setTimeFilter}>
                 <SelectTrigger className="w-full">

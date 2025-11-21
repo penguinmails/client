@@ -7,17 +7,19 @@ import { useServerAction } from "@/hooks/useServerAction";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
+import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 
 // Simple loading skeleton component
 function BillingLoadingSkeleton() {
   return (
-    <div className="bg-white shadow sm:rounded-lg animate-pulse">
+    <div className="bg-white dark:bg-card shadow sm:rounded-lg animate-pulse">
       <div className="px-4 py-5 sm:p-6">
-        <div className="h-6 bg-gray-200 rounded w-48 mb-2" />
-        <div className="h-4 bg-gray-200 rounded w-64 mb-4" />
-        <div className="rounded-md bg-gray-50 px-6 py-5">
-          <div className="h-4 bg-gray-200 rounded w-24 mb-2" />
-          <div className="h-4 bg-gray-200 rounded w-40" />
+        <div className="h-6 bg-gray-200 dark:bg-muted rounded w-48 mb-2" />
+        <div className="h-4 bg-gray-200 dark:bg-muted rounded w-64 mb-4" />
+        <div className="rounded-md bg-gray-50 dark:bg-muted/30 px-6 py-5">
+          <div className="h-4 bg-gray-200 dark:bg-muted rounded w-24 mb-2" />
+          <div className="h-4 bg-gray-200 dark:bg-muted rounded w-40" />
         </div>
       </div>
     </div>
@@ -25,6 +27,8 @@ function BillingLoadingSkeleton() {
 }
 
 export default function BillingSettingsPage() {
+  const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
+
   // Server action hooks for billing data
   const billingOptions = {
     onError: (error: string) => {
@@ -92,23 +96,23 @@ export default function BillingSettingsPage() {
   const planType = companyBilling.currentPlanName;
 
   return (
-    <div className="bg-white shadow sm:rounded-lg">
+    <div className="bg-white dark:bg-card shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-foreground">
           Billing & Plan
         </h3>
-        <div className="mt-2 max-w-xl text-sm text-gray-500">
+        <div className="mt-2 max-w-xl text-sm text-gray-500 dark:text-muted-foreground">
           <p>Manage your subscription and view billing history.</p>
         </div>
 
         <div className="mt-5">
-          <div className="rounded-md bg-gray-50 px-6 py-5 sm:flex sm:items-start sm:justify-between">
+          <div className="rounded-md bg-gray-50 dark:bg-muted/30 px-6 py-5 sm:flex sm:items-start sm:justify-between">
             <div className="sm:flex sm:items-start">
               <div className="mt-3 sm:mt-0 sm:ml-4">
-                <div className="text-sm font-medium text-gray-900">
+                <div className="text-sm font-medium text-gray-900 dark:text-foreground">
                   Current Plan
                 </div>
-                <div className="mt-1 text-sm text-gray-600">
+                <div className="mt-1 text-sm text-gray-600 dark:text-muted-foreground">
                   You are currently on the{" "}
                   <span className="font-semibold">
                     {planType.charAt(0) + planType.slice(1).toLowerCase()}
@@ -119,18 +123,14 @@ export default function BillingSettingsPage() {
             </div>
             <div className="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
               {planType === "FREE" ? (
-                <Link
-                  href={config.stripe.checkoutUrl} // Link to upgrade checkout
-                  target="_blank" // Open Stripe in new tab
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Upgrade Plan
-                </Link>
+                <div className="w-48">
+                  <ChangePlanTrigger title={"Upgrade Plan"} onSelectPlan={handleCheckoutForPlan} isLoading={isCheckoutLoading} />
+                </div>
               ) : (
                 <Link
                   href={config.stripe.portalUrl} // Link to Stripe Customer Portal
                   target="_blank" // Open Stripe in new tab
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-border shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-foreground bg-white dark:bg-card hover:bg-gray-50 dark:hover:bg-muted/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   Manage Subscription
                 </Link>
@@ -139,8 +139,8 @@ export default function BillingSettingsPage() {
           </div>
         </div>
 
-        <div className="mt-6 border-t border-gray-200 pt-6">
-          <p className="text-sm text-gray-500">
+        <div className="mt-6 border-t border-gray-200 dark:border-border pt-6">
+          <p className="text-sm text-gray-500 dark:text-muted-foreground">
             Billing management is handled by Stripe. Clicking the button above
             will redirect you to Stripe&apos;s secure portal.
           </p>

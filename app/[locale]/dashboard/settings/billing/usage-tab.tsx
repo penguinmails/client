@@ -332,7 +332,7 @@ function UsageTab() {
         <CardHeader className="flex-center-between">
           <div>
             <CardTitle className="text-xl font-semibold">Add Storage</CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardDescription className="text-gray-600 dark:text-muted-foreground">
               Purchase additional storage at $3 per GB
             </CardDescription>
           </div>

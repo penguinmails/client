@@ -140,7 +140,7 @@ function EmailMailboxesTable() {
           <CardTitle>
             <div className="flex items-center space-x-2">
               <Mail className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-foreground">
                 Email Mailboxes
               </h2>
               <Badge className="bg-primary/20 text-primary">Loading...</Badge>
@@ -167,7 +167,7 @@ function EmailMailboxesTable() {
           <CardTitle>
             <div className="flex items-center space-x-2">
               <Mail className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-foreground">
                 Email Mailboxes
               </h2>
               <Badge className="bg-red-100 text-red-800">Error</Badge>
@@ -201,7 +201,7 @@ function EmailMailboxesTable() {
           <CardTitle>
             <div className="flex items-center space-x-2">
               <Mail className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-foreground">
                 Email Mailboxes
               </h2>
               <Badge className="bg-primary/20 text-primary">
@@ -227,7 +227,7 @@ function EmailMailboxesTable() {
         <CardTitle>
           <div className="flex items-center space-x-2">
             <Mail className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-foreground">
               Email Mailboxes
             </h2>
             <Badge className="bg-primary/20 text-primary">

@@ -78,7 +78,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         </div>
         <Separator orientation="vertical" />
         <div className="flex-1">
-          <div className="h-full bg-gray-100 rounded animate-pulse" />
+          <div className="h-full bg-gray-100 dark:bg-muted rounded animate-pulse" />
         </div>
       </div>
     );

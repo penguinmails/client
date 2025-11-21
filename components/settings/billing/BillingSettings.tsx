@@ -223,7 +223,7 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
           isValidPaymentMethod(billing.paymentMethod) ? (
             <div className="flex items-center justify-between rounded-md border p-4">
               <div className="flex items-center space-x-4">
-                <div className="h-10 w-14 rounded-md bg-gray-100 flex items-center justify-center">
+                <div className="h-10 w-14 rounded-md bg-gray-100 dark:bg-muted flex items-center justify-center">
                   {/* Basic card icon - replace with actual icon based on billingData.paymentMethod.brand if available */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -264,7 +264,7 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
           ) : (
             <div className="flex items-center justify-between rounded-md border p-4">
               <div className="flex items-center space-x-4">
-                <div className="h-10 w-14 rounded-md bg-gray-100 flex items-center justify-center">
+                <div className="h-10 w-14 rounded-md bg-gray-100 dark:bg-muted flex items-center justify-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"

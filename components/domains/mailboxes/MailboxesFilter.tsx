@@ -3,7 +3,7 @@ import {
   Filter,
   SearchInput,
 } from "@/components/ui/custom/Filter";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 
 function MailboxesFilter() {
   return (
@@ -44,7 +44,9 @@ function MailboxesFilter() {
         </Button>
       </div>
       <div className="flex items-center space-x-2">
-        <span className="text-sm text-gray-600">Show:</span>
+        <span className="text-sm text-gray-600 dark:text-muted-foreground">
+          Show:
+        </span>
         <DropDownFilter
           placeholder="10 per page"
           options={[

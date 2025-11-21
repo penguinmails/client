@@ -23,7 +23,6 @@ import {
   AuthenticationError,
   InvalidCredentialsError,
 } from "@/lib/niledb/errors";
-import { profileMockData } from "./mock-user";
 import { mockUserSettings } from "@/lib/data/settings.mock";
 
 interface EnhancedAuthContextType extends AuthContextType {
@@ -158,26 +157,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUserCompanies = useCallback(
     async (userId: string): Promise<CompanyInfo[]> => {
       try {
-        /*
+        // In development/non-production uses, we allow mock-ups to facilitate local testing
+        if (process.env.NODE_ENV !== "production") {
+          return Array.isArray(mockUserSettings.companyInfo)
+            ? mockUserSettings.companyInfo
+            : [mockUserSettings.companyInfo];
+        }
+
+        // In production we always use the real API
         const response = await fetch(`/api/users/${userId}/companies`, {
           method: "GET",
           credentials: "include",
         });
-        
+
         if (!response.ok) {
           if (response.status === 401) {
             return [];
           }
           throw new Error(`Companies fetch failed: ${response.status}`);
         }
-        
+
         const data = (await response.json()) as {
           companies: CompanyInfo[];
         };
-        */
-        return Array.isArray(mockUserSettings.companyInfo)
-          ? mockUserSettings.companyInfo
-          : [mockUserSettings.companyInfo];
+
+        return data.companies || [];
       } catch (error) {
         console.error("Failed to fetch user companies:", error);
         return [];
@@ -226,22 +230,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (data?.ok) {
         const initializeUserSession = async () => {
           try {
-            // Test authentication first
-            //const isAuthenticated = await testAuthentication();
-            //if (!isAuthenticated) {
-            //  throw new AuthenticationError("Authentication validation failed");
-            //}
 
-            // Fetch enhanced profile data using Task 8 API
-            //const profileData = await fetchProfile();
+            const isAuthenticated = await testAuthentication();
+            if (!isAuthenticated) {
+              throw new AuthenticationError("Authentication validation failed");
+            }
 
-            if (profileMockData) {
-              setNileUser(profileMockData);
-              setIsStaff(profileMockData.profile?.isPenguinMailsStaff || false);
+            const profileData = await fetchProfile();
+
+            if (profileData) {
+              setNileUser(profileData);
+              setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
 
               // Map to legacy User format for backward compatibility
               const legacyUser = mapNileUserToLegacyUser(
-                profileMockData,
+                profileData,
                 userCompanies,
                 selectedTenantId,
                 selectedCompanyId
@@ -251,7 +254,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               // Fetch tenants and companies in parallel
               const [tenants, companies] = await Promise.all([
                 fetchUserTenants(),
-                fetchUserCompanies(profileMockData.id),
+                fetchUserCompanies(profileData.id),
               ]);
 
               setUserTenants(tenants);
@@ -299,8 +302,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     },
     callbackUrl:
       typeof window !== "undefined"
-        ? window.location.origin + "/dashboard"
-        : "/dashboard",
+        ? window.location.origin + "/email-confirmation"
+        : "/email-confirmation",
   });
 
   const signUpHook = useSignUp({
@@ -320,50 +323,56 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setAuthError(error);
     },
     createTenant: true,
-    callbackUrl: "/dashboard",
+    callbackUrl: "/email-confirmation",
   });
 
   // Enhanced mapping function for NileDB user to legacy User format
-  const mapNileUserToLegacyUser = (
-    nileUser: NileDBUser,
-    userCompanies: CompanyInfo[],
-    selectedTenantId: string | null,
-    selectedCompanyId: string | null
-  ): User => {
-    const displayName = nileUser.name || nileUser.email.split("@")[0];
-    let role = UserRole.USER;
-    if (nileUser.profile?.role === "super_admin") role = UserRole.SUPER_ADMIN;
-    else if (nileUser.profile?.role === "admin") role = UserRole.ADMIN;
+  const mapNileUserToLegacyUser = useCallback(
+    (
+      nileUser: NileDBUser,
+      userCompanies: CompanyInfo[],
+      selectedTenantId: string | null,
+      selectedCompanyId: string | null
+    ): User => {
+      const displayName = nileUser.name || nileUser.email.split("@")[0];
+      let role = UserRole.USER;
+      if (nileUser.profile?.role === "super_admin") role = UserRole.SUPER_ADMIN;
+      else if (nileUser.profile?.role === "admin") role = UserRole.ADMIN;
 
-    const selectedCompany = userCompanies.find(
-      (c) => c.id === selectedCompanyId
-    );
-    return {
-      id: nileUser.id,
-      tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
-      email: nileUser.email,
-      displayName,
-      photoURL: nileUser.picture,
-      uid: nileUser.id,
-      token: nileUser.id,
-      claims: {
-        role,
+      const selectedCompany = userCompanies.find(
+        (c) => c.id === selectedCompanyId
+      );
+
+      return {
+        id: nileUser.id,
         tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
-        companyId: selectedCompany?.id,
-        permissions: [],
-      },
-      profile: {
-        timezone: (nileUser.profile?.preferences?.timezone as string) || "UTC",
-        language: (nileUser.profile?.preferences?.language as string) || "en",
-        firstName: nileUser.givenName,
-        lastName: nileUser.familyName,
-        avatar: nileUser.picture,
-        lastLogin: nileUser.profile?.lastLoginAt,
-        createdAt: nileUser.created ? new Date(nileUser.created) : undefined,
-        updatedAt: nileUser.updated ? new Date(nileUser.updated) : undefined,
-      },
-    };
-  };
+        email: nileUser.email,
+        displayName,
+        photoURL: nileUser.picture,
+        uid: nileUser.id,
+        token: nileUser.id,
+        claims: {
+          role,
+          tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
+          companyId: selectedCompany?.id,
+          permissions: [],
+        },
+        profile: {
+          timezone:
+            (nileUser.profile?.preferences?.timezone as string) || "UTC",
+          language:
+            (nileUser.profile?.preferences?.language as string) || "en",
+          firstName: nileUser.givenName,
+          lastName: nileUser.familyName,
+          avatar: nileUser.picture,
+          lastLogin: nileUser.profile?.lastLoginAt,
+          createdAt: nileUser.created ? new Date(nileUser.created) : undefined,
+          updatedAt: nileUser.updated ? new Date(nileUser.updated) : undefined,
+        },
+      };
+    },
+    []
+  );
 
   const login = async (email: string, password: string): Promise<void> => {
     setAuthError(null);
@@ -460,7 +469,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
 
         const legacyUser = mapNileUserToLegacyUser(
-          profileMockData,
+          profileData,
           userCompanies,
           selectedTenantId,
           selectedCompanyId
@@ -554,52 +563,74 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Test authentication first
-        // Fetch enhanced profile data
-        if (profileMockData) {
-          setNileUser(profileMockData);
-          setIsStaff(profileMockData.profile?.isPenguinMailsStaff || false);
+        // Test authentication with real session
+        const isAuthenticated = await testAuthentication();
 
-          try {
-            // Fetch tenants and companies in parallel FIRST
-            const [tenants, companies] = await Promise.all([
-              fetchUserTenants(),
-              fetchUserCompanies(profileMockData.id),
-            ]);
+        if (isAuthenticated) {
+          // User is authenticated, fetch real profile data
+          const profileData = await fetchProfile();
 
-            setUserTenants(tenants);
-            setUserCompanies(companies);
+          if (profileData) {
+            setNileUser(profileData);
+            setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
 
-            // Auto-select first tenant/company if none selected yet
-            const tenantId =
-              selectedTenantId ||
-              tenants[0]?.id ||
-              profileMockData.tenants?.[0] ||
-              null;
-            const companyId = selectedCompanyId || companies[0]?.id || null;
+            try {
+              // Fetch tenants and companies in parallel
+              const [tenants, companies] = await Promise.all([
+                fetchUserTenants(),
+                fetchUserCompanies(profileData.id),
+              ]);
 
-            setSelectedTenantId(tenantId);
-            setSelectedCompanyId(companyId);
+              setUserTenants(tenants);
+              setUserCompanies(companies);
 
-            // Now that we have all data, map to legacy User format
-            const legacyUser = mapNileUserToLegacyUser(
-              profileMockData,
-              companies,
-              tenantId,
-              companyId
-            );
-            setUser(legacyUser);
+              // Auto-select first tenant/company if none selected yet
+              const tenantId =
+                selectedTenantId ||
+                tenants[0]?.id ||
+                profileData.tenants?.[0] ||
+                null;
+              const companyId = selectedCompanyId || companies[0]?.id || null;
 
-            // Check system health for staff users
-            if (profileMockData.profile?.isPenguinMailsStaff) {
-              checkSystemHealthStatus();
+              setSelectedTenantId(tenantId);
+              setSelectedCompanyId(companyId);
+
+              // Map to legacy User format
+              const legacyUser = mapNileUserToLegacyUser(
+                profileData,
+                companies,
+                tenantId,
+                companyId
+              );
+              setUser(legacyUser);
+
+              // Check system health for staff users
+              if (profileData.profile?.isPenguinMailsStaff) {
+                checkSystemHealthStatus();
+              }
+
+              setAuthError(null);
+            } catch (error) {
+              console.warn("Failed to fetch additional user data:", error);
+              // Don't fail initialization for this
             }
-
+          } else {
+            // Profile data fetch failed, clear any existing state
+            setNileUser(null);
+            setUser(null);
+            setUserTenants([]);
+            setUserCompanies([]);
+            setIsStaff(false);
             setAuthError(null);
-          } catch (error) {
-            console.warn("Failed to fetch additional user data:", error);
-            // Don't fail initialization for this
           }
+        } else {
+          // User is not authenticated, clear state
+          setNileUser(null);
+          setUser(null);
+          setUserTenants([]);
+          setUserCompanies([]);
+          setIsStaff(false);
+          setAuthError(null);
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
@@ -615,7 +646,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     initializeAuth();
-  }, []);
+  }, [
+    fetchProfile,
+    fetchUserTenants,
+    fetchUserCompanies,
+    testAuthentication,
+    checkSystemHealthStatus,
+    mapNileUserToLegacyUser,
+    selectedTenantId,
+    selectedCompanyId,
+  ]);
 
   return (
     <AuthContext.Provider

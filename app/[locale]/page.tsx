@@ -54,6 +54,8 @@ export default function LoginPage() {
     }
   };
 
+
+
   const icon = user ? User : LogIn;
   const mode = user ? "loggedIn" : "form";
   const footer = user ? undefined : (

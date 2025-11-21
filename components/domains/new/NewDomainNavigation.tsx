@@ -27,7 +27,7 @@ function NewDomainNavigation() {
   const isCheckingDNS = false; // Replace with actual state if needed
 
   return (
-    <div className="w-full border-t border-gray-200 ">
+    <div className="w-full border-t border-gray-200 dark:border-border">
       <div className="px-8 py-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Button

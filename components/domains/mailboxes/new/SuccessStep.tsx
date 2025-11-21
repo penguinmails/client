@@ -13,22 +13,22 @@ function SuccessStep() {
     router.push("/dashboard/domains/mailboxes");
   }
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+    <div className="bg-white dark:bg-card rounded-2xl shadow-sm border border-gray-200 dark:border-border p-8">
       <div className="max-w-2xl mx-auto text-center space-y-8">
         <div>
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-foreground mb-4">
             ✅ Mailbox Created Successfully!
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-xl text-gray-600 dark:text-muted-foreground mb-8">
             <strong>
               {mailboxData.name}@{mailboxData.domain}
             </strong>{" "}
             is now ready for sending emails.
           </p>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-muted-foreground">
             {mailboxData.enableWarmup
               ? "Your mailbox will start the warmup process automatically to build sender reputation."
               : "Your mailbox is ready to start sending emails immediately."}

@@ -51,7 +51,7 @@ const getRecordIconStyles = (type: DNSRecord["type"]) => {
     case "MX":
       return cn(baseStyles, "bg-orange-100");
     default:
-      return cn(baseStyles, "bg-gray-100");
+      return cn(baseStyles, "bg-gray-100 dark:bg-muted");
   }
 };
 

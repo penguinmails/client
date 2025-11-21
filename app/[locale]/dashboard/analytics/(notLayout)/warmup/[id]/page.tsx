@@ -22,7 +22,11 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
     <div className=" space-y-4">
       <div className="flex">
         <div className="flex items-center space-x-4">
-          <Button className="text-gray-700" variant="ghost" asChild>
+          <Button
+            className="text-foreground dark:text-muted-foreground"
+            variant="ghost"
+            asChild
+          >
             <Link href="/dashboard/analytics/warmup">
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Mailboxes</span>
@@ -30,8 +34,10 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
           </Button>
           <Separator orientation="vertical" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{mailbox.name}</h1>
-            <p className="text-gray-600">{mailbox.email}</p>
+            <h1 className="text-2xl font-bold text-foreground">
+              {mailbox.name}
+            </h1>
+            <p className="text-muted-foreground">{mailbox.email}</p>
           </div>
         </div>
       </div>
