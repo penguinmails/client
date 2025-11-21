@@ -26,14 +26,14 @@ Our design system follows these core principles:
 // ❌ Bad - Hardcoded colors
 <div className="text-blue-600 dark:text-blue-400">
   <Plus className="w-4 h-4" />
-</div>
+</div>;
 
 // ✅ Good - Design tokens
 import { iconTextColors } from "@/lib/design-tokens";
 
 <div className={iconTextColors.blue}>
   <Plus className="w-4 h-4" />
-</div>
+</div>;
 ```
 
 ### Using Unified Components
@@ -49,7 +49,7 @@ import { iconTextColors } from "@/lib/design-tokens";
   <CardContent>
     <p className="text-2xl font-bold">42</p>
   </CardContent>
-</Card>
+</Card>;
 
 // ✅ Good - UnifiedStatsCard
 import { UnifiedStatsCard } from "@/components/design-system/components";
@@ -59,7 +59,7 @@ import { UnifiedStatsCard } from "@/components/design-system/components";
   value="42"
   icon={Send}
   color="primary"
-/>
+/>;
 ```
 
 ---
@@ -74,12 +74,12 @@ import { iconContainerStyles, iconTextColors } from "@/lib/design-tokens";
 // Icon with background container
 <div className={iconContainerStyles.blue}>
   <Plus className={iconTextColors.blue} />
-</div>
+</div>;
 
 // Standalone icon (no background)
 import { standaloneIconColors } from "@/lib/design-tokens";
 
-<Calendar className={standaloneIconColors.blue} />
+<Calendar className={standaloneIconColors.blue} />;
 ```
 
 **Available colors**: `blue`, `green`, `purple`, `orange`, `gray`
@@ -176,6 +176,7 @@ import { gridLayouts } from "@/lib/design-tokens";
 ### When to Use Unified Components
 
 Use unified components when:
+
 - ✅ Displaying statistics/metrics → `UnifiedStatsCard`
 - ✅ Showing tabular data → `UnifiedDataTable`
 - ✅ Creating forms → `UnifiedFormField`
@@ -185,11 +186,13 @@ Use unified components when:
 ### When to Create Custom Components
 
 Create custom components only when:
+
 - ⚠️ No existing component fits your use case
 - ⚠️ The component is highly domain-specific
 - ⚠️ Reusing would require excessive configuration
 
 **Before creating**, check:
+
 1. Can an existing component be extended?
 2. Can you combine multiple unified components?
 3. Is this pattern used elsewhere? (Consider adding to design system)
@@ -285,6 +288,7 @@ import { cn } from "@/lib/utils";
 ### Step 1: Identify Hardcoded Patterns
 
 Search for common patterns:
+
 ```bash
 # Find hardcoded colors
 grep -r "text-blue-" components/
@@ -297,14 +301,14 @@ grep -r "dark:text-" components/
 
 ### Step 2: Map to Tokens
 
-| Hardcoded Pattern | Token Replacement |
-|-------------------|-------------------|
-| `text-gray-800`, `text-gray-900` | `textColors.primary` |
-| `text-gray-500`, `text-gray-600` | `textColors.secondary` |
-| `text-blue-600 dark:text-blue-400` | `standaloneIconColors.blue` |
+| Hardcoded Pattern                        | Token Replacement                                  |
+| ---------------------------------------- | -------------------------------------------------- |
+| `text-gray-800`, `text-gray-900`         | `textColors.primary`                               |
+| `text-gray-500`, `text-gray-600`         | `textColors.secondary`                             |
+| `text-blue-600 dark:text-blue-400`       | `standaloneIconColors.blue`                        |
 | `bg-blue-100 dark:bg-blue-900/30` + icon | `iconContainerStyles.blue` + `iconTextColors.blue` |
-| `text-green-600 dark:text-green-400` | `statusColors.success` |
-| `text-orange-600` | `statusColors.warning` |
+| `text-green-600 dark:text-green-400`     | `statusColors.success`                             |
+| `text-orange-600`                        | `statusColors.warning`                             |
 
 ### Step 3: Import and Apply
 
@@ -334,11 +338,13 @@ import { cn } from "@/lib/utils";
 ### Issue: Token not applying dark mode
 
 **Problem**:
+
 ```tsx
 <span className={statusColors.success}>  // Not working
 ```
 
 **Solution**: Tokens already include dark mode, ensure parent has `dark` class:
+
 ```tsx
 // In root layout
 <html className={isDark ? 'dark' : ''}>
@@ -347,11 +353,13 @@ import { cn } from "@/lib/utils";
 ### Issue: Multiple classes conflict
 
 **Problem**:
+
 ```tsx
 <div className="text-blue-500" className={textColors.secondary}>
 ```
 
 **Solution**: Use `cn()` to merge:
+
 ```tsx
 import { cn } from "@/lib/utils";
 
@@ -361,23 +369,25 @@ import { cn } from "@/lib/utils";
 ### Issue: Icon color not showing
 
 **Problem**:
+
 ```tsx
-<Calendar className={iconContainerStyles.blue} />  // Wrong token
+<Calendar className={iconContainerStyles.blue} /> // Wrong token
 ```
 
 **Solution**: Use correct token category:
+
 ```tsx
-<Calendar className={standaloneIconColors.blue} />  // Correct
+<Calendar className={standaloneIconColors.blue} /> // Correct
 ```
 
 ---
 
 ## 📖 Additional Resources
 
-- [Design Tokens Documentation](file:///C:/Users/DELL/.gemini/antigravity/brain/725c227c-c63e-4750-bb0d-9be5fa196916/DESIGN_TOKENS.md)
-- [Visual Token Reference](file:///c:/Users/DELL/Documents/NOVASOFT/client/components/design-system/docs/DESIGN_TOKENS_VISUAL_REFERENCE.md)
-- [Component Migration Guide](file:///c:/Users/DELL/Documents/NOVASOFT/client/components/design-system/docs/COMPONENT_MIGRATION_GUIDE.md)
-- [Dashboard Migration Example](file:///C:/Users/DELL/.gemini/antigravity/brain/725c227c-c63e-4750-bb0d-9be5fa196916/dashboard_migration_walkthrough.md)
+- [Design Tokens Documentation](../lib/design-tokens.ts)
+- [Visual Token Reference](./docs/DESIGN_TOKENS_VISUAL_REFERENCE.md)
+- [Component Migration Guide](./docs/COMPONENT_MIGRATION_GUIDE.md)
+- [Dashboard Migration Example](./docs/dashboard_migration_walkthrough.md) _(Note: File not found)_
 
 ---
 
@@ -407,6 +417,7 @@ When submitting PRs that use the design system:
 ## Token Usage
 
 List tokens used:
+
 - `statusColors.success` - for active status indicators
 - `textColors.primary` - for headings
 - `gridLayouts.statsGrid` - for stats layout
@@ -429,7 +440,7 @@ Your contribution is ready when:
 ✅ Responsive across all breakpoints  
 ✅ Accessible to keyboard and screen readers  
 ✅ Code reviewed and approved  
-✅ Visual testing passed  
+✅ Visual testing passed
 
 ---
 

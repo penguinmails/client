@@ -146,7 +146,7 @@ export function EmptyState({
           <div className="mt-2">
             {actionHref ? (
               <Button asChild>
-                <a href={actionHref}>{actionLabel}</a>
+                <link href={actionHref}>{actionLabel}</link>
               </Button>
             ) : (
               <Button onClick={onAction}>{actionLabel}</Button>
