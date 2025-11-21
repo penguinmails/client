@@ -3,13 +3,15 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+
 function WarmupSummarySkeleton() {
   return (
     <Card>
       <CardHeader>
-        <h3 className="font-semibold text-foreground mb-4">Warmup Status</h3>
+        <CardTitle>Warmup Status</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center justify-between">

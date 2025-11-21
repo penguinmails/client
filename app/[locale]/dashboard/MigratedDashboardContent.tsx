@@ -14,6 +14,8 @@ import RecentReplySkeleton from "@/components/inbox/RecentReply/RecentReplySkele
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
 import type { RecentReply } from "@/types/campaign";
 import type { WarmupSummaryData } from "@/types/campaign";
+import { textColors, gridLayouts } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 // Import server actions (keeping existing ones for non-analytics data)
 import {
@@ -41,10 +43,10 @@ export default function MigratedDashboardContent() {
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+        <h1 className={cn("text-2xl font-bold", textColors.primary)}>
           Dashboard
         </h1>
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className={textColors.secondary}>
           Welcome back! Here&apos;s what&apos;s happening with your campaigns.
         </p>
       </div>
@@ -52,7 +54,7 @@ export default function MigratedDashboardContent() {
       {/* Migrated KPI Cards with real-time analytics */}
       <Suspense
         fallback={
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className={gridLayouts.statsGrid}>
             {Array.from({ length: 4 }).map((_, index) => (
               <KPISummaryCardSkeleton key={index} />
             ))}
@@ -66,7 +68,7 @@ export default function MigratedDashboardContent() {
         />
       </Suspense>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className={gridLayouts.dashboardGrid}>
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>

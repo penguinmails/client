@@ -1,6 +1,8 @@
 import React from "react";
 import { Mail, BarChart2, MessageSquare, MousePointer } from "lucide-react"; // Using lucide-react for icons
 import Link from "next/link";
+import { textColors } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 // Define the expected data structure for props
 interface CampaignStat {
@@ -22,7 +24,7 @@ const RecentCampaignsList: React.FC<RecentCampaignsListProps> = ({
 }) => {
   return (
     <div className="bg-card dark:bg-card shadow rounded-lg p-4 h-64 flex flex-col">
-      <h3 className="text-lg font-medium text-foreground mb-4">
+      <h3 className={cn("text-lg font-medium mb-4", textColors.primary)}>
         Recent Campaigns
       </h3>
       <div className="flex-grow overflow-y-auto">
@@ -30,15 +32,15 @@ const RecentCampaignsList: React.FC<RecentCampaignsListProps> = ({
         <ul className="divide-y divide-border">
           {campaigns.map((campaign, index) => (
             <li key={index} className="py-3">
-              <p className="text-sm font-medium text-gray-800 truncate mb-1">
+              <p className={cn("text-sm font-medium truncate mb-1", textColors.primary)}>
                 <Link
                   href={`/dashboard/campaigns/${campaign.id}`}
-                  className="hover:text-blue-500"
+                  className={textColors.linkHover}
                 >
                   {campaign.name}
                 </Link>
               </p>
-              <div className="flex items-center space-x-3 text-xs text-gray-500">
+              <div className={cn("flex items-center space-x-3 text-xs", textColors.secondary)}>
                 <span className="flex items-center">
                   <Mail size={12} className="mr-1" /> {campaign.total}
                 </span>
@@ -57,7 +59,7 @@ const RecentCampaignsList: React.FC<RecentCampaignsListProps> = ({
           ))}
           {/* Add a message if no campaigns */}
           {campaigns.length === 0 && (
-            <li className="py-3 text-sm text-gray-500 text-center">
+            <li className={cn("py-3 text-sm text-center", textColors.secondary)}>
               No recent campaigns found.
             </li>
           )}

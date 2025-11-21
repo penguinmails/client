@@ -1,5 +1,7 @@
 import React from "react";
 import { Calendar, Mail, FileText, Globe } from "lucide-react";
+import { standaloneIconColors, textColors } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 // Define the expected data structure for props
 interface Task {
@@ -13,19 +15,19 @@ interface UpcomingTasksListProps {
   tasks: Task[];
 }
 
-// Helper function to get the appropriate icon for each task type (remains the same)
+// Helper function to get the appropriate icon for each task type
 const getTaskIcon = (type: string) => {
   switch (type) {
     case "campaign":
-      return <Calendar size={16} className="text-blue-500" />;
+      return <Calendar size={16} className={standaloneIconColors.blue} />;
     case "email":
-      return <Mail size={16} className="text-green-500" />;
+      return <Mail size={16} className={standaloneIconColors.green} />;
     case "template":
-      return <FileText size={16} className="text-purple-500" />;
+      return <FileText size={16} className={standaloneIconColors.purple} />;
     case "domain":
-      return <Globe size={16} className="text-orange-500" />;
+      return <Globe size={16} className={standaloneIconColors.orange} />;
     default:
-      return <Calendar size={16} className="text-gray-500" />;
+      return <Calendar size={16} className={standaloneIconColors.gray} />;
   }
 };
 
@@ -33,7 +35,7 @@ const getTaskIcon = (type: string) => {
 const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
   return (
     <div className="bg-card dark:bg-card shadow rounded-lg p-4 h-64 flex flex-col">
-      <h3 className="text-lg font-medium text-foreground mb-4">
+      <h3 className={cn("text-lg font-medium mb-4", textColors.primary)}>
         Upcoming Tasks
       </h3>
       <div className="flex-grow overflow-y-auto">
@@ -45,10 +47,10 @@ const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
                 {getTaskIcon(task.type)}
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-800">
+                <p className={cn("text-sm font-medium", textColors.primary)}>
                   {task.title}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className={cn("text-xs", textColors.secondary)}>
                   {task.type.charAt(0).toUpperCase() + task.type.slice(1)} ·{" "}
                   {task.dueDate}
                 </p>
@@ -57,7 +59,7 @@ const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
           ))}
           {/* Add a message if no tasks */}
           {tasks.length === 0 && (
-            <li className="py-3 text-sm text-gray-500 text-center">
+            <li className={cn("py-3 text-sm text-center", textColors.secondary)}>
               No upcoming tasks found.
             </li>
           )}
