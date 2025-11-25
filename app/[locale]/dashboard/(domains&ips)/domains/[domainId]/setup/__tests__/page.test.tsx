@@ -193,14 +193,21 @@ describe("DomainSetupPage", () => {
 
   describe("Performance", () => {
     it("should await params only once", async () => {
-      let resolveCount = 0;
-      const params = new Promise<{ domainId: string }>((resolve) => {
-        resolveCount++;
-        resolve({ domainId: "1" });
-      });
+      let thenCallCount = 0;
+      const originalPromise = Promise.resolve({ domainId: "1" });
+      // Wrap the promise to count .then() calls
+      const params = Object.create(originalPromise);
+      params.then = function (
+        onfulfilled?: ((value: { domainId: string }) => unknown) | null,
+        onrejected?: ((reason: unknown) => unknown) | null
+      ) {
+        thenCallCount++;
+        // Call the original .then
+        return originalPromise.then(onfulfilled, onrejected);
+      };
 
       await DomainSetupPage({ params });
-      expect(resolveCount).toBe(1);
+      expect(thenCallCount).toBe(1);
     });
   });
 

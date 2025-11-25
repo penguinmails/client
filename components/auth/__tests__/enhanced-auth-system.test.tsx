@@ -397,7 +397,8 @@ describe("Enhanced Authentication System", () => {
         const { result } = renderHook(() => useStaffAccess());
 
         expect(result.current.isStaff).toBe(false);
-        // SystemHealth is initialized as 'unknown', not null
+        // API CHANGE: SystemHealth is now initialized as 'unknown', not null.
+        // Previously, systemHealth.status was expected to be null. This test expects 'unknown' per the updated API.
         expect(result.current.systemHealth.status).toBe("unknown");
       });
     });

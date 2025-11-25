@@ -223,7 +223,7 @@ describe("CampaignCreatePage", () => {
         expect(screen.getByText("Step 2 of 6")).toBeInTheDocument();
       });
 
-      // Step 1 should now be marked as completed with a check icon
+      // Step 1 should now be marked as completed
       const stepButtons = screen.getAllByRole("button");
       const step1Button = stepButtons.find(
         (btn) =>
@@ -232,12 +232,13 @@ describe("CampaignCreatePage", () => {
           !btn.textContent?.includes("Continue")
       );
 
-      // The completed step should contain a Check icon (lucide-check class or check SVG)
+      // The completed step should be present
       expect(step1Button).toBeInTheDocument();
 
-      // Check for the presence of Check icon within the step button
-      const checkIcon = step1Button!.querySelector("svg.lucide-check");
-      expect(checkIcon).toBeInTheDocument();
+      // Verify completion by checking for the green background class that indicates completed state
+      // This is more robust than checking for specific icon class names
+      const completedIndicator = step1Button!.querySelector(".bg-green-500");
+      expect(completedIndicator).toBeInTheDocument();
     });
 
     it("should disable steps that haven't been reached yet", () => {

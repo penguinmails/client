@@ -107,8 +107,6 @@ describe("Enhanced Auth Integration", () => {
   });
 
   it("should handle authenticated user", async () => {
-
-
     const mockProfile = {
       id: "user-1",
       email: "test@example.com",
