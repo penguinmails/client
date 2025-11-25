@@ -57,7 +57,8 @@ describe("UpcomingTasksList", () => {
   it("displays task types with capitalization", () => {
     render(<UpcomingTasksList tasks={mockTasks} />);
 
-    expect(screen.getByText(/Campaign/)).toBeInTheDocument();
+    // Use getAllByText since "Campaign" appears in both title and type
+    expect(screen.getAllByText(/Campaign/)[0]).toBeInTheDocument();
     expect(screen.getByText(/Email/)).toBeInTheDocument();
     expect(screen.getByText(/Template/)).toBeInTheDocument();
     expect(screen.getByText(/Domain/)).toBeInTheDocument();

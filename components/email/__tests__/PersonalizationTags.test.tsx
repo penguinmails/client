@@ -6,13 +6,15 @@ import PersonalizationTags, {
   personalizationTags,
 } from "../PersonalizationTags";
 
-// Mock sonner toast
-const mockToastMessage = jest.fn();
+// Mock sonner toast - use inline jest.fn() to avoid hoisting issues
 jest.mock("sonner", () => ({
   toast: {
-    message: mockToastMessage,
+    message: jest.fn(),
   },
 }));
+
+import { toast } from "sonner";
+const mockToastMessage = toast.message as jest.Mock;
 
 describe("PersonalizationTags", () => {
   const mockOnInsertTag = jest.fn();

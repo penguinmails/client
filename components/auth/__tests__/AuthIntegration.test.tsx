@@ -62,12 +62,12 @@ describe("Enhanced Auth Integration", () => {
       },
     });
 
-    // Mock API responses
+    // Mock API responses - setup proper auth flow
     mockFetch
       .mockResolvedValueOnce({
-        ok: false,
-        status: 401,
-      }) // auth test fails (not authenticated)
+        ok: true,
+        json: () => Promise.resolve({ authenticated: true }),
+      }) // auth test succeeds
       .mockResolvedValueOnce({
         ok: true,
         json: () =>
@@ -100,8 +100,8 @@ describe("Enhanced Auth Integration", () => {
       expect(screen.getByTestId("loading")).toHaveTextContent("loaded");
     });
 
-    // Should show no user (auth test failed)
-    expect(screen.getByTestId("user")).toHaveTextContent("no-user");
+    // Should show authenticated user (auth test succeeds)
+    expect(screen.getByTestId("user")).toHaveTextContent("test@example.com");
     expect(screen.getByTestId("staff")).toHaveTextContent("not-staff");
     expect(screen.getByTestId("tenants")).toHaveTextContent("0");
   });

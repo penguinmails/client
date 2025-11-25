@@ -256,14 +256,16 @@ describe("Enhanced Authentication System", () => {
   });
 
   describe("TenantCompanySelector Component", () => {
-    it("should render tenant selector", () => {
+    it("should render tenant selector", async () => {
       render(
         <AuthProvider>
           <TenantCompanySelector />
         </AuthProvider>
       );
 
-      expect(screen.getByText("Context Selection")).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText("Context Selection")).toBeInTheDocument();
+      });
       expect(screen.getByText("Tenant")).toBeInTheDocument();
     });
 
