@@ -83,8 +83,6 @@ describe("DomainSetupClient", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockFetch.mockClear();
-    // Suppress console.error in tests
-    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -125,16 +123,25 @@ describe("DomainSetupClient", () => {
     });
 
     it("should handle fetch error", async () => {
+      const consoleErrorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
       render(<DomainSetupClient domainId="1" />);
 
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalledWith("Failed to load domain data");
+        expect(consoleErrorSpy).toHaveBeenCalled();
       });
+
+      consoleErrorSpy.mockRestore();
     });
 
     it("should handle non-ok response", async () => {
+      const consoleErrorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
       mockFetch.mockResolvedValueOnce({
         ok: false,
         json: async () => ({}),
@@ -144,7 +151,10 @@ describe("DomainSetupClient", () => {
 
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalledWith("Failed to load domain data");
+        expect(consoleErrorSpy).toHaveBeenCalled();
       });
+
+      consoleErrorSpy.mockRestore();
     });
   });
 
@@ -389,6 +399,9 @@ describe("DomainSetupClient", () => {
     });
 
     it("should handle verification API error", async () => {
+      const consoleErrorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
@@ -405,7 +418,10 @@ describe("DomainSetupClient", () => {
 
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalledWith("Failed to verify SPF record");
+        expect(consoleErrorSpy).toHaveBeenCalled();
       });
+
+      consoleErrorSpy.mockRestore();
     });
 
     it("should disable verify button during verification", async () => {

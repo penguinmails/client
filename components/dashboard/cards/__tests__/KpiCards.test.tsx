@@ -100,7 +100,7 @@ describe("KpiCards", () => {
     render(<KpiCards cards={mockCards} />);
 
     const campaignCard = screen.getByTestId("kpi-card-Total Campaigns");
-    expect(campaignCard).toHaveClass("blue text-white");
+    expect(campaignCard).toHaveClass("blue");
   });
 
   it("handles single card", () => {

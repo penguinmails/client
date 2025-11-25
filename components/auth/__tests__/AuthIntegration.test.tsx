@@ -107,12 +107,7 @@ describe("Enhanced Auth Integration", () => {
   });
 
   it("should handle authenticated user", async () => {
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: { retry: false },
-        mutations: { retry: false },
-      },
-    });
+
 
     const mockProfile = {
       id: "user-1",

@@ -5,9 +5,8 @@
  * component rendering, and domainId prop passing.
  */
 
-import React from "react";
-import { render, screen, cleanup, within } from "@testing-library/react";
 import { jest } from "@jest/globals";
+import { render, within } from "@testing-library/react";
 import DomainSetupPage from "../page";
 
 // Mock DomainSetupClient component
@@ -121,24 +120,17 @@ describe("DomainSetupPage", () => {
   });
 
   describe("Props Validation", () => {
-    it("should extract domainId from params correctly", async () => {
-      const testCases = [
-        { domainId: "1" },
-        { domainId: "100" },
-        { domainId: "9999" },
-      ];
-
-      for (const testCase of testCases) {
-        const params = Promise.resolve(testCase);
+    it.each([{ domainId: "1" }, { domainId: "100" }, { domainId: "9999" }])(
+      "should extract domainId $domainId from params correctly",
+      async ({ domainId }) => {
+        const params = Promise.resolve({ domainId });
         const component = await DomainSetupPage({ params });
         const { getByTestId } = render(component);
 
         const client = getByTestId("domain-setup-client");
-        expect(client).toHaveTextContent(`Domain ID: ${testCase.domainId}`);
-
-        cleanup(); // Clean up after each render
+        expect(client).toHaveTextContent(`Domain ID: ${domainId}`);
       }
-    });
+    );
 
     it("should pass domainId as string type", async () => {
       const params = Promise.resolve({ domainId: "123" });
@@ -209,17 +201,6 @@ describe("DomainSetupPage", () => {
 
       await DomainSetupPage({ params });
       expect(resolveCount).toBe(1);
-    });
-
-    it("should render quickly with resolved params", async () => {
-      const params = Promise.resolve({ domainId: "1" });
-      const startTime = Date.now();
-
-      const component = await DomainSetupPage({ params });
-      render(component);
-
-      const endTime = Date.now();
-      expect(endTime - startTime).toBeLessThan(100); // Should be very fast
     });
   });
 

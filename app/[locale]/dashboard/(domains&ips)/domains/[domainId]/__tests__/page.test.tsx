@@ -5,12 +5,12 @@
  * metrics display, authentication status, and navigation.
  */
 
-import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
-import { jest } from "@jest/globals";
-import DomainPage from "../page";
 import { getDomainById, getTopAccountsForDomain } from "@/lib/actions/domains";
 import { Domain, EmailAccount } from "@/types/domain";
+import { jest } from "@jest/globals";
+import { render, screen } from "@testing-library/react";
+import React from "react";
+import DomainPage from "../page";
 
 // Mock next/navigation
 const mockPush = jest.fn();
@@ -144,7 +144,9 @@ describe("DomainPage", () => {
 
       expect(mockGetDomainById).toHaveBeenCalledWith(1);
       expect(mockGetTopAccountsForDomain).toHaveBeenCalledWith(1, 10);
-      expect(container.querySelector("h1")).toHaveTextContent("example.com");
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        "example.com"
+      );
     });
 
     it("should parse domainId correctly", async () => {
@@ -476,7 +478,12 @@ describe("DomainPage", () => {
       const component = await DomainPage({ params: mockParams });
       const { container } = render(component);
 
-      expect(container).toBeInTheDocument();
+      // Verify all metric fallback values are displayed correctly
+      expect(container.textContent).toContain("0"); // Emails (24h) count
+      expect(container.textContent).toContain("0.0%"); // Open Rate
+      expect(container.textContent).toContain("0.0% bounce rate");
+      expect(container.textContent).toContain("0.0% reply rate");
+      expect(container.textContent).toContain("Spam Rate0.000%");
     });
 
     it("should handle domain with zero metrics", async () => {

@@ -83,7 +83,7 @@ describe("Providers", () => {
   });
 
   it("renders all providers in correct nesting order", () => {
-    const { container } = render(
+    render(
       <Providers>
         <div data-testid="content">Content</div>
       </Providers>
