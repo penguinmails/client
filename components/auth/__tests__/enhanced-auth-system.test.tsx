@@ -15,6 +15,7 @@ import {
 } from "@testing-library/react";
 import { renderHook } from "@testing-library/react";
 import "@testing-library/jest-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Mock the NileDB client and services
 jest.mock("@/lib/niledb/client");
@@ -121,10 +122,21 @@ const mockCompanies = [
 // Mock fetch for API calls
 global.fetch = jest.fn();
 
-// Test wrapper component
-const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <AuthProvider>{children}</AuthProvider>
-);
+// Test wrapper component with QueryClient
+const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>{children}</AuthProvider>
+    </QueryClientProvider>
+  );
+};
 
 describe("Enhanced Authentication System", () => {
   beforeEach(() => {
@@ -453,10 +465,7 @@ describe("Enhanced Authentication System", () => {
 
         // Test validation error
         act(() => {
-          result.current.reportError(
-            new Error("Invalid input"),
-            "validation"
-          );
+          result.current.reportError(new Error("Invalid input"), "validation");
         });
 
         expect(result.current.errorType).toBe("validation");

@@ -6,6 +6,7 @@
 
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 
 // Mock fetch
@@ -54,6 +55,13 @@ describe("Enhanced Auth Integration", () => {
   });
 
   it("should initialize and load user data", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+
     // Mock API responses
     mockFetch
       .mockResolvedValueOnce({
@@ -77,9 +85,11 @@ describe("Enhanced Auth Integration", () => {
       });
 
     render(
-      <AuthProvider>
-        <TestComponent />
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>
+      </QueryClientProvider>
     );
 
     // Should start loading
@@ -97,6 +107,13 @@ describe("Enhanced Auth Integration", () => {
   });
 
   it("should handle authenticated user", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+
     const mockProfile = {
       id: "user-1",
       email: "test@example.com",
