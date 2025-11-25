@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import EnhancedErrorBoundary from "../EnhancedErrorBoundary";
+import { toast } from "sonner";
 
 // Mock sonner toast
 jest.mock("sonner", () => ({
@@ -90,10 +91,8 @@ describe("EnhancedErrorBoundary", () => {
     expect(screen.getByText("Go to Dashboard")).toBeInTheDocument();
     expect(screen.getByText("Reload Page")).toBeInTheDocument();
   });
-
   it("handles retry action", async () => {
     const user = userEvent.setup();
-    const { toast } = require("sonner");
 
     render(
       <EnhancedErrorBoundary enableRecovery={true} maxRetries={3}>
@@ -109,7 +108,6 @@ describe("EnhancedErrorBoundary", () => {
 
   it("limits retry attempts", async () => {
     const user = userEvent.setup();
-    const { toast } = require("sonner");
 
     const { rerender } = render(
       <EnhancedErrorBoundary enableRecovery={true} maxRetries={1}>
