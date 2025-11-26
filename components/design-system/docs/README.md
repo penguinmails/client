@@ -218,6 +218,82 @@ import { DashboardLayout } from "@/components/design-system/components/dashboard
 - `showBackButton`: Show back navigation
 - `backHref`: Back button destination
 
+### PageHeader
+
+Standardized page header that can be used independently without full DashboardLayout.
+
+```tsx
+import { PageHeader } from "@/components/design-system/components/page-header";
+import { Download } from "lucide-react";
+
+<PageHeader
+  title="Settings"
+  description="Manage your account settings and preferences"
+  breadcrumbs={[
+    { label: "Settings" }
+  ]}
+  actions={
+    <Button variant="outline">
+      <Download className="mr-2 h-4 w-4" />
+      Export Settings
+    </Button>
+  }
+/>
+```
+
+**Props:**
+
+- `title`: Page title
+- `description`: Optional page description
+- `breadcrumbs`: Breadcrumb items array
+- `actions`: Optional action buttons
+- `showBackButton`: Show back button
+- `backHref`: Back button URL
+
+### EmptyState
+
+Friendly empty state placeholder for when there's no data to display.
+
+```tsx
+import { EmptyState } from "@/components/design-system/components/empty-state";
+import { Inbox, Folder, Users } from "lucide-react";
+
+// Simple empty state
+<EmptyState
+  icon={Inbox}
+  title="No messages yet"
+  description="Your inbox is empty. Start a conversation to see messages here."
+/>
+
+// With action button (link)
+<EmptyState
+  icon={Folder}
+  title="No campaigns found"
+  description="Get started by creating your first campaign."
+  actionLabel="Create Campaign"
+  actionHref="/campaigns/create"
+/>
+
+// With action button (click handler)
+<EmptyState
+  icon={Users}
+  title="No contacts"
+  actionLabel="Import Contacts"
+  onAction={() => openImportDialog()}
+  size="lg"
+/>
+```
+
+**Props:**
+
+- `icon`: Lucide icon component
+- `title`: Empty state title (required)
+- `description`: Optional description text
+- `actionLabel`: Optional button label
+- `onAction`: Button click handler
+- `actionHref`: Button link destination
+- `size`: "sm" | "default" | "lg"
+
 ## 🔄 Migration Guide
 
 ### From Old Components to Unified Components
