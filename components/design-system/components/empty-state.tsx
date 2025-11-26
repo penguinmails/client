@@ -5,6 +5,7 @@ import { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { typography, spacing, textColors } from "@/lib/design-tokens";
+import Link from "next/link";
 
 interface EmptyStateProps {
   /**
@@ -146,7 +147,7 @@ export function EmptyState({
           <div className="mt-2">
             {actionHref ? (
               <Button asChild>
-                <link href={actionHref}>{actionLabel}</link>
+                <Link href={actionHref}>{actionLabel}</Link>
               </Button>
             ) : (
               <Button onClick={onAction}>{actionLabel}</Button>
