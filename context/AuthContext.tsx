@@ -292,14 +292,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (data?.status === 401) {
             setAuthError(new InvalidCredentialsError("Invalid email or password."));
             toast.error("Invalid email or password.");
-            setUser(null);
-            setNileUser(null);
-            setLoading(false);
-            throw new InvalidCredentialsError("Invalid email or password.");   
+        } else {
+            setAuthError(new Error("Login failed."));
+            toast.error("Login failed.");
         }
-        
-        setAuthError(new Error("Login failed."));
-        toast.error("Login failed.");
         setUser(null);
         setNileUser(null);
         setLoading(false);

@@ -58,7 +58,7 @@ export default function LoginPage() {
       router.push("/dashboard");
       setError(null);
     }
-  }, [user, router, isLoading, error]);
+  }, [user, router, isLoading]);
 
   useEffect(() => {
     if (authError) {
