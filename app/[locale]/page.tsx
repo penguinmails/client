@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
@@ -22,7 +22,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { login, user } = useAuth();
+  const { login, user, error: authError } = useAuth();
   const [token, setToken] = useState(""); // ✅ NEW — stores Turnstile token when user verifies
 
   const t = useTranslations("Login");
@@ -44,7 +44,6 @@ export default function LoginPage() {
 
       // Proceed with Nile login only if token is valid
       await login(email, password);
-      router.push("/dashboard");
       setToken(""); // ✅ reset after successful login
     } catch (err) {
       console.error("Login failed:", err);
@@ -54,7 +53,20 @@ export default function LoginPage() {
     }
   };
 
+  useEffect(() => {
+    if (user && !isLoading) {
+      router.push("/dashboard");
+      setError(null);
+    }
+  }, [user, router, isLoading, error]);
 
+  useEffect(() => {
+    if (authError) {
+        setError(authError.message);
+    } else {
+        setError(null);
+    }
+}, [authError]);
 
   const icon = user ? User : LogIn;
   const mode = user ? "loggedIn" : "form";
