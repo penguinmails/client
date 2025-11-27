@@ -163,13 +163,13 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
             onClick={togglePasswordVisibility}
             onKeyDown={handleKeyDown}
             disabled={disabled}
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? "Show password" : "Hide password"}
             data-testid={`${testId}-toggle`}
           >
             {showPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
               <Eye className="h-4 w-4" />
+            ) : (
+              <EyeOff className="h-4 w-4" />
             )}
           </Button>
         </div>
