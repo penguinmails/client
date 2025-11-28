@@ -1,25 +1,25 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Eye, MousePointer, Reply, TrendingUp } from 'lucide-react';
-import KpiCards from '@/components/dashboard/cards/KpiCards';
-import MigratedKpiCards from '@/components/dashboard/cards/MigratedKpiCards';
-import { StatsCardData } from '@/types/campaign';
-import React from 'react';
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { Eye, MousePointer, Reply, TrendingUp } from "lucide-react";
+import KpiCards from "@/components/dashboard/cards/KpiCards";
+import MigratedKpiCards from "@/components/dashboard/cards/MigratedKpiCards";
+import { StatsCardData } from "@/types/campaign";
+import React from "react";
 
 /**
  * REAL COMPARISON: KpiCards vs MigratedKpiCards
- * 
+ *
  * This story shows the comparison of REAL components from the project:
  * - KpiCards: Migrated component that uses UnifiedStatsCard
  * - MigratedKpiCards: Advanced version with analytics logic
- * 
+ *
  * Both already use the Design System, but this comparison demonstrates
  * how to validate that different implementations have visual parity.
  */
 
 const meta: Meta = {
-  title: 'Design System/Visual Verification/Real Components Comparison',
+  title: "Design System/Visual Verification/Real Components Comparison",
   parameters: {
-    layout: 'padded',
+    layout: "padded",
     docs: {
       description: {
         component: `
@@ -46,7 +46,7 @@ Both already use \`UnifiedStatsCard\` from the Design System, which guarantees v
   decorators: [
     (Story, context) => {
       const theme = context.args.theme || "light";
-      
+
       React.useEffect(() => {
         const htmlElement = document.documentElement;
         if (theme === "dark") {
@@ -54,7 +54,7 @@ Both already use \`UnifiedStatsCard\` from the Design System, which guarantees v
         } else {
           htmlElement.classList.remove("dark");
         }
-        
+
         return () => {
           htmlElement.classList.remove("dark");
         };
@@ -71,35 +71,35 @@ type Story = StoryObj;
 // Mock data for stories
 const mockKpiData: StatsCardData[] = [
   {
-    title: 'Open Rate',
-    value: '24.5%',
+    title: "Open Rate",
+    value: "24.5%",
     icon: Eye,
-    color: 'success',
+    color: "success",
   },
   {
-    title: 'Click Rate',
-    value: '3.2%',
+    title: "Click Rate",
+    value: "3.2%",
     icon: MousePointer,
-    color: 'info',
+    color: "info",
   },
   {
-    title: 'Reply Rate',
-    value: '8.7%',
+    title: "Reply Rate",
+    value: "8.7%",
     icon: Reply,
-    color: 'warning',
+    color: "warning",
   },
   {
-    title: 'Health Score',
-    value: '87/100',
+    title: "Health Score",
+    value: "87/100",
     icon: TrendingUp,
-    color: 'success',
+    color: "success",
   },
 ];
 
 // Mock analytics data para MigratedKpiCards
 const mockAnalyticsData = [
   {
-    campaign_id: '1',
+    campaign_id: "1",
     sent: 1000,
     delivered: 980,
     opened_tracked: 245,
@@ -112,16 +112,19 @@ const mockAnalyticsData = [
 
 /**
  * Story 1: Simple KpiCards Comparison
- * 
+ *
  * Shows the KpiCards component that already uses UnifiedStatsCard
  */
 export const KpiCardsExample: Story = {
   render: () => (
     <div className="space-y-6">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold mb-2">✅ KpiCards (Design System)</h3>
+        <h3 className="text-lg font-semibold mb-2">
+          ✅ KpiCards (Design System)
+        </h3>
         <p className="text-sm text-muted-foreground">
-          Simple component that already uses UnifiedStatsCard from the Design System
+          Simple component that already uses UnifiedStatsCard from the Design
+          System
         </p>
       </div>
 
@@ -135,8 +138,8 @@ export const KpiCardsExample: Story = {
               Migrated Component
             </p>
             <p className="text-blue-700 dark:text-blue-300">
-              This component already uses design tokens through UnifiedStatsCard.
-              No additional migration needed.
+              This component already uses design tokens through
+              UnifiedStatsCard. No additional migration needed.
             </p>
           </div>
         </div>
@@ -147,14 +150,16 @@ export const KpiCardsExample: Story = {
 
 /**
  * Story 2: MigratedKpiCards with Analytics
- * 
+ *
  * Advanced version with rate calculations and benchmarks
  */
 export const MigratedKpiCardsExample: Story = {
   render: () => (
     <div className="space-y-6">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold mb-2">✅ MigratedKpiCards (Advanced)</h3>
+        <h3 className="text-lg font-semibold mb-2">
+          ✅ MigratedKpiCards (Advanced)
+        </h3>
         <p className="text-sm text-muted-foreground">
           Advanced version with automatic rate and benchmark calculations
         </p>
@@ -182,7 +187,7 @@ export const MigratedKpiCardsExample: Story = {
 
 /**
  * Story 3: Side by Side Comparison
- * 
+ *
  * Shows both components to validate visual consistency
  */
 export const SideBySideComparison: Story = {
@@ -190,7 +195,10 @@ export const SideBySideComparison: Story = {
     <div className="space-y-8">
       <div className="text-sm text-muted-foreground mb-4">
         <p className="font-medium mb-2">🎯 Goal:</p>
-        <p>Validate that different components using UnifiedStatsCard maintain visual consistency</p>
+        <p>
+          Validate that different components using UnifiedStatsCard maintain
+          visual consistency
+        </p>
       </div>
 
       {/* KpiCards Simple */}
@@ -249,7 +257,7 @@ export const SideBySideComparison: Story = {
 
 /**
  * Story 4: Loading and Error States
- * 
+ *
  * Demonstrates how MigratedKpiCards handles different states
  */
 export const StateComparison: Story = {
@@ -285,7 +293,7 @@ export const StateComparison: Story = {
  */
 export const DarkModeComparison: Story = {
   parameters: {
-    backgrounds: { default: 'dark' },
+    backgrounds: { default: "dark" },
   },
   decorators: [
     (Story) => (
@@ -301,14 +309,18 @@ export const DarkModeComparison: Story = {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4 text-white">KpiCards - Dark</h3>
+        <h3 className="text-lg font-semibold mb-4 text-white">
+          KpiCards - Dark
+        </h3>
         <KpiCards cards={mockKpiData} />
       </div>
 
       <div className="border-t border-border my-6" />
 
       <div>
-        <h3 className="text-lg font-semibold mb-4 text-white">MigratedKpiCards - Dark</h3>
+        <h3 className="text-lg font-semibold mb-4 text-white">
+          MigratedKpiCards - Dark
+        </h3>
         <MigratedKpiCards campaignAnalytics={mockAnalyticsData as any} />
       </div>
 
@@ -320,8 +332,8 @@ export const DarkModeComparison: Story = {
               Successful Dark Mode
             </p>
             <p className="text-green-300">
-              Design tokens automatically handle theme switching.
-              No additional logic needed in components.
+              Design tokens automatically handle theme switching. No additional
+              logic needed in components.
             </p>
           </div>
         </div>

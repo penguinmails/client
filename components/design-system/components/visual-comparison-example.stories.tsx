@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { TrendingUp, TrendingDown, Mail, Eye, MousePointer, Reply } from 'lucide-react';
 import { UnifiedStatsCard } from '@/components/design-system/components/unified-stats-card';
 
@@ -174,7 +174,7 @@ export const BasicComparison: Story = {
             </h4>
             <p className="text-sm text-green-700 dark:text-green-300">
               The differences (icons, colors, trends) are <strong>completely optional</strong>.
-              If you don't pass those props, the component looks identical to legacy.
+              If you don&apos;t pass those props, the component looks identical to legacy.
             </p>
           </div>
         </div>
