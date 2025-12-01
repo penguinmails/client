@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { TrendingUp, TrendingDown, Mail, Eye, MousePointer, Reply } from 'lucide-react';
+import { TrendingUp, Mail, Eye, MousePointer, Reply } from 'lucide-react';
 import { UnifiedStatsCard } from '@/components/design-system/components/unified-stats-card';
 
 /**

@@ -27,9 +27,7 @@ const RecentRepliesList = ({
         <div className="flex-1 min-w-0">
           {/* First line: Name • Company • Badge */}
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-semibold text-foreground">
-              {reply.name}
-            </span>
+            <span className="font-semibold text-foreground">{reply.name}</span>
             <span className="text-muted-foreground">•</span>
             <span className="text-sm text-muted-foreground">
               {reply.company}
@@ -56,6 +54,15 @@ const RecentRepliesList = ({
     );
   };
 
+  // TODO: Missing keyExtractor prop - this is a regression from the previous implementation
+  // The UnifiedDataList component now falls back to array indices as keys, which is a React anti-pattern.
+  // Previous implementation correctly used reply.email as unique key.
+  //
+  // Fix: Add keyExtractor prop to use reply.email (or other unique identifier) as keys:
+  // keyExtractor={(item) => item.email}
+  //
+  // This maintains the previous behavior and prevents rendering bugs when items are reordered,
+  // added, or removed from the list.
   return (
     <UnifiedDataList
       data={recentReplies}

@@ -34,7 +34,7 @@ const meta = {
   decorators: [
     (Story, context) => {
       const theme = context.args.theme || "light";
-      
+
       React.useEffect(() => {
         const htmlElement = document.documentElement;
         if (theme === "dark") {
@@ -42,7 +42,7 @@ const meta = {
         } else {
           htmlElement.classList.remove("dark");
         }
-        
+
         return () => {
           htmlElement.classList.remove("dark");
         };
@@ -51,7 +51,9 @@ const meta = {
       return <Story />;
     },
   ],
-} satisfies Meta<React.ComponentProps<typeof MigratedDashboardContent> & { theme?: string }>;
+} satisfies Meta<
+  React.ComponentProps<typeof MigratedDashboardContent> & { theme?: string }
+>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -167,6 +169,21 @@ export const Default: Story = {
   },
 };
 
+// TODO: Currently using empty args which doesn't demonstrate the component's data-driven state.
+// This story should be updated to use the mock data generators defined above:
+// - generateMockCampaignAnalytics() for campaign analytics
+// - mockRecentReplies for recent replies data
+// - mockWarmupSummary for warmup status data
+//
+// The component expects these props to properly render the dashboard with data.
+// Update args to pass the generated mock data to see the full functionality.
+//
+// Example fix:
+// args: {
+//   campaignAnalytics: generateMockCampaignAnalytics(),
+//   recentReplies: mockRecentReplies,
+//   warmupSummaryData: mockWarmupSummary,
+// }
 export const WithData: Story = {
   args: {},
   parameters: {

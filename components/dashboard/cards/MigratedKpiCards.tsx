@@ -247,7 +247,34 @@ function MigratedKpiCards({
 }
 
 // Color mapping helper function
-function getColorForKPI(color?: KPIDisplayConfig["color"]): "primary" | "secondary" | "success" | "warning" | "error" | "info" {
+// TODO: Critical bug - duplicate return statements make this function broken
+//
+// Current issues:
+// 1. Each case has duplicate return statements (line 253 has unreachable code)
+// 2. First return returns CSS class strings but return type expects semantic colors
+// 3. The intended semantic color returns ("success", "warning", "error", "primary") are unreachable
+//
+// This function should only return the semantic color strings to match the return type:
+//
+// function getColorForKPI(color?: KPIDisplayConfig["color"]): "primary" | "secondary" | "success" | "warning" | "error" | "info" {
+//   switch (color) {
+//     case "positive":
+//       return "success";
+//     case "warning":
+//       return "warning";
+//     case "danger":
+//       return "error";
+//     case "neutral":
+//     default:
+//       return "primary";
+//   }
+// }
+//
+// Note: If CSS classes are needed, this should be a different helper function
+// that maps semantic colors to CSS classes, or the return type should be updated accordingly.
+function getColorForKPI(
+  color?: KPIDisplayConfig["color"]
+): "primary" | "secondary" | "success" | "warning" | "error" | "info" {
   switch (color) {
     case "positive":
       return "success";

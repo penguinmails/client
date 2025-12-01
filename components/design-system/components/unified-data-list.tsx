@@ -6,42 +6,45 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
-import { spacing, textColors } from "@/lib/design-tokens";
+import { spacing } from "@/lib/design-tokens";
 
 interface UnifiedDataListProps<TData> {
   /** Array of data items to display */
   data: TData[];
-  
+
   /** Custom rendering function for each list item */
   renderItem: (item: TData, index: number) => React.ReactNode;
-  
+
+  /** Function to extract unique keys for each item (recommended for better React performance) */
+  keyExtractor?: (item: TData, index: number) => string | number;
+
   /** Optional title for the list */
   title?: string;
-  
+
   /** Enable search functionality */
   searchable?: boolean;
-  
+
   /** Keys to search within (for searchable lists) */
   searchKeys?: (keyof TData)[];
-  
+
   /** Enable pagination */
   paginated?: boolean;
-  
+
   /** Number of items per page (default: 10) */
   itemsPerPage?: number;
-  
+
   /** Loading state */
   loading?: boolean;
-  
+
   /** Message to show when list is empty */
   emptyMessage?: string;
-  
+
   /** Additional className for the container */
   className?: string;
-  
+
   /** Additional className for each list item */
   itemClassName?: string;
-  
+
   /** Callback when an item is clicked */
   onItemClick?: (item: TData, index: number) => void;
 }
@@ -53,6 +56,7 @@ interface UnifiedDataListProps<TData> {
 export function UnifiedDataList<TData>({
   data = [],
   renderItem,
+  keyExtractor,
   title,
   searchable = false,
   searchKeys = [],
@@ -138,7 +142,9 @@ export function UnifiedDataList<TData>({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+            }
             disabled={currentPage === totalPages}
           >
             Next
@@ -157,9 +163,7 @@ export function UnifiedDataList<TData>({
   );
 
   const renderEmptyState = () => (
-    <div className="text-center py-8 text-muted-foreground">
-      {emptyMessage}
-    </div>
+    <div className="text-center py-8 text-muted-foreground">{emptyMessage}</div>
   );
 
   const renderList = () => {
@@ -174,13 +178,13 @@ export function UnifiedDataList<TData>({
             ? () => onItemClick(item, index)
             : undefined;
 
+          // Use keyExtractor if provided, otherwise fallback to index for backward compatibility
+          const itemKey = keyExtractor ? keyExtractor(item, index) : index;
+
           return (
             <div
-              key={index}
-              className={cn(
-                itemClassName,
-                handleClick && "cursor-pointer"
-              )}
+              key={itemKey}
+              className={cn(itemClassName, handleClick && "cursor-pointer")}
               onClick={handleClick}
             >
               {renderItem(item, index)}

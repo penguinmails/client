@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Plus, Mail, Upload, AlertTriangle } from "lucide-react";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
@@ -9,10 +15,10 @@ import DashboardHeader from "@/components/layout/components/DashboardHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 // Wrapper component that replicates the real app layout structure
-const RealDashboardLayout = ({ 
-  children, 
-  theme = "light" 
-}: { 
+const RealDashboardLayout = ({
+  children,
+  theme = "light",
+}: {
   children: React.ReactNode;
   theme?: "light" | "dark";
 }) => {
@@ -61,7 +67,7 @@ const meta = {
   decorators: [
     (Story, context) => {
       const theme = context.args.theme || "light";
-      
+
       React.useEffect(() => {
         const htmlElement = document.documentElement;
         if (theme === "dark") {
@@ -69,7 +75,7 @@ const meta = {
         } else {
           htmlElement.classList.remove("dark");
         }
-        
+
         // Cleanup on unmount
         return () => {
           htmlElement.classList.remove("dark");
@@ -98,21 +104,24 @@ const mockRecentReplies: MockReply[] = [
     name: "Sarah Johnson",
     email: "techcorp",
     status: "interested",
-    message: "Thanks for reaching out! I'd love to schedule a call to discuss this further.",
+    message:
+      "Thanks for reaching out! I'd love to schedule a call to discuss this further.",
     timestamp: "2 hours ago",
   },
   {
     name: "Mike Chen",
     email: "startupbb",
     status: "not_interested",
-    message: "Not interested at this time, but please keep us in mind for the future.",
+    message:
+      "Not interested at this time, but please keep us in mind for the future.",
     timestamp: "4 hours ago",
   },
   {
     name: "Lisa Rodriguez",
     email: "enterprise-inc",
     status: "interested",
-    message: "This looks interesting. Can you send me more information about pricing?",
+    message:
+      "This looks interesting. Can you send me more information about pricing?",
     timestamp: "6 hours ago",
   },
 ];
@@ -144,24 +153,40 @@ const DashboardContentSample = () => (
       <div className="lg:col-span-2">
         <Card className="border border-border">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold">Recent Replies</CardTitle>
+            <CardTitle className="text-sm font-semibold">
+              Recent Replies
+            </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {mockRecentReplies.map((reply, i) => (
-              <div 
-                key={i} 
-                className="flex items-start gap-3 p-4"
-              >
+              // TODO: React key anti-pattern - using array index as key can cause rendering issues
+              // when list items are reordered, added, or removed
+              //
+              // Fix: Use reply.email as unique key instead of array index:
+              // key={reply.email}
+              //
+              // Alternatively, add an 'id' field to MockReply interface and use:
+              // key={reply.id}
+              //
+              // This ensures stable keys and prevents React reconciliation bugs.
+              <div key={i} className="flex items-start gap-3 p-4">
                 <div className="w-9 h-9 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-xs font-medium">
-                    {reply.name.split(" ").map((n) => n[0]).join("")}
+                    {reply.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center flex-wrap gap-2 mb-1">
-                    <span className="font-medium text-sm text-foreground">{reply.name}</span>
+                    <span className="font-medium text-sm text-foreground">
+                      {reply.name}
+                    </span>
                     <span className="text-muted-foreground text-xs">•</span>
-                    <span className="text-muted-foreground text-xs">{reply.email}</span>
+                    <span className="text-muted-foreground text-xs">
+                      {reply.email}
+                    </span>
                     <Badge
                       variant="outline"
                       className={
@@ -170,7 +195,9 @@ const DashboardContentSample = () => (
                           : "bg-muted text-muted-foreground border-border text-xs ml-1"
                       }
                     >
-                      {reply.status === "interested" ? "Interested" : "Not interested"}
+                      {reply.status === "interested"
+                        ? "Interested"
+                        : "Not interested"}
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground mb-2">
@@ -191,11 +218,15 @@ const DashboardContentSample = () => (
         {/* Warmup Status */}
         <Card className="border border-border">
           <CardHeader className="border-b border-border pb-3">
-            <CardTitle className="text-sm font-semibold">Warmup Status</CardTitle>
+            <CardTitle className="text-sm font-semibold">
+              Warmup Status
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 pt-4 pb-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Active Mailboxes</span>
+              <span className="text-sm text-muted-foreground">
+                Active Mailboxes
+              </span>
               <span className="text-sm font-semibold">8</span>
             </div>
             <div className="flex items-center justify-between">
@@ -203,7 +234,9 @@ const DashboardContentSample = () => (
               <span className="text-sm font-semibold text-orange-500">3</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Ready to Send</span>
+              <span className="text-sm text-muted-foreground">
+                Ready to Send
+              </span>
               <span className="text-sm font-semibold text-green-500">5</span>
             </div>
           </CardContent>
@@ -218,10 +251,12 @@ const DashboardContentSample = () => (
         {/* Quick Actions */}
         <Card className="border border-border">
           <CardHeader className="border-b border-border pb-3">
-            <CardTitle className="text-sm font-semibold">Quick Actions</CardTitle>
+            <CardTitle className="text-sm font-semibold">
+              Quick Actions
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 pt-3 pb-3">
-            <button className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
+            <Button variant="ghost" className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
               <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Plus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               </div>
@@ -231,7 +266,7 @@ const DashboardContentSample = () => (
                   Start a new email campaign
                 </p>
               </div>
-            </button>
+            </Button>
             <button className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
               <div className="w-9 h-9 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Upload className="w-4 h-4 text-green-600 dark:text-green-400" />
@@ -256,4 +291,3 @@ export const CompleteDashboard: Story = {
     theme: "light",
   },
 };
-
