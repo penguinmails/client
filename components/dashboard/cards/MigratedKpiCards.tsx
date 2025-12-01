@@ -12,7 +12,7 @@ import {
 import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
 import { KPIDisplayConfig } from "@/types/analytics/ui";
 import { CampaignAnalytics } from "@/types/analytics/domain-specific";
-import MigratedStatsCard from "@/components/analytics/dashboard/MigratedStatsCard";
+import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
 import { KPISummaryCardSkeleton } from "@/components/analytics/components/SkeletonLoaders";
 
 interface MigratedKpiCardsProps {
@@ -227,7 +227,7 @@ function MigratedKpiCards({
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {kpiConfigs.map((kpi) => (
-        <MigratedStatsCard
+        <UnifiedStatsCard
           key={kpi.id}
           title={kpi.name}
           value={kpi.displayValue}
@@ -239,6 +239,7 @@ function MigratedKpiCards({
           trend={kpi.trend}
           change={kpi.change}
           changeType={kpi.changeType}
+          benchmark={true}
         />
       ))}
     </div>
@@ -246,17 +247,44 @@ function MigratedKpiCards({
 }
 
 // Color mapping helper function
-function getColorForKPI(color?: KPIDisplayConfig["color"]) {
+// TODO: Critical bug - duplicate return statements make this function broken
+//
+// Current issues:
+// 1. Each case has duplicate return statements (line 253 has unreachable code)
+// 2. First return returns CSS class strings but return type expects semantic colors
+// 3. The intended semantic color returns ("success", "warning", "error", "primary") are unreachable
+//
+// This function should only return the semantic color strings to match the return type:
+//
+// function getColorForKPI(color?: KPIDisplayConfig["color"]): "primary" | "secondary" | "success" | "warning" | "error" | "info" {
+//   switch (color) {
+//     case "positive":
+//       return "success";
+//     case "warning":
+//       return "warning";
+//     case "danger":
+//       return "error";
+//     case "neutral":
+//     default:
+//       return "primary";
+//   }
+// }
+//
+// Note: If CSS classes are needed, this should be a different helper function
+// that maps semantic colors to CSS classes, or the return type should be updated accordingly.
+function getColorForKPI(
+  color?: KPIDisplayConfig["color"]
+): "primary" | "secondary" | "success" | "warning" | "error" | "info" {
   switch (color) {
     case "positive":
-      return "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400";
+      return "success";
     case "warning":
-      return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400";
+      return "warning";
     case "danger":
-      return "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400";
+      return "error";
     case "neutral":
     default:
-      return "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400";
+      return "primary";
   }
 }
 

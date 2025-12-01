@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { DashboardLayout } from "./dashboard-layout";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,36 +7,48 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import {
-  Plus,
-  Settings,
-  Mail,
-  Upload,
-  CalendarPlus,
-  AlertTriangle,
-} from "lucide-react";
+import { Plus, Mail, Upload, AlertTriangle } from "lucide-react";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { UnifiedStatsCard } from "./unified-stats-card";
+import AppSideBar from "@/components/layout/components/Sidebar";
+import DashboardHeader from "@/components/layout/components/DashboardHeader";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
+// Wrapper component that replicates the real app layout structure
+const RealDashboardLayout = ({
+  children,
+  theme = "light",
+}: {
+  children: React.ReactNode;
+  theme?: "light" | "dark";
+}) => {
+  return (
+    <SidebarProvider>
+      <AppSideBar />
+      <SidebarInset className="max-w-10/12 md:peer-data-[variant=inset]:shadow-none gap-5 overflow-hidden">
+        <div className="rounded-lg shadow-sm">
+          <DashboardHeader />
+        </div>
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 rounded-lg shadow-sm">
+          {children}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+};
 
 const meta = {
-  title: "Design System/Components/DashboardLayout",
-  component: DashboardLayout,
+  title: "Legacy/App Layout/Dashboard Layout (Real)",
+  component: RealDashboardLayout,
   tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
         component:
-          "Unified Dashboard Layout component that provides consistent structure across dashboard pages. Includes sidebar, breadcrumbs, title, and actions.",
+          "This is the REAL dashboard layout used in the application (from app/[locale]/dashboard/layout.tsx). It includes AppSideBar (hierarchical sidebar) and DashboardHeader. Compare this with Design System/Components/DashboardLayout to see the migration.",
       },
     },
     layout: "fullscreen",
-    // Configure Next.js router for Storybook 9.x
-    // nextRouter: {
-    //   path: "/dashboard",
-    //   asPath: "/dashboard",
-    // },
-    //},
     nextjs: {
       navigation: {
         pathname: "/dashboard",
@@ -46,18 +57,6 @@ const meta = {
     },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Page title",
-    },
-    description: {
-      control: "text",
-      description: "Page description",
-    },
-    showBackButton: {
-      control: "boolean",
-      description: "Show back button",
-    },
     theme: {
       control: { type: "select" },
       options: ["light", "dark"],
@@ -77,6 +76,7 @@ const meta = {
           htmlElement.classList.remove("dark");
         }
 
+        // Cleanup on unmount
         return () => {
           htmlElement.classList.remove("dark");
         };
@@ -85,119 +85,12 @@ const meta = {
       return <Story />;
     },
   ],
-} satisfies Meta<
-  React.ComponentProps<typeof DashboardLayout> & { theme?: string }
->;
+} satisfies Meta<typeof RealDashboardLayout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Sample content for stories using UnifiedStatsCard
-const SampleContent = () => (
-  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-    <UnifiedStatsCard
-      title="Total Campaigns"
-      value="24"
-      icon={Mail}
-      color="primary"
-    />
-    <UnifiedStatsCard
-      title="Active Campaigns"
-      value="12"
-      icon={CalendarPlus}
-      color="success"
-    />
-    <UnifiedStatsCard
-      title="Total Sent"
-      value="1,234"
-      icon={Upload}
-      color="info"
-    />
-  </div>
-);
-
-export const Basic: Story = {
-  args: {
-    title: "Dashboard",
-    children: <SampleContent />,
-  },
-};
-
-export const WithDescription: Story = {
-  args: {
-    title: "Campaign Analytics",
-    description: "Monitor your campaign performance",
-    children: <SampleContent />,
-  },
-};
-
-export const WithBreadcrumbs: Story = {
-  args: {
-    title: "Analytics",
-    breadcrumbs: [
-      { label: "Campaigns", href: "/campaigns" },
-      { label: "Analytics" },
-    ],
-    children: <SampleContent />,
-  },
-};
-
-export const WithActions: Story = {
-  args: {
-    title: "Campaigns",
-    description: "Manage all your email campaigns",
-    actions: (
-      <>
-        <Button variant="outline" size="sm">
-          <Settings className="mr-2 h-4 w-4" />
-          Settings
-        </Button>
-        <Button size="sm">
-          <Plus className="mr-2 h-4 w-4" />
-          New Campaign
-        </Button>
-      </>
-    ),
-    children: <SampleContent />,
-  },
-};
-
-export const FullFeatured: Story = {
-  args: {
-    title: "Campaign Analytics",
-    description: "Monitor your campaign performance and engagement metrics",
-    breadcrumbs: [
-      { label: "Campaigns", href: "/campaigns" },
-      { label: "Welcome Series", href: "/campaigns/123" },
-      { label: "Analytics" },
-    ],
-    actions: (
-      <Button size="sm">
-        <Plus className="mr-2 h-4 w-4" />
-        Export Report
-      </Button>
-    ),
-    showBackButton: true,
-    backHref: "/campaigns/123",
-    children: (
-      <div className="space-y-6">
-        <SampleContent />
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
-              Your recent campaign activity will appear here.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    ),
-  },
-};
-
-// Sample data for realistic dashboard
+// Sample data matching the reference image
 interface MockReply {
   name: string;
   email: string;
@@ -235,7 +128,15 @@ const mockRecentReplies: MockReply[] = [
 
 const DashboardContentSample = () => (
   <div className="space-y-4">
-    {/* Empty State - No Campaign Data (large dark area, NOT a card) */}
+    {/* Manual Header - matching reference image */}
+    <div className="mb-4">
+      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <p className="text-sm text-muted-foreground">
+        Welcome back! Here&apos;s what&apos;s happening with your campaigns.
+      </p>
+    </div>
+
+    {/* Empty State - No Campaign Data */}
     <div className="bg-muted/30 rounded-lg border border-border flex flex-col items-center justify-center py-20 mb-6">
       <div className="w-16 h-16 rounded-full bg-background border border-border flex items-center justify-center mb-4">
         <Mail className="h-8 w-8 text-muted-foreground" />
@@ -246,7 +147,7 @@ const DashboardContentSample = () => (
       </p>
     </div>
 
-    {/* Main Grid: Recent Replies + Sidebar (matching reference image) */}
+    {/* Main Grid: Recent Replies + Sidebar */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       {/* Recent Replies - 2/3 width */}
       <div className="lg:col-span-2">
@@ -258,20 +159,17 @@ const DashboardContentSample = () => (
           </CardHeader>
           <CardContent className="p-0">
             {mockRecentReplies.map((reply, i) => (
-              <div
-                // TODO: React key anti-pattern - using array index as key can cause rendering bugs
-                // when list items are reordered, added, or removed
-                //
-                // Fix: Use reply.email as unique key instead of array index:
-                // key={reply.email}
-                //
-                // Alternatively, add an 'id' field to MockReply interface and use:
-                // key={reply.id}
-                //
-                // This ensures stable keys and prevents React reconciliation bugs.
-                key={i}
-                className="flex items-start gap-3 p-4"
-              >
+              // TODO: React key anti-pattern - using array index as key can cause rendering issues
+              // when list items are reordered, added, or removed
+              //
+              // Fix: Use reply.email as unique key instead of array index:
+              // key={reply.email}
+              //
+              // Alternatively, add an 'id' field to MockReply interface and use:
+              // key={reply.id}
+              //
+              // This ensures stable keys and prevents React reconciliation bugs.
+              <div key={i} className="flex items-start gap-3 p-4">
                 <div className="w-9 h-9 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-xs font-medium">
                     {reply.name
@@ -319,7 +217,7 @@ const DashboardContentSample = () => (
       <div className="space-y-4">
         {/* Warmup Status */}
         <Card className="border border-border">
-          <CardHeader className="pb-3">
+          <CardHeader className="border-b border-border pb-3">
             <CardTitle className="text-sm font-semibold">
               Warmup Status
             </CardTitle>
@@ -352,23 +250,13 @@ const DashboardContentSample = () => (
 
         {/* Quick Actions */}
         <Card className="border border-border">
-          <CardHeader className="pb-3">
+          <CardHeader className="border-b border-border pb-3">
             <CardTitle className="text-sm font-semibold">
               Quick Actions
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 pt-3 pb-3">
-            {/* TODO: Accessibility issue - this <button> element is not a proper interactive element
-            It should be replaced with the Button component for better accessibility and consistency.
-            
-            Problems:
-            1. Using raw <button> element instead of the imported Button component
-            2. No proper keyboard navigation and focus management
-            3. Missing accessibility attributes like aria-label
-            4. Inconsistent with Button component usage elsewhere in the codebase
-            
-            Fix:
-            <Button variant="ghost" className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-muted/50">
+            <Button variant="ghost" className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
               <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Plus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               </div>
@@ -379,18 +267,6 @@ const DashboardContentSample = () => (
                 </p>
               </div>
             </Button>
-            */}
-            <button className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
-              <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Plus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-sm">Create Campaign</p>
-                <p className="text-xs text-muted-foreground">
-                  Start a new email campaign
-                </p>
-              </div>
-            </button>
             <button className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
               <div className="w-9 h-9 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Upload className="w-4 h-4 text-green-600 dark:text-green-400" />
@@ -411,8 +287,7 @@ const DashboardContentSample = () => (
 
 export const CompleteDashboard: Story = {
   args: {
-    title: "Dashboard",
-    description: "Welcome back! Here's what's happening with your campaigns.",
     children: <DashboardContentSample />,
+    theme: "light",
   },
 };

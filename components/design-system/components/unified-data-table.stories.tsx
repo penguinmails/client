@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { UnifiedDataTable } from "./unified-data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
+import React from "react";
 
 // Sample data type
 type Campaign = {
@@ -111,8 +112,34 @@ const meta = {
       control: "boolean",
       description: "Show loading state",
     },
+    theme: {
+      control: { type: "select" },
+      options: ["light", "dark"],
+      description: "Toggle between light and dark mode",
+      defaultValue: "light",
+    },
   },
-} satisfies Meta<typeof UnifiedDataTable>;
+  decorators: [
+    (Story, context) => {
+      const theme = context.args.theme || "light";
+      
+      React.useEffect(() => {
+        const htmlElement = document.documentElement;
+        if (theme === "dark") {
+          htmlElement.classList.add("dark");
+        } else {
+          htmlElement.classList.remove("dark");
+        }
+        
+        return () => {
+          htmlElement.classList.remove("dark");
+        };
+      }, [theme]);
+
+      return <Story />;
+    },
+  ],
+} satisfies Meta<React.ComponentProps<typeof UnifiedDataTable> & { theme?: string }>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
