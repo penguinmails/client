@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button/button"
@@ -18,7 +19,6 @@ import { useTranslations } from "next-intl"
 //PostHog
 import posthog from '@/lib/instrumentation-client'
 
-
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -30,7 +30,7 @@ export default function LoginPage() {
 
   const t = useTranslations("Login")
 
-   useEffect(() => {
+  useEffect(() => {
     posthog.capture('login_page_loaded')
   }, [])
 
@@ -41,6 +41,7 @@ export default function LoginPage() {
 
     if (!token) {
       setError("Please complete the CAPTCHA verification.")
+      setIsLoading(false)
       return
     }
 
@@ -54,21 +55,26 @@ export default function LoginPage() {
       posthog.capture('login_attempt', { email, success: true })
 
       router.push("/dashboard")
-      setToken("")
     } catch (err) {
       console.error("Login failed:", err)
       const errorMsg = (err as Error)?.message || loginContent.errors.generic
       setError(errorMsg)
 
       // Log failed login attempt
-      posthog.capture('login_attempt', { email, success: false, error: errorMsg })
+      posthog.capture('login_attempt', { 
+        email, 
+        success: false, 
+        error: 'Login failed' // ← FIX de Gemini
+      })
     } finally {
+      setToken("") // ← FIX de Gemini
       setIsLoading(false)
     }
   }
 
   const icon = user ? User : LogIn
   const mode = user ? "loggedIn" : "form"
+
   const footer = user ? undefined : (
     <div className="flex flex-col items-center space-y-2">
       <p className="text-xs text-muted-foreground">
@@ -108,6 +114,12 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{t("password.label")}</Label>
+                {/* <Link
+                  href="/forgot-password"
+                  className="text-sm font-medium text-primary hover:underline underline-offset-4"
+                >
+                  {loginContent.forgotPassword}
+                </Link> */}
               </div>
               <PasswordInput
                 name="password"
@@ -119,6 +131,7 @@ export default function LoginPage() {
               />
             </div>
 
+            {/*  NEW - Turnstile Widget */}
             <div className="flex justify-center">
               {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
                 <Turnstile
