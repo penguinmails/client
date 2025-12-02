@@ -15,10 +15,8 @@ import { AuthTemplate } from "@/components/auth/AuthTemplate";
 import { Turnstile } from "next-turnstile";
 import { verifyTurnstileToken } from "./signup/verifyToken";
 import { useTranslations } from "next-intl";
-import { initPostHog } from "@/lib/instrumentation-client";
+import { initPostHog, ph } from "@/lib/instrumentation-client";
 import { getLoginAttemptStatus } from "@/lib/auth/rate-limit";
-
-import { ph } from "@/lib/instrumentation-client";
 
 const MAX_LOGIN_ATTEMPTS = parseInt(
   process.env.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS || "3",
@@ -38,7 +36,6 @@ export default function LoginPage() {
 
   const t = useTranslations("Login");
 
-  // Initialize from sessionStorage on component mount
   useEffect(() => {
     initPostHog().then((client) => {
       client.capture("login_page_loaded");
@@ -50,10 +47,8 @@ export default function LoginPage() {
     setError(null);
     setIsLoading(true);
 
-    // Check sessionStorage for existing attempts for this email
     if (email?.includes("@")) {
       const status = getLoginAttemptStatus(email);
-      // Update UI to reflect current attempt count
       if (status.attempts > 0) {
         setLoginAttempts(status.attempts);
         setShowTurnstile(status.requiresTurnstile);
@@ -61,37 +56,29 @@ export default function LoginPage() {
     }
 
     try {
-      // Check if Turnstile is required
-      const requiresTurnstile = showTurnstile && !turnstileToken;
-
-      if (requiresTurnstile) {
+      if (showTurnstile && !turnstileToken) {
         setError(t("errors.captchaRequired"));
         setIsLoading(false);
         return;
       }
 
-      // If Turnstile is shown but we have a token, verify it
       if (showTurnstile && turnstileToken) {
         await verifyTurnstileToken(turnstileToken);
         ph().capture("captcha_completed", { email });
       }
 
-      // Proceed with login
       await login(email, password);
       ph().capture("login_attempt", { email, success: true });
     } catch (err) {
       console.error("Login failed:", err);
-      const errorMessage =
-        (err as Error)?.message || loginContent.errors.generic;
+      const errorMessage = (err as Error)?.message || loginContent.errors.generic;
       setError(errorMessage);
 
-      // Get updated attempt status (AuthContext already recorded the failure)
       const status = getLoginAttemptStatus(email);
       setShowTurnstile(status.requiresTurnstile);
       setLoginAttempts(status.attempts || 0);
       setTurnstileToken(null);
 
-      // Log failed login attempt
       ph().capture("login_attempt", {
         email,
         success: false,
@@ -113,8 +100,6 @@ export default function LoginPage() {
   useEffect(() => {
     if (authError) {
       setError(authError.message);
-
-      // Also update attempt counter when there's an authError
       if (email && email.includes("@")) {
         const status = getLoginAttemptStatus(email);
         setLoginAttempts(status.attempts || 0);
@@ -127,16 +112,19 @@ export default function LoginPage() {
 
   const icon = user ? User : LogIn;
   const mode = user ? "loggedIn" : "form";
-  const footer = user ? undefined : (
-    <div className="flex flex-col items-center space-y-2">
-      <p className="text-xs text-muted-foreground">
-        {loginContent.signup.text}{" "}
-        <Link href="/signup" className="underline font-medium text-primary">
-          {loginContent.signup.link}
-        </Link>
-      </p>
-    </div>
-  );
+
+  const footer = user
+    ? undefined
+    : (
+      <div className="flex flex-col items-center space-y-2">
+        <p className="text-xs text-muted-foreground">
+          {loginContent.signup.text}{" "}
+          <Link href="/signup" className="underline font-medium text-primary">
+            {loginContent.signup.link}
+          </Link>
+        </p>
+      </div>
+    );
 
   return (
     <LandingLayout>
