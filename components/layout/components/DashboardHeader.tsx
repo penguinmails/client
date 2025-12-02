@@ -30,12 +30,6 @@ function Header() {
               <DropdownMenuItem asChild>
                 <a href="https://help.penguinmails.com/video-tutorials" target="_blank">Video Tutorials</a>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a href="https://help.penguinmails.com/glossary" target="_blank">Glossary</a>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a href="https://help.penguinmails.com/our-services" target="_blank">Our Services</a>
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <NotificationsPopover />
