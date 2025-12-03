@@ -22,19 +22,13 @@ function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
-                <a href="https://help.penguinmails.com/knowledge-base" target="_blank">Knowledge Base</a>
+                <a href="https://help.penguinmails.com/" target="_blank" rel="noopener noreferrer">Knowledge Base</a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <a href="https://help.penguinmails.com/support" target="_blank">Support</a>
+                <a href="https://penguinmails.com/contact-us/" target="_blank" rel="noopener noreferrer">Support</a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <a href="https://help.penguinmails.com/video-tutorials" target="_blank">Video Tutorials</a>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a href="https://help.penguinmails.com/glossary" target="_blank">Glossary</a>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a href="https://help.penguinmails.com/our-services" target="_blank">Our Services</a>
+                <a href="https://help.penguinmails.com/video-tutorials" target="_blank" rel="noopener noreferrer">Video Tutorials</a>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
