@@ -15,9 +15,10 @@ import { AuthTemplate } from "@/components/auth/AuthTemplate"
 import { Turnstile } from "next-turnstile"
 import { verifyTurnstileToken } from "./signup/verifyToken"
 import { useTranslations } from "next-intl"
+import { initPostHog } from '@/lib/instrumentation-client';
 
 //PostHog
-import posthog from '@/lib/instrumentation-client'
+import { ph } from '@/lib/instrumentation-client'
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -31,8 +32,10 @@ export default function LoginPage() {
   const t = useTranslations("Login")
 
   useEffect(() => {
-    posthog.capture('login_page_loaded')
-  }, [])
+    initPostHog().then(client => {
+      client.capture('login_page_loaded');
+    });
+  }, []);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -48,11 +51,11 @@ export default function LoginPage() {
     try {
       // CAPTCHA verification
       await verifyTurnstileToken(token)
-      posthog.capture('captcha_completed', { email })
+      ph().capture('captcha_completed', { email })
 
       // Login attempt
       await login(email, password)
-      posthog.capture('login_attempt', { email, success: true })
+      ph().capture('login_attempt', { email, success: true })
 
       router.push("/dashboard")
     } catch (err) {
@@ -61,7 +64,7 @@ export default function LoginPage() {
       setError(errorMsg)
 
       // Log failed login attempt
-      posthog.capture('login_attempt', { 
+      ph().capture('login_attempt', { 
         email, 
         success: false, 
         error: 'Login failed' // ← FIX de Gemini
