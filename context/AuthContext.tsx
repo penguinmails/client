@@ -310,9 +310,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onSuccess: (data) => {
       const { ok } = data;
       if (ok) {
-        toast.success("Account created successfully!");
-        // After signup, we might need to sign in immediately
-        // But since useSignUp doesn't automatically populate session, we'll handle in signup
+        // Success is handled in the SignUpFormView component
         setAuthError(null);
       } else {
         setAuthError(new Error("Signup failed."));
@@ -417,8 +415,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error("Signup error:", error);
       setLoading(false);
+      
+      // Check for specific error types and add metadata
+      if (error && typeof error === 'object' && 'code' in error) {
+        const errorCode = (error as any).code;
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        
+        if (errorCode === 'EMAIL_ALREADY_EXISTS_VERIFIED') {
+          const verifiedError = new Error(errorMessage);
+          (verifiedError as any).code = errorCode;
+          (verifiedError as any).actionType = 'LOGIN';
+          (verifiedError as any).i18nKey = 'emailAlreadyExistsVerified';
+          setAuthError(verifiedError);
+          // Toast notification will use i18n in the component
+          throw verifiedError;
+        }
+        
+        if (errorCode === 'EMAIL_ALREADY_EXISTS_UNVERIFIED') {
+          const unverifiedError = new Error(errorMessage);
+          (unverifiedError as any).code = errorCode;
+          (unverifiedError as any).actionType = 'RESEND_VERIFICATION';
+          (unverifiedError as any).i18nKey = 'emailAlreadyExistsUnverified';
+          setAuthError(unverifiedError);
+          // Toast notification will use i18n in the component
+          throw unverifiedError;
+        }
+      }
+      
+      // Generic error
       setAuthError(error as Error);
-      toast.error("Failed to create account. Please try again.");
       throw error;
     }
   };
