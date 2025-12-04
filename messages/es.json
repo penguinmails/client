@@ -36,6 +36,61 @@
             "link": "Regístrate"
         }
     },
+    "Signup": {
+        "header": {
+            "title": "Crea tu cuenta de Penguin Mails",
+            "description": "Comienza con tu experiencia de correo seguro."
+        },
+        "form": {
+            "name": {
+                "label": "Nombre",
+                "placeholder": "Ingresa tu nombre"
+            },
+            "email": {
+                "label": "Correo electrónico",
+                "placeholder": "tu@ejemplo.com"
+            },
+            "password": {
+                "label": "Contraseña",
+                "placeholder": "Ingresa tu contraseña"
+            },
+            "confirmPassword": {
+                "label": "Confirmar Contraseña",
+                "placeholder": "Confirma tu contraseña"
+            }
+        },
+        "errors": {
+            "emailAlreadyExistsVerified": {
+                "title": "Email Ya Registrado",
+                "message": "Este correo electrónico ya está registrado. Por favor, inicia sesión en tu cuenta existente.",
+                "actionLogin": "Iniciar Sesión",
+                "actionForgotPassword": "¿Olvidaste tu Contraseña?"
+            },
+            "emailAlreadyExistsUnverified": {
+                "title": "Cuenta No Verificada",
+                "message": "Existe una cuenta con este correo pero aún no ha sido verificada. Te hemos enviado un nuevo correo de verificación.",
+                "actionResend": "Reenviar Email de Verificación"
+            },
+            "signupFailed": "Error en el registro. Por favor, inténtalo de nuevo.",
+            "captchaRequired": "Por favor, completa la verificación CAPTCHA.",
+            "passwordTooWeak": "La contraseña es muy débil. Incluye al menos 2 de: mayúsculas, minúsculas, números, caracteres especiales",
+            "passwordMismatch": "Las contraseñas no coinciden",
+            "invalidEmail": "Por favor, ingresa un correo electrónico válido"
+        },
+        "success": {
+            "accountCreated": "¡Cuenta creada exitosamente! Revisa tu correo para el enlace de verificación y activa tu cuenta.",
+            "accountCreatedNoEmail": "¡Cuenta creada exitosamente! Te enviaremos un enlace de verificación pronto.",
+            "verificationEmailResent": "El correo de verificación ha sido reenviado. Por favor, revisa tu bandeja de entrada."
+        },
+        "button": {
+            "createAccount": "Crear Cuenta",
+            "creatingAccount": "Creando Cuenta..."
+        },
+        "footer": {
+            "haveAccount": "¿Ya tienes una cuenta?",
+            "login": "Iniciar Sesión"
+        }
+    },
     "button": {
         "label": "botón"
     }

@@ -310,9 +310,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onSuccess: (data) => {
       const { ok } = data;
       if (ok) {
-        toast.success("Account created successfully!");
-        // After signup, we might need to sign in immediately
-        // But since useSignUp doesn't automatically populate session, we'll handle in signup
+        // Success is handled in the SignUpFormView component
         setAuthError(null);
       } else {
         setAuthError(new Error("Signup failed."));
@@ -417,8 +415,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error("Signup error:", error);
       setLoading(false);
+      
+      // Generic error handling - signup now uses custom API endpoint directly
       setAuthError(error as Error);
-      toast.error("Failed to create account. Please try again.");
       throw error;
     }
   };
