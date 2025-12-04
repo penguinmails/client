@@ -7,8 +7,8 @@
     "500-LEADS": "A system error occurred while fetching lead data. The issue has been logged."
   },
   "Metadata": {
-      "title": "Penguin Mails - Email Outreach & Domain Warm-up",
-      "description": "Enter the world of Penguin Mails, where every message is a delightful surprise!"
+    "title": "Penguin Mails - Email Outreach & Domain Warm-up",
+    "description": "Enter the world of Penguin Mails, where every message is a delightful surprise!"
   },
   "Login": {
     "title": "Welcome Back!",
@@ -84,7 +84,8 @@
     },
     "button": {
       "createAccount": "Create Account",
-      "creatingAccount": "Creating Account..."
+      "creatingAccount": "Creating Account...",
+      "sending": "Sending..."
     },
     "footer": {
       "haveAccount": "Already have an account?",

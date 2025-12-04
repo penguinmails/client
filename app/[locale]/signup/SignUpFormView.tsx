@@ -23,12 +23,15 @@ interface FormData {
 
 export default function SignUpFormView() {
   const t = useTranslations("Signup");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<any>(null);
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
   const { error: authError } = useAuth();
   const [token, setToken] = useState("");
   const router = useRouter();
+
+  // Loading state for resend verification
+  const [isResendingVerification, setIsResendingVerification] = useState(false);
 
   // Initialize react-hook-form
   const {
@@ -52,6 +55,46 @@ export default function SignUpFormView() {
   // Handle password strength changes
   const handlePasswordStrengthChange = (strength: PasswordStrength | null) => {
     setPasswordStrength(strength);
+  };
+
+  // Handle resend verification email
+  const handleResendVerification = async () => {
+    // Prevent double-clicks
+    if (isResendingVerification) return;
+
+    setIsResendingVerification(true);
+
+    try {
+      // Get current email value from form
+      const emailValue = watch("email");
+
+      // Validate email before sending
+      if (!emailValue || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+        toast.error(t("errors.invalidEmail"));
+        return;
+      }
+
+      const response = await fetch("/api/emails/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "verification",
+          email: emailValue,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success(t("success.accountCreatedNoEmail"));
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.message || t("errors.signupFailed"));
+      }
+    } catch (err) {
+      console.error("Resend error:", err);
+      toast.error(t("errors.signupFailed"));
+    } finally {
+      setIsResendingVerification(false);
+    }
   };
 
   const onSubmit = async (data: FormData) => {
@@ -151,8 +194,8 @@ export default function SignUpFormView() {
       // Check if it's a duplicate email error with i18n key
       if (err && typeof err === "object" && "i18nKey" in err) {
         const i18nKey = (err as any).i18nKey;
-        // Set error message using i18n
-        setError(t(`errors.${i18nKey}.message`));
+        // Store the full error object with metadata
+        setError(err);
 
         // Show toast notification
         toast.error(t(`errors.${i18nKey}.title`));
@@ -167,10 +210,10 @@ export default function SignUpFormView() {
         "message" in err &&
         typeof (err as { message?: unknown }).message === "string"
       ) {
-        setError((err as { message: string }).message);
+        setError(err);
         toast.error((err as { message: string }).message);
       } else {
-        setError(t("errors.signupFailed"));
+        setError(new Error(t("errors.signupFailed")));
         toast.error(t("errors.signupFailed"));
       }
     } finally {
@@ -179,7 +222,7 @@ export default function SignUpFormView() {
   };
 
   useEffect(() => {
-    if (authError) setError(authError.message);
+    if (authError) setError(authError);
   }, [authError]);
 
   return (
@@ -187,21 +230,23 @@ export default function SignUpFormView() {
       {error && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-4">
           {/* Error title based on error type */}
-          {authError && (authError as any).i18nKey && (
+          {error && (error as any).i18nKey && (
             <p className="text-sm font-semibold text-red-800 mb-1">
-              {t(`errors.${(authError as any).i18nKey}.title`)}
+              {t(`errors.${(error as any).i18nKey}.title`)}
             </p>
           )}
 
           {/* Error message */}
           <p className="text-sm text-red-600 mb-2">
-            {authError && (authError as any).i18nKey
-              ? t(`errors.${(authError as any).i18nKey}.message`)
-              : error}
+            {error && (error as any).i18nKey
+              ? t(`errors.${(error as any).i18nKey}.message`)
+              : typeof error === "string"
+                ? error
+                : error.message}
           </p>
 
           {/* Action buttons for verified duplicate email */}
-          {authError && (authError as any).actionType === "LOGIN" && (
+          {error && (error as any).actionType === "LOGIN" && (
             <div className="flex gap-2 mt-3">
               <Button
                 variant="outline"
@@ -223,39 +268,21 @@ export default function SignUpFormView() {
           )}
 
           {/* Action button for unverified duplicate email */}
-          {authError &&
-            (authError as any).actionType === "RESEND_VERIFICATION" && (
-              <div className="mt-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={async () => {
-                    try {
-                      const response = await fetch("/api/emails/send", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          type: "verification",
-                          email: watch("email"),
-                        }),
-                      });
-
-                      if (response.ok) {
-                        toast.success(t("success.accountCreatedNoEmail"));
-                      } else {
-                        toast.error(t("errors.signupFailed"));
-                      }
-                    } catch (err) {
-                      console.error("Resend error:", err);
-                      toast.error(t("errors.signupFailed"));
-                    }
-                  }}
-                  className="text-red-600 border-red-300 hover:bg-red-100"
-                >
-                  {t("errors.emailAlreadyExistsUnverified.actionResend")}
-                </Button>
-              </div>
-            )}
+          {error && (error as any).actionType === "RESEND_VERIFICATION" && (
+            <div className="mt-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleResendVerification}
+                disabled={isResendingVerification}
+                className="text-red-600 border-red-300 hover:bg-red-100"
+              >
+                {isResendingVerification
+                  ? t("button.sending")
+                  : t("errors.emailAlreadyExistsUnverified.actionResend")}
+              </Button>
+            </div>
+          )}
         </div>
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

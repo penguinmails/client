@@ -416,33 +416,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Signup error:", error);
       setLoading(false);
       
-      // Check for specific error types and add metadata
-      if (error && typeof error === 'object' && 'code' in error) {
-        const errorCode = (error as any).code;
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        
-        if (errorCode === 'EMAIL_ALREADY_EXISTS_VERIFIED') {
-          const verifiedError = new Error(errorMessage);
-          (verifiedError as any).code = errorCode;
-          (verifiedError as any).actionType = 'LOGIN';
-          (verifiedError as any).i18nKey = 'emailAlreadyExistsVerified';
-          setAuthError(verifiedError);
-          // Toast notification will use i18n in the component
-          throw verifiedError;
-        }
-        
-        if (errorCode === 'EMAIL_ALREADY_EXISTS_UNVERIFIED') {
-          const unverifiedError = new Error(errorMessage);
-          (unverifiedError as any).code = errorCode;
-          (unverifiedError as any).actionType = 'RESEND_VERIFICATION';
-          (unverifiedError as any).i18nKey = 'emailAlreadyExistsUnverified';
-          setAuthError(unverifiedError);
-          // Toast notification will use i18n in the component
-          throw unverifiedError;
-        }
-      }
-      
-      // Generic error
+      // Generic error handling - signup now uses custom API endpoint directly
       setAuthError(error as Error);
       throw error;
     }
