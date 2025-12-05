@@ -1,57 +1,77 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button/button";
-import { PasswordInput } from "@/components/ui/custom/password-input";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
-import { LogIn, User } from "lucide-react";
-import { LandingLayout } from "@/components/landing/LandingLayout";
-import { loginContent } from "./content";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import { AuthTemplate } from "@/components/auth/AuthTemplate";
-import { Turnstile } from "next-turnstile";
-import { verifyTurnstileToken } from "./signup/verifyToken";
+'use client'
 
-import { useTranslations } from "next-intl";
+import React, { useState, useEffect } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button/button"
+import { PasswordInput } from "@/components/ui/custom/password-input"
+import { Input } from "@/components/ui/input/input"
+import { Label } from "@/components/ui/label"
+import { LogIn, User } from "lucide-react"
+import { LandingLayout } from "@/components/landing/LandingLayout"
+import { loginContent } from "./content"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
+import { AuthTemplate } from "@/components/auth/AuthTemplate"
+import { Turnstile } from "next-turnstile"
+import { verifyTurnstileToken } from "./signup/verifyToken"
+import { useTranslations } from "next-intl"
+import { initPostHog } from '@/lib/instrumentation-client';
+
+//PostHog
+import { ph } from '@/lib/instrumentation-client'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const { login, user, error: authError } = useAuth();
-  const [token, setToken] = useState(""); // ✅ NEW — stores Turnstile token when user verifies
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const { login, user } = useAuth()
+  const [token, setToken] = useState("") // stores Turnstile token
 
-  const t = useTranslations("Login");
+  const t = useTranslations("Login")
+
+  useEffect(() => {
+    initPostHog().then(client => {
+      client.capture('login_page_loaded');
+    });
+  }, []);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+    e.preventDefault()
+    setError(null)
+    setIsLoading(true)
 
-    // This prevents the form from submitting if the CAPTCHA hasn’t been completed.
     if (!token) {
-      setError("Please complete the CAPTCHA verification.");
-      return;
+      setError("Please complete the CAPTCHA verification.")
+      setIsLoading(false)
+      return
     }
 
     try {
-      // Verify Turnstile token on your backend
-      await verifyTurnstileToken(token);
+      // CAPTCHA verification
+      await verifyTurnstileToken(token)
+      ph().capture('captcha_completed', { email })
 
       // Proceed with Nile login only if token is valid
       await login(email, password);
       setToken(""); // ✅ reset after successful login
     } catch (err) {
-      console.error("Login failed:", err);
-      setError((err as Error)?.message || loginContent.errors.generic);
+      console.error("Login failed:", err)
+      const errorMsg = (err as Error)?.message || loginContent.errors.generic
+      setError(errorMsg)
+
+      // Log failed login attempt
+      ph().capture('login_attempt', { 
+        email, 
+        success: false, 
+        error: 'Login failed' // ← FIX de Gemini
+      })
     } finally {
-      setIsLoading(false);
+      setToken("") // ← FIX de Gemini
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
     if (user && !isLoading) {
@@ -79,7 +99,7 @@ export default function LoginPage() {
         </Link>
       </p>
     </div>
-  );
+  )
 
   return (
     <LandingLayout>
@@ -105,6 +125,7 @@ export default function LoginPage() {
                 disabled={isLoading}
               />
             </div>
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{t("password.label")}</Label>
@@ -124,7 +145,8 @@ export default function LoginPage() {
                 required
               />
             </div>
-            {/* ✅ NEW - Turnstile Widget */}
+
+            {/*  NEW - Turnstile Widget */}
             <div className="flex justify-center">
               {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
                 <Turnstile
@@ -137,6 +159,7 @@ export default function LoginPage() {
                 </p>
               )}
             </div>
+
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? t("loginButton.loading") : t("loginButton.default")}
             </Button>
@@ -144,8 +167,8 @@ export default function LoginPage() {
         )}
       </AuthTemplate>
     </LandingLayout>
-  );
+  )
 }
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic"

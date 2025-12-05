@@ -239,6 +239,28 @@ export class ConflictError extends NileDBError {
   }
 }
 
+export class DuplicateEmailError extends ConflictError {
+  public readonly isVerified: boolean;
+  
+  constructor(
+    message: string = 'Email address already registered',
+    email?: string,
+    isVerified: boolean = false
+  ) {
+    super(
+      message, 
+      'duplicate_email', 
+      { email, isVerified }
+    );
+    this.isVerified = isVerified;
+    // Override code for specific detection
+    Object.defineProperty(this, 'code', { 
+      value: isVerified ? 'EMAIL_ALREADY_EXISTS_VERIFIED' : 'EMAIL_ALREADY_EXISTS_UNVERIFIED', 
+      writable: false 
+    });
+  }
+}
+
 // Migration Errors
 export class MigrationError extends NileDBError {
   constructor(
@@ -326,6 +348,10 @@ export const isValidationError = (error: unknown): error is ValidationError => {
   return error instanceof ValidationError;
 };
 
+export const isDuplicateEmailError = (error: unknown): error is DuplicateEmailError => {
+  return error instanceof DuplicateEmailError;
+};
+
 // Error Classification
 export const classifyDatabaseError = (error: unknown): DatabaseError => {
   let pgError: Record<string, unknown> | undefined;
@@ -341,6 +367,21 @@ export const classifyDatabaseError = (error: unknown): DatabaseError => {
   // PostgreSQL error codes
   switch (code) {
     case '23505': // unique_violation
+      // Check if it's an email duplicate
+      const detail = pgError?.detail as string | undefined;
+      if (detail && detail.includes('email')) {
+        // Extract email from error detail if possible
+        const emailMatch = detail.match(/\(email\)=\(([^)]+)\)/);
+        const email = emailMatch ? emailMatch[1] : undefined;
+        
+        return new DuplicateEmailError(
+          'Email address already registered',
+          email,
+          false // We'll check verification status in auth.ts
+        );
+      }
+      
+      // Generic conflict error for other unique violations
       return new ConflictError('Duplicate entry detected', 'unique_violation', {
         constraint: pgError?.constraint as string | undefined,
         detail: pgError?.detail as string | undefined,

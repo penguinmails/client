@@ -9,6 +9,7 @@ import {
   Mail,
   Activity,
 } from "lucide-react";
+import React from "react";
 
 const meta = {
   title: "Design System/Components/UnifiedStatsCard",
@@ -39,8 +40,34 @@ const meta = {
       options: ["default", "highlighted", "muted"],
       description: "Visual style variant",
     },
+    theme: {
+      control: { type: "select" },
+      options: ["light", "dark"],
+      description: "Toggle between light and dark mode",
+      defaultValue: "light",
+    },
   },
-} satisfies Meta<typeof UnifiedStatsCard>;
+  decorators: [
+    (Story, context) => {
+      const theme = context.args.theme || "light";
+      
+      React.useEffect(() => {
+        const htmlElement = document.documentElement;
+        if (theme === "dark") {
+          htmlElement.classList.add("dark");
+        } else {
+          htmlElement.classList.remove("dark");
+        }
+        
+        return () => {
+          htmlElement.classList.remove("dark");
+        };
+      }, [theme]);
+
+      return <Story />;
+    },
+  ],
+} satisfies Meta<React.ComponentProps<typeof UnifiedStatsCard> & { theme?: string }>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -26,6 +26,34 @@ const meta: Meta = {
     },
     layout: "centered",
   },
+  argTypes: {
+    theme: {
+      control: { type: "select" },
+      options: ["light", "dark"],
+      description: "Toggle between light and dark mode",
+      defaultValue: "light",
+    },
+  },
+  decorators: [
+    (Story, context) => {
+      const theme = context.args.theme || "light";
+      
+      React.useEffect(() => {
+        const htmlElement = document.documentElement;
+        if (theme === "dark") {
+          htmlElement.classList.add("dark");
+        } else {
+          htmlElement.classList.remove("dark");
+        }
+        
+        return () => {
+          htmlElement.classList.remove("dark");
+        };
+      }, [theme]);
+
+      return <Story />;
+    },
+  ],
 };
 
 export default meta;
