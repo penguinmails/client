@@ -55,6 +55,7 @@ export default function LoginPage() {
 
       // Proceed with Nile login only if token is valid
       await login(email, password);
+      ph().capture('login_attempt', { email, success: true })
       setToken(""); // ✅ reset after successful login
     } catch (err) {
       console.error("Login failed:", err)
