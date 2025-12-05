@@ -151,6 +151,12 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? t("loginButton.loading") : t("loginButton.default")}
             </Button>
+            <Link
+              href="/forgot-password"
+              className="block text-right text-sm text-muted-foreground hover:underline underline-offset-4"
+            >
+              Forgot Password?
+            </Link>
           </form>
         )}
       </AuthTemplate>
