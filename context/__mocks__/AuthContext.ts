@@ -1,6 +1,7 @@
 // Mock for AuthContext
 import { useAuth as useAuthOriginal } from '@/context/AuthContext';
 
+
 // Mock implementation
 export const useAuth = () => ({
   user: {

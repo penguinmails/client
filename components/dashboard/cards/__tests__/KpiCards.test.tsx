@@ -38,35 +38,35 @@ describe("KpiCards", () => {
       title: "Total Campaigns",
       value: "24",
       icon: Mail,
-      color: "blue",
+      color: "primary",
     },
     {
       title: "Active Leads",
       value: "1,234",
       icon: Users,
-      color: "green",
+      color: "success",
     },
     {
       title: "Open Rate",
       value: "45%",
       icon: BarChart2,
-      color: "purple",
+      color: "info",
     },
     {
       title: "Click Rate",
       value: "12%",
       icon: MousePointer,
-      color: "orange",
+      color: "warning",
     },
   ];
 
   it("renders all KPI cards", () => {
     render(<KpiCards cards={mockCards} />);
 
-    expect(screen.getByTestId("kpi-card-Total Campaigns")).toBeInTheDocument();
-    expect(screen.getByTestId("kpi-card-Active Leads")).toBeInTheDocument();
-    expect(screen.getByTestId("kpi-card-Open Rate")).toBeInTheDocument();
-    expect(screen.getByTestId("kpi-card-Click Rate")).toBeInTheDocument();
+    expect(screen.getByLabelText("Statistics for Total Campaigns")).toBeInTheDocument();
+expect(screen.getByLabelText("Statistics for Active Leads")).toBeInTheDocument();
+expect(screen.getByLabelText("Statistics for Open Rate")).toBeInTheDocument();
+expect(screen.getByLabelText("Statistics for Click Rate")).toBeInTheDocument();
   });
 
   it("displays correct titles and values", () => {
@@ -99,8 +99,8 @@ describe("KpiCards", () => {
   it("passes color prop correctly to cards", () => {
     render(<KpiCards cards={mockCards} />);
 
-    const campaignCard = screen.getByTestId("kpi-card-Total Campaigns");
-    expect(campaignCard).toHaveClass("blue");
+    const campaignCard = screen.getByLabelText("Statistics for Total Campaigns");
+    expect(campaignCard).toHaveClass("border-primary/20"); 
   });
 
   it("handles single card", () => {
@@ -109,30 +109,37 @@ describe("KpiCards", () => {
         title: "Single Card",
         value: "100",
         icon: Mail,
-        color: "red",
+        color: "error",
       },
     ];
 
     render(<KpiCards cards={singleCard} />);
 
-    expect(screen.getByTestId("kpi-card-Single Card")).toBeInTheDocument();
+    expect(screen.getByLabelText("Statistics for Single Card")).toBeInTheDocument();
     expect(screen.getByText("Single Card")).toBeInTheDocument();
     expect(screen.getByText("100")).toBeInTheDocument();
   });
 
   it("renders icons for each card", () => {
-    render(<KpiCards cards={mockCards} />);
+  render(<KpiCards cards={mockCards} />);
 
-    expect(screen.getByTestId("icon-Total Campaigns")).toBeInTheDocument();
-    expect(screen.getByTestId("icon-Active Leads")).toBeInTheDocument();
-    expect(screen.getByTestId("icon-Open Rate")).toBeInTheDocument();
-    expect(screen.getByTestId("icon-Click Rate")).toBeInTheDocument();
-  });
+  
+  const totalCampaignsCard = screen.getByLabelText("Statistics for Total Campaigns");
+  const activeLeadsCard = screen.getByLabelText("Statistics for Active Leads");
+  const openRateCard = screen.getByLabelText("Statistics for Open Rate");
+  const clickRateCard = screen.getByLabelText("Statistics for Click Rate");
+
+ 
+  expect(totalCampaignsCard.querySelector('svg')).not.toBeNull();
+  expect(activeLeadsCard.querySelector('svg')).not.toBeNull();
+  expect(openRateCard.querySelector('svg')).not.toBeNull();
+  expect(clickRateCard.querySelector('svg')).not.toBeNull();
+});
 
   it("uses title as unique key", () => {
     const { container } = render(<KpiCards cards={mockCards} />);
 
-    const cards = container.querySelectorAll('[data-testid^="kpi-card-"]');
-    expect(cards.length).toBe(mockCards.length);
+    const cards = container.querySelectorAll('[data-slot="card"]');
+expect(cards.length).toBe(mockCards.length);
   });
 });

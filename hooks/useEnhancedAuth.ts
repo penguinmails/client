@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
+
 // Types for enhanced auth functionality
 
 type ErrorType = 'authentication' | 'validation' | 'network' | 'unknown';
@@ -286,6 +287,9 @@ export const useErrorRecovery = () => {
   const { error: authError, clearError, refreshUserData } = useAuth();
   const [localError, setLocalError] = useState<Error | null>(null);
   const [errorType, setErrorType] = useState<ErrorType | null>(null);
+   const handleClearError = useCallback(() => {
+    clearError(); // Ahora está definida
+  }, [clearError]);
   const [recovering, setRecovering] = useState(false);
 
   const currentError = localError || authError;
