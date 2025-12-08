@@ -3,6 +3,8 @@ import Icon from "@/components/ui/custom/Icon";
 import { Calendar, Filter as FilterIcon } from "lucide-react";
 import { useAnalytics } from "@/context/AnalyticsContext";
 import { DataGranularity, DateRangePreset } from "@/types";
+import { spacing } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 const dateRangeOptions = [
   { label: "Last 7 days", value: "7d" as DateRangePreset },
@@ -17,6 +19,14 @@ const granularityOptions = [
   { label: "Monthly", value: "month" as DataGranularity },
 ];
 
+/**
+ * Warmup Analytics Filter component.
+ * 
+ * This component uses existing Filter and DropDownFilter components
+ * that already implement Design System patterns (Select, Input).
+ * 
+ * Minor optimization: Applied Design System spacing and color tokens.
+ */
 function WarmupAnalyticsFilter() {
   const { dateRange, setDateRange, granularity, setGranularity, allowedGranularities } = useAnalytics();
 
@@ -35,9 +45,9 @@ function WarmupAnalyticsFilter() {
 
   return (
     <Filter className="shadow-none border-none ">
-      <div className="flex items-center space-x-4 ml-auto">
-        <div className="flex items-center space-x-4 ">
-          <Icon icon={Calendar} className="text-gray-500 w-5  h-5" />
+      <div className={cn("flex items-center ml-auto", spacing.inlineMd)}>
+        <div className={cn("flex items-center", spacing.inlineMd)}>
+          <Icon icon={Calendar} className="text-muted-foreground w-5 h-5" />
           <DropDownFilter
             placeholder="Select date range"
             options={dateRangeOptions}
@@ -45,8 +55,8 @@ function WarmupAnalyticsFilter() {
             onChange={handleDateRangeChange}
           />
         </div>
-        <div className="flex items-center space-x-4">
-          <Icon icon={FilterIcon} className="text-gray-500 w-5  h-5" />
+        <div className={cn("flex items-center", spacing.inlineMd)}>
+          <Icon icon={FilterIcon} className="text-muted-foreground w-5 h-5" />
           <DropDownFilter
             placeholder="Select granularity"
             options={availableGranularityOptions}
