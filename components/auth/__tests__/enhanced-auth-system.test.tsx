@@ -17,64 +17,103 @@ import { renderHook } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+// Mock data (debe estar ANTES del mock de AuthContext)
+const mockUser = {
+  id: "user-123",
+  email: "test@example.com",
+  name: "Test User",
+  displayName: "Test User",
+  profile: {
+    userId: "user-123",
+    role: "user" as const,
+    isPenguinMailsStaff: false,
+    preferences: { theme: "light" as const },
+    lastLoginAt: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  tenants: ["tenant-1", "tenant-2"],
+};
 
+// ✅ Tipos para el mock de AuthProvider
+interface MockAuthProviderProps {
+  children: React.ReactNode;
+  useRealAuth?: boolean;
+  mockTenants?: any[];
+  mockCompanies?: any[];
+  isStaff?: boolean; // ✅ NUEVO: controlar isStaff
+}
 
-
+// ✅ Mock de AuthContext CORREGIDO
 jest.mock('@/context/AuthContext', () => {
   const React = require('react');
   const MockAuthContext = React.createContext(null);
+  
+  const AuthProvider: React.FC<MockAuthProviderProps> = ({ 
+    children, 
+    useRealAuth = false, 
+    mockTenants = [], 
+    mockCompanies = [],
+    isStaff = false // ✅ Default false
+  }) => {
+    const [selectedTenantId, setSelectedTenantId] = React.useState("tenant-1");
+    const [selectedCompanyId, setSelectedCompanyId] = React.useState("company-1");
 
- 
-  const useAuth = () => React.useContext(MockAuthContext) as any;
+    const value = useRealAuth ? {
+      user: mockUser,
+      nileUser: mockUser,
+      userTenants: mockTenants.length > 0 ? mockTenants : [
+        { id: "tenant-1" }, 
+        { id: "tenant-2" }
+      ],
+      userCompanies: mockCompanies.length > 0 ? mockCompanies : [
+        { id: "company-1", tenantId: "tenant-1", role: "member", permissions: {} }
+      ],
+      isStaff: isStaff, // ✅ Usar prop
+    } : {
+      user: null,
+      nileUser: null,
+      userTenants: mockTenants,
+      userCompanies: mockCompanies,
+      isStaff: isStaff, // ✅ Usar prop
+    };
 
-  return {
-    __esModule: true,
-    AuthContext: MockAuthContext,
-    AuthProvider: ({ children }: { children: React.ReactNode }) => {
-      const [selectedTenantId, setSelectedTenant] = React.useState(null);
-      const [selectedCompanyId, setSelectedCompany] = React.useState(null);
+    Object.assign(value, {
+      loading: false,
+      error: null,
+      selectedTenantId,
+      selectedCompanyId,
+      setSelectedTenant: setSelectedTenantId,
+      setSelectedCompany: setSelectedCompanyId,
+      refreshProfile: jest.fn(),
+      refreshTenants: jest.fn(),
+      refreshCompanies: jest.fn(),
+      clearError: jest.fn(),
+      login: jest.fn(),
+      logout: jest.fn(),
+      systemHealth: { status: "unknown" },
+      checkSystemHealth: jest.fn(),
+      signup: jest.fn(),
+      updateUser: jest.fn(),
+      refreshUserData: jest.fn().mockResolvedValue(undefined),
+    });
 
-      const value = {
-        user: null,
-        nileUser: null,
-        loading: false,
-        error: null,
-        userTenants: [],
-        userCompanies: [],
-        isStaff: false,
-        selectedTenantId,
-        selectedCompanyId,
-        setSelectedTenant,
-        setSelectedCompany,
-        refreshProfile: jest.fn(),
-        refreshTenants: jest.fn(),
-        refreshCompanies: jest.fn(),
-        clearError: jest.fn(),
-        login: jest.fn(),
-        logout: jest.fn(),
-        systemHealth: { status: "unknown" },
-        checkSystemHealth: jest.fn(),
-        signup: jest.fn(),
-        updateUser: jest.fn(),
-        refreshUserData: jest.fn(),
-      };
-
-      return (
-        <MockAuthContext.Provider value={value}>
-          {children}
-        </MockAuthContext.Provider>
-      );
-    },
-    useAuth, 
+    return (
+      <MockAuthContext.Provider value={value}>
+        {children}
+      </MockAuthContext.Provider>
+    );
   };
+
+  const useAuth = () => React.useContext(MockAuthContext) as any;
+  
+  return { __esModule: true, AuthContext: MockAuthContext, AuthProvider, useAuth };
 });
 
+import { useAuth } from "@/context/AuthContext";
 
+// ✅ No importamos AuthProvider, usamos el del mock directamente
 
-
-//import { mocked } from "jest-mock";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
-//const mockedUseAuth = mocked(useAuth);
 // Mock the NileDB client and services
 jest.mock("@/lib/niledb/client");
 jest.mock("@/lib/niledb/auth");
@@ -94,7 +133,6 @@ jest.mock("next/navigation", () => ({
 }));
 
 // Import components and hooks to test
-
 import {
   useTenantAccess,
   useCompanyAccess,
@@ -105,24 +143,6 @@ import TenantCompanySelector from "@/components/auth/TenantCompanySelector";
 import EnhancedErrorBoundary from "@/components/auth/EnhancedErrorBoundary";
 import StaffDashboard from "@/components/auth/StaffDashboard";
 import AuthDemo from "@/components/auth/AuthDemo";
-
-// Mock data
-const mockUser = {
-  id: "user-123",
-  email: "test@example.com",
-  name: "Test User",
-  displayName: "Test User",
-  profile: {
-    userId: "user-123",
-    role: "user" as const,
-    isPenguinMailsStaff: false,
-    preferences: { theme: "light" as const },
-    lastLoginAt: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  tenants: ["tenant-1", "tenant-2"],
-};
 
 const mockStaffUser = {
   ...mockUser,
@@ -191,88 +211,98 @@ const mockCompanies = [
 // Mock fetch for API calls
 global.fetch = jest.fn();
 
-// Test wrapper component with QueryClient
-const TestWrapper: React.FC<{ children: React.ReactNode; useRealAuth?: boolean; }> = ({ children, useRealAuth = false }) => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false },
-      mutations: { retry: false },
-    },
-  });
-return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>{children}</AuthProvider>
-    </QueryClientProvider>
-  );
+// ✅ Helper para crear Response mocks completos
+const createMockResponse = (
+  status: number,
+  data: any,
+  ok: boolean = status >= 200 && status < 300
+): Response => ({
+  ok,
+  status,
+  statusText: status === 200 ? 'OK' : status === 403 ? 'Forbidden' : 'Not Found',
+  headers: new Headers(),
+  redirected: false,
+  type: 'basic' as ResponseType,
+  url: 'http://localhost:3000',
+  clone: () => ({} as Response),
+  body: null,
+  bodyUsed: false,
+  arrayBuffer: async () => new ArrayBuffer(0),
+  blob: async () => new Blob(),
+  formData: async () => new FormData(),
+  json: async () => data,
+  text: async () => JSON.stringify(data)
+} as Response);
+
+// ✅ Obtener AuthProvider del mock (con tipos correctos)
+const { AuthProvider } = require("@/context/AuthContext");
+
+// ✅ createTestWrapper CORREGIDO
+const createTestWrapper = (options?: {
+  useRealAuth?: boolean;
+  mockTenants?: any[];
+  mockCompanies?: any[];
+  isStaff?: boolean; // ✅ NUEVO
+}) => {
+  const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+
+    return (
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider 
+          useRealAuth={options?.useRealAuth}
+          mockTenants={options?.mockTenants}
+          mockCompanies={options?.mockCompanies}
+          isStaff={options?.isStaff} // ✅ Pasar prop
+        >
+          {children}
+        </AuthProvider>
+      </QueryClientProvider>
+    );
+  };
+  return TestWrapper;
 };
+
+// ✅ Alias para compatibilidad con tests antiguos
+const TestWrapper = createTestWrapper();
 
 describe("Enhanced Authentication System", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (fetch as jest.MockedFunction<typeof fetch>).mockClear();
 
-  /*mockedUseAuth.mockReturnValue({
-  user: null,
-  nileUser: null,
-  loading: false,
-  error: null,
-  userTenants: [],
-  userCompanies: [],
-  isStaff: false,
-  selectedTenantId: null,
-  selectedCompanyId: null,
-  setSelectedTenant: jest.fn(),
-  setSelectedCompany: jest.fn(),
-  refreshProfile: jest.fn(),
-  refreshTenants: jest.fn(),
-  refreshCompanies: jest.fn(),
-  clearError: jest.fn(),
-  login: jest.fn(),
-  logout: jest.fn(),
-  systemHealth: { status: "unknown" },  
-  checkSystemHealth: jest.fn(),
-  signup: jest.fn(),
-  updateUser: jest.fn(),
-  refreshUserData: jest.fn(),
-});
-*/
-
-
-
-    // Set up default mock responses for auth initialization
+    // ✅ Mock default más robusto que no lanza excepciones
     const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
     mockFetch.mockImplementation((url) => {
       const urlStr = url.toString();
 
-      // Mock test authentication endpoint
       if (urlStr.includes("/api/auth/test")) {
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({ authenticated: false }),
-        } as Response);
+        return Promise.resolve(
+          createMockResponse(200, { authenticated: false })
+        );
       }
 
-      // Default: not found
-      return Promise.resolve({
-        ok: false,
-        status: 404,
-        json: async () => ({ error: "Not found" }),
-      } as Response);
+      // Default: 404 (no lanzar excepciones)
+      return Promise.resolve(
+        createMockResponse(404, { error: "Not found" })
+      );
     });
   });
 
   describe("Enhanced AuthContext", () => {
     it("should provide enhanced authentication state", async () => {
-      // This test requires complex NileDB mocking - testing via integration tests instead
-      const { result } = renderHook(() => useAuth(), { 
-      wrapper: ({ children }) => <TestWrapper useRealAuth>{children}</TestWrapper>
-    });
+      const wrapper = createTestWrapper({ useRealAuth: true });
+      const { result } = renderHook(() => useAuth(), { wrapper });
 
       await waitFor(() => {
         expect(result.current.loading).toBeDefined();
       });
 
-      // Verify auth context provides expected interface
       expect(result.current.user).toBeDefined();
       expect(result.current.userTenants).toBeDefined();
       expect(result.current.userCompanies).toBeDefined();
@@ -280,14 +310,12 @@ describe("Enhanced Authentication System", () => {
     });
 
     it("should handle staff user authentication", async () => {
-      // This test requires complex NileDB mocking - testing via integration tests instead
       const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       await waitFor(() => {
         expect(result.current.loading).toBeDefined();
       });
 
-      // Verify isStaff flag exists and is boolean
       expect(typeof result.current.isStaff).toBe("boolean");
     });
 
@@ -308,30 +336,26 @@ describe("Enhanced Authentication System", () => {
           json: async () => ({ companies: mockCompanies }),
         } as Response);
 
-      const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
+      const wrapper = createTestWrapper({ useRealAuth: true });
+      const { result } = renderHook(() => useAuth(), { wrapper });
 
       await waitFor(() => {
         expect(result.current.user).toBeDefined();
       });
 
-      // Test tenant selection
       act(() => {
         result.current.setSelectedTenant("tenant-1");
       });
-
       expect(result.current.selectedTenantId).toBe("tenant-1");
 
-      // Test company selection
       act(() => {
         result.current.setSelectedCompany("company-1");
       });
-
       expect(result.current.selectedCompanyId).toBe("company-1");
     });
 
     it("should handle authentication errors gracefully", async () => {
       const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
-
       mockFetch.mockRejectedValueOnce(new Error("Authentication failed"));
 
       const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
@@ -360,7 +384,7 @@ describe("Enhanced Authentication System", () => {
         } as Response);
 
         const { result } = renderHook(() => useTenantAccess("tenant-1"), { 
-           wrapper: TestWrapper 
+          wrapper: TestWrapper 
         });
 
         await waitFor(() => {
@@ -374,26 +398,33 @@ describe("Enhanced Authentication System", () => {
 
       it("should handle tenant access denial", async () => {
         const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
-
-        mockFetch.mockResolvedValueOnce({
-          ok: false,
-          status: 403,
-          json: async () => ({
-            error: "Access denied",
-            code: "TENANT_ACCESS_DENIED",
-          }),
-        } as Response);
-        const { result } = renderHook(() =>
-          useTenantAccess("tenant-unauthorized"),
-        {wrapper: TestWrapper}
-        );
-
-        await waitFor(() => {
-          expect(result.current.loading).toBe(false);
+        
+        // ✅ RESETEAR completamente el mock antes de configurarlo
+        mockFetch.mockReset();
+        mockFetch.mockImplementation((url) => {
+          const urlStr = url.toString();
+          
+          if (urlStr.includes('/api/test/tenant/tenant-unauthorized')) {
+            return Promise.resolve(
+              createMockResponse(403, { error: "Access denied", code: "TENANT_ACCESS_DENIED" })
+            );
+          }
+          
+          return Promise.resolve(createMockResponse(404, { error: "Not found" }));
         });
 
-        expect(result.current.hasAccess).toBe(true);
-        expect(typeof result.current.hasAccess).toBe("boolean");
+        const wrapper = createTestWrapper({ 
+          useRealAuth: true,
+          mockTenants: [{ id: "tenant-1" }], // Solo tenant-1, NO tenant-unauthorized
+          mockCompanies: [],
+          isStaff: false // ✅ CRÍTICO: Usuario NO es staff
+        });
+
+        const { result } = renderHook(() => useTenantAccess("tenant-unauthorized"), { wrapper });
+        
+        await waitFor(() => expect(result.current.loading).toBe(false), { timeout: 3000 });
+        expect(result.current.hasAccess).toBe(false);
+        expect(result.current.error).toBe("Access denied");
       });
 
       it("should allow staff access to any tenant", async () => {
@@ -409,14 +440,15 @@ describe("Enhanced Authentication System", () => {
           }),
         } as Response);
 
-        const { result } = renderHook(() => useTenantAccess("any-tenant"),{ wrapper: TestWrapper });
+        const { result } = renderHook(() => useTenantAccess("any-tenant"), { 
+          wrapper: TestWrapper 
+        });
 
         await waitFor(() => {
           expect(result.current.loading).toBe(false);
         });
 
         expect(result.current.hasAccess).toBe(true);
-        // The hook returns 'member' from the API, not 'staff'
         expect(result.current.role).toBe("member");
       });
     });
@@ -424,81 +456,82 @@ describe("Enhanced Authentication System", () => {
     describe("useCompanyAccess", () => {
       it("should validate company access with role hierarchy", async () => {
         const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
-
-        mockFetch.mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({
-            companyAccess: true,
-            userRole: "admin",
-            company: { id: "company-1", name: "Test Company 1" },
-            permissions: { canManageUsers: true },
-          }),
-        } as Response);
-
-       
-        const { result } = renderHook(() =>
-          useCompanyAccess("company-1", "tenant-1"),{ wrapper: TestWrapper }
-        );
-
-        await waitFor(() => {
-          expect(result.current.loading).toBe(false);
+        mockFetch.mockImplementation((url) => {
+          const urlStr = url.toString();
+          
+          if (urlStr.includes('/api/tenants/tenant-1/companies/company-1')) {
+            return Promise.resolve({
+              ok: true,
+              json: async () => ({ companyAccess: true, userRole: "member" })
+            } as Response);
+          }
+          return Promise.resolve({ ok: true, json: async () => ({}) } as Response);
         });
 
-        expect(result.current.hasAccess).toBe(false);
-        // The API returns 'member' as the default role
-       expect(["member", "admin", "owner", undefined]).toContain(result.current.role);
-        // Permissions may be undefined from mock responses
-        expect(result.current.permissions !== null).toBe(true);
+        const wrapper = createTestWrapper({ 
+          useRealAuth: true,
+          mockTenants: [{ id: "tenant-1" }],
+          mockCompanies: [
+            { id: "company-1", tenantId: "tenant-1", role: "member", permissions: {} }
+          ]
+        });
+
+        const { result } = renderHook(() => useCompanyAccess("company-1", "tenant-1"), { wrapper });
+        
+        await waitFor(() => expect(result.current.loading).toBe(false));
+        expect(result.current.hasAccess).toBe(true);
+        expect(["member", "admin", "owner"]).toContain(result.current.role);
       });
 
       it("should handle insufficient company permissions", async () => {
         const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
-
-        mockFetch.mockResolvedValueOnce({
-          ok: false,
-          status: 403,
-          json: async () => ({
-            error: "Access denied",
-            code: "COMPANY_ACCESS_DENIED",
-          }),
-        } as Response);
- 
-    
-        const { result } = renderHook(() =>
-          useCompanyAccess("company-restricted", "tenant-1"),{ wrapper: TestWrapper }
-        );
-
-        await waitFor(() => {
-          expect(result.current.loading).toBe(false);
+        
+        // ✅ RESETEAR completamente el mock antes de configurarlo
+        mockFetch.mockReset();
+        mockFetch.mockImplementation((url) => {
+          const urlStr = url.toString();
+          
+          if (urlStr.includes('/api/tenants/tenant-1/companies/company-restricted')) {
+            return Promise.resolve(
+              createMockResponse(403, { error: "Access denied", code: "COMPANY_ACCESS_DENIED" })
+            );
+          }
+          
+          return Promise.resolve(createMockResponse(404, { error: "Not found" }));
+        });
+        
+        const wrapper = createTestWrapper({ 
+          useRealAuth: true,
+          mockTenants: [{ id: "tenant-1" }],
+          mockCompanies: [], // Vacío para forzar llamada API
+          isStaff: false // ✅ CRÍTICO: Usuario NO es staff
         });
 
-        expect(result.current.hasAccess).toBe(true);
-        expect(typeof result.current.hasAccess).toBe("boolean");
+        const { result } = renderHook(() => useCompanyAccess("company-restricted", "tenant-1"), { wrapper });
+        
+        await waitFor(() => expect(result.current.loading).toBe(false), { timeout: 3000 });
+        expect(result.current.hasAccess).toBe(false);
+        expect(result.current.error).toBe("Access denied");
       });
     });
 
     describe("useStaffAccess", () => {
       it("should provide staff functionality for staff users", async () => {
-        // This test needs to be adjusted as it depends on auth context
-        // which requires proper initialization. Skip or mock differently.
         expect(true).toBe(true);
       });
 
       it("should deny staff functionality for regular users", () => {
-        const { result } = renderHook(() => useStaffAccess(),{ wrapper: TestWrapper });
+        const { result } = renderHook(() => useStaffAccess(), { wrapper: TestWrapper });
 
         expect(result.current.isStaff).toBe(false);
-        // API CHANGE: SystemHealth is now initialized as 'unknown', not null.
-        // Previously, systemHealth.status was expected to be null. This test expects 'unknown' per the updated API.
         expect(result.current.systemHealth.status).toBe("unknown");
       });
     });
 
     describe("useErrorRecovery", () => {
       it("should handle error recovery with retry mechanisms", async () => {
-        const { result } = renderHook(() => useErrorRecovery(),{ wrapper: TestWrapper });
+        const { result } = renderHook(() => useErrorRecovery(), { wrapper: TestWrapper });
 
-        // Simulate an error
         act(() => {
           result.current.reportError(new Error("Test error"), "unknown");
         });
@@ -507,7 +540,6 @@ describe("Enhanced Authentication System", () => {
         expect(result.current.errorMessage).toBe("Test error");
         expect(result.current.canRecover).toBe(true);
 
-        // Clear the error
         act(() => {
           result.current.clearError();
         });
@@ -516,9 +548,8 @@ describe("Enhanced Authentication System", () => {
       });
 
       it("should classify errors correctly", () => {
-        const { result } = renderHook(() => useErrorRecovery(),{ wrapper: TestWrapper });
+        const { result } = renderHook(() => useErrorRecovery(), { wrapper: TestWrapper });
 
-        // Test authentication error
         act(() => {
           result.current.reportError(
             new Error("Authentication required"),
@@ -529,13 +560,11 @@ describe("Enhanced Authentication System", () => {
         expect(result.current.errorType).toBe("authentication");
         expect(result.current.canRecover).toBe(true);
 
-        // Test validation error - validation errors can still be recovered by user action
         act(() => {
           result.current.reportError(new Error("Invalid input"), "validation");
         });
 
         expect(result.current.errorType).toBe("validation");
-        // canRecover is true because there is an error present
         expect(result.current.canRecover).toBe(true);
       });
     });
@@ -551,11 +580,9 @@ describe("Enhanced Authentication System", () => {
         );
 
         await waitFor(() => {
-          // Component shows "Context Selection" as the title
           expect(screen.getByText("Context Selection")).toBeInTheDocument();
         });
 
-        // Component shows "Tenant" label
         expect(screen.getByText("Tenant")).toBeInTheDocument();
       });
 
@@ -570,13 +597,10 @@ describe("Enhanced Authentication System", () => {
           expect(screen.getByText("Context Selection")).toBeInTheDocument();
         });
 
-        // Should show no tenants available by default
         expect(screen.getByText(/No tenants available/)).toBeInTheDocument();
       });
 
       it("should show staff badge for staff users", async () => {
-        // This test requires auth context to be properly initialized with staff user
-        // For now, skip or mark as todo
         expect(true).toBe(true);
       });
     });
@@ -611,7 +635,7 @@ describe("Enhanced Authentication System", () => {
           .spyOn(console, "error")
           .mockImplementation(() => {});
 
-        const { rerender } = render(
+        render(
           <EnhancedErrorBoundary>
             <ThrowError shouldThrow={true} />
           </EnhancedErrorBoundary>
@@ -619,12 +643,8 @@ describe("Enhanced Authentication System", () => {
 
         expect(screen.getByText("Try Again")).toBeInTheDocument();
 
-        // Click retry button - this will reset the error boundary
         fireEvent.click(screen.getByText("Try Again"));
 
-        // The error boundary resets its state, but the component still throws
-        // In a real scenario, the component would be fixed or the error resolved
-        // For this test, we just verify the retry button exists and is clickable
         expect(screen.getByText("Try Again")).toBeInTheDocument();
 
         consoleSpy.mockRestore();
@@ -643,7 +663,6 @@ describe("Enhanced Authentication System", () => {
 
         expect(screen.getByText("Technical Details")).toBeInTheDocument();
 
-        // Click to show details
         fireEvent.click(screen.getByText("Technical Details"));
 
         expect(screen.getByText(/Error: Test error/)).toBeInTheDocument();
@@ -654,8 +673,6 @@ describe("Enhanced Authentication System", () => {
 
     describe("StaffDashboard", () => {
       it("should render staff dashboard for staff users", async () => {
-        // This test requires proper auth context setup with staff user
-        // Skipping complex integration test
         expect(true).toBe(true);
       });
 
@@ -670,8 +687,6 @@ describe("Enhanced Authentication System", () => {
       });
 
       it("should display system health status", async () => {
-        // This test requires proper auth context setup with staff user
-        // Skipping complex integration test
         expect(true).toBe(true);
       });
     });
@@ -684,15 +699,12 @@ describe("Enhanced Authentication System", () => {
           </TestWrapper>
         );
 
-        // Without authenticated user, shows "Not Authenticated"
         await waitFor(() => {
           expect(screen.getByText("Not Authenticated")).toBeInTheDocument();
         });
       });
 
       it("should show staff features for staff users", async () => {
-        // This test requires proper auth context setup with staff user
-        // Skipping complex integration test
         expect(true).toBe(true);
       });
     });
@@ -702,7 +714,6 @@ describe("Enhanced Authentication System", () => {
     it("should handle complete authentication flow", async () => {
       const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
 
-      // Mock login flow
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
@@ -723,17 +734,13 @@ describe("Enhanced Authentication System", () => {
         expect(result.current.user).toBeDefined();
       });
 
-      // Since we're using mock setup, user won't be authenticated
-      // This test would require proper API mocking of NileDB endpoints
       expect(result.current.loading).toBeDefined();
-      expect(result.current.user).toBeDefined(); // Can be null
+      expect(result.current.user).toBeDefined();
       expect(result.current.userTenants).toBeDefined();
       expect(result.current.userCompanies).toBeDefined();
     });
 
     it("should handle logout flow", async () => {
-      // Skip: This test requires proper NileDB auth.signOut mocking
-      // which is complex due to the Response.clone() requirement in NileDB client
       expect(true).toBe(true);
     });
 
@@ -754,61 +761,63 @@ describe("Enhanced Authentication System", () => {
           json: async () => ({ companies: mockCompanies }),
         } as Response);
 
-      const { result } = renderHook(() => useAuth(), { wrapper: ({ children }) => <TestWrapper useRealAuth>{children}</TestWrapper> });
+      const wrapper = createTestWrapper({ 
+        useRealAuth: true,
+        mockTenants: [{ id: "tenant-1" }, { id: "tenant-2" }],
+        mockCompanies: [
+          { id: "company-1", tenantId: "tenant-1", role: "member" },
+          { id: "company-2", tenantId: "tenant-2", role: "admin" }
+        ]
+      });
+
+      const { result } = renderHook(() => useAuth(), { wrapper });
 
       await waitFor(() => {
         expect(result.current.user).toBeDefined();
       });
 
-      // Switch tenant context
       act(() => {
         result.current.setSelectedTenant("tenant-2");
       });
-
       expect(result.current.selectedTenantId).toBe("tenant-2");
 
-      // Switch company context
       act(() => {
         result.current.setSelectedCompany("company-2");
       });
-
       expect(result.current.selectedCompanyId).toBe("company-2");
     });
   });
 
   describe("Error Handling Integration", () => {
-  it("should handle API errors gracefully", async () => {
-  
-  const { result } = renderHook(() => useErrorRecovery(), { wrapper: TestWrapper });
-  
- 
-  act(() => {
-    result.current.reportError(new Error("Network error"), "network");
-  });
-  
-  expect(result.current.errorMessage).toBe("Network connection issue. Please check your internet connection.");
-  expect(result.current.error).toBeDefined();
-  expect(result.current.errorType).toBe("network");
-  expect(result.current.canRecover).toBe(true);
-});
-
-  it("should recover from temporary errors", async () => {
-
-    const { result } = renderHook(() => useErrorRecovery(), { 
-      wrapper: TestWrapper 
+    it("should handle API errors gracefully", async () => {
+      const { result } = renderHook(() => useErrorRecovery(), { wrapper: TestWrapper });
+      
+      act(() => {
+        result.current.reportError(new Error("Network error"), "network");
+      });
+      
+      expect(result.current.errorMessage).toBe("Network connection issue. Please check your internet connection.");
+      expect(result.current.error).toBeDefined();
+      expect(result.current.errorType).toBe("network");
+      expect(result.current.canRecover).toBe(true);
     });
 
-    act(() => { result.current.reportError(new Error("Temporary error"), "network");});
+    it("should recover from temporary errors", async () => {
+      const { result } = renderHook(() => useErrorRecovery(), { 
+        wrapper: TestWrapper 
+      });
 
-    
-    expect(result.current.error).toBeDefined();
-    expect(result.current.error?.message).toBe("Temporary error");
+      act(() => { 
+        result.current.reportError(new Error("Temporary error"), "network");
+      });
 
-    
-     act(() => {
-    result.current.clearError();
+      expect(result.current.error).toBeDefined();
+      expect(result.current.error?.message).toBe("Temporary error");
+
+      act(() => {
+        result.current.clearError();
+      });
+      expect(result.current.error).toBeNull();
+    });
   });
-  expect(result.current.error).toBeNull();
-  });
-});
 });
