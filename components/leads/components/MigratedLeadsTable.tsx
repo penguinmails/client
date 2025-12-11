@@ -6,7 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Eye, Edit, Trash2, ArrowUpDown } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { MigratedEditLeadListButton } from "./MigratedEditLeadListButton";
 import { MigratedShowLeadListItemButton } from "./MigratedShowLeadListItemButton";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -18,7 +18,7 @@ export interface Lead {
   email: string;
   status: string;
   tags: string[];
-  campaign: string;
+  campaign: string | null;
   lastContact?: string | null;
 }
 
@@ -36,16 +36,14 @@ const getStatusColor = (status: string) => {
     replied: "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800",
     sent: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800",
     bounced: "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800",
-    not_used_yet: "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800",
+    not_used: "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800",
   };
-  return colors[statusLower] || colors.not_used_yet;
+  return colors[statusLower] || colors.not_used;
 };
 
 export function MigratedLeadsTable({
   data,
   loading = false,
-  onEdit,
-  onView,
   onSelectionChange,
 }: MigratedLeadsTableProps) {
   
@@ -70,7 +68,7 @@ export function MigratedLeadsTable({
       enableHiding: false,
       meta: {
         headerClassName: "w-12",
-      } as any,
+      },
     },
     {
       accessorKey: "name",
@@ -183,7 +181,7 @@ export function MigratedLeadsTable({
       columns={columns}
       data={data}
       loading={loading}
-      onRowSelect={React.useCallback((rows: any[]) => {
+      onRowSelect={React.useCallback((rows: import("@tanstack/react-table").Row<Lead>[]) => {
         const selectedIds = rows.map((r) => r.original.id);
         onSelectionChange?.(selectedIds);
       }, [onSelectionChange])}

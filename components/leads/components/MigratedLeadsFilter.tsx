@@ -7,6 +7,8 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Filter } from "lucide-react";
@@ -88,15 +90,16 @@ export function MigratedLeadsFilter({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          {statusOptions.map((option) => (
-            <DropdownMenuCheckboxItem
-              key={option.value}
-              checked={statusFilter === option.value}
-              onCheckedChange={() => onStatusChange(option.value)}
-            >
-              {option.label}
-            </DropdownMenuCheckboxItem>
-          ))}
+          <DropdownMenuRadioGroup
+            value={statusFilter}
+            onValueChange={onStatusChange}
+          >
+            {statusOptions.map((option) => (
+              <DropdownMenuRadioItem key={option.value} value={option.value}>
+                {option.label}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -115,15 +118,16 @@ export function MigratedLeadsFilter({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          {campaignOptions.map((option) => (
-            <DropdownMenuCheckboxItem
-              key={option.value}
-              checked={campaignFilter === option.value}
-              onCheckedChange={() => onCampaignChange(option.value)}
-            >
-              {option.label}
-            </DropdownMenuCheckboxItem>
-          ))}
+          <DropdownMenuRadioGroup
+            value={campaignFilter}
+            onValueChange={onCampaignChange}
+          >
+            {campaignOptions.map((option) => (
+              <DropdownMenuRadioItem key={option.value} value={option.value}>
+                {option.label}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

@@ -73,7 +73,7 @@ export function MigratedShowLeadListItemButton({ lead }: MigratedShowLeadListIte
           <DialogTitle className="text-xl flex items-center gap-3">
              <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                    {lead.name.substring(0,2)}
+                    {lead.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                 </AvatarFallback>
             </Avatar>
              {lead.name}
