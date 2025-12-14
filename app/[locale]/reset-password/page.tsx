@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,17 @@ import { KeyRound, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { LandingLayout } from "@/components/landing/LandingLayout";
 import { AuthTemplate } from "@/components/auth/AuthTemplate";
 
+/**
+ * Reset Password Page
+ * 
+ * This page is accessed after user clicks the reset link in their email.
+ * NileDB sends: ?token=...&identifier=email@example.com
+ * We use NileDB's resetPassword API to update the password.
+ */
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
+  // NileDB sends 'identifier' with the email, but also check 'email' for compatibility
+  const email = searchParams.get('identifier') || searchParams.get('email');
   const token = searchParams.get('token');
 
   const [formData, setFormData] = useState({
@@ -21,56 +30,30 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
-  const [isTokenValidating, setIsTokenValidating] = useState(true);
-  const [tokenError, setTokenError] = useState<string | null>(null);
 
-  // Validate token on mount
-  useEffect(() => {
-    const validateToken = async () => {
-      if (!token) {
-        setTokenValid(false);
-        setTokenError('No reset token provided');
-        return;
-      }
-
-      // Validate token format (basic check)
-      if (token.length !== 36) { // UUID length
-        setTokenValid(false);
-        setTokenError('Invalid reset token format');
-        return;
-      }
-
-      try {
-        // Validate token with backend
-        const response = await fetch('/api/auth/validate-reset-token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          setTokenValid(false);
-          setTokenError(data.error || 'Invalid or expired reset token');
-          return;
-        }
-
-        setTokenValid(true);
-      } catch (err) {
-        console.error('Token validation error:', err);
-        setTokenValid(false);
-        setTokenError('Failed to validate reset token');
-      } finally {
-        setIsTokenValidating(false);
-      }
-    };
-
-    validateToken();
-  }, [token]);
+  // If no email/identifier, show error - user needs to request a new link
+  if (!email) {
+    return (
+      <LandingLayout>
+        <AuthTemplate
+          mode="form"
+          icon={AlertCircle}
+          title="Invalid Reset Link"
+          description="This password reset link is invalid or has expired."
+          footer={
+            <div className="flex flex-col items-center space-y-2">
+              <p className="text-xs text-muted-foreground">
+                Need a new reset link?{' '}
+                <Link href="/forgot-password" className="underline font-medium text-primary">
+                  Request another one
+                </Link>
+              </p>
+            </div>
+          }
+        />
+      </LandingLayout>
+    );
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -96,8 +79,9 @@ export default function ResetPasswordPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Important: include cookies
         body: JSON.stringify({
-          token,
+          email,
           newPassword: formData.newPassword,
           confirmPassword: formData.confirmPassword,
         }),
@@ -125,48 +109,6 @@ export default function ResetPasswordPage() {
     }));
   };
 
-  // Show loading state while validating token
-  if (isTokenValidating) {
-    return (
-      <LandingLayout>
-        <AuthTemplate
-          mode="form"
-          icon={Loader2}
-          title="Validating Reset Link..."
-          description="Please wait while we validate your password reset link."
-        >
-          <div className="flex justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        </AuthTemplate>
-      </LandingLayout>
-    );
-  }
-
-  // Show error if token is invalid
-  if (tokenValid === false) {
-    return (
-      <LandingLayout>
-        <AuthTemplate
-          mode="form"
-          icon={AlertCircle}
-          title="Invalid Reset Link"
-          description={tokenError || "This password reset link is invalid or has expired."}
-          footer={
-            <div className="flex flex-col items-center space-y-2">
-              <p className="text-xs text-muted-foreground">
-                Need a new reset link?{' '}
-                <Link href="/forgot-password" className="underline font-medium text-primary">
-                  Request another one
-                </Link>
-              </p>
-            </div>
-          }
-        />
-      </LandingLayout>
-    );
-  }
-
   // Show success message
   if (isSubmitted) {
     return (
@@ -178,7 +120,7 @@ export default function ResetPasswordPage() {
           description="Your password has been successfully reset. You can now sign in with your new password."
           footer={
             <div className="flex flex-col items-center space-y-2">
-              <Link href="/login">
+              <Link href="/">
                 <Button>Sign In</Button>
               </Link>
             </div>
@@ -194,7 +136,7 @@ export default function ResetPasswordPage() {
         mode="form"
         icon={KeyRound}
         title="Reset Your Password"
-        description="Enter your new password below."
+        description={`Enter a new password for ${email}`}
         error={error}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -245,3 +187,4 @@ export default function ResetPasswordPage() {
     </LandingLayout>
   );
 }
+

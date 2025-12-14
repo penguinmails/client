@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthService } from '@/lib/niledb/auth';
-import { validateResetToken } from '@/lib/auth/passwordResetTokenUtils';
+import { nile } from '@/lib/niledb/client-handler';
 import { z } from 'zod';
 
 const resetPasswordSchema = z.object({
-  token: z.string().min(1),
+  email: z.string().email(),
   newPassword: z.string().min(8, 'Password must be at least 8 characters'),
   confirmPassword: z.string().min(8),
 }).refine(
@@ -15,21 +14,53 @@ const resetPasswordSchema = z.object({
   },
 );
 
+/**
+ * POST /api/auth/reset-password
+ * 
+ * Uses NileDB's native resetPassword API.
+ * Requires the reset cookie to be set (done when user clicked email link).
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = resetPasswordSchema.parse(body);
 
-    // Validate stateless reset token and extract email
-    const { email } = validateResetToken(validatedData.token);
+    // Use NileDB's native resetPassword - requires cookie from email link click
+    const response = await nile.auth.resetPassword({
+      email: validatedData.email,
+      password: validatedData.newPassword,
+    });
 
-    // Update password using NileDB auth service (Nile remains source of truth)
-    const authService = getAuthService();
-    if (typeof (authService as any).updatePassword !== 'function') {
-      throw new Error('Auth service does not implement updatePassword');
+    // Log for debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.log('NileDB resetPassword response:', response);
     }
 
-    await (authService as any).updatePassword(email, validatedData.newPassword);
+    // Check if response indicates an error
+    if (response && typeof response === 'object') {
+      if ('status' in response) {
+        const status = (response as Response).status;
+        if (status >= 400) {
+          const errorText = await (response as Response).text().catch(() => '');
+          console.error('NileDB resetPassword error:', status, errorText);
+          
+          if (status === 404) {
+            return NextResponse.json(
+              { 
+                error: 'Reset session expired. Please request a new password reset link.',
+                code: 'SESSION_EXPIRED'
+              },
+              { status: 400 },
+            );
+          }
+          
+          return NextResponse.json(
+            { error: 'Failed to reset password. Please try again.', code: 'RESET_FAILED' },
+            { status: 400 },
+          );
+        }
+      }
+    }
 
     return NextResponse.json({
       success: true,
@@ -40,21 +71,16 @@ export async function POST(request: NextRequest) {
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.issues },
-        { status: 400 },
-      );
-    }
-
-    if (error instanceof Error && error.message.toLowerCase().includes('token')) {
-      return NextResponse.json(
-        { error: error.message },
+        { error: 'Invalid request data', details: error.issues, code: 'VALIDATION_ERROR' },
         { status: 400 },
       );
     }
 
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', code: 'INTERNAL_ERROR' },
       { status: 500 },
     );
   }
 }
+
+

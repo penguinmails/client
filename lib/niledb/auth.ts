@@ -556,32 +556,44 @@ export class AuthService {
   }
 
   /**
-   * Update user password
+   * Update user password using NileDB's native API
+   * This ensures proper password hashing via NileDB's auth system
    */
   async updatePassword(email: string, newPassword: string): Promise<void> {
     try {
-      await withoutTenantContext(async (nile) => {
-        // First get the user by email to obtain the user ID
-        const userResult = await nile.db.query(
+      // First verify the user exists
+      const userExists = await withoutTenantContext(async (nile) => {
+        const result = await nile.db.query(
           `SELECT id FROM users.users WHERE email = $1 AND deleted IS NULL`,
           [email]
         );
-
-        if (userResult.rows.length === 0) {
-          throw new AuthenticationError('User not found');
-        }
-
-        const userId = userResult.rows[0].id;
-
-        // Update the password using NileDB's auth system
-        // Note: NileDB handles password hashing internally
-        await nile.db.query(
-          `UPDATE users.users SET password = $2, updated = CURRENT_TIMESTAMP WHERE id = $1`,
-          [userId, newPassword] // NileDB expects the plain password and handles hashing
-        );
+        return result.rows.length > 0;
       });
+
+      if (!userExists) {
+        throw new AuthenticationError('User not found');
+      }
+
+      // Use NileDB's native resetPassword API which handles password hashing
+      const response = await this.nile.auth.resetPassword({
+        email,
+        password: newPassword,
+      });
+
+      // Check if the response indicates an error
+      if (response && typeof response === 'object' && 'status' in response) {
+        const status = (response as Response).status;
+        if (status >= 400) {
+          const errorText = await (response as Response).text().catch(() => 'Unknown error');
+          console.error('NileDB resetPassword error:', status, errorText);
+          throw new AuthenticationError('Failed to update password');
+        }
+      }
     } catch (error) {
       console.error('Failed to update password:', error);
+      if (error instanceof AuthenticationError) {
+        throw error;
+      }
       throw new AuthenticationError('Failed to update password');
     }
   }
