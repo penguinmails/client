@@ -21,7 +21,6 @@ export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
   // NileDB sends 'identifier' with the email, but also check 'email' for compatibility
   const email = searchParams.get('identifier') || searchParams.get('email');
-  const token = searchParams.get('token');
 
   const [formData, setFormData] = useState({
     newPassword: '',
