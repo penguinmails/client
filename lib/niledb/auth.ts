@@ -556,49 +556,6 @@ export class AuthService {
   }
 
   /**
-   * Update user password using NileDB's native API
-   * This ensures proper password hashing via NileDB's auth system
-   */
-  async updatePassword(email: string, newPassword: string): Promise<void> {
-    try {
-      // First verify the user exists
-      const userExists = await withoutTenantContext(async (nile) => {
-        const result = await nile.db.query(
-          `SELECT id FROM users.users WHERE email = $1 AND deleted IS NULL`,
-          [email]
-        );
-        return result.rows.length > 0;
-      });
-
-      if (!userExists) {
-        throw new AuthenticationError('User not found');
-      }
-
-      // Use NileDB's native resetPassword API which handles password hashing
-      const response = await this.nile.auth.resetPassword({
-        email,
-        password: newPassword,
-      });
-
-      // Check if the response indicates an error
-      if (response && typeof response === 'object' && 'status' in response) {
-        const status = (response as Response).status;
-        if (status >= 400) {
-          const errorText = await (response as Response).text().catch(() => 'Unknown error');
-          console.error('NileDB resetPassword error:', status, errorText);
-          throw new AuthenticationError('Failed to update password');
-        }
-      }
-    } catch (error) {
-      console.error('Failed to update password:', error);
-      if (error instanceof AuthenticationError) {
-        throw error;
-      }
-      throw new AuthenticationError('Failed to update password');
-    }
-  }
-
-  /**
    * Validate session and return user with profile
    */
   async validateSession(request?: ExpressRequest): Promise<UserWithProfile> {
