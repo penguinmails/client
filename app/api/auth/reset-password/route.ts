@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { nile } from '@/lib/niledb/client-handler';
+import { nile } from '@/app/api/[...nile]/nile';
 import { z } from 'zod';
 
 const resetPasswordSchema = z.object({
