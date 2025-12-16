@@ -1,7 +1,8 @@
 import React from "react";
 import { Calendar, Mail, FileText, Globe } from "lucide-react";
-import { standaloneIconColors, textColors } from "@/lib/design-tokens";
+import { standaloneIconColors, textColors, typography, spacing } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 // Define the expected data structure for props
 interface Task {
@@ -31,16 +32,17 @@ const getTaskIcon = (type: string) => {
   }
 };
 
-// Accept tasks as props
 const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
   return (
-    <div className="bg-card dark:bg-card shadow rounded-lg p-4 h-64 flex flex-col">
-      <h3 className={cn("text-lg font-medium mb-4", textColors.primary)}>
-        Upcoming Tasks
-      </h3>
-      <div className="flex-grow overflow-y-auto">
+    <Card className="h-64 flex flex-col">
+      <CardHeader>
+        <CardTitle className={typography.cardTitle}>
+          Upcoming Tasks
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="flex-grow overflow-y-auto">
         {/* Use the tasks prop */}
-        <ul className="space-y-3">
+        <ul className={spacing.componentGap}>
           {tasks.map((task) => (
             <li key={task.id} className="flex items-start">
               <div className="flex-shrink-0 mt-0.5">
@@ -64,8 +66,8 @@ const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
             </li>
           )}
         </ul>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
