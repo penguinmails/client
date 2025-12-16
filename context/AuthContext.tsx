@@ -378,14 +378,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw error;
       }
 
-      // Manejar otros tipos de errores
+     
       if (error instanceof AuthenticationError) {
         setAuthError(error);
         toast.error(error.message);
       } else {
-        const genericError = new Error('Login falló. Por favor intenta de nuevo.');
+        const genericError = new Error('Login failed. Please try again.');
         setAuthError(genericError);
-        toast.error('Login falló. Por favor intenta de nuevo.');
+        toast.error('Login failed. Please try again.');
       }
       throw error;
     }

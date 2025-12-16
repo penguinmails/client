@@ -1,8 +1,8 @@
-export async function validateTurnstileToken(token: string): Promise<boolean> {
+export async function validateTurnstileToken(token: string): Promise<{ success: boolean }> {
     const secretKey = process.env.TURNSTILE_SECRET_KEY;
     if (!secretKey) {
         console.error("TURNSTILE_SECRET_KEY is not set");
-        return false;
+        return { success: false };
     }
 
     try {
@@ -20,9 +20,9 @@ export async function validateTurnstileToken(token: string): Promise<boolean> {
         if (!outcome.success) {
             console.error("Turnstile validation failed:", outcome);
         }
-        return outcome.success;
+        return { success: outcome.success };
     } catch (error) {
         console.error("Error validating Turnstile token:", error);
-        return false;
+        return { success: false };
     }
 }
