@@ -26,14 +26,16 @@ const meta = {
     (Story, context) => {
       const theme = context.args.theme || "light";
 
-      if (typeof document !== "undefined") {
+      React.useEffect(() => {
         const htmlElement = document.documentElement;
-        if (theme === "dark") {
-          htmlElement.classList.add("dark");
-        } else {
+        // Use toggle for cleaner class management and ensure it runs client-side.
+        htmlElement.classList.toggle("dark", theme === "dark");
+
+        // Cleanup effect to avoid side-effects between stories.
+        return () => {
           htmlElement.classList.remove("dark");
-        }
-      }
+        };
+      }, [theme]);
 
       return <Story />;
     },
