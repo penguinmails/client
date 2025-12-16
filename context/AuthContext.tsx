@@ -407,8 +407,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error("Signup error:", error);
       setLoading(false);
+      
+      // Generic error handling - signup now uses custom API endpoint directly
       setAuthError(error as Error);
-      toast.error("Failed to create account. Please try again.");
       throw error;
     }
   };

@@ -1,60 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLoopService } from '@/lib/services/loop';
-import { getAuthService } from '@/lib/niledb/auth';
-import { generateResetToken } from '@/lib/auth/passwordResetTokenUtils';
+import { nile } from '@/app/api/[...nile]/nile';
 import { z } from 'zod';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email(),
 });
 
+/**
+ * POST /api/auth/forgot-password
+ * 
+ * Uses NileDB's native forgotPassword which:
+ * 1. Generates a secure token
+ * 2. Sends email via configured SMTP
+ * 3. Token is stored in auth.verification_tokens table
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = forgotPasswordSchema.parse(body);
+    
+    // callbackUrl: where user lands after clicking email link (to set cookie)
+    // redirectUrl: final destination after cookie is set
+    const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/reset-callback`;
+    const redirectUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`;
 
-    // Try to get user profile to obtain real name
-    const authService = getAuthService();
-    let userName = 'User'; // Default fallback
+    // Use NileDB's native forgotPassword - handles token generation and email sending
+    const response = await nile.auth.forgotPassword({
+      email: validatedData.email,
+      callbackUrl,
+      redirectUrl,
+    });
 
-    try {
-      const user = await authService.getUserWithProfile(validatedData.email);
-      if (user?.name) {
-        userName = user.name;
-      } else if (user?.givenName) {
-        userName = user.givenName;
-      }
-    } catch (error) {
-      // If user lookup fails, continue with default 'User'
-      console.log(
-        'Could not find user profile for email:',
-        validatedData.email,
-        'using default name',
-        error,
-      );
+    // Log response for debugging (remove in production)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('NileDB forgotPassword response:', response);
     }
 
-    // Generate a stateless signed reset token bound to the email
-    const token = generateResetToken(validatedData.email);
-
-    // Send password reset email via Loop with real user name
-    const loopService = getLoopService();
-    const result = await loopService.sendPasswordResetEmail(
-      validatedData.email,
-      token,
-      userName, // Includes real user name when available
-    );
-
-    if (!result.success) {
-      console.error('Failed to send password reset email:', result.message);
-      // For security, do not leak whether the email exists
-    }
-
-    // Always return success for security reasons (do not confirm if email exists)
+    // Always return success for security reasons (don't reveal if email exists)
     return NextResponse.json({
       success: true,
-      message:
-        'If an account with this email exists, you will receive a password reset link shortly.',
+      message: 'If an account with this email exists, you will receive a password reset link shortly.',
     });
   } catch (error) {
     console.error('Forgot password error:', error);
@@ -72,4 +57,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
 

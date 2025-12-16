@@ -7,8 +7,8 @@
     "500-LEADS": "A system error occurred while fetching lead data. The issue has been logged."
   },
   "Metadata": {
-      "title": "Penguin Mails - Email Outreach & Domain Warm-up",
-      "description": "Enter the world of Penguin Mails, where every message is a delightful surprise!"
+    "title": "Penguin Mails - Email Outreach & Domain Warm-up",
+    "description": "Enter the world of Penguin Mails, where every message is a delightful surprise!"
   },
   "Login": {
     "title": "Welcome Back!",
@@ -34,6 +34,62 @@
     "signup": {
       "text": "Don't have an account?",
       "link": "Sign Up"
+    }
+  },
+  "Signup": {
+    "header": {
+      "title": "Create your Penguin Mails Account",
+      "description": "Get started with your secure email experience."
+    },
+    "form": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter your name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "you@example.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password"
+      },
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm your password"
+      }
+    },
+    "errors": {
+      "emailAlreadyExistsVerified": {
+        "title": "Email Already Registered",
+        "message": "This email address is already registered. Please sign in to your existing account.",
+        "actionLogin": "Sign In",
+        "actionForgotPassword": "Forgot Password?"
+      },
+      "emailAlreadyExistsUnverified": {
+        "title": "Account Not Verified",
+        "message": "An account with this email exists but hasn't been verified yet. We've sent you a new verification email.",
+        "actionResend": "Resend Verification Email"
+      },
+      "signupFailed": "Signup failed. Please try again.",
+      "captchaRequired": "Please complete the CAPTCHA verification.",
+      "passwordTooWeak": "Password is too weak. Please include at least 2 of: uppercase, lowercase, number, special character",
+      "passwordMismatch": "Passwords do not match",
+      "invalidEmail": "Please enter a valid email address"
+    },
+    "success": {
+      "accountCreated": "Account created successfully! Check your email for a verification link to activate your account.",
+      "accountCreatedNoEmail": "Account created successfully! We'll send you a verification link shortly.",
+      "verificationEmailResent": "Verification email has been resent. Please check your inbox."
+    },
+    "button": {
+      "createAccount": "Create Account",
+      "creatingAccount": "Creating Account...",
+      "sending": "Sending..."
+    },
+    "footer": {
+      "haveAccount": "Already have an account?",
+      "login": "Login"
     }
   },
   "button": {

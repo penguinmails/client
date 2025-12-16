@@ -78,6 +78,10 @@ import {
   AuthenticationError,
   SessionExpiredError,
   InvalidCredentialsError,
+  DuplicateEmailError,
+  isDuplicateEmailError,
+  isNileDBError,
+  classifyDatabaseError,
 } from './errors';
 
 export { 
@@ -391,51 +395,163 @@ export class AuthService {
         ...(familyName && { family_name: familyName }),
       });
 
-      // Extract user from response
-      if (result && typeof result === 'object' && 'user' in result) {
-        return result.user as NileSessionUser;
+      // If result is undefined, NileDB likely encountered an error (like duplicate email)
+      // Check if the email already exists in the database
+      if (result === undefined || result === null) {
+        try {
+          const userCheck = await withoutTenantContext(async (nile) => {
+            return await nile.db.query(
+              `SELECT email_verified FROM users.users WHERE email = $1 AND deleted IS NULL`,
+              [email]
+            );
+          });
+          
+          if (userCheck.rows.length > 0) {
+            const isVerified = userCheck.rows[0].email_verified;
+            
+            // This was a duplicate email error
+            throw new DuplicateEmailError(
+              isVerified 
+                ? 'This email is already registered. Please sign in instead.'
+                : 'This email is already registered but not verified. Check your inbox for the verification email.',
+              email,
+              isVerified
+            );
+          }
+        } catch (checkError) {
+          // If it's a DuplicateEmailError, re-throw it
+          if (isDuplicateEmailError(checkError)) {
+            throw checkError;
+          }
+          console.error('Error checking email in database:', checkError);
+        }
+        
+        // If email doesn't exist, it's some other error
+        throw new AuthenticationError('Signup failed - please try again');
       }
 
-      // Fallback for different response formats
-      if (result && typeof result === 'object' && 'id' in result) {
-        return result as NileSessionUser;
+      // Check if result contains an error (NileDB might return error as successful response)
+      if (result && typeof result === 'object') {
+        // Check if it's an error response with text/message
+        if ('text' in result || 'error' in result || 'message' in result) {
+          const errorText = (result as any).text || (result as any).error || (result as any).message || '';
+          if (errorText && typeof errorText === 'string' && errorText.includes('already exists')) {
+            // This is a duplicate email error, throw to be caught below
+            throw new Error(errorText);
+          }
+        }
+        
+        // Extract user from response
+        if ('user' in result) {
+          return result.user as NileSessionUser;
+        }
+
+        // Fallback for different response formats
+        if ('id' in result) {
+          return result as NileSessionUser;
+        }
       }
 
       throw new AuthenticationError('Invalid signup response format');
     } catch (error) {
       console.error('Failed to sign up user:', error);
-      throw new AuthenticationError('Failed to sign up user');
-    }
-  }
-
-  /**
-   * Update user password
-   */
-  async updatePassword(email: string, newPassword: string): Promise<void> {
-    try {
-      await withoutTenantContext(async (nile) => {
-        // First get the user by email to obtain the user ID
-        const userResult = await nile.db.query(
-          `SELECT id FROM users.users WHERE email = $1 AND deleted IS NULL`,
-          [email]
-        );
-
-        if (userResult.rows.length === 0) {
-          throw new AuthenticationError('User not found');
+      
+      // Check if it's a NileDB error message about existing user
+      if (error && typeof error === 'object') {
+        // Check multiple properties where the error message might be
+        const errorMessage = 
+          (error as any).message || 
+          (error as any).text || 
+          (error as any).error || 
+          (error as any).statusText ||
+          '';
+        
+        // Detect "The user X already exists" message from NileDB
+        if (errorMessage && typeof errorMessage === 'string' && errorMessage.includes('already exists')) {
+          // Check if the email is verified
+          try {
+            const userCheck = await withoutTenantContext(async (nile) => {
+              return await nile.db.query(
+                `SELECT email_verified FROM users.users WHERE email = $1 AND deleted IS NULL`,
+                [email]
+              );
+            });
+            
+            if (userCheck.rows.length > 0) {
+              const isVerified = userCheck.rows[0].email_verified;
+              
+              // Throw appropriate error based on verification status
+              throw new DuplicateEmailError(
+                isVerified 
+                  ? 'This email is already registered. Please sign in instead.'
+                  : 'This email is already registered but not verified. Check your inbox for the verification email.',
+                email,
+                isVerified
+              );
+            }
+          } catch (checkError) {
+            // If it's already a DuplicateEmailError, re-throw it
+            if (isDuplicateEmailError(checkError)) {
+              throw checkError;
+            }
+            // Otherwise, log and continue
+            console.error('Error checking email verification status:', checkError);
+          }
+          
+          // Fallback: throw generic duplicate email error
+          throw new DuplicateEmailError(
+            'This email is already registered.',
+            email,
+            false
+          );
         }
-
-        const userId = userResult.rows[0].id;
-
-        // Update the password using NileDB's auth system
-        // Note: NileDB handles password hashing internally
-        await nile.db.query(
-          `UPDATE users.users SET password = $2, updated = CURRENT_TIMESTAMP WHERE id = $1`,
-          [userId, newPassword] // NileDB expects the plain password and handles hashing
-        );
-      });
-    } catch (error) {
-      console.error('Failed to update password:', error);
-      throw new AuthenticationError('Failed to update password');
+      }
+      
+      // Classify database errors (for PostgreSQL errors)
+      const classifiedError = classifyDatabaseError(error);
+      
+      // Handle duplicate email specifically (from PostgreSQL)
+      if (isDuplicateEmailError(classifiedError)) {
+        // Check if the email is verified
+        try {
+          const userCheck = await withoutTenantContext(async (nile) => {
+            return await nile.db.query(
+              `SELECT email_verified FROM users.users WHERE email = $1 AND deleted IS NULL`,
+              [email]
+            );
+          });
+          
+          if (userCheck.rows.length > 0) {
+            const isVerified = userCheck.rows[0].email_verified;
+            
+            // Throw appropriate error based on verification status
+            throw new DuplicateEmailError(
+              isVerified 
+                ? 'This email is already registered. Please sign in instead.'
+                : 'This email is already registered but not verified. Check your inbox for the verification email.',
+              email,
+              isVerified
+            );
+          }
+        } catch (checkError) {
+          // If it's already a DuplicateEmailError, re-throw it
+          if (isDuplicateEmailError(checkError)) {
+            throw checkError;
+          }
+          // Otherwise, throw generic duplicate error
+          console.error('Error checking email verification status:', checkError);
+        }
+        
+        // Fallback if check failed
+        throw classifiedError;
+      }
+      
+      // For other errors, throw classified error or generic auth error
+      if (isNileDBError(classifiedError)) {
+        throw classifiedError;
+      }
+      
+      throw new AuthenticationError('Failed to sign up user');
     }
   }
 
