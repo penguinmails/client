@@ -1,60 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { userPreferencesSchema } from '@/lib/validations/settings';
-import { ZodError } from 'zod';
+import { NextResponse } from 'next/server';
 
-// This implementation will fail until the database connection and logic are added
-// GET /api/settings/user - Get current user's preferences
-
-export async function GET(_request: NextRequest): Promise<NextResponse> {
-  try {
-    // TODO: Implement user preferences retrieval
-    // - Get user ID from authentication context
-    // - Query user_preferences table
-    // - Return formatted response
-
-    return NextResponse.json(
-      { error: 'User preferences API not implemented' },
-      { status: 501 }
-    );
-  } catch (error: unknown) {
-    console.error('Error fetching user preferences:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch user preferences' },
-      { status: 500 }
-    );
-  }
-}
-
-// POST /api/settings/user - Create or update user preferences
-export async function POST(request: NextRequest): Promise<NextResponse> {
-  try {
-    const body = await request.json();
-
-    // Validate input (data will be used when implementation is complete)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _validatedData = userPreferencesSchema.parse(body);
-
-    // TODO: Implement user preferences creation/update
-    // - Get user ID from authentication context
-    // - Upsert user_preferences table
-    // - Return updated preferences
-
-    return NextResponse.json(
-      { error: 'User preferences API not implemented' },
-      { status: 501 }
-    );
-  } catch (error: unknown) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input data', details: error.issues },
-        { status: 400 }
-      );
-    }
-
-    console.error('Error updating user preferences:', error);
-    return NextResponse.json(
-      { error: 'Failed to update user preferences' },
-      { status: 500 }
-    );
-  }
+/**
+ * STUB: User settings endpoint
+ * Added to prevent 404 errors in console during development
+ * Real implementation pending
+ */
+export async function GET() {
+    // Return mock user preferences matching the expected schema
+    return NextResponse.json({
+        id: 'stub-user-id',
+        theme: 'light',
+        language: 'en',
+        timezone: 'America/New_York',
+        emailNotifications: true,
+        pushNotifications: false,
+        weeklyReports: true,
+        marketingEmails: false,
+        sidebarCollapsed: false,
+        tableDensity: 'comfortable',
+        sidebarView: 'expanded',
+        updatedAt: new Date().toISOString()
+    });
 }

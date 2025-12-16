@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,7 +13,7 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -31,11 +31,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { InfoIcon } from "lucide-react";
-import {
-  DnsProvider,
-  DNS_RECORD_TYPES,
-  DkimManagementType,
-} from "./components/constants";
+import { DnsProvider, DNS_RECORD_TYPES, DkimManagementType } from "./components/constants";
 import { VerificationStatus } from "@/types";
 import { copyText as t } from "./copy";
 
@@ -94,6 +90,8 @@ export default function DomainForm({
   const watchDkimManagementType = form.watch("dkimManagementType");
   const domain = form.watch("domain"); // Keep this for CNAME target generation
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- React Hook Form returns incompatible functions for React Compiler memoization
+
   const getDnsValue = (template: string) => {
     // Keep for CNAME or default suggestions
     return template.replace("{domain}", domain || "example.com");
@@ -101,7 +99,7 @@ export default function DomainForm({
 
   // Helper to display verification status text
   const getVerificationStatusText = (
-    statusKey: VerificationStatus | undefined
+    statusKey: VerificationStatus | undefined,
   ) => {
     const verificationStatusMap = t.form.enums?.verificationStatus; // Use optional chaining for safety
     if (
@@ -121,7 +119,7 @@ export default function DomainForm({
   const getDkimCnameTarget = () => {
     return DNS_RECORD_TYPES.DKIM.template.replace(
       "{domain}",
-      domain || "yourdomain.com"
+      domain || "yourdomain.com",
     );
   };
 
@@ -213,7 +211,7 @@ export default function DomainForm({
                       <FormControl>
                         <Input
                           placeholder={getDnsValue(
-                            DNS_RECORD_TYPES.SPF.template
+                            DNS_RECORD_TYPES.SPF.template,
                           )}
                           {...field}
                           disabled={isLoading}
@@ -365,7 +363,7 @@ export default function DomainForm({
                       <FormControl>
                         <Input
                           placeholder={getDnsValue(
-                            DNS_RECORD_TYPES.DMARC.template
+                            DNS_RECORD_TYPES.DMARC.template,
                           )}
                           {...field}
                           disabled={isLoading}

@@ -54,9 +54,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-muted-foreground">
-                Overall Usage
-              </p>
+              <p className="text-sm font-medium text-gray-600">Overall Usage</p>
               <p className="text-2xl font-bold">{summary.overallUsage}%</p>
             </div>
             <div
@@ -86,9 +84,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-muted-foreground">
-                Active Alerts
-              </p>
+              <p className="text-sm font-medium text-gray-600">Active Alerts</p>
               <p className="text-2xl font-bold">{summary.totalAlerts}</p>
             </div>
             <div
@@ -111,7 +107,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
               />
             </div>
           </div>
-          <p className="text-xs text-gray-500 dark:text-muted-foreground mt-2">
+          <p className="text-xs text-gray-500 mt-2">
             {summary.criticalAlerts} critical,{" "}
             {summary.totalAlerts - summary.criticalAlerts} warnings
           </p>
@@ -123,7 +119,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-muted-foreground">
+              <p className="text-sm font-medium text-gray-600">
                 Projected Cost
               </p>
               <p className="text-2xl font-bold">
@@ -149,7 +145,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
                   ? "text-red-600"
                   : summary.costTrend === "decreasing"
                     ? "text-green-600"
-                    : "text-gray-600 dark:text-muted-foreground"
+                    : "text-gray-600"
               }`}
             >
               {summary.costTrend}
@@ -163,7 +159,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-muted-foreground">
+              <p className="text-sm font-medium text-gray-600">
                 Account Status
               </p>
               <p className="text-2xl font-bold">

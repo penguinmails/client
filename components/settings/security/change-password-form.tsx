@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -158,6 +158,8 @@ function ChangePasswordForm() {
   });
 
   const newPassword = form.watch("newPassword");
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- React Hook Form returns incompatible functions for React Compiler memoization
 
   const handlePasswordChange = (_data: PasswordFormValues) => {};
 

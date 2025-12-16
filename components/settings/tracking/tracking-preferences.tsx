@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -9,7 +9,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
+import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -34,6 +34,8 @@ function TrackingPreferences() {
   });
 
   const watchClickTracking = form.watch("clickTracking");
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- React Hook Form returns incompatible functions for React Compiler memoization
 
   const onSubmit = (data: TrackingFormValues) => {
     console.log("Tracking preferences saved:", data);

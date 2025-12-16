@@ -5,7 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
 
 type TooltipButtonProps = {

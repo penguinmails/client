@@ -1,10 +1,10 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { Clock, Mail, Zap, AlertTriangle } from "lucide-react";
-import { useRef } from "react";
+import { useState } from "react";
 import WaitStep from "./components/sequence-wait";
 import EmailStep, {
   EmailStep as EmailStepInterface,
@@ -14,7 +14,7 @@ function SequenceBuilderStep() {
   const { form } = useAddCampaignContext();
   const { setValue, watch } = form;
   const sequence = watch("sequence") || [];
-  const focusedTextareaIndex = useRef<number | null>(null);
+  const [focusedTextareaIndex, setFocusedTextareaIndex] = useState<number | null>(null);
   const addEmailStep = () => {
     const newStep: EmailStepInterface = {
       id: Date.now().toString(),
@@ -55,7 +55,7 @@ function SequenceBuilderStep() {
         issues.push({
           type: "consecutive_emails",
           stepIndex: i + 1,
-          message: `Step ${i + 2}: Two emails in a row without a wait step may cause delivery issues`,
+          message: `Step ${i + 2}: Two emails in a row without a wait step may cause delivery issues`
         });
       }
     }
@@ -66,15 +66,15 @@ function SequenceBuilderStep() {
 
   return (
     <>
-      <Card className="bg-card dark:bg-card rounded-2xl shadow-sm border border-border p-8">
+      <Card className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
         <CardHeader className="text-center mb-8">
-          <div className="w-16 h-16 bg-orange-100 dark:bg-orange-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Zap className="w-8 h-8 text-orange-600 dark:text-orange-400" />
+          <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Zap className="w-8 h-8 text-orange-600" />
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Build Email Sequence
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-gray-600">
             Create your email flow with personalized messages and timing
           </p>
         </CardHeader>
@@ -124,6 +124,7 @@ function SequenceBuilderStep() {
                 updateStep={updateStep}
                 removeStep={removeStep}
                 focusedTextareaIndex={focusedTextareaIndex}
+                setFocusedTextareaIndex={setFocusedTextareaIndex}
               />
             ) : (
               <WaitStep

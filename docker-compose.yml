@@ -1,0 +1,66 @@
+services:
+  niledb-oltp:
+    image: ghcr.io/niledatabase/testingcontainer:latest
+    ports:
+      - "5443:5432"
+      - "3005:3000"
+    volumes:
+      - nile_oltp_data:/var/lib/postgresql/data
+    environment:
+      - NILE_TESTING_DB_NAME=oltp
+      - NILE_TESTING_DB_ID=01000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_PASSWORD=password
+
+  niledb-olap:
+    image: ghcr.io/niledatabase/testingcontainer:latest
+    ports:
+      - "5444:5432"
+      - "3001:3000"
+    volumes:
+      - nile_olap_data:/var/lib/postgresql/data
+    environment:
+      - NILE_TESTING_DB_NAME=olap
+      - NILE_TESTING_DB_ID=02000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_PASSWORD=password
+
+  niledb-messages:
+    image: ghcr.io/niledatabase/testingcontainer:latest
+    ports:
+      - "5445:5432"
+      - "3002:3000"
+    volumes:
+      - nile_messages_data:/var/lib/postgresql/data
+    environment:
+      - NILE_TESTING_DB_NAME=messages
+      - NILE_TESTING_DB_ID=03000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_PASSWORD=password
+
+  niledb-queue:
+    image: ghcr.io/niledatabase/testingcontainer:latest
+    ports:
+      - "5446:5432"
+      - "3003:3000"
+    volumes:
+      - nile_queue_data:/var/lib/postgresql/data
+    environment:
+      - NILE_TESTING_DB_NAME=queue
+      - NILE_TESTING_DB_ID=04000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_PASSWORD=password
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  nile_oltp_data:
+  nile_olap_data:
+  nile_messages_data:
+  nile_queue_data:
+  redis_data:

@@ -18,7 +18,7 @@ function CampaignHeader({
   const actions = ["EDIT"] as (keyof typeof CampaignActionsEnum)[];
 
   return (
-    <div className="px-6 py-4 border-b border-border flex flex-col gap-4">
+    <div className="px-6 py-4 border-b border-gray-200 flex flex-col gap-4">
       {backArrow && (
         <div className="self-end">
           <BackArrow />
@@ -31,21 +31,21 @@ function CampaignHeader({
             className={cn(
               "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
               campaign.status === "active"
-                ? "bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-400"
+                ? "bg-green-100 text-green-800"
                 : campaign.status === "paused"
-                  ? "bg-yellow-100 dark:bg-yellow-500/20 text-yellow-800 dark:text-yellow-400"
-                  : "bg-muted dark:bg-muted/60 text-foreground"
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-gray-100 text-gray-800"
             )}
           >
             {campaign.status}
           </span>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-gray-500">
             {campaign.leadsSent} leads sent
           </span>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-gray-500">
             {campaign.replies} replies
           </span>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-gray-500">
             Last sent {campaign.lastSent}
           </span>
         </div>

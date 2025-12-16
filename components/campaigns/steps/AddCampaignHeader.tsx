@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import useBack from "@/hooks/use-back";
 import { ArrowLeft } from "lucide-react";
@@ -9,25 +9,25 @@ function AddCampaignHeader({ children }: { children?: React.ReactNode }) {
   const back = useBack();
   return (
     <>
-      <div className="bg-card dark:bg-card border-b border-border px-8 py-6">
+      <div className="bg-white border-b border-gray-200 px-8 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Button size={"icon"} onClick={back} variant="ghost">
+            <Button size={"icon"} onClick={back} variant="ghost" >
               <ArrowLeft />
             </Button>
             <div>
               {children}
-              <p className="text-muted-foreground">
+              <p className="text-gray-600">
                 Step {currentStep} of {steps.length}
               </p>
             </div>
           </div>
           <div className="flex items-center space-x-4">
             <div className="text-right">
-              <p className="text-sm font-medium text-foreground">
+              <p className="text-sm font-medium text-gray-900">
                 {currentStepData.title}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-gray-500">
                 {currentStepData.subtitle}
               </p>
             </div>

@@ -1,7 +1,7 @@
 "use client";
 import { Filter, SearchInput } from "@/components/ui/custom/Filter";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -24,32 +24,33 @@ import {
   TrendingUp,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function InboxFilter() {
-  const [selectedFilter, setSelectedFilter] = useState<string>("all");
-  const [campaignFilter, setCampaignFilter] = useState<string[]>([]);
-  const [mailboxFilter, setMailboxFilter] = useState<string[]>([]);
-  const [tagFilter, setTagFilter] = useState<string[]>([]);
-  const [timeFilter, setTimeFilter] = useState("all");
+  const [filterState, setFilterState] = useReducer(
+    (state, action) => ({ ...state, ...action }),
+    {
+      selectedFilter: 'all',
+      campaignFilter: [],
+      mailboxFilter: [],
+      tagFilter: [],
+      timeFilter: 'all'
+    }
+  );
 
   const router = useRouter();
   const currentSearchParams = useSearchParams();
 
   useEffect(() => {
     const params = new URLSearchParams(currentSearchParams);
-    const filter = params.get("filter") || "all";
-    setSelectedFilter(filter);
-    const campaigns = params.getAll("campaigns");
-    setCampaignFilter(campaigns);
-    const mailboxes = params.getAll("mailboxes");
-    setMailboxFilter(mailboxes);
-    const tags = params.getAll("tags");
-    setTagFilter(tags);
-
-    const time = params.get("time") || "all";
-    setTimeFilter(time);
+    setFilterState({
+      selectedFilter: params.get('filter') || 'all',
+      campaignFilter: params.getAll('campaigns'),
+      mailboxFilter: params.getAll('mailboxes'),
+      tagFilter: params.getAll('tags'),
+      timeFilter: params.get('time') || 'all'
+    });
   }, [currentSearchParams]);
 
   const filters = [
@@ -61,27 +62,21 @@ function InboxFilter() {
   ];
   useEffect(() => {
     const params = new URLSearchParams();
-    if (selectedFilter !== "all") params.append("filter", selectedFilter);
-    campaignFilter.forEach((c) => params.append("campaigns", c));
-    tagFilter.forEach((t) => params.append("tags", t));
-    mailboxFilter.forEach((m) => params.append("mailboxes", m));
-    if (timeFilter !== "all") params.append("time", timeFilter);
+    if (filterState.selectedFilter !== 'all') params.append('filter', filterState.selectedFilter);
+    filterState.campaignFilter.forEach(c => params.append('campaigns', c));
+    filterState.tagFilter.forEach(t => params.append('tags', t));
+    filterState.mailboxFilter.forEach(m => params.append('mailboxes', m));
+    if (filterState.timeFilter !== 'all') params.append('time', filterState.timeFilter);
     router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
-  }, [
-    selectedFilter,
-    campaignFilter,
-    tagFilter,
-    mailboxFilter,
-    timeFilter,
-    router,
-  ]);
+  }, [filterState, router]);
+
 
   const tags = ["Interested", "Not Interested", "Maybe Later", "Follow Up"];
 
   const handleMultiSelectToggle = (
     value: string,
     currentSelection: string[],
-    setSelection: (selection: string[]) => void
+    setSelection: (selection: string[]) => void,
   ) => {
     if (currentSelection.includes(value)) {
       setSelection(currentSelection.filter((item) => item !== value));
@@ -99,22 +94,22 @@ function InboxFilter() {
     items: string[],
     selectedItems: string[],
     setSelectedItems: (items: string[]) => void,
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>,
   ) => {
     const Icon = icon;
     return (
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Icon className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-foreground">{title}</span>
+            <Icon className="w-4 h-4 text-gray-500" />
+            <span className="text-sm font-medium text-gray-700">{title}</span>
           </div>
           {selectedItems.length > 0 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => clearMultiSelect(setSelectedItems)}
-              className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+              className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
             >
               <X className="w-3 h-3" />
             </Button>
@@ -137,7 +132,7 @@ function InboxFilter() {
                     handleMultiSelectToggle(
                       item,
                       selectedItems,
-                      setSelectedItems
+                      setSelectedItems,
                     )
                   }
                   className="h-3 w-3 p-0 ml-1 hover:bg-gray-300"
@@ -176,7 +171,7 @@ function InboxFilter() {
     <>
       <Filter
         className={cn(
-          "bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none"
+          "bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none",
         )}
       >
         <SearchInput />
@@ -189,29 +184,29 @@ function InboxFilter() {
               return (
                 <Button
                   key={filter.id}
-                  onClick={() => setSelectedFilter(filter.id)}
-                  variant={selectedFilter === filter.id ? "secondary" : "ghost"}
+                  onClick={() => setFilterState({ selectedFilter: filter.id })}
+                  variant={filterState.selectedFilter === filter.id ? "secondary" : "ghost"}
                   className={cn(
                     "w-full justify-between h-auto py-2.5 px-3",
-                    selectedFilter === filter.id
+                    filterState.selectedFilter === filter.id
                       ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                      : "text-gray-700"
+                      : "text-gray-700",
                   )}
                 >
                   <div className="flex items-center space-x-3">
                     <Icon
                       className={cn(
                         "w-4 h-4",
-                        selectedFilter === filter.id
+                        filterState.selectedFilter === filter.id
                           ? "text-blue-600"
-                          : "text-gray-500"
+                          : "text-gray-500",
                       )}
                     />
                     <span className="text-sm font-medium">{filter.label}</span>
                   </div>
                   <Badge
                     variant={
-                      selectedFilter === filter.id ? "default" : "secondary"
+                      filterState.selectedFilter === filter.id ? "default" : "secondary"
                     }
                     className="text-xs"
                   >
@@ -232,38 +227,36 @@ function InboxFilter() {
             {renderMultiSelectFilter(
               "Campaigns",
               campaignsData.map((c) => c.name),
-              campaignFilter,
-              setCampaignFilter,
-              TrendingUp
+              filterState.campaignFilter,
+              (campaignFilter) => setFilterState({ campaignFilter }),
+              TrendingUp,
             )}
 
             {/* Mailboxes Filter */}
             {renderMultiSelectFilter(
               "Mailboxes",
               mailboxes.map((m) => m.email),
-              mailboxFilter,
-              setMailboxFilter,
-              AtSign
+              filterState.mailboxFilter,
+              (mailboxFilter) => setFilterState({ mailboxFilter }),
+              AtSign,
             )}
 
             {/* Tags Filter */}
             {renderMultiSelectFilter(
               "Tags",
               tags,
-              tagFilter,
-              setTagFilter,
-              Tag
+              filterState.tagFilter,
+              (tagFilter) => setFilterState({ tagFilter }),
+              Tag,
             )}
 
             {/* Time Filter (single select) */}
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700 dark:text-foreground">
-                  Time
-                </span>
+                <span className="text-sm font-medium text-gray-700">Time</span>
               </div>
-              <Select value={timeFilter} onValueChange={setTimeFilter}>
+              <Select value={filterState.timeFilter} onValueChange={(timeFilter) => setFilterState({ timeFilter })}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="All Time" />
                 </SelectTrigger>

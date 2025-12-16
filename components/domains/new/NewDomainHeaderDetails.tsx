@@ -8,7 +8,7 @@ function NewDomainHeaderDetails() {
   return (
     <div className="flex items-center space-x-4">
       <div className="text-right">
-        <p className="text-sm font-medium text-gray-900 dark:text-foreground">
+        <p className="text-sm font-medium text-gray-900">
           {currentStepData.title}
         </p>
         <p className="text-sm text-gray-500">{currentStepData.subtitle}</p>

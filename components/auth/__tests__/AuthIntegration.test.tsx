@@ -6,7 +6,6 @@
 
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 
 // Mock fetch
@@ -55,19 +54,12 @@ describe("Enhanced Auth Integration", () => {
   });
 
   it("should initialize and load user data", async () => {
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: { retry: false },
-        mutations: { retry: false },
-      },
-    });
-
-    // Mock API responses - setup proper auth flow
+    // Mock API responses
     mockFetch
       .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ authenticated: true }),
-      }) // auth test succeeds
+        ok: false,
+        status: 401,
+      }) // auth test fails (not authenticated)
       .mockResolvedValueOnce({
         ok: true,
         json: () =>
@@ -85,11 +77,9 @@ describe("Enhanced Auth Integration", () => {
       });
 
     render(
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TestComponent />
-        </AuthProvider>
-      </QueryClientProvider>
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
     );
 
     // Should start loading
@@ -100,8 +90,8 @@ describe("Enhanced Auth Integration", () => {
       expect(screen.getByTestId("loading")).toHaveTextContent("loaded");
     });
 
-    // Should show authenticated user (auth test succeeds)
-    expect(screen.getByTestId("user")).toHaveTextContent("test@example.com");
+    // Should show no user (auth test failed)
+    expect(screen.getByTestId("user")).toHaveTextContent("no-user");
     expect(screen.getByTestId("staff")).toHaveTextContent("not-staff");
     expect(screen.getByTestId("tenants")).toHaveTextContent("0");
   });

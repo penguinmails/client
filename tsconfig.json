@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "ES2017",
     "lib": [
       "dom",
       "dom.iterable",
@@ -11,7 +11,6 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "downlevelIteration": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
@@ -26,12 +25,6 @@
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@types/*": [
-        "./types/*"
-      ],
-      "@settings/*": [
-        "./types/settings/*"
       ]
     }
   },
@@ -39,10 +32,11 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
   ],
   "exclude": [
-    "node_modules",
-    ".kiro"
+    "node_modules"
   ]
 }

@@ -2,7 +2,7 @@
 // BILLING ANALYTICS SKELETON LOADERS - Loading states for billing components
 // ============================================================================
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -119,6 +119,32 @@ export function UsageAlertsCardSkeleton() {
   );
 }
 
+
+function BillingTimeSeriesChartSkeletonBars() {
+  // Generate pseudo-random heights once at component mount
+  const heights = useMemo(() => {
+    // Use a simple seeded random number generator to avoid Math.random() during render
+    // Use a fixed seed for consistency
+    const seed = 12345;
+    return Array.from({ length: 12 }, (_, i) => {
+      const value = ((seed + i) * 9301 + 49297) % 233280;
+      return (value / 233280) * 60 + 20; // Scale to 20-80 range
+    });
+  }, []);
+
+  return (
+    <div className="h-64 flex items-end space-x-2">
+      {heights.map((height, i) => (
+        <Skeleton
+          key={i}
+          className="flex-1 rounded-t"
+          style={{ height: `${height}%` }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /**
  * Skeleton loader for billing time series chart.
  */
@@ -142,15 +168,7 @@ export function BillingTimeSeriesChartSkeleton() {
           </div>
 
           {/* Chart area */}
-          <div className="h-64 flex items-end space-x-2">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <Skeleton
-                key={i}
-                className="flex-1 rounded-t"
-                style={{ height: `${Math.random() * 80 + 20}%` }}
-              />
-            ))}
-          </div>
+          <BillingTimeSeriesChartSkeletonBars />
 
           {/* X-axis labels */}
           <div className="flex justify-between">
@@ -271,7 +289,7 @@ export function BillingAnalyticsProgressiveLoader({
       <CardContent className="p-8">
         <div className="text-center space-y-4">
           <div className="mx-auto w-16 h-16 relative">
-            <div className="absolute inset-0 rounded-full border-4 border-gray-200 dark:border-border"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
             <div
               className="absolute inset-0 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"
               style={{
@@ -297,7 +315,7 @@ export function BillingAnalyticsProgressiveLoader({
             </div>
           </div>
 
-          <p className="text-sm text-gray-600 dark:text-muted-foreground">
+          <p className="text-sm text-gray-600">
             Analyzing your usage patterns and cost projections...
           </p>
         </div>

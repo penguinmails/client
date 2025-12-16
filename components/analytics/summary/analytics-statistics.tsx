@@ -1,5 +1,5 @@
 import { Eye, Mail, MousePointer, Reply } from "lucide-react";
-import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
+import StatsCard from "../cards/StatsCard";
 
 function AnalyticsStatistics({
   totalSent,
@@ -18,32 +18,32 @@ function AnalyticsStatistics({
       title: "Total Sent",
       value: totalSent,
       icon: Mail,
-      color: "info" as const,
+      color: "bg-blue-100 text-blue-600",
     },
     {
       id: "open-rate",
       title: "Open Rate",
       value: `${openRate}%`,
       icon: Eye,
-      color: "primary" as const,
+      color: "bg-purple-100 text-purple-600",
     },
     {
       id: "reply-rate",
       title: "Reply Rate",
       value: `${replyRate}%`,
       icon: Reply,
-      color: "success" as const,
+      color: "bg-green-100 text-green-600",
     },
     {
       id: "click-rate",
       title: "Click Rate",
       value: `${clickRate}%`,
       icon: MousePointer,
-      color: "warning" as const,
+      color: "bg-orange-100 text-orange-600",
     },
   ];
   return cards.map((card) => (
-    <UnifiedStatsCard
+    <StatsCard
       key={card.id}
       title={card.title}
       value={card.value}

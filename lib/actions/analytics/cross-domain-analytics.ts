@@ -1,474 +1,316 @@
-'use server';
+"use server";
 
 /**
- * Cross-Domain Analytics Actions - Standardized Implementation
+ * Cross-Domain Analytics Server Actions
  * 
- * This module provides consistent cross-domain analytics actions using ConvexQueryHelper
- * for type safety and standardized error handling.
+ * Server-side functions for complex analytics calculations
+ * that combine data from multiple sources (domains + mailboxes).
  */
 
-import { api } from '@/convex/_generated/api';
-import { createAnalyticsConvexHelper } from '@/lib/utils/convex-query-helper';
-import { ConvexHttpClient } from 'convex/browser';
-import { 
-  createActionResult, 
-  withConvexErrorHandling 
-} from '../core/errors';
-import { 
-  withAuth, 
-  withAuthAndCompany,
-  withContextualRateLimit,
-  RateLimits 
-} from '../core/auth';
-import type { ActionResult, ActionContext } from '../core/types';
-import type {
-  AnalyticsFilters,
-  PerformanceMetrics,
-  TimeSeriesDataPoint,
-  CalculatedRates,
-} from '@/types/analytics/core';
-
-// Initialize Convex client and helper
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-const convexHelper = createAnalyticsConvexHelper(convex, 'CrossDomainAnalyticsActions');
-
-/**
- * Cross-domain performance comparison interface
- */
-export interface CrossDomainPerformanceComparison {
-  domains: Array<{
-    domainId: string;
-    domainName: string;
-    performance: PerformanceMetrics;
-    rates: CalculatedRates;
-    ranking: number;
-    percentileRank: number;
-    marketShare: number;
-  }>;
-  aggregatedMetrics: PerformanceMetrics;
-  averageRates: CalculatedRates;
-  topPerformer: {
-    domainId: string;
-    domainName: string;
-    advantage: number;
-    strongestMetric: string;
-  };
-  insights: string[];
-}
-
-/**
- * Cross-domain correlation analysis interface
- */
-export interface CrossDomainCorrelationAnalysis {
-  correlations: Array<{
-    domain1: string;
-    domain2: string;
-    correlationCoefficient: number;
-    strength: 'strong' | 'moderate' | 'weak';
-    direction: 'positive' | 'negative';
-    metrics: {
-      openRate: number;
-      clickRate: number;
-      replyRate: number;
-      deliveryRate: number;
-    };
-  }>;
-  patterns: Array<{
-    pattern: string;
-    domains: string[];
-    confidence: number;
-    impact: 'high' | 'medium' | 'low';
-    recommendation: string;
-  }>;
-  outliers: Array<{
-    domainId: string;
-    domainName: string;
-    deviation: number;
-    reason: string;
-  }>;
-}
-
-/**
- * Cross-domain trend analysis interface
- */
-export interface CrossDomainTrendAnalysis {
-  trends: Array<{
-    domainId: string;
-    domainName: string;
-    trend: 'improving' | 'declining' | 'stable';
-    trendStrength: number;
-    timeframe: string;
-    keyMetrics: {
-      openRate: { current: number; change: number; trend: string };
-      clickRate: { current: number; change: number; trend: string };
-      replyRate: { current: number; change: number; trend: string };
-      deliveryRate: { current: number; change: number; trend: string };
-    };
-  }>;
-  overallTrend: 'improving' | 'declining' | 'stable';
-  seasonalPatterns: Array<{
-    pattern: string;
-    domains: string[];
-    seasonality: 'daily' | 'weekly' | 'monthly';
-    strength: number;
-  }>;
-  forecasts: Array<{
-    domainId: string;
-    domainName: string;
-    projectedPerformance: PerformanceMetrics;
-    confidence: number;
-    timeframe: string;
-  }>;
-}
+import { olapDb } from "@/lib/db";
+import { AnalyticsFilters } from "@/types/analytics/core";
+import {
+    CrossDomainAnalyticsResult,
+    CrossDomainTimeSeriesDataPoint,
+    MailboxDomainImpactAnalysis,
+    calculateDomainHealthScore,
+    calculateMailboxImpactScore,
+    classifyImpact,
+    calculateCorrelationStrength,
+} from "@/lib/services/analytics/CrossDomainAnalyticsService";
 
 /**
  * Get cross-domain performance comparison
+ * Analyzes how mailboxes contribute to domain performance
  */
 export async function getCrossDomainPerformanceComparison(
-  domainIds: string[],
-  filters?: AnalyticsFilters
-): Promise<ActionResult<CrossDomainPerformanceComparison>> {
-  return withContextualRateLimit(
-    'cross_domain_performance_query',
-    'company',
-    RateLimits.ANALYTICS_QUERY,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
-      return withConvexErrorHandling(async () => {
-        const comparisonData = await convexHelper.query(
-          api.crossDomainAnalytics.getPerformanceComparison,
-          { 
-            companyId: context.companyId,
-            domainIds,
-            filters: filters || {}
-          },
-          {
-            serviceName: 'CrossDomainAnalyticsActions',
-            methodName: 'getCrossDomainPerformanceComparison',
-          }
-        );
+    domainIds: string[],
+    filters?: AnalyticsFilters
+) {
+    try {
+        // TODO: Implement actual database queries when schema is ready
+        // For now, return mock structure
 
-        return createActionResult(comparisonData as CrossDomainPerformanceComparison);
-      });
-    })
-  );
-}
+        const results: CrossDomainAnalyticsResult[] = domainIds.map((domainId) => ({
+            domainId,
+            domainName: `domain-${domainId}.com`,
+            mailboxCount: 5,
+            domainHealthScore: 85,
+            capacitySummary: {
+                totalDailyLimit: 500,
+                totalCurrentVolume: 350,
+                utilizationRate: 0.7,
+            },
+            warmupSummary: {
+                totalMailboxes: 5,
+                warmingMailboxes: 2,
+                warmedMailboxes: 3,
+                averageHealthScore: 82,
+            },
+            performanceMetrics: {
+                totalSent: 1000,
+                totalDelivered: 950,
+                totalOpened: 400,
+                totalClicked: 150,
+                totalReplied: 50,
+                totalBounced: 50,
+                deliveryRate: 0.95,
+                openRate: 0.42,
+                clickRate: 0.16,
+                replyRate: 0.05,
+                bounceRate: 0.05,
+            },
+        }));
 
-/**
- * Get cross-domain correlation analysis
- */
-export async function getCrossDomainCorrelationAnalysis(
-  domainIds: string[],
-  filters?: AnalyticsFilters
-): Promise<ActionResult<CrossDomainCorrelationAnalysis>> {
-  return withContextualRateLimit(
-    'cross_domain_correlation_query',
-    'company',
-    RateLimits.ANALYTICS_QUERY,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
-      return withConvexErrorHandling(async () => {
-        const correlationData = await convexHelper.query(
-          api.crossDomainAnalytics.getCorrelationAnalysis,
-          { 
-            companyId: context.companyId,
-            domainIds,
-            filters: filters || {}
-          },
-          {
-            serviceName: 'CrossDomainAnalyticsActions',
-            methodName: 'getCrossDomainCorrelationAnalysis',
-          }
-        );
-
-        return createActionResult(correlationData as CrossDomainCorrelationAnalysis);
-      });
-    })
-  );
-}
-
-/**
- * Get cross-domain trend analysis
- */
-export async function getCrossDomainTrendAnalysis(
-  domainIds: string[],
-  filters?: AnalyticsFilters
-): Promise<ActionResult<CrossDomainTrendAnalysis>> {
-  return withContextualRateLimit(
-    'cross_domain_trend_query',
-    'company',
-    RateLimits.ANALYTICS_QUERY,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
-      return withConvexErrorHandling(async () => {
-        const trendData = await convexHelper.query(
-          api.crossDomainAnalytics.getTrendAnalysis,
-          { 
-            companyId: context.companyId,
-            domainIds,
-            filters: filters || {}
-          },
-          {
-            serviceName: 'CrossDomainAnalyticsActions',
-            methodName: 'getCrossDomainTrendAnalysis',
-          }
-        );
-
-        return createActionResult(trendData as CrossDomainTrendAnalysis);
-      });
-    })
-  );
-}
-
-/**
- * Get cross-domain aggregated metrics
- */
-export async function getCrossDomainAggregatedMetrics(
-  domainIds: string[],
-  filters?: AnalyticsFilters
-): Promise<ActionResult<{
-  totalDomains: number;
-  aggregatedPerformance: PerformanceMetrics;
-  averageRates: CalculatedRates;
-  distributionStats: {
-    openRate: { min: number; max: number; avg: number; stdDev: number };
-    clickRate: { min: number; max: number; avg: number; stdDev: number };
-    replyRate: { min: number; max: number; avg: number; stdDev: number };
-    deliveryRate: { min: number; max: number; avg: number; stdDev: number };
-  };
-  performanceSegments: Array<{
-    segment: 'high' | 'medium' | 'low';
-    domainCount: number;
-    averagePerformance: PerformanceMetrics;
-    domains: Array<{ domainId: string; domainName: string }>;
-  }>;
-}>> {
-  return withContextualRateLimit(
-    'cross_domain_aggregated_query',
-    'company',
-    RateLimits.ANALYTICS_QUERY,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
-      return withConvexErrorHandling(async () => {
-        const aggregatedData = await convexHelper.query(
-          api.crossDomainAnalytics.getAggregatedMetrics,
-          { 
-            companyId: context.companyId,
-            domainIds,
-            filters: filters || {}
-          },
-          {
-            serviceName: 'CrossDomainAnalyticsActions',
-            methodName: 'getCrossDomainAggregatedMetrics',
-          }
-        );
-
-        return createActionResult(aggregatedData as {
-          totalDomains: number;
-          aggregatedPerformance: PerformanceMetrics;
-          averageRates: CalculatedRates;
-          distributionStats: {
-            openRate: { min: number; max: number; avg: number; stdDev: number };
-            clickRate: { min: number; max: number; avg: number; stdDev: number };
-            replyRate: { min: number; max: number; avg: number; stdDev: number };
-            deliveryRate: { min: number; max: number; avg: number; stdDev: number };
-          };
-          performanceSegments: Array<{
-            segment: 'high' | 'medium' | 'low';
-            domainCount: number;
-            averagePerformance: PerformanceMetrics;
-            domains: Array<{ domainId: string; domainName: string }>;
-          }>;
-        });
-      });
-    })
-  );
+        return {
+            success: true,
+            data: results,
+            timestamp: new Date().toISOString(),
+        };
+    } catch (error) {
+        console.error("Error in getCrossDomainPerformanceComparison:", error);
+        return {
+            success: false,
+            error: {
+                message: error instanceof Error ? error.message : "Unknown error",
+                code: "CROSS_DOMAIN_PERFORMANCE_ERROR",
+            },
+            timestamp: new Date().toISOString(),
+        };
+    }
 }
 
 /**
  * Get cross-domain time series data
+ * Shows performance trends over time
  */
 export async function getCrossDomainTimeSeries(
-  domainIds: string[],
-  filters?: AnalyticsFilters
-): Promise<ActionResult<{
-  timeSeries: TimeSeriesDataPoint[];
-  domainSeries: Array<{
-    domainId: string;
-    domainName: string;
-    series: TimeSeriesDataPoint[];
-  }>;
-  aggregatedSeries: TimeSeriesDataPoint[];
-}>> {
-  return withContextualRateLimit(
-    'cross_domain_timeseries_query',
-    'company',
-    RateLimits.ANALYTICS_QUERY,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
-      return withConvexErrorHandling(async () => {
-        const timeSeriesData = await convexHelper.query(
-          api.crossDomainAnalytics.getTimeSeriesData,
-          { 
-            companyId: context.companyId,
-            domainIds,
-            filters: filters || {}
-          },
-          {
-            serviceName: 'CrossDomainAnalyticsActions',
-            methodName: 'getCrossDomainTimeSeries',
-          }
+    domainIds: string[],
+    filters?: AnalyticsFilters
+) {
+    try {
+        
+        const timeSeriesData: CrossDomainTimeSeriesDataPoint[] = [];
+
+    
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+
+            domainIds.forEach((domainId) => {
+                timeSeriesData.push({
+                    date: date.toISOString().split('T')[0],
+                    label: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                    domainId,
+                    domainMetrics: {
+                        sent: 100 + Math.floor(Math.random() * 50),
+                        delivered: 95 + Math.floor(Math.random() * 5),
+                        opened_tracked: 40 + Math.floor(Math.random() * 20),
+                        clicked_tracked: 15 + Math.floor(Math.random() * 10),
+                        replied: 5 + Math.floor(Math.random() * 5),
+                        bounced: 2 + Math.floor(Math.random() * 3),
+                    },
+                    domainHealthScore: 80 + Math.floor(Math.random() * 15),
+                    mailboxInsights: {
+                        activeMailboxes: 5,
+                        warmingMailboxes: 2,
+                        totalCapacity: 500,
+                        currentVolume: 350 + Math.floor(Math.random() * 100),
+                    },
+                    correlationMetrics: {
+                        capacityUtilization: 0.7 + Math.random() * 0.2,
+                        averageMailboxHealth: 80 + Math.random() * 15,
+                        performanceIndex: 0.85 + Math.random() * 0.1,
+                    },
+                });
+            });
+        }
+
+        return {
+            success: true,
+            data: timeSeriesData,
+            timestamp: new Date().toISOString(),
+        };
+    } catch (error) {
+        console.error("Error in getCrossDomainTimeSeries:", error);
+        return {
+            success: false,
+            error: {
+                message: error instanceof Error ? error.message : "Unknown error",
+                code: "CROSS_DOMAIN_TIMESERIES_ERROR",
+            },
+            timestamp: new Date().toISOString(),
+        };
+    }
+}
+
+/**
+ * Get cross-domain correlation analysis
+ * Analyzes correlation between mailbox and domain performance
+ */
+export async function getCrossDomainCorrelationAnalysis(
+    domainIds: string[],
+    filters?: AnalyticsFilters
+) {
+    try {
+        // TODO: Implement actual correlation calculations
+        const correlations = domainIds.map((domainId) => {
+            const mailboxCorrelations = Array.from({ length: 5 }, (_, i) => {
+                const correlationScore = 0.5 + Math.random() * 0.4;
+                return {
+                    mailboxId: `mailbox-${i + 1}`,
+                    email: `mailbox${i + 1}@domain-${domainId}.com`,
+                    correlationScore,
+                    correlationStrength: calculateCorrelationStrength(correlationScore),
+                    correlationDirection: correlationScore > 0.5 ? "POSITIVE" as const : "NEGATIVE" as const,
+                    insights: [
+                        correlationScore > 0.7
+                            ? "Strong positive impact on domain performance"
+                            : "Moderate contribution to domain metrics",
+                    ],
+                    formattedCorrelationScore: `${Math.round(correlationScore * 100)}%`,
+                };
+            });
+
+            const avgCorrelation =
+                mailboxCorrelations.reduce((sum, m) => sum + m.correlationScore, 0) /
+                mailboxCorrelations.length;
+
+            return {
+                domainId,
+                domainName: `domain-${domainId}.com`,
+                mailboxCorrelations,
+                overallCorrelation: Math.round(avgCorrelation * 100),
+                formattedOverallCorrelation: `${Math.round(avgCorrelation * 100)}%`,
+            };
+        });
+
+        const strongCount = correlations.reduce(
+            (sum, d) =>
+                sum +
+                d.mailboxCorrelations.filter((m) => m.correlationStrength === "STRONG")
+                    .length,
+            0
+        );
+        const moderateCount = correlations.reduce(
+            (sum, d) =>
+                sum +
+                d.mailboxCorrelations.filter((m) => m.correlationStrength === "MODERATE")
+                    .length,
+            0
+        );
+        const weakCount = correlations.reduce(
+            (sum, d) =>
+                sum +
+                d.mailboxCorrelations.filter((m) => m.correlationStrength === "WEAK")
+                    .length,
+            0
         );
 
-        return createActionResult(timeSeriesData as {
-          timeSeries: TimeSeriesDataPoint[];
-          domainSeries: Array<{
-            domainId: string;
-            domainName: string;
-            series: TimeSeriesDataPoint[];
-          }>;
-          aggregatedSeries: TimeSeriesDataPoint[];
-        });
-      });
-    })
-  );
+        const avgCorrelation =
+            correlations.reduce((sum, d) => sum + d.overallCorrelation, 0) /
+            correlations.length;
+
+        return {
+            success: true,
+            data: {
+                correlations,
+                summary: {
+                    strongCorrelations: strongCount,
+                    moderateCorrelations: moderateCount,
+                    weakCorrelations: weakCount,
+                    averageCorrelation: `${Math.round(avgCorrelation)}%`,
+                    strongCorrelationPercentage: `${Math.round((strongCount / (strongCount + moderateCount + weakCount)) * 100)}%`,
+                },
+            },
+            timestamp: new Date().toISOString(),
+        };
+    } catch (error) {
+        console.error("Error in getCrossDomainCorrelationAnalysis:", error);
+        return {
+            success: false,
+            error: {
+                message: error instanceof Error ? error.message : "Unknown error",
+                code: "CROSS_DOMAIN_CORRELATION_ERROR",
+            },
+            timestamp: new Date().toISOString(),
+        };
+    }
 }
 
 /**
  * Generate cross-domain insights
+ * Provides actionable insights based on mailbox-domain relationships
  */
 export async function generateCrossDomainInsights(
-  domainIds: string[],
-  filters?: AnalyticsFilters
-): Promise<ActionResult<{
-  insights: Array<{
-    type: 'performance' | 'trend' | 'correlation' | 'anomaly';
-    title: string;
-    description: string;
-    impact: 'high' | 'medium' | 'low';
-    confidence: number;
-    recommendation: string;
-    affectedDomains: string[];
-  }>;
-  summary: {
-    totalInsights: number;
-    highImpactInsights: number;
-    actionableRecommendations: number;
-    overallHealthScore: number;
-  };
-}>> {
-  return withContextualRateLimit(
-    'cross_domain_insights_query',
-    'company',
-    RateLimits.ANALYTICS_QUERY,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
-      return withConvexErrorHandling(async () => {
-        const insightsData = await convexHelper.query(
-          api.crossDomainAnalytics.generateInsights,
-          { 
-            companyId: context.companyId,
-            domainIds,
-            filters: filters || {}
-          },
-          {
-            serviceName: 'CrossDomainAnalyticsActions',
-            methodName: 'generateCrossDomainInsights',
-          }
-        );
+    domainIds: string[],
+    filters?: AnalyticsFilters
+) {
+    try {
+        // TODO: Implement actual insight generation
+        const insights: MailboxDomainImpactAnalysis[] = domainIds.map((domainId) => {
+            const mailboxImpacts = Array.from({ length: 5 }, (_, i) => {
+                const impactScore = 30 + Math.floor(Math.random() * 60);
+                return {
+                    mailboxId: `mailbox-${i + 1}`,
+                    email: `mailbox${i + 1}@domain-${domainId}.com`,
+                    impactScore,
+                    impactClassification: classifyImpact(impactScore),
+                    contributionMetrics: {
+                        volumeContribution: Math.random() * 0.3,
+                        deliveryContribution: Math.random() * 0.3,
+                        engagementContribution: Math.random() * 0.3,
+                    },
+                    healthFactors: {
+                        warmupStatus: i < 2 ? "WARMING" : "WARMED",
+                        healthScore: 70 + Math.floor(Math.random() * 25),
+                        reputationScore: 75 + Math.floor(Math.random() * 20),
+                    },
+                };
+            });
 
-        return createActionResult(insightsData as {
-          insights: Array<{
-            type: 'performance' | 'trend' | 'correlation' | 'anomaly';
-            title: string;
-            description: string;
-            impact: 'high' | 'medium' | 'low';
-            confidence: number;
-            recommendation: string;
-            affectedDomains: string[];
-          }>;
-          summary: {
-            totalInsights: number;
-            highImpactInsights: number;
-            actionableRecommendations: number;
-            overallHealthScore: number;
-          };
+            const positiveCount = mailboxImpacts.filter(
+                (m) => m.impactClassification === "POSITIVE"
+            ).length;
+            const negativeCount = mailboxImpacts.filter(
+                (m) => m.impactClassification === "NEGATIVE"
+            ).length;
+            const neutralCount = mailboxImpacts.filter(
+                (m) => m.impactClassification === "NEUTRAL"
+            ).length;
+
+            const avgImpact =
+                mailboxImpacts.reduce((sum, m) => sum + m.impactScore, 0) /
+                mailboxImpacts.length;
+
+            return {
+                domainId,
+                domainName: `domain-${domainId}.com`,
+                summary: {
+                    totalMailboxes: mailboxImpacts.length,
+                    positiveImpactMailboxes: positiveCount,
+                    negativeImpactMailboxes: negativeCount,
+                    neutralImpactMailboxes: neutralCount,
+                    averageImpactScore: Math.round(avgImpact),
+                },
+                mailboxImpactAnalysis: mailboxImpacts,
+            };
         });
-      });
-    })
-  );
-}
 
-/**
- * Export cross-domain analytics data
- */
-export async function exportCrossDomainAnalytics(
-  domainIds: string[],
-  analysisType: 'performance' | 'correlation' | 'trend' | 'all' = 'all',
-  filters?: AnalyticsFilters,
-  format: 'csv' | 'json' = 'csv'
-): Promise<ActionResult<{ downloadUrl: string; expiresAt: number }>> {
-  return withContextualRateLimit(
-    'cross_domain_export',
-    'company',
-    RateLimits.ANALYTICS_EXPORT,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
-      return withConvexErrorHandling(async () => {
-        const exportData = await convexHelper.mutation(
-          api.crossDomainAnalytics.exportAnalytics,
-          { 
-            companyId: context.companyId,
-            domainIds,
-            analysisType,
-            filters: filters || {},
-            format,
-            requestedBy: context.userId,
-            requestedAt: Date.now()
-          },
-          {
-            serviceName: 'CrossDomainAnalyticsActions',
-            methodName: 'exportCrossDomainAnalytics',
-          }
-        );
-
-        return createActionResult(exportData as { downloadUrl: string; expiresAt: number });
-      });
-    })
-  );
-}
-
-/**
- * Get cross-domain analytics health check
- */
-export async function getCrossDomainAnalyticsHealth(): Promise<ActionResult<{
-  status: 'healthy' | 'degraded' | 'unhealthy';
-  lastUpdated: number;
-  dataFreshness: number;
-  issues: string[];
-}>> {
-  return withAuth(async (_context: ActionContext) => {
-    return withConvexErrorHandling(async () => {
-      // Check ConvexQueryHelper health
-      const helperHealthy = await convexHelper.healthCheck();
-      
-      if (!helperHealthy) {
-        return createActionResult({
-          status: 'unhealthy' as const,
-          lastUpdated: Date.now(),
-          dataFreshness: 0,
-          issues: ['ConvexQueryHelper health check failed']
-        });
-      }
-
-      const healthData = await convexHelper.query(
-        api.crossDomainAnalytics.getHealthStatus,
-        {},
-        {
-          serviceName: 'CrossDomainAnalyticsActions',
-          methodName: 'getCrossDomainAnalyticsHealth',
-        }
-      );
-
-      return createActionResult(healthData as {
-        status: 'healthy' | 'degraded' | 'unhealthy';
-        lastUpdated: number;
-        dataFreshness: number;
-        issues: string[];
-      });
-    });
-  });
+        return {
+            success: true,
+            data: insights,
+            timestamp: new Date().toISOString(),
+        };
+    } catch (error) {
+        console.error("Error in generateCrossDomainInsights:", error);
+        return {
+            success: false,
+            error: {
+                message: error instanceof Error ? error.message : "Unknown error",
+                code: "CROSS_DOMAIN_INSIGHTS_ERROR",
+            },
+            timestamp: new Date().toISOString(),
+        };
+    }
 }

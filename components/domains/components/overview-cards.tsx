@@ -1,10 +1,11 @@
 "use client";
 import { getDomainsData } from "@/lib/actions/domains";
+import { cn } from "@/lib/utils";
 import { CheckCircle, Clock, Globe, Mail } from "lucide-react";
 import { useAnalytics } from "@/context/AnalyticsContext";
 import { useState, useEffect } from "react";
 import type { MailboxWarmupData, Domain } from "@/types";
-import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
+import StatsCard from "@/components/analytics/cards/StatsCard";
 
 function OverviewCards() {
   const [mailboxes, setMailboxes] = useState<MailboxWarmupData[]>([]);
@@ -48,37 +49,42 @@ function OverviewCards() {
       title: "Total Domains",
       value: domains.length,
       icon: Globe,
-      color: "primary" as const,
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600",
     },
     {
       title: "Active Mailboxes",
       value: mailboxes.length,
       icon: Mail,
-      color: "info" as const,
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
     },
     {
       title: "Ready to Send",
       value: readyMailboxes,
       icon: CheckCircle,
-      color: "success" as const,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
     },
     {
       title: "Warming Up",
       value: warmingMailboxes,
       icon: Clock,
-      color: "warning" as const,
+      iconBg: "bg-orange-100",
+      iconColor: "text-orange-600",
     },
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
       {cards.map((card, index) => (
-        <UnifiedStatsCard
+        <StatsCard
           key={index}
           title={card.title}
-          value={card.value}
+          value={card.value.toString()}
           icon={card.icon}
-          color={card.color}
+          color={cn(card.iconBg, card.iconColor)}
+          className="flex-row-reverse gap-5 justify-end"
         />
       ))}
     </div>

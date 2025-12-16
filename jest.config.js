@@ -14,7 +14,6 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
-  modulePathIgnorePatterns: ['node_modules', 'jest-test-results.json'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   globals: {
     'ts-jest': {
@@ -24,4 +23,3 @@ module.exports = {
     },
   },
 };
-

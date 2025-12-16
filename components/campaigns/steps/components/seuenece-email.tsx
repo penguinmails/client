@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -35,7 +35,8 @@ interface EmailStepProps {
   index: number;
   updateStep: (index: number, updates: Partial<EmailStep>) => void;
   removeStep: (index: number) => void;
-  focusedTextareaIndex: React.MutableRefObject<number | null>;
+  focusedTextareaIndex: number | null;
+  setFocusedTextareaIndex: (index: number | null) => void;
 }
 
 function EmailStep({
@@ -44,6 +45,7 @@ function EmailStep({
   updateStep,
   removeStep,
   focusedTextareaIndex,
+  setFocusedTextareaIndex,
 }: EmailStepProps) {
   const [isPreviewMode, setIsPreviewMode] = React.useState(false);
 
@@ -120,17 +122,17 @@ function EmailStep({
       .replace(/\n/g, "<br>");
   }
   return (
-    <div className="bg-card dark:bg-card rounded-2xl shadow-sm border border-border p-6">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-orange-100 dark:bg-orange-500/20">
-            <Mail className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-orange-100">
+            <Mail className="w-5 h-5 text-orange-600" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-foreground">
+            <h3 className="text-lg font-semibold text-gray-900">
               Email {Math.floor(index / 2) + 1}
             </h3>
-            <p className="text-sm text-muted-foreground">Step {index + 1}</p>
+            <p className="text-sm text-gray-500">Step {index + 1}</p>
           </div>
         </div>
         <Button
@@ -138,7 +140,7 @@ function EmailStep({
           variant="ghost"
           size="sm"
           onClick={removeStepHandler}
-          className="p-2 text-muted-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors"
+          className="p-2 text-gray-400 hover:text-red-600 transition-colors"
         >
           <Trash2 className="w-5 h-5" />
         </Button>
@@ -146,7 +148,7 @@ function EmailStep({
 
       <div className="space-y-6">
         <div>
-          <Label className="block text-sm font-medium text-foreground mb-2">
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
             Subject Line
           </Label>
           <div className="flex space-x-2">
@@ -156,7 +158,7 @@ function EmailStep({
               name="subject"
               onChange={updateStepHandler}
               placeholder="e.g. Quick question about {Company}'s software strategy"
-              className="w-full px-4 py-3 border border-input rounded-xl "
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl "
             />
             <Button variant="outline" className="whitespace-nowrap">
               Import Template
@@ -164,11 +166,11 @@ function EmailStep({
           </div>
         </div>
         <div>
-          <Label className="block text-sm font-medium text-foreground mb-2">
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
             Email Content
           </Label>
-          <div className="border border-border rounded-xl">
-            <div className="flex justify-between items-center p-2 border-b border-border">
+          <div className="border border-gray-300 rounded-xl">
+            <div className="flex justify-between items-center p-2 border-b border-gray-200">
               <div className="flex space-x-1">
                 <Button
                   type="button"
@@ -241,14 +243,14 @@ function EmailStep({
                 name="content"
                 value={step.content || ""}
                 onChange={updateStepHandler}
-                onFocus={() => (focusedTextareaIndex.current = index)}
+                onFocus={() => setFocusedTextareaIndex(index)}
                 data-step-index={index}
                 placeholder="Write your email here... Use {First Name}, {Company}, etc. for personalization."
                 className="border-0 focus:ring-0 px-4 py-3 rounded-none rounded-b-xl resize-none focus:border-none"
               />
             ) : (
               <div
-                className="px-4 py-3 min-h-[144px] rounded-none rounded-b-xl bg-muted/50 dark:bg-muted/30 border-0"
+                className="px-4 py-3 min-h-[144px] rounded-none rounded-b-xl bg-gray-50 border-0"
                 dangerouslySetInnerHTML={{
                   __html: renderPreview(
                     step.content || "No content to preview"
@@ -260,7 +262,7 @@ function EmailStep({
 
           {/* Personalization Tags */}
           <div className="mt-4">
-            <Label className="block text-sm font-medium text-foreground mb-2">
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
               Personalization Tags
             </Label>
             <div className="flex flex-wrap gap-2">
@@ -283,7 +285,7 @@ function EmailStep({
                   size="sm"
                   name="content"
                   onClick={() => {
-                    if (focusedTextareaIndex.current === index) {
+                    if (focusedTextareaIndex === index) {
                       const currentContent = step.content || "";
                       const updatedContent = currentContent
                         ? `${currentContent} ${tag.value}`
@@ -291,7 +293,7 @@ function EmailStep({
                       updateStep(index, { content: updatedContent });
                     }
                   }}
-                  className="text-xs px-2 py-1 border-border text-foreground hover:bg-accent dark:hover:bg-accent"
+                  className="text-xs px-2 py-1 border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   {tag.label}
                 </Button>
@@ -301,7 +303,7 @@ function EmailStep({
         </div>
         {index > 0 && (
           <div>
-            <Label className="block text-sm font-medium text-foreground mb-2">
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
               Send Condition
             </Label>
             <Select

@@ -43,7 +43,7 @@ export function PlanUtilizationCard({
     <Card>
       <CardHeader>
         <CardTitle>Plan Utilization</CardTitle>
-        <p className="text-sm text-gray-600 dark:text-muted-foreground">
+        <p className="text-sm text-gray-600">
           Current plan: {planUtilization.planType}
         </p>
       </CardHeader>
@@ -71,9 +71,7 @@ export function PlanUtilizationCard({
               </span>
             </div>
           </div>
-          <p className="text-sm text-gray-600 dark:text-muted-foreground mt-2">
-            Overall Utilization
-          </p>
+          <p className="text-sm text-gray-600 mt-2">Overall Utilization</p>
         </div>
 
         {planUtilization.recommendations.length > 0 && (
@@ -82,10 +80,7 @@ export function PlanUtilizationCard({
             {planUtilization.recommendations
               .slice(0, 3)
               .map((rec: string, index: number) => (
-                <p
-                  key={index}
-                  className="text-xs text-gray-600 dark:text-muted-foreground"
-                >
+                <p key={index} className="text-xs text-gray-600">
                   • {rec}
                 </p>
               ))}
