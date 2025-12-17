@@ -1,8 +1,9 @@
 import React from "react";
-import { Mail, BarChart2, MessageSquare, MousePointer } from "lucide-react"; // Using lucide-react for icons
+import { Mail, BarChart2, MessageSquare, MousePointer } from "lucide-react";
 import Link from "next/link";
-import { textColors } from "@/lib/design-tokens";
+import { textColors, typography } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 // Define the expected data structure for props
 interface CampaignStat {
@@ -18,16 +19,17 @@ interface RecentCampaignsListProps {
   campaigns: CampaignStat[];
 }
 
-// Accept campaigns as props
 const RecentCampaignsList: React.FC<RecentCampaignsListProps> = ({
   campaigns,
 }) => {
   return (
-    <div className="bg-card dark:bg-card shadow rounded-lg p-4 h-64 flex flex-col">
-      <h3 className={cn("text-lg font-medium mb-4", textColors.primary)}>
-        Recent Campaigns
-      </h3>
-      <div className="flex-grow overflow-y-auto">
+    <Card className="h-64 flex flex-col">
+      <CardHeader>
+        <CardTitle className={typography.cardTitle}>
+          Recent Campaigns
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="flex-grow overflow-y-auto">
         {/* Use the campaigns prop */}
         <ul className="divide-y divide-border">
           {campaigns.map((campaign, index) => (
@@ -64,8 +66,8 @@ const RecentCampaignsList: React.FC<RecentCampaignsListProps> = ({
             </li>
           )}
         </ul>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
