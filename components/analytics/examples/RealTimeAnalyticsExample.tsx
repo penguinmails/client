@@ -26,7 +26,7 @@ import {
   useCampaignTimeSeriesData,
   useCampaignAnalyticsOverview,
   useOptimisticCampaignAnalytics,
-} from "@/hooks/useCampaignAnalytics";
+} from "@/shared/hooks/useCampaignAnalytics";
 
 // Imporonents
 // import { RealTimeCampaignDashboard } from "../components/RealTimeCampaignDashboard";

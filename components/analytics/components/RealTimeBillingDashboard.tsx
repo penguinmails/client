@@ -12,8 +12,8 @@ import {
   useBillingAnalyticsDashboard,
   useUsageRecommendations,
   useOptimisticBillingAnalytics,
-} from "@/hooks/useBillingAnalytics";
-import { useBillingRefresh } from "@/hooks/useBillingRefresh";
+} from "@/shared/hooks/useBillingAnalytics";
+import { useBillingRefresh } from "@/shared/hooks/useBillingRefresh";
 import { AnalyticsFilters } from "@/types/analytics/core";
 import { BillingAnalyticsDashboardSkeleton } from "./BillingAnalyticsSkeletons";
 import {

@@ -1,12 +1,12 @@
 import { Folder, FolderPlus } from "lucide-react";
-import { Button } from "../ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
+} from "@/shared/ui/dialog";
 import NewFolderForm from "./new-folder-form";
 
 function CreateNewFolderButton() {

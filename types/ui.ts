@@ -3,7 +3,7 @@ import { VariantProps } from "class-variance-authority";
 
 // Button Types
 export type ButtonVariants = VariantProps<
-  typeof import("../components/ui/button/button").buttonVariants
+  typeof import("@/shared/ui/button/button").buttonVariants
 >;
 export type ButtonVariant =
   | "default"

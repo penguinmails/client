@@ -1,6 +1,6 @@
 # Design System Components
 
-This design system provides unified, consolidated components that use existing UI primitives from `components/ui/` and follow Tailwind-first design principles.
+This design system provides unified, consolidated components that use existing UI primitives from `shared/ui/` and follow Tailwind-first design principles.
 
 ## 🎯 Philosophy
 
@@ -372,17 +372,16 @@ import { DashboardLayout } from "@/components/design-system/components/dashboard
 
 All design system components depend on existing UI components:
 
-- `components/ui/card` - Card, CardHeader, CardContent, CardTitle
-- `components/ui/table` - Table, TableHeader, TableBody, TableRow, TableCell, TableHead
-- `components/ui/button` - Button variants and sizes
-- `components/ui/badge` - Status indicators and badges
-- `components/ui/input` - Form inputs
-- `components/ui/select` - Select components
-- `components/ui/checkbox` - Checkbox component
-- `components/ui/form` - Form field components
-- `components/ui/breadcrumb` - Navigation breadcrumbs
-- `components/layout/DashboardSidebar` - Sidebar navigation
-
+- `shared/ui/card` - Card, CardHeader, CardContent, CardTitle
+- `shared/ui/table` - Table, TableHeader, TableBody, TableRow, TableCell, TableHead
+- `shared/ui/button` - Button variants and sizes
+- `shared/ui/badge` - Status indicators and badges
+- `shared/ui/input` - Form inputs
+- `shared/ui/select` - Select components
+- `shared/ui/checkbox` - Checkbox component
+- `shared/ui/form` - Form field components
+- `shared/ui/breadcrumb` - Navigation breadcrumbs
+- `componnts/layout/DashboardSidebar` - Sidebar navigation
 ## ✅ Benefits
 
 - **Reduced Duplication**: Single source of truth for common UI patterns

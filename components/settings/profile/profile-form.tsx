@@ -4,7 +4,7 @@ import { Button } from "@/shared/ui/button/button";
 import { Form } from "@/shared/ui/form";
 import { Separator } from "@/shared/ui/separator";
 import { Loader2 } from "lucide-react";
-import { useProfileForm } from "@/hooks/useProfileForm";
+import { useProfileForm } from "@/shared/hooks/useProfileForm";
 import ProfileBasicsForm from "@/components/settings/profile/ProfileBasicsForm";
 import AvatarForm from "@/components/settings/profile/AvatarForm";
 import PreferencesForm from "@/components/settings/profile/PreferencesForm";

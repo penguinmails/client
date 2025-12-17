@@ -40,7 +40,7 @@ import {
 import { Input } from "@/shared/ui/input/input";
 import { Label } from "@/shared/ui/label";
 import { Skeleton } from "@/shared/ui/skeleton";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/shared/hooks/use-toast";
 import { cn } from "@/shared/lib/utils";
 import { Edit, Trash2, Plus, RefreshCw, AlertCircle } from "lucide-react";
 import {
@@ -54,7 +54,7 @@ import {
 import {
   useServerAction,
   useServerActionWithParams,
-} from "@/hooks/useServerAction";
+} from "@/shared/hooks/useServerAction";
 import type { TeamMember, TeamInvite, TeamRole } from "@/types/team";
 
 interface EditMemberDialogProps {

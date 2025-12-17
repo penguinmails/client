@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useStaffAccess } from "@/hooks/useEnhancedAuth";
+import { useStaffAccess } from "@/shared/hooks/useEnhancedAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button/button";
 import { Badge } from "@/shared/ui/badge";

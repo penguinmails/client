@@ -17,7 +17,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { Button } from "@/shared/ui/button/button";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 

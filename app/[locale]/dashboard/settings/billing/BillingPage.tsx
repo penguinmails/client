@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { config } from "@/shared/lib/config";
 import { getBillingDataForSettings } from "@/shared/lib/actions/billing";
-import { useServerAction } from "@/hooks/useServerAction";
+import { useServerAction } from "@/shared/hooks/useServerAction";
 import { useEffect } from "react";
 import { Button } from "@/shared/ui/button/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
-import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { useStripeCheckout } from "@/shared/hooks/useStripeCheckout";
 
 // Simple loading skeleton component
 function BillingLoadingSkeleton() {

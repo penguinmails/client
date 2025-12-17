@@ -148,7 +148,7 @@ le.log(`Rank ${template.effectiveness.rank}: ${template.templateName}`);
 ### Real-Time Template Analytics
 
 ```typescript
-import { useTemplatePerformanceMetrics } from "@/hooks/useTemplateAnalytics";
+import { useTemplatePerformanceMetrics } from "@/shared/hooks/useTemplateAnalytics";
 
 function TemplateAnalyticsDashboard({ templateIds, companyId }) {
   const { data: templates, isLoading } = useTemplatePerformanceMetrics(

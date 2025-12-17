@@ -12,7 +12,7 @@ import {
 import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLoadingSkeleton";
 import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
 import { showBillingUpdateSuccess } from "@/components/settings/common/SettingsSuccessNotification";
-import { useServerAction } from "@/hooks/useServerAction";
+import { useServerAction } from "@/shared/hooks/useServerAction";
 import { getBillingDataForSettings as getBillingInfo } from "@/shared/lib/actions/billing";
 import { Loader2 } from "lucide-react";
 import type { BillingData } from "@/types/settings";

@@ -9,7 +9,7 @@ import { useTwoAuthContext } from "./two-factor-auth-switch";
 import { AlertTriangle, Check, Shield, Loader2, RefreshCw } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
 import { cn } from "@/shared/lib/utils";
-import { useServerAction } from "@/hooks/useServerAction";
+import { useServerAction } from "@/shared/hooks/useServerAction";
 import { getSecurityRecommendations } from "@/shared/lib/actions/settings";
 
 interface SecurityRecommendation {

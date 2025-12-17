@@ -29,7 +29,7 @@ import { updateCompanyInfo, getUserSettings } from "@/shared/lib/actions/setting
 import {
   useServerAction,
   useServerActionWithParams,
-} from "@/hooks/useServerAction";
+} from "@/shared/hooks/useServerAction";
 import { BillingLoadingSkeleton } from "@/components/settings/billing/BillingLoadingSkeleton";
 import {
   SettingsErrorBoundary,
@@ -37,7 +37,7 @@ import {
 } from "@/components/settings/SettingsErrorBoundary";
 import { Button } from "@/shared/ui/button/button";
 import { toast } from "sonner";
-import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { useStripeCheckout } from "@/shared/hooks/useStripeCheckout";
 import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import CheckoutDialog from "@/components/settings/billing/checkout-dialog";

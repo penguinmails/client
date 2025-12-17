@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader } from "../../ui/card";
-import { Separator } from "../../ui/separator";
-import { Skeleton } from "../../ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Separator } from "@/shared/ui/separator";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 function CampaignTableSkeleton({
   title = "Table Skeleton",

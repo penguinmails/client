@@ -9,7 +9,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { jest } from "@jest/globals";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { useTenantAccess } from "@/hooks/useEnhancedAuth";
+import { useTenantAccess } from "@/shared/hooks/useEnhancedAuth";
 import TenantCompanySelector from "@/components/auth/TenantCompanySelector";
 import StaffDashboard from "@/components/auth/StaffDashboard";
 

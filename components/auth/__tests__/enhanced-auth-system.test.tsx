@@ -42,7 +42,7 @@ import {
   useCompanyAccess,
   useStaffAccess,
   useErrorRecovery,
-} from "@/hooks/useEnhancedAuth";
+} from "@/shared/hooks/useEnhancedAuth";
 import TenantCompanySelector from "@/components/auth/TenantCompanySelector";
 import EnhancedErrorBoundary from "@/components/auth/EnhancedErrorBoundary";
 import StaffDashboard from "@/components/auth/StaffDashboard";

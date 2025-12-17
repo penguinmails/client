@@ -174,7 +174,7 @@ const MyComponent = () => {
 ### Tenant Access Validation
 
 ```typescript
-import { useTenantAccess } from '@/hooks/useEnhancedAuth';
+import { useTenantAccess } from '@/shared/hooks/useEnhancedAuth';
 
 const TenantComponent = ({ tenantId }: { tenantId: string }) => {
   const { hasAccess, role, loading, error } = useTenantAccess(tenantId);
@@ -194,7 +194,7 @@ const TenantComponent = ({ tenantId }: { tenantId: string }) => {
 ### Staff Administration
 
 ```typescript
-import { useStaffAccess } from '@/hooks/useEnhancedAuth';
+import { useStaffAccess } from '@/shared/hooks/useEnhancedAuth';
 
 const AdminPanel = () => {
   const { isStaff, systemHealth, checkSystemHealth } = useStaffAccess();
@@ -214,7 +214,7 @@ const AdminPanel = () => {
 ### Error Recovery
 
 ```typescript
-import { useErrorRecovery } from '@/hooks/useEnhancedAuth';
+import { useErrorRecovery } from '@/shared/hooks/useEnhancedAuth';
 
 const ErrorHandler = () => {
   const { error, errorMessage, canRecover, recoverFromError } = useErrorRecovery();

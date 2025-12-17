@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useTenantAccess, useCompanyAccess } from "@/hooks/useEnhancedAuth";
+import { useTenantAccess, useCompanyAccess } from "@/shared/hooks/useEnhancedAuth";
 import {
   Select,
   SelectContent,

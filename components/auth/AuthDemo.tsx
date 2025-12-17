@@ -13,7 +13,7 @@ import {
   useCompanyAccess,
   useStaffAccess,
   useErrorRecovery,
-} from "@/hooks/useEnhancedAuth";
+} from "@/shared/hooks/useEnhancedAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button/button";
 import { Badge } from "@/shared/ui/badge";

@@ -31,7 +31,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useCampaignStats } from "@/hooks/useCampaignStats";
+import { useCampaignStats } from "@/shared/hooks/useCampaignStats";
 
 type TooltipPayloadItem = {
   color: string;

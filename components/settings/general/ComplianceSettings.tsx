@@ -33,7 +33,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/ui/form";
-import { useServerAction } from "@/hooks/useServerAction";
+import { useServerAction } from "@/shared/hooks/useServerAction";
 import {
   getComplianceSettings,
   updateComplianceSettings,

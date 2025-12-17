@@ -5,7 +5,7 @@ import { SettingsErrorBoundary } from "@/components/settings/SettingsErrorBounda
 import { SettingsLoadingSkeleton } from "./SettingsLoadingSkeleton";
 import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { WifiOff } from "lucide-react";
-import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useOnlineStatus } from "@/shared/hooks/useOnlineStatus";
 
 interface SettingsPageWrapperProps {
   children: ReactNode;

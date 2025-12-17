@@ -10,8 +10,8 @@ import {
   CardTitle,
 } from "@/shared/ui/card";
 import { AnalyticsProvider } from "@/context/AnalyticsContext";
-import { useMailboxes } from "@/hooks/useMailboxes";
-import { useCampaignAnalytics } from "@/hooks/useCampaignAnalytics";
+import { useMailboxes } from "@/shared/hooks/useMailboxes";
+import { useCampaignAnalytics } from "@/shared/hooks/useCampaignAnalytics";
 import { useDomainAnalytics } from "@/components/analytics/hooks/useDomainAnalytics";
 
 // Import migrated components

@@ -12,7 +12,7 @@ import {
   SettingsLoadingSkeleton,
   SettingsErrorState,
 } from "@/components/settings/common";
-import { useServerAction, type ActionResult } from "@/hooks/useServerAction";
+import { useServerAction, type ActionResult } from "@/shared/hooks/useServerAction";
 import { getUserProfile } from "@/shared/lib/actions/profile";
 import { mapNileUserToFormData, type NileUser } from "@/shared/lib/utils";
 import PasswordSettingsForm from "../profile/PasswordSettingsForm";

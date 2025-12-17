@@ -22,9 +22,9 @@ import {
   useLoading,
   useDomainLoading,
 } from "./LoadingContext";
-import { useAnalyticsRefresh } from "@/hooks/useAnalyticsRefresh";
-import { useFormattedAnalytics } from "@/hooks/useFormattedAnalytics";
-import { useParallelDomainLoading } from "@/hooks/useParallelDomainLoading";
+import { useAnalyticsRefresh } from "@/shared/hooks/useAnalyticsRefresh";
+import { useFormattedAnalytics } from "@/shared/hooks/useFormattedAnalytics";
+import { useParallelDomainLoading } from "@/shared/hooks/useParallelDomainLoading";
 import { useFilterValidation } from "./FiltersContext";
 
 /**

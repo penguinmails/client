@@ -14,7 +14,7 @@ import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLo
 import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
 import { showAppearanceUpdateSuccess } from "@/components/settings/common/SettingsSuccessNotification";
 import { useClientPreferences } from "@/context/ClientPreferencesContext";
-import { usePreferenceSync } from "@/hooks/usePreferenceSync";
+import { usePreferenceSync } from "@/shared/hooks/usePreferenceSync";
 import { Sun, Moon, Monitor, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import type { TableDensity } from "@/shared/lib/utils/clientStorage";

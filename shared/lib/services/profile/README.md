@@ -218,7 +218,7 @@ export const mapFormDataToNileUpdate = (formData: ProfileFormData) => ({
 ### Error Handling Hook
 
 ```typescript
-import { useProfileActions } from '@/hooks/useProfileActions';
+import { useProfileActions } from '@/shared/hooks/useProfileActions';
 
 export function ProfileComponent() {
   const { handleError } = useProfileActions();
