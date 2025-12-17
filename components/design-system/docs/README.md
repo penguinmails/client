@@ -381,7 +381,7 @@ All design system components depend on existing UI components:
 - `shared/ui/checkbox` - Checkbox component
 - `shared/ui/form` - Form field components
 - `shared/ui/breadcrumb` - Navigation breadcrumbs
-- `componnts/layout/DashboardSidebar` - Sidebar navigation
+- `components/layout/DashboardSidebar` - Sidebar navigation
 ## ✅ Benefits
 
 - **Reduced Duplication**: Single source of truth for common UI patterns

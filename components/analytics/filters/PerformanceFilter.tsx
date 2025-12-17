@@ -1,8 +1,8 @@
 "use client";
-import { Button } from "@/shared//ui/button/button";
-import { Checkbox } from "@/shared//ui/checkbox";
-import { Input } from "@/shared//ui/input/input";
-import { Label } from "@/shared//ui/label";
+import { Button } from "@/shared/ui/button/button";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { Input } from "@/shared/ui/input/input";
+import { Label } from "@/shared/ui/label";
 import {
   Popover,
   PopoverContent,
