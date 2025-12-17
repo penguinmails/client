@@ -4,11 +4,11 @@ import "./globals.css";
 import { cn } from "@/shared/lib/utils";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/context/AuthContext";
-import { Providers } from "@/components/common/providers";
+import { Providers } from "@/app/providers/providers";
 import EnhancedErrorBoundary from "@/components/auth/EnhancedErrorBoundary";
-import {NextIntlClientProvider, hasLocale} from 'next-intl';
-import {notFound} from 'next/navigation';
-import {routing} from '@/i18n/routing';
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/shared/config/i18n/routing";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,17 +38,17 @@ export const metadata: Metadata = {
 
 // Generate static params for each locale
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({locale}));
+  return routing.locales.map((locale) => ({ locale }));
 }
 
 export default async function RootLayout({
   children,
-  params
+  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }>) {
-  const {locale} = await params;
+  const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
