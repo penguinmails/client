@@ -1,4 +1,4 @@
-import { nile } from "../../app/api/[...nile]/nile";
+import { nile } from "@/shared/config/nile";
 import { cookies } from "next/headers";
 
 // User type from NileDB

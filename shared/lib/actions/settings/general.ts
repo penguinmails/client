@@ -7,7 +7,7 @@
 
 "use server";
 
-import { nile } from "../../../app/api/[...nile]/nile";
+import { nile } from "@/shared/config/nile";
 import { mockUserSettings } from "../../data/settings.mock";
 import { ActionResult } from "../core/types";
 import { ErrorFactory, withErrorHandling } from "../core/errors";

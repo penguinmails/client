@@ -12,7 +12,7 @@ import { ActionResult } from "@/shared/lib/actions/core/types";
 import { withAuth, withContextualRateLimit, RateLimits } from "@/shared/lib/actions/core/auth";
 import { ErrorFactory, withErrorHandling } from "@/shared/lib/actions/core/errors";
 import { validateTemplateData, validateTemplateId } from "./validation";
-import { nile } from "@/app/api/[...nile]/nile";
+import { nile } from "@/shared/config/nile";
 import { initialQuickReplies } from "@/shared/lib/data/template.mock";
 
 // Map mock data to Template type

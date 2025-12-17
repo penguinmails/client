@@ -13,7 +13,7 @@ import {
 // GET /api/billing/summary/limits - Check plan limits and usage
 export async function GET(_request: NextRequest) {
   try {
-    const { nile } = await import("@/app/api/[...nile]/nile");
+    const { nile } = await import("@/shared/config/nile");
 
     // Get user context for company ID
     const user = await nile.users.getSelf();

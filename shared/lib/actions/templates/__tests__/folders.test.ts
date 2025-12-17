@@ -10,11 +10,11 @@ import {
   updateTemplateFolder, 
   deleteTemplateFolder 
 } from '../folders';
-import { nile } from '@/app/api/[...nile]/nile';
+import { nile } from '@/shared/config/nile';
 import * as auth from '@/shared/lib/actions/core/auth';
 
 // Mock dependencies
-jest.mock('@/app/api/[...nile]/nile', () => ({
+jest.mock('@/shared/config/nile', () => ({
   nile: {
     db: {
       query: jest.fn(),

@@ -20,7 +20,7 @@ import {
 export async function GET(_request: NextRequest) {
   try {
     // Get user context for company ID
-    const { nile } = await import("@/app/api/[...nile]/nile");
+    const { nile } = await import("@/shared/config/nile");
     const user = await nile.users.getSelf();
     if (user instanceof Response) {
       return NextResponse.json(

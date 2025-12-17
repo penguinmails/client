@@ -1,6 +1,6 @@
 "use server";
 
-import { nile } from "@/app/api/[...nile]/nile";
+import { nile } from "@/shared/config/nile";
 import {
   PaymentMethod,
   PaymentMethodFormData,

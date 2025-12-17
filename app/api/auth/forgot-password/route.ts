@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { nile } from '@/app/api/[...nile]/nile';
+import { nile } from '@/shared/config/nile';
 import { z } from 'zod';
 
 const forgotPasswordSchema = z.object({

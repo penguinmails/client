@@ -15,7 +15,7 @@ import { ActionResult } from "@/shared/lib/actions/core/types";
 import { withAuth, withAuthAndCompany, withContextualRateLimit, RateLimits } from "@/shared/lib/actions/core/auth";
 import { ErrorFactory, withErrorHandling } from "@/shared/lib/actions/core/errors";
 import { validateTemplateData, validateTemplateId } from "./validation";
-import { nile } from "@/app/api/[...nile]/nile";
+import { nile } from "@/shared/config/nile";
 import { initialTemplates as initialTemplatesMock } from "@/shared/lib/data/template.mock";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";

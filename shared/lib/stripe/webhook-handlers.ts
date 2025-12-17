@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { stripeApi } from './stripe-server';
-import { nile } from '@/app/api/[...nile]/nile';
+import { nile } from '@/shared/config/nile';
 
 // Handle checkout.session.completed - attach subscription to company_billing
 export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {

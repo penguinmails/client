@@ -2,7 +2,7 @@
 
 import { leadsStats, leadLists } from "@/shared/lib/data/leads";
 import { LeadStats } from "@/types/clients-leads";
-import { nile } from "@/app/api/[...nile]/nile";
+import { nile } from "@/shared/config/nile";
 import { getCurrentUserId } from "@/shared/lib/utils/auth";
 import { DbLeadList, DbLeadListRow } from "@/types/clients-leads";
 

@@ -11,12 +11,12 @@ import {
   deleteQuickReply,
   markQuickReplyAsUsed
 } from '../quick-replies';
-import { nile } from '@/app/api/[...nile]/nile';
+import { nile } from '@/shared/config/nile';
 import * as auth from '@/shared/lib/actions/core/auth';
 import { ActionContext, ActionResult } from '@/shared/lib/actions/core/types';
 
 // Mock dependencies
-jest.mock('@/app/api/[...nile]/nile', () => ({
+jest.mock('@/shared/config/nile', () => ({
   nile: {
     db: {
       query: jest.fn(),

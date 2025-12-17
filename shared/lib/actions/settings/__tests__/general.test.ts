@@ -20,7 +20,7 @@ jest.mock('@/shared/lib/utils/auth', () => ({
 }));
 
 // Mock the nile client
-jest.mock('@/app/api/[...nile]/nile', () => ({
+jest.mock('@/shared/config/nile', () => ({
   nile: {
     users: {
       getSelf: jest.fn(),
@@ -165,7 +165,7 @@ describe('General Settings Actions', () => {
   describe('getGeneralSettings', () => {
     it('should return general settings successfully', async () => {
       // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-      const { nile } = require('@/app/api/[...nile]/nile');
+      const { nile } = require('@/shared/config/nile');
       nile.users.getSelf.mockResolvedValue({
         name: 'Test User',
         email: 'test@example.com',
@@ -180,7 +180,7 @@ describe('General Settings Actions', () => {
 
     it('should handle nile API errors', async () => {
       // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-      const { nile } = require('@/app/api/[...nile]/nile');
+      const { nile } = require('@/shared/config/nile');
       nile.users.getSelf.mockResolvedValue(null); // Simulate API returning null
 
       const result = await getGeneralSettings();
@@ -287,7 +287,7 @@ describe('General Settings Actions', () => {
   describe('getAllSettings', () => {
     it('should return all settings successfully', async () => {
       // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-      const { nile } = require('@/app/api/[...nile]/nile');
+      const { nile } = require('@/shared/config/nile');
       nile.users.getSelf.mockResolvedValue({
         name: 'Test User',
         email: 'test@example.com',

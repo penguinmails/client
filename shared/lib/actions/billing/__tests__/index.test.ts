@@ -19,7 +19,7 @@ import * as billingIndex from '../index';
 import * as usageModule from '../usage';
 
 // Mock dependencies
-jest.mock('@/app/api/[...nile]/nile', () => ({
+jest.mock('@/shared/config/nile', () => ({
   nile: {
     db: {
       query: jest.fn(),

@@ -11,7 +11,7 @@ import { ActionResult } from "@/shared/lib/actions/core/types";
 import { withAuth, withContextualRateLimit, RateLimits } from "@/shared/lib/actions/core/auth";
 import { ErrorFactory, withErrorHandling } from "@/shared/lib/actions/core/errors";
 import { validateTemplateId } from "./validation";
-import { nile } from "@/app/api/[...nile]/nile";
+import { nile } from "@/shared/config/nile";
 
 /**
  * Template usage statistics interface

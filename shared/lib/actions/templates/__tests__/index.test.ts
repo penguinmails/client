@@ -4,11 +4,11 @@
 
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import { getTemplates, getTemplateById, updateTemplate, getTabCounts } from '../index';
-import { nile } from '@/app/api/[...nile]/nile';
+import { nile } from '@/shared/config/nile';
 import * as auth from '@/shared/lib/actions/core/auth';
 
 // Mock dependencies
-jest.mock('@/app/api/[...nile]/nile', () => ({
+jest.mock('@/shared/config/nile', () => ({
   nile: {
     db: {
       query: jest.fn(),

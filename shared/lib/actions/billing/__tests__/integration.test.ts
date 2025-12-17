@@ -11,7 +11,7 @@ import { requireAuth, withContextualRateLimit } from '../../core/auth';
 import { PaymentMethodType } from '@/types/billing';
 
 // Mock dependencies
-jest.mock('@/app/api/[...nile]/nile', () => ({
+jest.mock('@/shared/config/nile', () => ({
   nile: {
     db: {
       query: jest.fn(),

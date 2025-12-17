@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { stripeApi } from '@/shared/lib/stripe/stripe-server';
-import { nile } from '@/app/api/[...nile]/nile';
+import { nile } from '@/shared/config/nile';
 
 interface NileUser {
   id: string;

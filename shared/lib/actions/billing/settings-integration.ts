@@ -1,6 +1,6 @@
 "use server";
 
-import { nile } from "@/app/api/[...nile]/nile";
+import { nile } from "@/shared/config/nile";
 import { Invoice } from "@/types/billing";
 import { ID } from "@/types/common";
 import { ActionResult } from "@/shared/lib/actions/core/types";
