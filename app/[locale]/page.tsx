@@ -16,10 +16,7 @@ import { Turnstile } from "next-turnstile";
 import { verifyTurnstileToken } from "./signup/verifyToken";
 import { useTranslations } from "next-intl";
 import { initPostHog } from "@/lib/instrumentation-client";
-import {
-  getLoginAttemptStatus,
-  recordFailedLoginAttempt,
-} from "@/lib/auth/rate-limit";
+import { getLoginAttemptStatus } from "@/lib/auth/rate-limit";
 
 //PostHog
 import { ph } from "@/lib/instrumentation-client";
@@ -84,8 +81,8 @@ export default function LoginPage() {
         (err as Error)?.message || loginContent.errors.generic;
       setError(errorMessage);
 
-      // Record failed login attempt
-      const status = recordFailedLoginAttempt(email);
+      // Get updated attempt status (AuthContext already recorded the failure)
+      const status = getLoginAttemptStatus(email);
       setShowTurnstile(status.requiresTurnstile);
       setLoginAttempts(status.attempts || 0);
       setTurnstileToken(null);
