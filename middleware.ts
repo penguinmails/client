@@ -6,9 +6,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { logError } from './lib/niledb/errors';
+import { logError } from '@/shared/lib/niledb/errors';
 import createMiddleware from 'next-intl/middleware';
-import {routing} from './i18n/routing';
+import {routing} from './shared/config/i18n/routing';
 
 // Security headers configuration
 const SECURITY_HEADERS = {

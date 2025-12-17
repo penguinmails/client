@@ -25,7 +25,10 @@ import {
   getBillingDataForSettings,
   updateBillingInfo,
 } from "@/shared/lib/actions/billing";
-import { updateCompanyInfo, getUserSettings } from "@/shared/lib/actions/settings";
+import {
+  updateCompanyInfo,
+  getUserSettings,
+} from "@/shared/lib/actions/settings";
 import {
   useServerAction,
   useServerActionWithParams,
@@ -39,7 +42,7 @@ import { Button } from "@/shared/ui/button/button";
 import { toast } from "sonner";
 import { useStripeCheckout } from "@/shared/hooks/useStripeCheckout";
 import { useSearchParams } from "next/navigation";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { usePathname, useRouter } from "@/shared/config/i18n/navigation";
 import CheckoutDialog from "@/components/settings/billing/checkout-dialog";
 
 function BillingTab() {
@@ -140,7 +143,7 @@ function BillingTab() {
   };
 
   useEffect(() => {
-    if (typeof checkout === 'string')
+    if (typeof checkout === "string")
       setTimeout(() => {
         router.push(pathname);
       }, 2000);
@@ -244,12 +247,16 @@ function BillingTab() {
             </div>
           </CardContent>
           <CardFooter className="ml-auto">
-            <ChangePlanTrigger title="Change Plan" onSelectPlan={handleCheckoutForPlan} isLoading={isCheckoutLoading} />
+            <ChangePlanTrigger
+              title="Change Plan"
+              onSelectPlan={handleCheckoutForPlan}
+              isLoading={isCheckoutLoading}
+            />
           </CardFooter>
         </Card>
 
         <CheckoutDialog
-          isModalOpen={typeof checkout === 'string'}
+          isModalOpen={typeof checkout === "string"}
           checkout={checkout}
           setIsModalOpen={() => router.push(pathname)}
         />
