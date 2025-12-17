@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
-
 const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -27,6 +26,8 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withNextIntl = createNextIntlPlugin();
+const withNextIntl = createNextIntlPlugin(
+  './shared/config/i18n/request.ts' 
+);
 
 export default withNextIntl(nextConfig);
