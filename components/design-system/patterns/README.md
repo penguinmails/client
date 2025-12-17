@@ -53,15 +53,15 @@ Display tabular data with search, filtering, and row actions.
 
 ```tsx
 import { UnifiedDataTable } from "@/components/design-system/components/unified-data-table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Badge } from "@/shared/ui/badge";
 import { MoreHorizontal, Edit, Trash2, ArrowUpDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/shared/ui/dropdown-menu";
 
 // Utility function for date formatting
 const formatDate = (date: string | Date) => {
@@ -151,9 +151,9 @@ Display detailed information with breadcrumbs and actions.
 ```tsx
 import { DashboardLayout } from "@/components/design-system/components/dashboard-layout";
 import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Button } from "@/shared/ui/button";
+import { Badge } from "@/shared/ui/badge";
 import { Edit, Play } from "lucide-react";
 
 // Utility function for date formatting
@@ -241,8 +241,8 @@ Handle empty states gracefully with clear calls-to-action.
 
 ```tsx
 import { DashboardLayout } from "@/components/design-system/components/dashboard-layout";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/shared/ui/card";
+import { Button } from "@/shared/ui/button";
 import { Mail, Plus } from "lucide-react";
 
 function EmptyCampaignsPage() {
@@ -286,8 +286,8 @@ Show skeleton loaders during data fetching.
 ```tsx
 import { DashboardLayout } from "@/components/design-system/components/dashboard-layout";
 import { UnifiedDataTable } from "@/components/design-system/components/unified-data-table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Badge } from "@/shared/ui/badge";
 import { ArrowUpDown } from "lucide-react";
 
 // Define columns (from the data table pattern above)
@@ -341,8 +341,8 @@ Handle errors gracefully with retry options.
 
 ```tsx
 import { DashboardLayout } from "@/components/design-system/components/dashboard-layout";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/shared/ui/card";
+import { Button } from "@/shared/ui/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
 function ErrorPage({ error, retry }) {

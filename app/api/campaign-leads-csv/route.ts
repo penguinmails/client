@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { campaignLeadsData } from '@/lib/data/leads';
+import { campaignLeadsData } from '@/shared/lib/data/leads';
 
 export async function GET() {
   const csvContent = campaignLeadsData.map((row) =>

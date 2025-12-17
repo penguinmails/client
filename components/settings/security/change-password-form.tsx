@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Form,
   FormControl,
@@ -8,10 +8,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input/input";
+import { Progress } from "@/shared/ui/progress";
+import { cn } from "@/shared/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";

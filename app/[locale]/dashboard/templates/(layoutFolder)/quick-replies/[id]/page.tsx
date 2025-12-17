@@ -1,14 +1,14 @@
 import TemplateActions from "@/components/templates/template-actions";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { getQuickReplyById } from "@/lib/actions/templates";
+} from "@/shared/ui/card";
+import { Separator } from "@/shared/ui/separator";
+import { getQuickReplyById } from "@/shared/lib/actions/templates";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";

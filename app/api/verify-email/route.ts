@@ -5,7 +5,7 @@ import {
   markTokenAsUsed,
   updateUserVerificationStatus,
   storeVerificationToken
-} from '@/lib/utils/email-verification';
+} from '@/shared/lib/utils/email-verification';
 
 // Schema for email verification requests
 const verifyEmailSchema = z.object({

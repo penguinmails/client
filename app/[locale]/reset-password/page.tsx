@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
 import { KeyRound, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { LandingLayout } from "@/components/landing/LandingLayout";
 import { AuthTemplate } from "@/components/auth/AuthTemplate";

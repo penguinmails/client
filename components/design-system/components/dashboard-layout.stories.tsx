@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { DashboardLayout } from "./dashboard-layout";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import {
   Plus,
   Settings,
@@ -17,7 +17,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import React from "react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 import { UnifiedStatsCard } from "./unified-stats-card";
 
 const meta = {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getBillingDataForSettings,
   updateBillingInfo,
-} from "@/lib/actions/billing";
+} from "@/shared/lib/actions/billing";
 
 /**
  * Billing Settings API Endpoints - Secure OLTP Operations

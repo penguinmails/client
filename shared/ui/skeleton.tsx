@@ -1,0 +1,18 @@
+import { cn } from "@/shared/lib/utils";
+
+interface SkeletonProps {
+  className?: string;
+  [key: string]: unknown;
+}
+
+function Skeleton({ className, ...props }: SkeletonProps) {
+  return (
+    <div
+      data-slot="skeleton"
+      className={cn("bg-accent animate-pulse rounded-md", className)}
+      {...props}
+    />
+  );
+}
+
+export { Skeleton };

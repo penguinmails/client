@@ -1,13 +1,13 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Separator } from "@/components/ui/separator";
-import { faqItems } from "@/lib/data/onboarding.mock";
+} from "@/shared/ui/collapsible";
+import { Separator } from "@/shared/ui/separator";
+import { faqItems } from "@/shared/lib/data/onboarding.mock";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { useCallback, useState } from "react";
 

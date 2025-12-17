@@ -1,11 +1,11 @@
 "use client";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Alert, AlertDescription } from "@/shared/ui/alert"
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Label } from "@/shared/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
-import { leadLists } from "@/lib/data/leads";
-import { cn } from "@/lib/utils";
+import { leadLists } from "@/shared/lib/data/leads";
+import { cn } from "@/shared/lib/utils";
 import { Users } from "lucide-react";
 
 function LeadsSelectionStep() {

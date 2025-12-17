@@ -1,13 +1,13 @@
 "use client ";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/shared/ui/dropdown-menu";
 import { useConversation } from "@/context/ConversationContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { Archive, Pin, Star, Tag, X } from "lucide-react";
 import Link from "next/link";
 import ShowNotesButton from "./show-notes-button";

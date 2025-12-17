@@ -29,7 +29,7 @@ Tracks compilation time and build performance metrics.
 **Usage:**
 
 ```typescript
-import { createPerformanceMonitor } from "@/lib/utils/performance-monitor";
+import { createPerformanceMonitor } from "@/shared/lib/utils/performance-monitor";
 
 const monitor = createPerformanceMonitor();
 monitor.startBuild("production");
@@ -53,7 +53,7 @@ Monitors the runtime performance impact of ConvexQueryHelper operations.
 **Usage:**
 
 ```typescript
-import { getGlobalRuntimeMonitor } from "@/lib/utils/runtime-performance-monitor";
+import { getGlobalRuntimeMonitor } from "@/shared/lib/utils/runtime-performance-monitor";
 
 const monitor = getGlobalRuntimeMonitor();
 monitor.recordMetric({
@@ -249,8 +249,8 @@ npm run validate:performance
 ### Programmatic Usage
 
 ```typescript
-import { createPerformanceMonitor } from "@/lib/utils/performance-monitor";
-import { createRuntimePerformanceMonitor } from "@/lib/utils/runtime-performance-monitor";
+import { createPerformanceMonitor } from "@/shared/lib/utils/performance-monitor";
+import { createRuntimePerformanceMonitor } from "@/shared/lib/utils/runtime-performance-monitor";
 
 // Build monitoring
 const buildMonitor = createPerformanceMonitor();

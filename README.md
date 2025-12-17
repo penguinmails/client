@@ -221,8 +221,8 @@ The application uses Loop (loops.so) for sending transactional emails including 
 #### Usage in Code
 
 ```typescript
-import { sendVerificationEmail } from '@/lib/actions/emailActions';
-import { getLoopService } from '@/lib/services/loop';
+import { sendVerificationEmail } from '@/shared/lib/actions/emailActions';
+import { getLoopService } from '@/shared/lib/services/loop';
 
 // Send verification email
 await sendVerificationEmail({

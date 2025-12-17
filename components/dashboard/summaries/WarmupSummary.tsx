@@ -4,11 +4,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { AlertTriangle } from "lucide-react";
 import { WarmupSummaryData } from "@/types/campaign";
-import { statusColors } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { statusColors } from "@/shared/lib/design-tokens";
+import { cn } from "@/shared/lib/utils";
 
 interface WarmupSummaryProps {
   data: WarmupSummaryData;

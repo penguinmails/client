@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { warmupData } from "@/lib/data/domains.mock";
+import { warmupData } from "@/shared/lib/data/domains.mock";
 
 // GET /api/warmup - Get warmup data for the current user's company
 export async function GET() {

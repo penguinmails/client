@@ -6,7 +6,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { getLoopService } from '@/lib/services/loop';
+import { getLoopService } from '@/shared/lib/services/loop';
 
 // Test endpoint to send verification email
 export async function GET(request: Request) {

@@ -7,10 +7,10 @@ import {
   UseFormReturn,
   FieldErrors,
 } from "react-hook-form";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Form } from "@/components/ui/form";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import { Form } from "@/shared/ui/form";
 import { FileText, Clock, Users } from "lucide-react";
 import { CampaignDetailsForm } from "./CampaignDetailsForm";
 import { ScheduleSettings } from "../settings/ScheduleSettings";
@@ -19,7 +19,7 @@ import { copyText as t } from "../data/copy";
 import {
   getCampaignSendingAccounts,
   getTimezones,
-} from "@/lib/actions/campaigns";
+} from "@/shared/lib/actions/campaigns";
 import {
   CampaignFormProps,
   CampaignFormValues,

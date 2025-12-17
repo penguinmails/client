@@ -9,8 +9,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button/button";
+} from "@/shared/ui/alert-dialog";
+import { Button } from "@/shared/ui/button/button";
 import {
   Dialog,
   DialogContent,
@@ -18,15 +18,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/shared/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { getTemplateFolders } from "@/lib/actions/templates";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/dropdown-menu";
+import { getTemplateFolders } from "@/shared/lib/actions/templates";
+import { cn } from "@/shared/lib/utils";
 import { Copy, Edit, FolderX, MoreHorizontal, Star, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState, useEffect } from "react";

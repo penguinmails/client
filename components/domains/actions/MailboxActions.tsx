@@ -3,8 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Settings } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import AlertDialogDelete from "@/components/ui/custom/AlertDialogDelete";
-import { Button } from "@/components/ui/button/button";
+import AlertDialogDelete from "@/shared/ui/custom/AlertDialogDelete";
+import { Button } from "@/shared/ui/button/button";
 import {
   Dialog,
   DialogClose,
@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/shared/ui/dialog";
 import {
   Form,
   FormControl,
@@ -22,9 +22,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
-import { Switch } from "@/components/ui/switch";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input/input";
+import { Switch } from "@/shared/ui/switch";
 import { Mailbox } from "@/types/mailbox";
 
 function MailboxActions({ mailbox }: { mailbox: Mailbox }) {

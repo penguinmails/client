@@ -4,8 +4,8 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button/button";
+} from "@/shared/ui/dropdown-menu";
+import { Button } from "@/shared/ui/button/button";
 import { SlidersHorizontal } from "lucide-react";
 
 interface ColumnVisibilityProps<TData> {

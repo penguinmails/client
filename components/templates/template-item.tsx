@@ -3,7 +3,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { Clock, Eye, Mail, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import TemplateActions from "./template-actions";

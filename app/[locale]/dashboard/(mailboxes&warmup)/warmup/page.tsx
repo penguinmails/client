@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 // import { useAnalytics } from "@/context/AnalyticsContext";
-import { DomainWithMailboxesData } from "@/lib/actions/domains";
+import { DomainWithMailboxesData } from "@/shared/lib/actions/domains";
 import WarmupTab from "@/components/domains/components/warmup-tab";
 
 // Force dynamic rendering to prevent SSR issues

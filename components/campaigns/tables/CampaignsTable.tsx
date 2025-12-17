@@ -1,6 +1,6 @@
-import { campaignsData } from "@/lib/data/campaigns";
-import { Card, CardContent, CardHeader } from "../../ui/card";
-import { Separator } from "../../ui/separator";
+import { campaignsData } from "@/shared/lib/data/campaigns";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Separator } from "@/shared/ui/separator";
 import CampaignsTableRow from "./CampaignsTableRow";
 
 export const campaignColumns = [

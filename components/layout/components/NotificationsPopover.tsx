@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button/button";
-import { PopoverContent } from "@/components/ui/popover";
+import { Button } from "@/shared/ui/button/button";
+import { PopoverContent } from "@/shared/ui/popover";
 import { Notification } from "@/types/notification";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import NotificationsList from "./NotificationsList";
-import { getNotifications } from "@/lib/actions/notificationsActions";
+import { getNotifications } from "@/shared/lib/actions/notificationsActions";
 // Use server action for notifications data
 function NotificationsPopover() {
   const [notifications, setNotifications] = useState<Notification[]>([]);

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { validateResetToken } from '@/lib/auth/passwordResetTokenUtils';
+import { validateResetToken } from '@/shared/lib/auth/passwordResetTokenUtils';
 
 const validateTokenSchema = z.object({
   token: z.string().min(1),

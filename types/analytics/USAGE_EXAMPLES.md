@@ -19,7 +19,7 @@ This document provides comprehensive examples of how to use the standardized ana
 ```typescript
 import React from 'react';
 import { CampaignAnalytics } from '@/types/analytics';
-import { AnalyticsCalculator } from '@/lib/utils/analytics-calculator';
+import { AnalyticsCalculator } from '@/shared/lib/utils/analytics-calculator';
 
 interface CampaignStatsProps {
   campaign: CampaignAnalytics;
@@ -64,7 +64,7 @@ export function CampaignStats({ campaign }: CampaignStatsProps) {
 
 ```typescript
 import { TimeSeriesDataPoint } from "@/types/analytics";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 
 interface ChartData {
   date: string;
@@ -96,7 +96,7 @@ export function prepareChartData(
 ```typescript
 import React from 'react';
 import { MailboxAnalytics } from '@/types/analytics';
-import { AnalyticsCalculator } from '@/lib/utils/analytics-calculator';
+import { AnalyticsCalculator } from '@/shared/lib/utils/analytics-calculator';
 
 interface MailboxDashboardProps {
   mailboxes: MailboxAnalytics[];
@@ -142,7 +142,7 @@ export function MailboxDashboard({ mailboxes }: MailboxDashboardProps) {
 
 ```typescript
 import { PerformanceMetrics } from "@/types/analytics";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 
 export function validateAndProcessMetrics(
   rawData: any
@@ -175,7 +175,7 @@ export function validateAndProcessMetrics(
 
 ```typescript
 import { CampaignAnalytics } from "@/types/analytics";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 
 export async function getCampaignAnalytics(
   campaignId: string
@@ -221,7 +221,7 @@ export async function getCampaignAnalytics(
 ```typescript
 import { useState, useEffect } from "react";
 import { CampaignAnalytics, CalculatedRates } from "@/types/analytics";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 
 export function useCampaignAnalytics(campaignId: string) {
   const [analytics, setAnalytics] = useState<CampaignAnalytics | null>(null);
@@ -274,7 +274,7 @@ export function useCampaignAnalytics(campaignId: string) {
 
 ```typescript
 import { CampaignAnalytics, PerformanceMetrics } from "@/types/analytics";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 
 export class AnalyticsService {
   // Filter campaigns by performance criteria

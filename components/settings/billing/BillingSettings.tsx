@@ -1,19 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLoadingSkeleton";
 import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
 import { showBillingUpdateSuccess } from "@/components/settings/common/SettingsSuccessNotification";
 import { useServerAction } from "@/hooks/useServerAction";
-import { getBillingDataForSettings as getBillingInfo } from "@/lib/actions/billing";
+import { getBillingDataForSettings as getBillingInfo } from "@/shared/lib/actions/billing";
 import { Loader2 } from "lucide-react";
 import type { BillingData } from "@/types/settings";
 

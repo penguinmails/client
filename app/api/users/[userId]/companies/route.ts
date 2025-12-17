@@ -7,9 +7,9 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withAuthentication } from '@/lib/niledb/middleware';
-import { getCompanyService } from '@/lib/niledb/company';
-import { getAuthService } from '@/lib/niledb/auth';
+import { withAuthentication } from '@/shared/lib/niledb/middleware';
+import { getCompanyService } from '@/shared/lib/niledb/company';
+import { getAuthService } from '@/shared/lib/niledb/auth';
 
 /**
  * GET /api/users/[userId]/companies

@@ -238,7 +238,7 @@ export type ActionResult<T> =
   | { success: false; error: string; code?: string };
 
 // After: Standardized type with backward compatibility
-import { ActionResult, ActionError } from "@/lib/actions/core/types";
+import { ActionResult, ActionError } from "@/shared/lib/actions/core/types";
 
 export function useServerAction<T>(action: () => Promise<ActionResult<T>>) {
   const [state, setState] = useState<{

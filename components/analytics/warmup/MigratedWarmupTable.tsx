@@ -10,9 +10,9 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { statusColors } from "@/lib/design-tokens";
+} from "@/shared/ui/tooltip";
+import { cn } from "@/shared/lib/utils";
+import { statusColors } from "@/shared/lib/design-tokens";
 
 /**
  * Migrated Warmup Table component using Design System.

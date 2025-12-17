@@ -1,5 +1,5 @@
-import { leadListsData } from "@/lib/data/leads";
-import { TableCell, TableRow } from "@/components/ui/table";
+import { leadListsData } from "@/shared/lib/data/leads";
+import { TableCell, TableRow } from "@/shared/ui/table";
 import {
   CheckCircle,
   Clock,
@@ -9,7 +9,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import { Button } from "../../ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 
 // Type for performance metrics
 type PerformanceMetrics = {

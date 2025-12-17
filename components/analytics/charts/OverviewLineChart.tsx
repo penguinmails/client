@@ -3,10 +3,10 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from "@/shared/ui/chart";
 import { useAnalytics, useDomainAnalytics } from "@/context/AnalyticsContext";
 import { ChartDataPoint } from "@/types/analytics/ui";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 import { ANALYTICS_METRICS_CONFIG, getChartConfig } from "../config/metrics";
 import {
   prepareChartDataFromTimeSeries,
@@ -44,7 +44,7 @@ function OverviewLineChart() {
 
         // Type guard to ensure we have the correct service type
         const typedCampaignService =
-          campaignService as import("@/lib/services/analytics/CampaignAnalyticsService").CampaignAnalyticsService;
+          campaignService as import("@/shared/lib/services/analytics/CampaignAnalyticsService").CampaignAnalyticsService;
 
         // Check if the service has the getTimeSeriesData method
         if (typeof typedCampaignService.getTimeSeriesData !== "function") {

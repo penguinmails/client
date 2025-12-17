@@ -1,8 +1,8 @@
 import React from "react";
 import { Calendar, Mail, FileText, Globe } from "lucide-react";
-import { standaloneIconColors, textColors, typography, spacing } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { standaloneIconColors, textColors, typography, spacing } from "@/shared/lib/design-tokens";
+import { cn } from "@/shared/lib/utils";
+import { Card, CardHeader, CardTitle, CardContent } from "@/shared/ui/card";
 
 // Define the expected data structure for props
 interface Task {

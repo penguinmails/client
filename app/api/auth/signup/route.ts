@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AuthService } from "@/lib/niledb/auth";
-import { isDuplicateEmailError } from "@/lib/niledb/errors";
+import { AuthService } from "@/shared/lib/niledb/auth";
+import { isDuplicateEmailError } from "@/shared/lib/niledb/errors";
 
 export async function POST(request: NextRequest) {
   try {

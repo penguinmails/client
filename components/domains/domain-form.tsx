@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Form,
   FormControl,
@@ -12,24 +12,24 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 import {
   Card,
   CardContent,
   CardHeader,
   CardDescription,
   CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
+} from "@/shared/ui/card";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { Badge } from "@/shared/ui/badge";
 import { InfoIcon } from "lucide-react";
 import {
   DnsProvider,

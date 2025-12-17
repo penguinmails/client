@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/shared/ui/dialog";
 import UpdateBillingAddressForm from "./update-billing-address-form";
 
 function EditAddressTrigger({ title }: { title: string }) {

@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Card, CardContent } from "@/shared/ui/card";
+import { cn } from "@/shared/lib/utils";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import React from "react";
 

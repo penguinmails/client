@@ -1,5 +1,5 @@
 "use client";
-import { Logo } from "@/components/ui/custom/Logo";
+import { Logo } from "@/shared/ui/custom/Logo";
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/shared/ui/sidebar";
 import { NavLink } from "@/types/nav-link";
 import {
   BarChart3,

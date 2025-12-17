@@ -1,13 +1,13 @@
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Separator } from "@/shared/ui/separator";
 import { Globe, Plus, Upload } from "lucide-react";
 import Link from "next/link";
 import { 
   iconContainerStyles, 
   iconTextColors, 
   componentPatterns 
-} from "@/lib/design-tokens";
+} from "@/shared/lib/design-tokens";
 
 function QuickActions() {
   return (

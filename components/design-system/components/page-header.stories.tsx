@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { PageHeader } from "./page-header";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import { Download, Plus, Settings } from "lucide-react";
 import React from "react";
 

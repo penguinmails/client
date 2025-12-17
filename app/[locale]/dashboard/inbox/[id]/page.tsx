@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { ConversationProvider } from "@/context/ConversationContext";
 import { fetchConversationByIdAction } from "@/app/[locale]/dashboard/inbox/actions";
 import { notFound } from "next/navigation";

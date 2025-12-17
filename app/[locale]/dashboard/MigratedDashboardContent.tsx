@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { CampaignAnalytics } from "@/types/analytics/domain-specific";
 import MigratedKpiCards from "@/components/dashboard/cards/MigratedKpiCards";
 import QuickActions from "@/components/dashboard/actions/QuickActions";
@@ -14,14 +14,14 @@ import RecentReplySkeleton from "@/components/inbox/RecentReply/RecentReplySkele
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
 import type { RecentReply } from "@/types/campaign";
 import type { WarmupSummaryData } from "@/types/campaign";
-import { textColors, gridLayouts } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { textColors, gridLayouts } from "@/shared/lib/design-tokens";
+import { cn } from "@/shared/lib/utils";
 
 // Import server actions (keeping existing ones for non-analytics data)
 import {
   getRecentReplies,
   getWarmupSummaryData,
-} from "@/lib/actions/dashboardActions";
+} from "@/shared/lib/actions/dashboardActions";
 
 /**
  * Migrated Dashboard Content with real-time analytics KPIs.

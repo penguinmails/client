@@ -1,25 +1,25 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/shared/ui/button/button";
+import { Card } from "@/shared/ui/card";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/shared/ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/shared/ui/select";
+import { Separator } from "@/shared/ui/separator";
+import { Textarea } from "@/shared/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/ui/tooltip";
 import {
   Bold,
   Calendar,

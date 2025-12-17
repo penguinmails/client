@@ -1,23 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input/input";
-import { Switch } from "@/components/ui/switch";
+} from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input/input";
+import { Switch } from "@/shared/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLoadingSkeleton";
 import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
 import { showSaveSuccess } from "@/components/settings/common/SettingsSuccessNotification";
@@ -32,12 +32,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/shared/ui/form";
 import { useServerAction } from "@/hooks/useServerAction";
 import {
   getComplianceSettings,
   updateComplianceSettings,
-} from "@/lib/actions/settings";
+} from "@/shared/lib/actions/settings";
 import { Loader2 } from "lucide-react";
 
 const complianceFormSchema = z.object({

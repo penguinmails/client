@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,15 +9,15 @@ import {
   DialogTrigger,
   DialogClose,
   DialogFooter
-} from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+} from "@/shared/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Badge } from "@/shared/ui/badge";
+import { Separator } from "@/shared/ui/separator";
 import { Eye } from "lucide-react";
 import { Lead } from "./MigratedLeadsTable";
 import { UnifiedDataTable } from "@/components/design-system/components/unified-data-table";
 import { ColumnDef } from "@tanstack/react-table";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
 
 // Mock history data for the view modal
 type HistoryItem = {

@@ -8,13 +8,13 @@ import {
   CrossDomainAnalyticsResult,
   CrossDomainTimeSeriesDataPoint,
   MailboxDomainImpactAnalysis,
-} from "@/lib/services/analytics/CrossDomainAnalyticsService";
+} from "@/shared/lib/services/analytics/CrossDomainAnalyticsService";
 import {
   getCrossDomainPerformanceComparison,
   getCrossDomainTimeSeries,
   getCrossDomainCorrelationAnalysis,
   generateCrossDomainInsights,
-} from "@/lib/actions/analytics/cross-domain-analytics";
+} from "@/shared/lib/actions/analytics/cross-domain-analytics";
 
 /**
  * Hook for real-time mailbox-domain joined analytics.

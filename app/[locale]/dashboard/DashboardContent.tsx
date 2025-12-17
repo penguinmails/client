@@ -5,13 +5,13 @@ import RecentReplySkeleton from "@/components/inbox/RecentReply/RecentReplySkele
 import StatsCardSkeleton from "@/components/dashboard/cards/KpiCardSkeleton";
 import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { Suspense } from "react";
 import {
   getStatsCards,
   getRecentReplies,
   getWarmupSummaryData,
-} from "@/lib/actions/dashboard";
+} from "@/shared/lib/actions/dashboard";
 
 export default async function DashboardContent() {
   const statsCards = await getStatsCards();

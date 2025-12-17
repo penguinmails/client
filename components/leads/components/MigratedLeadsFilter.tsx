@@ -2,7 +2,7 @@
 
 import React from "react";
 import { UnifiedFilterBar } from "@/components/design-system/components/unified-filter-bar";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -10,7 +10,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/shared/ui/dropdown-menu";
 import { ChevronDown, Filter } from "lucide-react";
 
 interface MigratedLeadsFilterProps {

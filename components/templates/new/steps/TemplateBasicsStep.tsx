@@ -1,19 +1,19 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input/input";
+import { Label } from "@/shared/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
+} from "@/shared/ui/select";
+import { Switch } from "@/shared/ui/switch";
+import { Badge } from "@/shared/ui/badge";
 import { useAddTemplateContext } from "@/context/AddTemplateContext";
-import { getTemplateFolders } from "@/lib/actions/templates";
+import { getTemplateFolders } from "@/shared/lib/actions/templates";
 import { TemplateFolder } from "@/types";
 import { useState, useEffect } from "react";
 import { X, Plus, ArrowLeft, ArrowRight } from "lucide-react";

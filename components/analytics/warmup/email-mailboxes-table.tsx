@@ -4,10 +4,10 @@ import {
   Filter,
   DropDownFilter,
   SearchInput,
-} from "@/components/ui/custom/Filter";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@/shared/ui/custom/Filter";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import { Mail, Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useAnalytics } from "@/context/AnalyticsContext";
@@ -29,7 +29,7 @@ type LocalProgressiveAnalyticsState = Record<
     error: string | null;
   }
 >;
-import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
+import { mapRawToLegacyMailboxData } from "@/shared/lib/utils/analytics-mappers";
 
 function EmailMailboxesTable() {
   const { dateRange, fetchMailboxes, fetchMultipleMailboxAnalytics } =

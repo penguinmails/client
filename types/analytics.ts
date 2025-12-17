@@ -58,7 +58,7 @@ import type { AnalyticsMetricConfig } from "./analytics/ui";
 // import { CampaignAnalytics, DomainAnalytics } from "@/types/analytics/domain-specific";
 //
 // For calculations:
-// import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+// import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 // ============================================================================
 
 // ============================================================================
@@ -197,7 +197,7 @@ export interface KPIMetric {
  * Replace with:
  * ```typescript
  * import { CampaignAnalytics } from "@/types/analytics/domain-specific";
- * import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+ * import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
  * 
  * // Use raw data structure
  * const campaign: CampaignAnalytics = { ... };
@@ -425,7 +425,7 @@ export interface AnalyticsContextState {
   /** Function to fetch analytics for multiple mailboxes */
   fetchMultipleMailboxAnalytics: (mailboxIds: string[], dateRangePreset?: DateRangePreset, granularityLevel?: DataGranularity, userid?: string, companyid?: string) => Promise<Record<string, MailboxAnalyticsData>>;
   /** Function to fetch domains with mailboxes data */
-  fetchDomainsWithMailboxes: (userid?: string, companyid?: string) => Promise<import("@/lib/actions/domains").DomainWithMailboxesData[]>;
+  fetchDomainsWithMailboxes: (userid?: string, companyid?: string) => Promise<import("@/shared/lib/actions/domains").DomainWithMailboxesData[]>;
   /** Function to get account performance metrics */
   getAccountMetrics: () => AccountMetrics;
 }
@@ -517,7 +517,7 @@ export interface AnalyticsFilters {
  * MIGRATION:
  * ```typescript
  * import { PerformanceMetrics } from "@/types/analytics/core";
- * import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+ * import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
  * 
  * // Use raw performance metrics
  * const metrics: PerformanceMetrics = {

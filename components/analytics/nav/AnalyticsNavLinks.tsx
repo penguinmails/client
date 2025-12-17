@@ -1,9 +1,9 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { BarChart3, Mail, Target, Zap } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Icon from "../../ui/custom/Icon";
+import Icon from "@/shared/ui/custom/Icon";
 
 const links = [
   { id: "", label: "Overview", icon: BarChart3 },

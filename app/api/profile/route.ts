@@ -8,8 +8,8 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withAuthentication } from '@/lib/niledb/middleware';
-import { getAuthService } from '@/lib/niledb/auth';
+import { withAuthentication } from '@/shared/lib/niledb/middleware';
+import { getAuthService } from '@/shared/lib/niledb/auth';
 import { z } from 'zod';
 
 // Validation schema for profile updates

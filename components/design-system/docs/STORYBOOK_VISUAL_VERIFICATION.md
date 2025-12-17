@@ -256,7 +256,7 @@ Edit `StatsCard.tsx` to use design tokens:
 
 ```diff
 // StatsCard.tsx
-+ import { statusColors, textColors } from '@/lib/design-tokens';
++ import { statusColors, textColors } from '@/shared/lib/design-tokens';
 
 - <span className="text-green-600 dark:text-green-400">
 + <span className={statusColors.success}>

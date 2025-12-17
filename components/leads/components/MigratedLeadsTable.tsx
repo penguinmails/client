@@ -3,13 +3,13 @@
 import React from "react";
 import { UnifiedDataTable } from "@/components/design-system/components/unified-data-table";
 import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
 import { ArrowUpDown } from "lucide-react";
 import { MigratedEditLeadListButton } from "./MigratedEditLeadListButton";
 import { MigratedShowLeadListItemButton } from "./MigratedShowLeadListItemButton";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/shared/ui/checkbox";
 
 // Define the shape of our Lead data (matching legacy)
 export interface Lead {

@@ -6,8 +6,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
+} from "@/shared/ui/card";
+import { Switch } from "@/shared/ui/switch";
 
 interface NotificationSettingsProps {
   email: {

@@ -29,7 +29,7 @@ Our design system follows these core principles:
 </div>;
 
 // ✅ Good - Design tokens
-import { iconTextColors } from "@/lib/design-tokens";
+import { iconTextColors } from "@/shared/lib/design-tokens";
 
 <div className={iconTextColors.blue}>
   <Plus className="w-4 h-4" />
@@ -69,7 +69,7 @@ import { UnifiedStatsCard } from "@/components/design-system/components";
 ### 1. Icon Styles
 
 ```tsx
-import { iconContainerStyles, iconTextColors } from "@/lib/design-tokens";
+import { iconContainerStyles, iconTextColors } from "@/shared/lib/design-tokens";
 
 // Icon with background container
 <div className={iconContainerStyles.blue}>
@@ -77,7 +77,7 @@ import { iconContainerStyles, iconTextColors } from "@/lib/design-tokens";
 </div>;
 
 // Standalone icon (no background)
-import { standaloneIconColors } from "@/lib/design-tokens";
+import { standaloneIconColors } from "@/shared/lib/design-tokens";
 
 <Calendar className={standaloneIconColors.blue} />;
 ```
@@ -87,7 +87,7 @@ import { standaloneIconColors } from "@/lib/design-tokens";
 ### 2. Status Colors
 
 ```tsx
-import { statusColors, statusBadgeStyles } from "@/lib/design-tokens";
+import { statusColors, statusBadgeStyles } from "@/shared/lib/design-tokens";
 
 // Status text
 <span className={cn("font-medium", statusColors.success)}>
@@ -105,7 +105,7 @@ import { statusColors, statusBadgeStyles } from "@/lib/design-tokens";
 ### 3. Text Colors
 
 ```tsx
-import { textColors } from "@/lib/design-tokens";
+import { textColors } from "@/shared/lib/design-tokens";
 
 // Primary text (replaces text-foreground)
 <h1 className={cn("text-2xl font-bold", textColors.primary)}>
@@ -126,7 +126,7 @@ import { textColors } from "@/lib/design-tokens";
 ### 4. Typography
 
 ```tsx
-import { typography } from "@/lib/design-tokens";
+import { typography } from "@/shared/lib/design-tokens";
 
 <h1 className={typography.h1}>Main Heading</h1>
 <h2 className={typography.h2}>Sub Heading</h2>
@@ -137,7 +137,7 @@ import { typography } from "@/lib/design-tokens";
 ### 5. Spacing
 
 ```tsx
-import { spacing } from "@/lib/design-tokens";
+import { spacing } from "@/shared/lib/design-tokens";
 
 // Vertical stacks
 <div className={spacing.stackLg}>
@@ -155,7 +155,7 @@ import { spacing } from "@/lib/design-tokens";
 ### 6. Grid Layouts
 
 ```tsx
-import { gridLayouts } from "@/lib/design-tokens";
+import { gridLayouts } from "@/shared/lib/design-tokens";
 
 // Stats grid (responsive 1-2-4 columns)
 <div className={gridLayouts.statsGrid}>
@@ -246,13 +246,13 @@ Create custom components only when:
 
 ```tsx
 // Use semantic tokens
-import { statusColors, textColors } from "@/lib/design-tokens";
+import { statusColors, textColors } from "@/shared/lib/design-tokens";
 
 <span className={statusColors.success}>Active</span>
 <p className={textColors.secondary}>Description</p>
 
 // Combine with cn() for multiple classes
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 <h1 className={cn("text-2xl font-bold", textColors.primary)}>
   Title
@@ -314,8 +314,8 @@ grep -r "dark:text-" components/
 
 ```tsx
 // Add imports
-import { statusColors, textColors } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { statusColors, textColors } from "@/shared/lib/design-tokens";
+import { cn } from "@/shared/lib/utils";
 
 // Replace classes
 - <h1 className="text-2xl font-bold text-foreground">
@@ -361,7 +361,7 @@ import { cn } from "@/lib/utils";
 **Solution**: Use `cn()` to merge:
 
 ```tsx
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 <div className={cn("font-medium", textColors.secondary)}>
 ```

@@ -1,15 +1,15 @@
 "use client";
 
 import React from "react";
-import { Input } from "@/components/ui/input/input";
+import { Input } from "@/shared/ui/input/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+} from "@/shared/ui/select";
+import { Label } from "@/shared/ui/label";
 import { copyText as t } from "../../data/copy";
 import type { EmailStepType } from "@/types/campaign";
 

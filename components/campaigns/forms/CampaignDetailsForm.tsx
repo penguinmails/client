@@ -9,15 +9,15 @@ import {
   FormControl,
   FormMessage,
   FormDescription,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 import { copyText as t } from "../data/copy";
 import { CampaignFormValues } from "@/types/campaign";
 

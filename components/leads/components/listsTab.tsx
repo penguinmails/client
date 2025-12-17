@@ -1,20 +1,20 @@
 "use client";
-import { Filter } from "@/components/ui/custom/Filter";
-import { DropDownFilter, SearchInput } from "@/components/ui/custom/Filter";
-import { Button } from "@/components/ui/button/button";
+import { Filter } from "@/shared/ui/custom/Filter";
+import { DropDownFilter, SearchInput } from "@/shared/ui/custom/Filter";
+import { Button } from "@/shared/ui/button/button";
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { getLeadsLists } from "@/lib/actions/leads";
+} from "@/shared/ui/table";
+import { getLeadsLists } from "@/shared/lib/actions/leads";
 import { LeadListData } from "@/types/clients-leads";
 import { ArrowUpDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import ListTableRow from "./ListTableRow";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 const listTableColumn = [
   { id: "name", label: "List Name", canSort: true },
   { id: "contacts", label: "Contacts", canSort: true },

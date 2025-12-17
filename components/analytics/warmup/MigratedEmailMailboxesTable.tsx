@@ -2,16 +2,16 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { UnifiedDataTable } from "@/components/design-system/components/unified-data-table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button/button";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button/button";
 import { useAnalytics } from "@/context/AnalyticsContext";
 import { MailboxWarmupData } from "@/types";
-import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
+import { mapRawToLegacyMailboxData } from "@/shared/lib/utils/analytics-mappers";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { statusColors } from "@/lib/design-tokens";
+import { cn } from "@/shared/lib/utils";
+import { statusColors } from "@/shared/lib/design-tokens";
 
 // Local type for progressive analytics state (same as legacy)
 type LocalProgressiveAnalyticsState = Record<

@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button/button";
-import { useSidebar } from "@/components/ui/sidebar";
+import { Button } from "@/shared/ui/button/button";
+import { useSidebar } from "@/shared/ui/sidebar";
 import { Minimize2, MoveDiagonal } from "lucide-react";
 
 function SidebarTriggerButton() {

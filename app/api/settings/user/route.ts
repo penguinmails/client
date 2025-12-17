@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { userPreferencesSchema } from '@/lib/validations/settings';
+import { userPreferencesSchema } from '@/shared/lib/validations/settings';
 import { ZodError } from 'zod';
 
 // This implementation will fail until the database connection and logic are added

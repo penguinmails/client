@@ -1,20 +1,20 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/shared//ui/button/button";
+import { Checkbox } from "@/shared//ui/checkbox";
+import { Input } from "@/shared//ui/input/input";
+import { Label } from "@/shared//ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/shared/ui/popover";
 import { useAnalytics } from "@/context/AnalyticsContext";
 import { DataGranularity } from "@/types/analytics/core";
 import { DateRangePreset } from "@/types/analytics/ui";
 import { CampaignAnalytics } from "@/types/analytics/domain-specific";
 import { AnalyticsMetricConfig } from "@/types/analytics/ui";
 import { ChevronDown, Mail, Settings, Target } from "lucide-react";
-import { DropDownFilter, Filter } from "../../ui/custom/Filter";
+import { DropDownFilter, Filter } from "@/shared/ui/custom/Filter";
 
 interface MailboxFilter {
   id: string;

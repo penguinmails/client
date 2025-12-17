@@ -1,22 +1,22 @@
 "use client";
 
 import AddStorageTrigger from "@/components/settings/billing/add-storge-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button/button";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/shared/ui/card";
+import { Progress } from "@/shared/ui/progress";
+import { Skeleton } from "@/shared/ui/skeleton";
 import {
   getUsageWithCalculations,
   getStorageOptions,
-} from "@/lib/actions/billing";
-import { cn } from "@/lib/utils";
+} from "@/shared/lib/actions/billing";
+import { cn } from "@/shared/lib/utils";
 import { Globe, HardDrive, Mail, Plus, Server, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

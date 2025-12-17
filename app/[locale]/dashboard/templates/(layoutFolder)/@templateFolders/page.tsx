@@ -1,5 +1,5 @@
 import Folders from "@/components/templates/Folder-Structure/Folders";
-import { getTemplateFolders } from "@/lib/actions/templates";
+import { getTemplateFolders } from "@/shared/lib/actions/templates";
 import { TemplateFolder } from "@/types";
 import { FolderIcon } from "lucide-react";
 

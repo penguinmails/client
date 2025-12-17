@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,12 +12,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/shared/ui/alert-dialog";
 import {
   removeFromCampaign,
   deleteClient,
   maskClientPII,
-} from "@/lib/actions/clients";
+} from "@/shared/lib/actions/clients";
 import { copyText as t } from "@/components/clients/data/copy";
 
 interface ClientHeaderProps {

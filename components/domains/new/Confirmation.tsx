@@ -1,8 +1,8 @@
 "use client";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent } from "@/shared/ui/card";
+import { cn } from "@/shared/lib/utils";
 import { ArrowRight, CheckCircle, Mail } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useFormContext } from "react-hook-form";

@@ -3,8 +3,8 @@ import {
   CardHeader,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/shared/ui/card";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 function ConversationSkeleton() {
   return (

@@ -1,7 +1,7 @@
 import Header from "@/components/layout/components/DashboardHeader";
 import AppSideBar from "@/components/layout/components/Sidebar";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/shared/ui/sidebar";
 import { ClientAnalyticsProvider } from "@/components/analytics/AnalyticsProviderClient";
 import React from "react";
 

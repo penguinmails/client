@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   reactivateSubscription,
-} from "@/lib/actions/billing";
+} from "@/shared/lib/actions/billing";
 
 /**
  * Subscription Reactivation API Endpoint - Secure OLTP Operations

@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardHeader } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardHeader } from "@/shared/ui/card";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { Clock, Mail, Zap, AlertTriangle } from "lucide-react";
 import { useRef } from "react";

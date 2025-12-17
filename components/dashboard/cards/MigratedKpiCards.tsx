@@ -9,7 +9,7 @@ import {
   TrendingUp,
   AlertTriangle,
 } from "lucide-react";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 import { KPIDisplayConfig } from "@/types/analytics/ui";
 import { CampaignAnalytics } from "@/types/analytics/domain-specific";
 import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";

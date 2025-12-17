@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { SAMPLE_CSV_DATA } from '@/lib/data/leads';
+import { SAMPLE_CSV_DATA } from '@/shared/lib/data/leads';
 
 // Server action to download sample CSV
 export async function GET() {

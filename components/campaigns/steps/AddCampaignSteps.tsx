@@ -1,7 +1,7 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/ui/card";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { Check } from "lucide-react";
 
 function AddCampaignSteps() {

@@ -9,8 +9,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button/button";
+} from "@/shared/ui/dropdown-menu";
+import { Button } from "@/shared/ui/button/button";
 import { FileText } from "lucide-react";
 import { Template } from "@/types";
 

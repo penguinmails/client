@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthService } from '@/lib/niledb/auth';
+import { getAuthService } from '@/shared/lib/niledb/auth';
 
 export async function GET(_request: NextRequest) {
   try {

@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { getQuickReplies } from "@/lib/actions/templates";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/card";
+import { getQuickReplies } from "@/shared/lib/actions/templates";
+import { cn } from "@/shared/lib/utils";
 import { Template } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button/button"
-import { PasswordInput } from "@/components/ui/custom/password-input"
-import { Input } from "@/components/ui/input/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/shared/ui/button/button"
+import { PasswordInput } from "@/shared/ui/custom/password-input"
+import { Input } from "@/shared/ui/input/input"
+import { Label } from "@/shared/ui/label"
 import { LogIn, User } from "lucide-react"
 import { LandingLayout } from "@/components/landing/LandingLayout"
 import { loginContent } from "./content"
@@ -15,10 +15,10 @@ import { AuthTemplate } from "@/components/auth/AuthTemplate"
 import { Turnstile } from "next-turnstile"
 import { verifyTurnstileToken } from "./signup/verifyToken"
 import { useTranslations } from "next-intl"
-import { initPostHog } from '@/lib/instrumentation-client';
+import { initPostHog } from '@/shared/lib/instrumentation-client';
 
 //PostHog
-import { ph } from '@/lib/instrumentation-client'
+import { ph } from '@/shared/lib/instrumentation-client'
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -26,7 +26,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const { login, user } = useAuth()
+  const { login, user, error: authError } = useAuth()
   const [token, setToken] = useState("") // stores Turnstile token
 
   const t = useTranslations("Login")

@@ -16,11 +16,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+} from "@/shared/ui/select";
+import { Button } from "@/shared/ui/button/button";
+import { Badge } from "@/shared/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Separator } from "@/shared/ui/separator";
 import { Building2, Users, RefreshCw, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 

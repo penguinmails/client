@@ -157,7 +157,7 @@ export type { Doc } from "./_generated/dataModel";
  * });
  * 
  * // Use with AnalyticsCalculator for rate calculations
- * import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+ * import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
  * 
  * const rates = AnalyticsCalculator.calculateAllRates(overview.overview);
  * const displayRate = AnalyticsCalculator.formatRateAsPercentage(rates.openRate);

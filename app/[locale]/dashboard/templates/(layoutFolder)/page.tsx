@@ -1,6 +1,6 @@
 import TemplateItem from "@/components/templates/template-item";
-import { Input } from "@/components/ui/input/input";
-import { getTemplates } from "@/lib/actions/templates";
+import { Input } from "@/shared/ui/input/input";
+import { getTemplates } from "@/shared/lib/actions/templates";
 
 // Force dynamic rendering for authentication checks
 export const dynamic = "force-dynamic";

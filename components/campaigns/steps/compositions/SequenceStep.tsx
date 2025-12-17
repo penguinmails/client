@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/ui/card";
 import { EmailStep } from "./EmailStep";
 import { StepHeader } from "./StepHeader";
 import { DelaySettings } from "../../settings/DelaySettings";

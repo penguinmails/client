@@ -14,10 +14,10 @@ import {
   useStaffAccess,
   useErrorRecovery,
 } from "@/hooks/useEnhancedAuth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button/button";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Button } from "@/shared/ui/button/button";
+import { Badge } from "@/shared/ui/badge";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
 import {
   User,
   Building2,

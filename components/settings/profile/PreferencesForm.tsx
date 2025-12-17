@@ -7,16 +7,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/shared/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
-import { allTimezones } from "@/lib/utils";
+} from "@/shared/ui/select";
+import { Skeleton } from "@/shared/ui/skeleton";
+import { allTimezones } from "@/shared/lib/utils";
 
 interface ProfileFormValues {
   name: string;

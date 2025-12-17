@@ -7,9 +7,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input/input";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 interface ProfileFormValues {
   name: string;

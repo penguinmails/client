@@ -1,11 +1,11 @@
 "use client";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { Label } from "@/shared/ui/label";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { Mail, Info } from "lucide-react";
-import { mailboxes } from "@/lib/data/mailboxes";
+import { mailboxes } from "@/shared/lib/data/mailboxes";
 
 function MailboxAssignmentStep() {
   const { form, editingMode, campaign } = useAddCampaignContext();

@@ -95,7 +95,7 @@ const { data, isLoading } = useCampaignAnalytics(campaignIds, companyId);
 
 ```typescript
 // Falls back to standardized mock data when Convex unavailable
-import { convexCampaignAnalytics } from "@/lib/data/analytics-convex.mock";
+import { convexCampaignAnalytics } from "@/shared/lib/data/analytics-convex.mock";
 ```
 
 ### 4. KPIDisplayConfig Interface

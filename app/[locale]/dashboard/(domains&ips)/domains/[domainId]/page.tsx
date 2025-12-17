@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+} from "@/shared/ui/card";
+import { Progress } from "@/shared/ui/progress";
+import { Badge } from "@/shared/ui/badge";
 import { EmailsTable } from "@/components/domains/components/emails-table";
-import { getDomainById, getTopAccountsForDomain } from "@/lib/actions/domains";
+import { getDomainById, getTopAccountsForDomain } from "@/shared/lib/actions/domains";
 import WeeklyMetricsClient from "./weekly-metrics-client";
 import {
   ArrowLeft,

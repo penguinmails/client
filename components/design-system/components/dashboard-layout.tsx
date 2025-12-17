@@ -3,8 +3,8 @@
 import React from "react";
 import AppSideBar from "@/components/layout/components/Sidebar";
 import DashboardHeader from "@/components/layout/components/DashboardHeader";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils";
+import { SidebarProvider, SidebarInset } from "@/shared/ui/sidebar";
+import { cn } from "@/shared/lib/utils";
 import { PageHeader } from "./page-header";
 
 interface DashboardLayoutProps {

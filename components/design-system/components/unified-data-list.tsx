@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { cn } from "@/shared/lib/utils";
 import { Search } from "lucide-react";
-import { spacing } from "@/lib/design-tokens";
+import { spacing } from "@/shared/lib/design-tokens";
 
 interface UnifiedDataListProps<TData> {
   /** Array of data items to display */

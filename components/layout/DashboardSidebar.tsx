@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import {
   BarChart3,
   Settings,
@@ -16,7 +16,7 @@ import {
   X,
   LogOut,
 } from "lucide-react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";

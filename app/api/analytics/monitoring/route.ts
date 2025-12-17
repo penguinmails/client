@@ -3,8 +3,8 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { MonitoringUtils } from "@/lib/services/analytics/monitoring/MonitoringUtils";
-import { requireAuth } from "@/lib/actions/core/auth";
+import { MonitoringUtils } from "@/shared/lib/services/analytics/monitoring/MonitoringUtils";
+import { requireAuth } from "@/shared/lib/actions/core/auth";
 
 /**
  * GET /api/analytics/monitoring
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Import analyticsMonitor directly to resolve alert
-        const { analyticsMonitor } = await import("@/lib/services/analytics/monitoring/AnalyticsMonitor");
+        const { analyticsMonitor } = await import("@/shared/lib/services/analytics/monitoring/AnalyticsMonitor");
         const resolved = analyticsMonitor.resolveAlert(alertId);
         
         return NextResponse.json({
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Import errorTracker directly to resolve error
-        const { errorTracker } = await import("@/lib/services/analytics/monitoring/ErrorTracker");
+        const { errorTracker } = await import("@/shared/lib/services/analytics/monitoring/ErrorTracker");
         const errorResolved = errorTracker.resolveError(errorId);
         
         return NextResponse.json({

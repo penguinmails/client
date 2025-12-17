@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSubscriptionPlan } from "@/lib/actions/billing/subscription-plans";
+import { getSubscriptionPlan } from "@/shared/lib/actions/billing/subscription-plans";
 
 /**
  * GET /api/billing/subscription-plans/[id] - Get specific subscription plan

@@ -8,8 +8,8 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withTenantAccess, withResourcePermission } from '@/lib/niledb/middleware';
-import { getTenantService } from '@/lib/niledb/tenant';
+import { withTenantAccess, withResourcePermission } from '@/shared/lib/niledb/middleware';
+import { getTenantService } from '@/shared/lib/niledb/tenant';
 import { z } from 'zod';
 
 // Validation schema for adding user to tenant

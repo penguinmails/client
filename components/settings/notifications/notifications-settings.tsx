@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
-import { Button } from "@/components/ui/button/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/shared/ui/button/button";
+import { Checkbox } from "@/shared/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -10,10 +10,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/form";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { Skeleton } from "@/shared/ui/skeleton";
+import { cn } from "@/shared/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -22,8 +22,8 @@ import { AlertTriangle, Loader2, RefreshCw, CheckCircle } from "lucide-react";
 import {
   getSimpleNotificationPreferences,
   updateSimpleNotificationPreferences,
-} from "@/lib/actions/settings";
-import type { SimpleNotificationPreferences } from "@/lib/actions/settings.types";
+} from "@/shared/lib/actions/settings";
+import type { SimpleNotificationPreferences } from "@/shared/lib/actions/settings.types";
 
 const notificationSchema = z.object({
   newReplies: z.boolean(),

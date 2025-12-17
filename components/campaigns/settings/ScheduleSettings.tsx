@@ -1,17 +1,17 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Label } from "@/shared/ui/label";
+import { Input } from "@/shared/ui/input/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button/button";
+} from "@/shared/ui/select";
+import { Button } from "@/shared/ui/button/button";
 import { copyText as t } from "../data/copy";
 import { ScheduleSettingsProps } from "@/types/campaigns";
 import {
@@ -20,7 +20,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/shared/ui/form";
 
 const daysOfWeek = [
   { id: 0, label: t.schedule.days.mon },

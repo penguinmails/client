@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { Plus, Mail, Upload, AlertTriangle } from "lucide-react";
 import React from "react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 import AppSideBar from "@/components/layout/components/Sidebar";
 import DashboardHeader from "@/components/layout/components/DashboardHeader";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/shared/ui/sidebar";
 
 // Wrapper component that replicates the real app layout structure
 const RealDashboardLayout = ({

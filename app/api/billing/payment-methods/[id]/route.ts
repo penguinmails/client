@@ -3,8 +3,8 @@ import {
   getPaymentMethod,
   setDefaultPaymentMethod,
   removePaymentMethod,
-} from "@/lib/actions/billing";
-import { sanitizePaymentMethodData } from "@/lib/utils/billingUtils";
+} from "@/shared/lib/actions/billing";
+import { sanitizePaymentMethodData } from "@/shared/lib/utils/billingUtils";
 
 /**
  * Individual Payment Method API Endpoints - Secure OLTP Operations

@@ -1,7 +1,7 @@
 import React from "react";
 import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
 import { StatsCardData } from "@/types/campaign";
-import { gridLayouts } from "@/lib/design-tokens";
+import { gridLayouts } from "@/shared/lib/design-tokens";
 
 interface KpiCardsProps {
   cards: StatsCardData[];

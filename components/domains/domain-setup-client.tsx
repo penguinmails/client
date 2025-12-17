@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ArrowLeft, RefreshCw, Shield, Copy } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button/button";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent } from "@/shared/ui/card";
+import { Button } from "@/shared/ui/button/button";
+import { Progress } from "@/shared/ui/progress";
 import { copyText } from "@/components/domains/copy";
 
 interface DomainData {

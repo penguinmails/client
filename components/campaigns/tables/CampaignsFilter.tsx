@@ -1,25 +1,25 @@
 "use client";
-import { Input } from "@/components/ui/input/input";
+import { Input } from "@/shared/ui/input/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button/button";
+} from "@/shared/ui/select";
+import { Button } from "@/shared/ui/button/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/shared/ui/popover";
+import { Checkbox } from "@/shared/ui/checkbox";
 import { Calendar, CheckIcon, Search, Server, X } from "lucide-react";
 import { useState } from "react";
-import DatePicker from "../../ui/custom/DatePicker";
-import { availableMailboxes } from "@/lib/data/campaigns";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import DatePicker from "@/shared/ui/custom/DatePicker";
+import { availableMailboxes } from "@/shared/lib/data/campaigns";
+import { Label } from "@/shared/ui/label";
+import { cn } from "@/shared/lib/utils";
 
 enum CampaignStatus {
   All = "all",

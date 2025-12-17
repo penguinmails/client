@@ -1,10 +1,10 @@
 "use client";
 
 import React, { Component, ReactNode } from "react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button/button";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { Button } from "@/shared/ui/button/button";
 import { AlertTriangle, RefreshCw, Home, Bug } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 
 interface ProfileErrorBoundaryState {
   hasError: boolean;

@@ -6,8 +6,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getLoopService } from '@/lib/services/loop';
-import { getAuthService } from '@/lib/niledb/auth';
+import { getLoopService } from '@/shared/lib/services/loop';
+import { getAuthService } from '@/shared/lib/niledb/auth';
 import { z } from 'zod';
 
 // Schema for notification email requests

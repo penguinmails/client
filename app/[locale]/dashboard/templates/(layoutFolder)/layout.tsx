@@ -1,12 +1,12 @@
-import NavLink from "@/components/ui/custom/NavLink";
+import NavLink from "@/shared/ui/custom/NavLink";
 import CreateNewFolderButton from "@/components/templates/create-new-folder-button";
 import ConditionalNewTemplateButton from "@/components/templates/ConditionalNewTemplateButton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import GalleryTab from "@/components/templates/gallery-tab";
 import MyTemplatesTab from "@/components/templates/my-templates-tab";
 import QuickRepliesTab from "@/components/templates/qucik-replies-tab";
 import { Tab } from "@/types/tab";
-import { getTabCounts } from "@/lib/actions/templates";
+import { getTabCounts } from "@/shared/lib/actions/templates";
 
 // Tab definitions - UI structure
 const tabs: Tab[] = [

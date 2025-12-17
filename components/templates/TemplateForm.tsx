@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef } from "react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Form,
   FormControl,
@@ -11,8 +11,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input/input";
 import { Info, Save } from "lucide-react";
 import {
   Select,
@@ -20,18 +20,18 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/ui/tooltip";
 import { copyText as t } from "./copy";
 import PersonalizationTags from "@/components/email/PersonalizationTags";
 import LexicalEditor, {
   LexicalEditorRef,
-} from "@/components/ui/custom/LexicalEditor";
+} from "@/shared/ui/custom/LexicalEditor";
 import { templateFormSchema, TemplateFormValues } from "@/types/forms";
 import { TemplateCategory } from "@/types";
 

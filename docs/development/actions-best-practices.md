@@ -65,7 +65,7 @@ import {
   withRateLimit,
   RateLimits,
   createUserRateLimitKey,
-} from "@/lib/actions/core";
+} from "@/shared/lib/actions/core";
 
 export async function myAction(
   data: MyActionData
@@ -127,7 +127,7 @@ export async function invite(data: any): Promise<ActionResult<any>>
 ### Use ErrorFactory for Consistent Errors
 
 ```typescript
-import { ErrorFactory } from "@/lib/actions/core";
+import { ErrorFactory } from "@/shared/lib/actions/core";
 
 // ✅ Good - Use ErrorFactory methods
 if (!user) {
@@ -218,7 +218,7 @@ import {
   Validators,
   validateArray,
   validateEnum,
-} from "@/lib/actions/core";
+} from "@/shared/lib/actions/core";
 
 // ✅ Good - Use specific validators
 const validation = validateObject(data, {
@@ -772,11 +772,11 @@ import {
   Validators,
   ErrorFactory,
   withErrorHandling,
-} from "@/lib/actions/core";
+} from "@/shared/lib/actions/core";
 
 // 3. Related modules
-import { getUserById, updateUserInDatabase } from "@/lib/data/users";
-import { sendWelcomeEmail } from "@/lib/services/email";
+import { getUserById, updateUserInDatabase } from "@/shared/lib/data/users";
+import { sendWelcomeEmail } from "@/shared/lib/services/email";
 
 // 4. Types
 import type { User, UpdateUserData } from "./types";

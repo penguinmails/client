@@ -1,5 +1,5 @@
 "use client";
-import { onboardingSteps } from "@/lib/data/onboarding.mock";
+import { onboardingSteps } from "@/shared/lib/data/onboarding.mock";
 import { OnboardingStep } from "@/types/onboarding";
 import {
   createContext,

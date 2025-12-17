@@ -2,8 +2,8 @@ import {
   DropDownFilter,
   Filter,
   SearchInput,
-} from "@/components/ui/custom/Filter";
-import { Button } from "@/components/ui/button";
+} from "@/shared/ui/custom/Filter";
+import { Button } from "@/shared/ui/button";
 
 function MailboxesFilter() {
   return (

@@ -405,7 +405,7 @@ await convex.mutation(api.adminAudit.createAdminSession, {
 
 ```typescript
 // Complete admin auth flow
-import { verifyAdminAccess } from "@/lib/auth/adminAuth";
+import { verifyAdminAccess } from "@/shared/lib/auth/adminAuth";
 
 const adminResult = await verifyAdminAccess(userId);
 

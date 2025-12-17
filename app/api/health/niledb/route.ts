@@ -9,9 +9,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { performHealthCheck, validateDatabaseConnection } from '@/lib/niledb/health';
-import { getClientInfo } from '@/lib/niledb/client';
-import { createErrorResponse } from '@/lib/niledb/errors';
+import { performHealthCheck, validateDatabaseConnection } from '@/shared/lib/niledb/health';
+import { getClientInfo } from '@/shared/lib/niledb/client';
+import { createErrorResponse } from '@/shared/lib/niledb/errors';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

@@ -1,12 +1,12 @@
 "use client";
 
 import { use, useState, useEffect } from "react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import EmailAccountForm from "@/components/domains/email-account-form";
 import { EmailAccountFormValues } from "@/types/forms";
-import { getAccountDetails } from "@/lib/actions/domains";
+import { getAccountDetails } from "@/shared/lib/actions/domains";
 
 // Define the type for the data EmailAccountForm expects for its initialData prop
 type EmailAccountFormInitialData = Partial<EmailAccountFormValues> & {

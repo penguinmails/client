@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 import { KPIDisplayConfig } from "@/types/analytics/ui";
 import {
   CampaignAnalytics,

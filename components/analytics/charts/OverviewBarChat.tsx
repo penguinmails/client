@@ -1,7 +1,7 @@
 "use client";
 import { useAnalytics, useDomainAnalytics } from "@/context/AnalyticsContext";
 import { ChartDataPoint } from "@/types/analytics/ui";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 import { getVisibleMetrics } from "../config/metrics";
 import {
   prepareChartDataFromTimeSeries,
@@ -22,7 +22,7 @@ import {
   YAxis,
 } from "recharts";
 import { useEffect, useState } from "react";
-import type { CampaignAnalyticsService } from "@/lib/services/analytics/CampaignAnalyticsService";
+import type { CampaignAnalyticsService } from "@/shared/lib/services/analytics/CampaignAnalyticsService";
 
 function OverviewBarChat() {
   const { filters, loadingState } = useAnalytics();

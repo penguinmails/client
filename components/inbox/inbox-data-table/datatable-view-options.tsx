@@ -9,8 +9,8 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button/button";
+} from "@/shared/ui/dropdown-menu";
+import { Button } from "@/shared/ui/button/button";
 import { Barcode } from "lucide-react";
 
 interface DataTableViewOptionsProps<TData> {

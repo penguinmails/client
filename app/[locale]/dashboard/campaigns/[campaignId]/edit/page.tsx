@@ -7,9 +7,9 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { AddCampaignProvider } from "@/context/AddCampaignContext";
-import { getCampaign } from "@/lib/actions/campaigns";
+import { getCampaign } from "@/shared/lib/actions/campaigns";
 import { notFound } from "next/navigation";
 
 export default async function CampaignCreatePage({

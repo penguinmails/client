@@ -1,9 +1,9 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/ui/card";
 import { useOnboarding } from "@/context/onboarding-context";
 import { HelpSection } from "../components/HelpSection";
 import { StepCard } from "../steps/StepCard";
-import { Stepper, Step } from "@/components/ui/Stepper";
+import { Stepper, Step } from "@/shared/ui/Stepper";
 import { createContext } from "react";
 
 interface OnboardingStepperContext {

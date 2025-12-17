@@ -11,14 +11,14 @@ import {
   withEnhancedAuthentication,
   withValidation,
   performanceMonitor,
-} from '@/lib/niledb/enhanced-middleware';
+} from '@/shared/lib/niledb/enhanced-middleware';
 import { 
   ValidationError,
   AuthenticationError,
   TenantAccessError,
   DatabaseError,
   createErrorResponse,
-} from '@/lib/niledb/errors';
+} from '@/shared/lib/niledb/errors';
 
 // Validation schemas for testing
 const TestValidationSchema = z.object({

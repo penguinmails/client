@@ -1,5 +1,5 @@
 import DomainsTab from "@/components/domains/components/domains-tab";
-import { getDomainsData } from "@/lib/actions/domains";
+import { getDomainsData } from "@/shared/lib/actions/domains";
 
 async function page() {
   const { domains, dnsRecords } = await getDomainsData();

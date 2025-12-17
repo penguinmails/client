@@ -5,8 +5,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button/button";
+} from "@/shared/ui/dialog";
+import { Button } from "@/shared/ui/button/button";
 import { copyText as t } from "../data/copy";
 import { Client } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 

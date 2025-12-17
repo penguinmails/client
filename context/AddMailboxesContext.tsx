@@ -3,7 +3,7 @@ import AddMailboxesNavigation from "@/components/domains/mailboxes/new/AddMailbo
 import AddMailboxesStep from "@/components/domains/mailboxes/new/AddMailboxesStep";
 import AddMailboxesStepper from "@/components/domains/mailboxes/new/AddMailboxesStepper";
 import NewMailboxHeaderDetails from "@/components/domains/mailboxes/new/NewMailboxHeaderDetails";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Dialog,
   DialogClose,
@@ -11,7 +11,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/shared/ui/dialog";
 import { ArrowLeft, CheckCircle, Mail, Settings } from "lucide-react";
 import Link from "next/link";
 import { createContext, useContext, useState } from "react";

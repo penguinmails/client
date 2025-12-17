@@ -1,6 +1,6 @@
 import { TimeSeriesDataPoint } from "@/types/analytics/core";
 import { ChartDataPoint, AnalyticsUIFilters } from "@/types/analytics/ui";
-import { AnalyticsCalculator, PerformanceCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator, PerformanceCalculator } from "@/shared/lib/utils/analytics-calculator";
 
 /**
  * Interface for UI filter data used in chart data preparation

@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/shared/ui/button/button";
+import { cn } from "@/shared/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

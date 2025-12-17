@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/shared/ui/button/button";
+import { Input } from "@/shared/ui/input/input";
+import { Textarea } from "@/shared/ui/textarea";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,12 +15,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/shared/ui/alert-dialog";
 import {
   createClient,
   removeFromCampaign,
   deleteClient,
-} from "@/lib/actions/clients";
+} from "@/shared/lib/actions/clients";
 
 interface ClientFormProps {
   campaignId: string;

@@ -1,5 +1,5 @@
-import Icon from "@/components/ui/custom/Icon";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Icon from "@/shared/ui/custom/Icon";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { BarChart3, CreditCard } from "lucide-react";
 import BillingTab from "./Billing-Tab";
 import UsageTab from "./usage-tab";

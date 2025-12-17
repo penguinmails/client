@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/shared/ui/button/button";
+import { Textarea } from "@/shared/ui/textarea";
 import { useConversation } from "@/context/ConversationContext";
 import { X } from "lucide-react";
 import { useState } from "react";

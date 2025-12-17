@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import { ArrowUp } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 export default function GoToTopButton() {
   const [isVisible, setIsVisible] = useState(false);

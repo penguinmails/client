@@ -1,9 +1,9 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { DataTableFacetedFilter } from "./datatable-faceted-filter";
 import { Check, Filter, Package, RotateCcw, X } from "lucide-react";
-import { Button } from "@/components/ui/button/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { Button } from "@/shared/ui/button/button";
+import { Label } from "@/shared/ui/label";
+import { Switch } from "@/shared/ui/switch";
 import React from "react";
 
 export function ModalFilter({

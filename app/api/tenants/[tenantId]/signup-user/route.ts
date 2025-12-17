@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { withTenantAccess } from '@/lib/niledb/middleware';
-import { getAuthService } from '@/lib/niledb/auth';
-import { getNileClient } from '@/lib/niledb/client';
+import { withTenantAccess } from '@/shared/lib/niledb/middleware';
+import { getAuthService } from '@/shared/lib/niledb/auth';
+import { getNileClient } from '@/shared/lib/niledb/client';
 import { z } from 'zod';
 
 // Validation schema for signing up a new user and adding to tenant

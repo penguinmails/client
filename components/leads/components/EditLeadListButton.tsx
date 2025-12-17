@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Dialog,
   DialogClose,
@@ -7,11 +7,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { LeadList } from "@/lib/data/leads";
+} from "@/shared/ui/dialog";
+import { Input } from "@/shared/ui/input/input";
+import { Label } from "@/shared/ui/label";
+import { Textarea } from "@/shared/ui/textarea";
+import { LeadList } from "@/shared/lib/data/leads";
 import { Pencil, Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 

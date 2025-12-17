@@ -1,16 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button/button";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
+import { Button } from "@/shared/ui/button/button";
 import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLoadingSkeleton";
 import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
 import { showSecurityUpdateSuccess } from "@/components/settings/common/SettingsSuccessNotification";
 import { useTwoAuthContext } from "./two-factor-auth-switch";
 import { AlertTriangle, Check, Shield, Loader2, RefreshCw } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { Badge } from "@/shared/ui/badge";
+import { cn } from "@/shared/lib/utils";
 import { useServerAction } from "@/hooks/useServerAction";
-import { getSecurityRecommendations } from "@/lib/actions/settings";
+import { getSecurityRecommendations } from "@/shared/lib/actions/settings";
 
 interface SecurityRecommendation {
   id: string;

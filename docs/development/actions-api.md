@@ -99,7 +99,7 @@ const userId = userIdResult.data;
 Standardized error creation:
 
 ```typescript
-import { ErrorFactory } from "@/lib/actions/core";
+import { ErrorFactory } from "@/shared/lib/actions/core";
 
 // Authentication errors
 ErrorFactory.authRequired();
@@ -137,7 +137,7 @@ return await withErrorHandling(async () => {
 ### Object Validation
 
 ```typescript
-import { validateObject, Validators } from "@/lib/actions/core";
+import { validateObject, Validators } from "@/shared/lib/actions/core";
 
 const validation = validateObject(data, {
   name: Validators.name,
@@ -705,7 +705,7 @@ interface HealthStatus {
 ### Basic Action Usage
 
 ```typescript
-import { getBillingInfo } from "@/lib/actions/billing";
+import { getBillingInfo } from "@/shared/lib/actions/billing";
 
 const result = await getBillingInfo();
 
@@ -723,7 +723,7 @@ if (result.success) {
 ### Handling Validation Errors
 
 ```typescript
-import { updateUserProfile } from "@/lib/actions/profile";
+import { updateUserProfile } from "@/shared/lib/actions/profile";
 
 const result = await updateUserProfile({
   name: "John Doe",
@@ -745,7 +745,7 @@ if (!result.success && result.error.type === "validation") {
 ### Handling Rate Limits
 
 ```typescript
-import { sendTeamInvitation } from "@/lib/actions/team";
+import { sendTeamInvitation } from "@/shared/lib/actions/team";
 
 const result = await sendTeamInvitation({
   email: "user@example.com",
@@ -766,7 +766,7 @@ if (!result.success && result.error.type === "rate_limit") {
 ### Pagination Example
 
 ```typescript
-import { getCampaigns } from "@/lib/actions/campaigns";
+import { getCampaigns } from "@/shared/lib/actions/campaigns";
 
 const result = await getCampaigns({
   limit: 20,

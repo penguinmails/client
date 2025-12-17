@@ -6,7 +6,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { UserPreferencesResponse } from '@/types/settings/user';
-import { userPreferencesSchema } from '@/lib/validations/settings';
+import { userPreferencesSchema } from '@/shared/lib/validations/settings';
 
 // This implementation will fail until API integration is added
 interface ClientPreferencesContextType {

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { copyText as t } from "./copy";
-import { isValidTimeRange } from "@/lib/utils";
+import { isValidTimeRange } from "@/shared/lib/utils";
 import { CampaignEventCondition, CampaignStatus } from "@/types/campaign";
 
 // Schema definitions

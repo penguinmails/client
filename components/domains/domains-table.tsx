@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/ui/card";
 import {
   Table,
   TableBody,
@@ -6,16 +6,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+} from "@/shared/ui/dropdown-menu";
+import { Button } from "@/shared/ui/button/button";
+import { Badge } from "@/shared/ui/badge";
+import { Progress } from "@/shared/ui/progress";
 import {
   MoreHorizontal,
   AlertTriangle,

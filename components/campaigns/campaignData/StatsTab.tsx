@@ -1,16 +1,16 @@
 "use client";
 import KpiCard from "@/components/analytics/cards/StatsCard";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/shared/ui/dropdown-menu";
 import { ChartData, MetricToggle } from "@/types/campaign";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator"; // MIGRATED: Added for rate calculations
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator"; // MIGRATED: Added for rate calculations
 import {
   AlertTriangle,
   ChevronDown,

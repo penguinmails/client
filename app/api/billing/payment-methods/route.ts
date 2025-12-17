@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getPaymentMethods,
   addPaymentMethod,
-} from "@/lib/actions/billing";
+} from "@/shared/lib/actions/billing";
 import { PaymentMethodFormSchema } from "@/types/billing";
-import { sanitizePaymentMethodData } from "@/lib/utils/billingUtils";
+import { sanitizePaymentMethodData } from "@/shared/lib/utils/billingUtils";
 
 /**
  * Payment Methods API Endpoints - Secure OLTP Operations

@@ -5,8 +5,8 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { PlanUtilizationCardSkeleton } from "../BillingAnalyticsSkeletons";
 

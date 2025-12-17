@@ -3,7 +3,7 @@ import {
   getCompanyBilling,
   createCompanyBilling,
   updateCompanyBilling,
-} from "@/lib/actions/billing";
+} from "@/shared/lib/actions/billing";
 import { CompanyBillingFormSchema } from "@/types/billing";
 
 interface UpdateBillingRequest {

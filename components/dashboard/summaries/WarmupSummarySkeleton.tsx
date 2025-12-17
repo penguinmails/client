@@ -4,8 +4,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/shared/ui/card";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 function WarmupSummarySkeleton() {
   return (

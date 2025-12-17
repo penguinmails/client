@@ -1,4 +1,4 @@
-import { initialTemplates } from "@/lib/data/template.mock";
+import { initialTemplates } from "@/shared/lib/data/template.mock";
 import { Template, TemplateCategoryType } from "@/types";
 
 // Type for simplified template from consolidated data

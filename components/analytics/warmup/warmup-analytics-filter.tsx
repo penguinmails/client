@@ -1,10 +1,10 @@
-import { DropDownFilter, Filter } from "@/components/ui/custom/Filter";
-import Icon from "@/components/ui/custom/Icon";
+import { DropDownFilter, Filter } from "@/shared/ui/custom/Filter";
+import Icon from "@/shared/ui/custom/Icon";
 import { Calendar, Filter as FilterIcon } from "lucide-react";
 import { useAnalytics } from "@/context/AnalyticsContext";
 import { DataGranularity, DateRangePreset } from "@/types";
-import { spacing } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { spacing } from "@/shared/lib/design-tokens";
+import { cn } from "@/shared/lib/utils";
 
 const dateRangeOptions = [
   { label: "Last 7 days", value: "7d" as DateRangePreset },

@@ -1,8 +1,8 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import {
   AlertTriangle,
   RefreshCw,

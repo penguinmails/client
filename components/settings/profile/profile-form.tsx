@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button/button";
-import { Form } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/shared/ui/button/button";
+import { Form } from "@/shared/ui/form";
+import { Separator } from "@/shared/ui/separator";
 import { Loader2 } from "lucide-react";
 import { useProfileForm } from "@/hooks/useProfileForm";
 import ProfileBasicsForm from "@/components/settings/profile/ProfileBasicsForm";

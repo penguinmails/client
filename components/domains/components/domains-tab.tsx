@@ -1,8 +1,8 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { getStatusColor } from "@/lib/data/domains";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { cn } from "@/shared/lib/utils";
+import { getStatusColor } from "@/shared/lib/data/domains";
 import { AlertTriangle, Check, Copy, X } from "lucide-react";
 
 export const getRecordIcon = (status: string) => {

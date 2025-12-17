@@ -5,6 +5,6 @@ export { OnboardingLayout } from "./layout/OnboardingLayout";
 export { PromotionAlert } from "./components/PromotionAlert";
 export { Step } from "./steps/Step";
 export { StepCard } from "./steps/StepCard";
-export { Stepper } from "@/components/ui/Stepper";
+export { Stepper } from "@/shared/ui/Stepper";
 export { VideoTutorial } from "./components/VideoTutorial";
 export type { OnboardingStep } from "@/types/onboarding";

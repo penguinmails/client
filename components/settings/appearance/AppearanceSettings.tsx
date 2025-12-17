@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+} from "@/shared/ui/card";
+import { Label } from "@/shared/ui/label";
+import { Switch } from "@/shared/ui/switch";
 import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLoadingSkeleton";
 import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
 import { showAppearanceUpdateSuccess } from "@/components/settings/common/SettingsSuccessNotification";
@@ -17,7 +17,7 @@ import { useClientPreferences } from "@/context/ClientPreferencesContext";
 import { usePreferenceSync } from "@/hooks/usePreferenceSync";
 import { Sun, Moon, Monitor, Loader2 } from "lucide-react";
 import React, { useState } from "react";
-import type { TableDensity } from "@/lib/utils/clientStorage";
+import type { TableDensity } from "@/shared/lib/utils/clientStorage";
 
 const themeOptions = [
   { value: "light", label: "Light", icon: Sun },

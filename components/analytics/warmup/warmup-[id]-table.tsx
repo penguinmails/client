@@ -1,8 +1,8 @@
 "use client";
 
-import { DropDownFilter, Filter } from "@/components/ui/custom/Filter";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DropDownFilter, Filter } from "@/shared/ui/custom/Filter";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import {
   Table,
   TableBody,
@@ -10,13 +10,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/ui/tooltip";
 import { Calendar, Download, HelpCircle } from "lucide-react";
 import { useAnalytics } from "@/context/AnalyticsContext";
 import { WarmupChartData } from "@/types";

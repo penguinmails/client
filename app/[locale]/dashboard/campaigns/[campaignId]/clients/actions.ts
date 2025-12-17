@@ -1,6 +1,6 @@
 "use server";
 
-import { campaignLeads } from "@/lib/data/campaigns";
+import { campaignLeads } from "@/shared/lib/data/campaigns";
 
 export async function getClientsPage(
   campaignId: string,

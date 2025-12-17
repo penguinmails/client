@@ -2,7 +2,7 @@
 import { createContext, useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { AddDomainFormType } from "@/types/domains";
-import { steps, dnsRecords } from "@/lib/data/domains.mock";
+import { steps, dnsRecords } from "@/shared/lib/data/domains.mock";
 import {
   Dialog,
   DialogClose,
@@ -10,7 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/shared/ui/dialog";
 import NewDomainHeaderDetails from "@/components/domains/new/NewDomainHeaderDetails";
 import NewDomainStepper from "@/components/domains/new/NewDomainStepper";
 import NewDomainStep from "@/components/domains/new/NewDomainStep";

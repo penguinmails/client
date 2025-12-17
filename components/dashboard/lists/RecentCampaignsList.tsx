@@ -1,9 +1,9 @@
 import React from "react";
 import { Mail, BarChart2, MessageSquare, MousePointer } from "lucide-react";
 import Link from "next/link";
-import { textColors, typography } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { textColors, typography } from "@/shared/lib/design-tokens";
+import { cn } from "@/shared/lib/utils";
+import { Card, CardHeader, CardTitle, CardContent } from "@/shared/ui/card";
 
 // Define the expected data structure for props
 interface CampaignStat {

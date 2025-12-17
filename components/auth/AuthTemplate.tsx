@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
@@ -10,8 +10,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+} from "@/shared/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
 import { Terminal } from "lucide-react";
 import { UserInfo, SignOutButton } from "@niledatabase/react";
 

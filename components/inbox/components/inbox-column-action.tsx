@@ -6,8 +6,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button/button";
+} from "@/shared/ui/dropdown-menu";
+import { Button } from "@/shared/ui/button/button";
 import {
   Eye,
   EyeClosed,
@@ -16,7 +16,7 @@ import {
   SquareArrowDown,
   Trash2Icon,
 } from "lucide-react";
-import { showCustomToast } from "@/components/ui/custom/custom-toast";
+import { showCustomToast } from "@/shared/ui/custom/custom-toast";
 import {
   hideEmailAction,
   markEmailAsReadAction,

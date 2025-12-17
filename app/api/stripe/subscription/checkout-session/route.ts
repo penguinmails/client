@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { stripeApi } from '@/lib/stripe/stripe-server';
+import { stripeApi } from '@/shared/lib/stripe/stripe-server';
 import { nile } from '@/app/api/[...nile]/nile';
 
 interface NileUser {

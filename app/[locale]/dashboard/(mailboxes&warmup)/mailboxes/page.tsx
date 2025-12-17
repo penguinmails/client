@@ -5,9 +5,9 @@ import MailboxesTab from "@/components/domains/mailboxes/mailboxes-tab";
 import {
   getMailboxesAction,
   getMultipleMailboxAnalyticsAction,
-} from "@/lib/actions/mailboxes";
+} from "@/shared/lib/actions/mailboxes";
 import { MailboxWarmupData } from "@/types";
-import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
+import { mapRawToLegacyMailboxData } from "@/shared/lib/utils/analytics-mappers";
 // Migration note: Using local alias for mailbox analytics state, all mailbox analytics set via mapper.
 
 // Force dynamic rendering to prevent SSR issues

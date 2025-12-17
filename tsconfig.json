@@ -24,16 +24,18 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@types/*": [
-        "./types/*"
-      ],
-      "@settings/*": [
-        "./types/settings/*"
-      ]
+      "@/*": ["./*"],
+      "@types/*": ["./types/*"],
+      "@settings/*": ["./types/settings/*"],
+
+      /* FSD Layers */
+      "@/app/*": ["./app/*"],
+      "@/shared/*": ["./shared/*"],
+      "@/entities/*": ["./entities/*"],
+      "@/features/*": ["./features/*"],
+      "@/widgets/*": ["./widgets/*"]
     }
   },
   "include": [

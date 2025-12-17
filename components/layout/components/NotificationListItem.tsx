@@ -1,4 +1,4 @@
-import { notificationStyles } from "@/lib/style";
+import { notificationStyles } from "@/shared/lib/style";
 import { Notification } from "@/types/notification";
 import { Clock } from "lucide-react";
 

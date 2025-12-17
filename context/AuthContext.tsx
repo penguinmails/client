@@ -22,8 +22,8 @@ import { toast } from "sonner";
 import {
   AuthenticationError,
   InvalidCredentialsError,
-} from "@/lib/niledb/errors";
-import { mockUserSettings } from "@/lib/data/settings.mock";
+} from "@/shared/lib/niledb/errors";
+import { mockUserSettings } from "@/shared/lib/data/settings.mock";
 
 interface EnhancedAuthContextType extends AuthContextType {
   // Enhanced user data

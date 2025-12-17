@@ -2,7 +2,7 @@
 import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
 import AnalyticsStatistics from "@/components/analytics/components/analytics-statistics";
 import CampaignPerformanceTable from "@/components/campaigns/analytics/CampaignPerformanceTable";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { PerformanceMetrics } from "@/types/analytics/core";
 // import { useAnalytics } from "@/context/AnalyticsContext";
 

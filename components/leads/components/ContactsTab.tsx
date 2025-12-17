@@ -1,5 +1,5 @@
 "use client";
-import { sampleLeads } from "@/lib/data/leads";
+import { sampleLeads } from "@/shared/lib/data/leads";
 import {
   ArrowUpDown,
   Download,
@@ -10,19 +10,19 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
-import { DropDownFilter, Filter, SearchInput } from "../../ui/custom/Filter";
-import { Avatar, AvatarFallback } from "../../ui/avatar";
-import { Badge } from "../../ui/badge";
-import { Button } from "../../ui/button/button";
-import { Card, CardContent, CardHeader } from "../../ui/card";
-import { Checkbox } from "../../ui/checkbox";
+import { DropDownFilter, Filter, SearchInput } from "@/shared/ui/custom/Filter";
+import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Checkbox } from "@/shared/ui/checkbox";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../ui/select";
+} from "@/shared/ui/select";
 import {
   Table,
   TableBody,
@@ -30,7 +30,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../ui/table";
+} from "@/shared/ui/table";
 
 const getStatusColor = (status: string) => {
   const statusLower = status.toLowerCase().replaceAll(" ", "_");

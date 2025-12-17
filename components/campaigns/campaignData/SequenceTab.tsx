@@ -4,8 +4,8 @@
 // PerformanceMetrics-style counts (non-nullable). We defensively guard against
 // missing or zero 'sent' values when computing rates to avoid NaN/Infinity.
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { getSequenceSteps } from "@/lib/actions/dashboardActions";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { getSequenceSteps } from "@/shared/lib/actions/dashboardActions";
 import { useState, useEffect } from "react";
 import { Clock, Mail } from "lucide-react";
 import { SequenceStep as SequenceStepType } from "@/types";

@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import {
   Table,
   TableBody,
@@ -7,12 +7,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+} from "@/shared/ui/table";
+import { Badge } from "@/shared/ui/badge";
 import { Loader2, Mail, Plus, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { MailboxWarmupData } from "@/types";
-import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
+import { mapRawToLegacyMailboxData } from "@/shared/lib/utils/analytics-mappers";
 // Migration note: Using local alias for mailbox analytics state, all mailbox analytics set via mapper.
 import MailboxesFilter from "./MailboxesFilter";
 

@@ -1,7 +1,7 @@
 "use server";
 
-import { inboxMockEmails, inboxMockFroms, inboxMockCampaigns } from "@/lib/data/emails.mock";
-import { conversations } from "@/lib/data/Inbox.mock";
+import { inboxMockEmails, inboxMockFroms, inboxMockCampaigns } from "@/shared/lib/data/emails.mock";
+import { conversations } from "@/shared/lib/data/Inbox.mock";
 
 interface Query {
   email?: string[];

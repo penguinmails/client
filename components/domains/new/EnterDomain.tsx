@@ -1,7 +1,7 @@
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { Card, CardContent } from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input/input";
+import { Label } from "@/shared/ui/label";
 import { AlertTriangle, Globe, Lightbulb } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 

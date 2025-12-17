@@ -8,8 +8,8 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withTenantAccess, withResourcePermission } from '@/lib/niledb/middleware';
-import { getCompanyService, type CreateCompanyData } from '@/lib/niledb/company';
+import { withTenantAccess, withResourcePermission } from '@/shared/lib/niledb/middleware';
+import { getCompanyService, type CreateCompanyData } from '@/shared/lib/niledb/company';
 import { z } from 'zod';
 
 // Validation schema for company creation

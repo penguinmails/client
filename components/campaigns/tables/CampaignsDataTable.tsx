@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { buttonVariants } from "@/components/ui/button/button";
+import { buttonVariants } from "@/shared/ui/button/button";
 import {
   ArrowUpDown,
   Download,
@@ -24,16 +24,16 @@ import {
   Copy,
   Eye,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button/button";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input/input";
+} from "@/shared/ui/dropdown-menu";
+import { Input } from "@/shared/ui/input/input";
 import {
   Table,
   TableBody,
@@ -41,13 +41,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
+} from "@/shared/ui/table";
+import { Progress } from "@/shared/ui/progress";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/ui/tooltip";
 import Link from "next/link";
 import { copyText as t } from "../data/copy";
 import { CampaignResponse, CampaignStatus } from "@/types/campaign";
@@ -58,7 +58,7 @@ import {
   pauseCampaign,
   resumeCampaign,
   duplicateCampaign,
-} from "@/lib/actions/dashboard";
+} from "@/shared/lib/actions/dashboard";
 
 function formatRelativeTime(date: Date): string {
   const now = new Date();

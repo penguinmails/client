@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { EmailsTable } from "@/components/domains/components/emails-table";
 import { ArrowLeft, PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { getDomainWithAccounts } from "@/lib/actions/domains";
+import { getDomainWithAccounts } from "@/shared/lib/actions/domains";
 import { notFound } from "next/navigation";
 
 export default async function DomainAccountsPage({

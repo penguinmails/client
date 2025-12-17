@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getInvoices,
   generateUsageInvoice,
-} from "@/lib/actions/billing/invoices";
+} from "@/shared/lib/actions/billing/invoices";
 
 /**
  * Invoices API Endpoints - Secure OLTP Operations

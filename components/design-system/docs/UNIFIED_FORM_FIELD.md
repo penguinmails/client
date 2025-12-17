@@ -330,7 +330,7 @@ const countries = [
 **Before:**
 
 ```tsx
-import { Input } from "@/components/ui/input";
+import { Input } from "@/shared/ui/input";
 import {
   Form,
   FormField,
@@ -338,7 +338,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/shared/ui/form";
 
 <FormField
   control={form.control}

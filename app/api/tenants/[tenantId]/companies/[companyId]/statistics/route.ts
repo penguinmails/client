@@ -7,8 +7,8 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withTenantAccess } from '@/lib/niledb/middleware';
-import { getCompanyService } from '@/lib/niledb/company';
+import { withTenantAccess } from '@/shared/lib/niledb/middleware';
+import { getCompanyService } from '@/shared/lib/niledb/company';
 
 /**
  * GET /api/tenants/[tenantId]/companies/[companyId]/statistics

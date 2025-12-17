@@ -1,5 +1,5 @@
 import TeamMembersTable from "@/components/settings/team/team-members-table";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/ui/card";
 
 // Force dynamic rendering to prevent SSR issues with analytics dependencies
 export const dynamic = "force-dynamic";

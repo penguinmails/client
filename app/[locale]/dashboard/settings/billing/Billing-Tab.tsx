@@ -4,15 +4,15 @@ import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dia
 import EditAddressTrigger from "@/components/settings/billing/edit-trigger-dialog";
 import InvoicesTable from "@/components/settings/billing/invocies-table";
 import UpdateCardDialogTrigger from "@/components/settings/billing/update-card-dialog";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/card";
+import { cn } from "@/shared/lib/utils";
 import {
   CreditCard,
   Crown,
@@ -24,8 +24,8 @@ import { useEffect, useMemo } from "react";
 import {
   getBillingDataForSettings,
   updateBillingInfo,
-} from "@/lib/actions/billing";
-import { updateCompanyInfo, getUserSettings } from "@/lib/actions/settings";
+} from "@/shared/lib/actions/billing";
+import { updateCompanyInfo, getUserSettings } from "@/shared/lib/actions/settings";
 import {
   useServerAction,
   useServerActionWithParams,
@@ -35,7 +35,7 @@ import {
   SettingsErrorBoundary,
   SettingsErrorFallback,
 } from "@/components/settings/SettingsErrorBoundary";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import { toast } from "sonner";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { useSearchParams } from "next/navigation";

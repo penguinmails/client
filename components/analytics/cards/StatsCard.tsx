@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card"; // Import from the new UI library
-import { cn } from "@/lib/utils"; // Import the cn utility
+import { Card, CardContent } from "@/shared/ui/card"; // Import from the new UI library
+import { cn } from "@/shared/lib/utils"; // Import the cn utility
 import React from "react";
 
 interface StatsCardProps {

@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import Link from "next/link"; // Import Link
-import { Button } from "@/components/ui/button/button";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/shared/ui/button/button";
+import { Input } from "@/shared/ui/input/input";
+import { Label } from "@/shared/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
 import { KeyRound, MailCheck, User } from "lucide-react"; // Icons
 import { LandingLayout } from "@/components/landing/LandingLayout";
 import { forgotPasswordContent } from "./content";

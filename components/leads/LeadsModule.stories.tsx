@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import MigratedContactsTab from "./components/MigratedContactsTab";
 import ContactsTab from "./components/ContactsTab"; // Legacy component
-import { sampleLeads } from "@/lib/data/leads";
+import { sampleLeads } from "@/shared/lib/data/leads";
 
 /**
  * Visual Verification for Leads Module Migration.

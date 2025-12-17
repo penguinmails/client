@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { mockAccountData } from "@/lib/data/accounts.mock";
+import { mockAccountData } from "@/shared/lib/data/accounts.mock";
 
 export async function GET(
   request: Request,

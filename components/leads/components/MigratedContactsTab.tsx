@@ -3,9 +3,9 @@
 import React, { useState, useMemo } from "react";
 import { MigratedLeadsFilter } from "./MigratedLeadsFilter";
 import { MigratedLeadsTable, Lead } from "./MigratedLeadsTable";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { sampleLeads } from "@/lib/data/leads";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { sampleLeads } from "@/shared/lib/data/leads";
+import { Button } from "@/shared/ui/button";
 import { Tag, Send, Download, Trash2 } from "lucide-react";
 import {
   Select,
@@ -13,7 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 // Placeholders for migrated modals - normally would import them here
 // import { MigratedEditLeadListButton } from "./MigratedEditLeadListButton";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { CardContent } from "@/components/ui/card";
+import { CardContent } from "@/shared/ui/card";
 import { useAnalytics } from "@/context/AnalyticsContext";
 
 export default function WeeklyMetricsClient() {

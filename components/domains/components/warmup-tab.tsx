@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import {
   Table,
   TableBody,
@@ -8,9 +8,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { getStatusColor } from "@/lib/utils/domains";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/table";
+import { getStatusColor } from "@/shared/lib/utils/domains";
+import { cn } from "@/shared/lib/utils";
 import {
   AlertTriangle,
   BarChart3,
@@ -22,12 +22,12 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
-import { DomainWithMailboxesData } from "@/lib/actions/domains";
+import { DomainWithMailboxesData } from "@/shared/lib/actions/domains";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/ui/tooltip";
 
 function WarmupTab({
   domainsData,

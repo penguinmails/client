@@ -1,5 +1,5 @@
 import NotificationsSettings from "@/components/settings/notifications/notifications-settings";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 
 function page() {
   return (

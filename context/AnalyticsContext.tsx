@@ -8,14 +8,14 @@ import type {
   MailboxWarmupData,
   MailboxAnalyticsData,
 } from "@/types/analytics";
-import type { DomainWithMailboxesData } from "@/lib/actions/domains/types";
+import type { DomainWithMailboxesData } from "@/shared/lib/actions/domains/types";
 import { PerformanceMetrics } from "@/types/analytics/core";
 import { CampaignPerformanceData } from "@/types";
-import { analyticsService } from "@/lib/services/analytics/AnalyticsService";
+import { analyticsService } from "@/shared/lib/services/analytics/AnalyticsService";
 import {
   mapServiceMailboxToLegacy,
   mapServiceWarmupToChartData,
-} from "@/lib/utils/analytics-mappers";
+} from "@/shared/lib/utils/analytics-mappers";
 import { FiltersProvider, useFilters } from "./FiltersContext";
 import {
   LoadingProvider,

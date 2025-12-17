@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Form,
   FormControl,
@@ -12,9 +12,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input/input";
+import { Card, CardHeader, CardTitle, CardContent } from "@/shared/ui/card";
 import { toast } from "sonner";
 
 const passwordSettingsSchema = z

@@ -3,7 +3,7 @@
 import { ReactNode, Suspense } from "react";
 import { SettingsErrorBoundary } from "@/components/settings/SettingsErrorBoundary";
 import { SettingsLoadingSkeleton } from "./SettingsLoadingSkeleton";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { WifiOff } from "lucide-react";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 

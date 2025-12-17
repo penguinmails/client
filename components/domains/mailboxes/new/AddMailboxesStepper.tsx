@@ -1,4 +1,4 @@
-import Stepper from "@/components/ui/Stepper";
+import Stepper from "@/shared/ui/Stepper";
 import { AddMailboxesContext } from "@/context/AddMailboxesContext";
 
 function NewMailboxesStepper() {

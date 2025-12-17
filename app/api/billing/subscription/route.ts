@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   updateSubscriptionPlan,
   cancelSubscription,
-} from "@/lib/actions/billing";
+} from "@/shared/lib/actions/billing";
 
 /**
  * Subscription Management API Endpoints - Secure OLTP Operations

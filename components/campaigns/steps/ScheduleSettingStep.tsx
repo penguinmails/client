@@ -1,26 +1,26 @@
 "use client";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { Input } from "@/shared/ui/input/input";
+import { Label } from "@/shared/ui/label";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
-import { allTimezones, calculateMaxEmails, cn } from "@/lib/utils";
+import { allTimezones, calculateMaxEmails, cn } from "@/shared/lib/utils";
 import { Calendar, Check, ChevronsUpDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command";
+} from "@/shared/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/shared/ui/popover";
 
 enum DayOfWeek {
   Monday = "monday",

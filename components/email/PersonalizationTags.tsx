@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import { Tag } from "lucide-react";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/shared/ui/label";
 import { toast } from "sonner";
 
 // Common personalization tags that can be used across the application

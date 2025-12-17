@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { PasswordInput } from "@/components/ui/custom/password-input";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
-import type { PasswordStrength } from "@/lib/utils";
+import { Button } from "@/shared/ui/button";
+import { PasswordInput } from "@/shared/ui/custom/password-input";
+import { Input } from "@/shared/ui/input/input";
+import { Label } from "@/shared/ui/label";
+import type { PasswordStrength } from "@/shared/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";

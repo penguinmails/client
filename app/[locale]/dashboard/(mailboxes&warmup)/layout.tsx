@@ -1,9 +1,9 @@
 import { ClientAnalyticsProvider } from "@/components/analytics/AnalyticsProviderClient";
 import OverviewCards from "@/components/domains/components/overview-cards";
 import TabTrigger from "@/components/domains/components/TabTrigger";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Tabs, TabsList } from "@/components/ui/tabs";
-import { tabs } from "@/lib/data/mailboxes";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Tabs, TabsList } from "@/shared/ui/tabs";
+import { tabs } from "@/shared/lib/data/mailboxes";
 import { Suspense } from "react";
 
 function Layout({ children }: { children: React.ReactNode }) {

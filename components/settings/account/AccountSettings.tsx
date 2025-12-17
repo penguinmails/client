@@ -7,14 +7,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import {
   SettingsLoadingSkeleton,
   SettingsErrorState,
 } from "@/components/settings/common";
 import { useServerAction, type ActionResult } from "@/hooks/useServerAction";
-import { getUserProfile } from "@/lib/actions/profile";
-import { mapNileUserToFormData, type NileUser } from "@/lib/utils";
+import { getUserProfile } from "@/shared/lib/actions/profile";
+import { mapNileUserToFormData, type NileUser } from "@/shared/lib/utils";
 import PasswordSettingsForm from "../profile/PasswordSettingsForm";
 import {
   ProfileFormValues,

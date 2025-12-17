@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isValidTimeRange } from "@/lib/utils";
+import { isValidTimeRange } from "@/shared/lib/utils";
 import { CampaignEventCondition, CampaignStatus } from "@/types/campaign";
 import { TemplateCategory } from "@/types";
 import { VerificationStatus, RelayType, DomainAccountCreationType, EmailAccount, ACCOUNT_STATUSES } from "@/types/domains";

@@ -7,8 +7,8 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withStaffAccess } from '@/lib/niledb/middleware';
-import { withoutTenantContext } from '@/lib/niledb/client';
+import { withStaffAccess } from '@/shared/lib/niledb/middleware';
+import { withoutTenantContext } from '@/shared/lib/niledb/client';
 
 interface AdminTenantRow {
   id: string;

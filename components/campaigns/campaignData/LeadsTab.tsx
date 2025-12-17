@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { getCampaignLeads } from "@/lib/actions/campaigns";
+import { Card, CardContent } from "@/shared/ui/card";
+import { getCampaignLeads } from "@/shared/lib/actions/campaigns";
 import LeadsFilter from "./LeadsFilter";
 
 const getStatusColor = (status: string) => {

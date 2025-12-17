@@ -1,6 +1,6 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input/input";
-import { Toggle } from "@/components/ui/toggle";
+import { Label } from "@/shared/ui/label";
+import { Input } from "@/shared/ui/input/input";
+import { Toggle } from "@/shared/ui/toggle";
 import { copyText as t } from "../data/copy";
 
 interface ScheduleSettingsProps {

@@ -1,24 +1,24 @@
 "use client";
 
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/shared/ui/card";
+import { Skeleton } from "@/shared/ui/skeleton";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { addStorage, getStorageOptions } from "@/lib/actions/billing";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/dialog";
+import { Label } from "@/shared/ui/label";
+import { addStorage, getStorageOptions } from "@/shared/lib/actions/billing";
+import { cn } from "@/shared/lib/utils";
 import { HardDrive, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";

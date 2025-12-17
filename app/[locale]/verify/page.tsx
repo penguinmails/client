@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle, XCircle, RefreshCw, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import { LandingLayout } from "@/components/landing/LandingLayout";
 import { AuthTemplate } from "@/components/auth/AuthTemplate";
 import { toast } from "sonner";

@@ -1,9 +1,9 @@
 "use client";
 
-import Icon from "@/components/ui/custom/Icon";
+import Icon from "@/shared/ui/custom/Icon";
 import NavLink from "@/components/settings/general/nav-link";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button/button";
+import { Separator } from "@/shared/ui/separator";
+import { Button } from "@/shared/ui/button/button";
 import { useClientPreferences } from "@/context/ClientPreferencesContext";
 import {
   Bell,
@@ -17,7 +17,7 @@ import {
   Moon,
   Monitor,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { useEffect, useState } from "react";
 
 const tabs = [

@@ -7,7 +7,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { AddCampaignProvider } from "@/context/AddCampaignContext";
 function CampaignCreatePage() {
   return (

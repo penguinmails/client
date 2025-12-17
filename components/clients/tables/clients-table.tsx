@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import { flexRender, Table as TableType } from "@tanstack/react-table";
 import { copyText as t } from "../data/copy";
 import { Client } from "@/app/[locale]/dashboard/inbox/schemas/schemas";

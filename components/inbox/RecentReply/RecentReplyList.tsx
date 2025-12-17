@@ -1,5 +1,5 @@
 import { RecentReply } from "@/types/campaign";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 import { UnifiedDataList } from "@/components/design-system/components/unified-data-list";
 
 const RecentRepliesList = ({

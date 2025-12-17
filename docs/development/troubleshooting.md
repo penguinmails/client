@@ -39,7 +39,7 @@ import { AnalyticsService } from "../services/analytics";
 import { AnalyticsService } from "../../lib/services/analytics";
 
 // ✅ Use absolute imports when configured
-import { AnalyticsService } from "@/lib/services/analytics";
+import { AnalyticsService } from "@/shared/lib/services/analytics";
 ```
 
 #### Unused variable warnings

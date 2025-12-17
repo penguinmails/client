@@ -2,8 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { AccountDetails } from "@/types/mailbox";
 import {
   ArrowUpRight,
@@ -31,8 +31,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
+} from "@/shared/ui/table";
+import { Progress } from "@/shared/ui/progress";
 
 interface AccountWarmupDetailsContentProps {
   accountDetails: AccountDetails;

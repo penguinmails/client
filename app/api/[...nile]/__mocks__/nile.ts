@@ -1,4 +1,4 @@
-import { mockNileUser } from '@/lib/data/team.mock';
+import { mockNileUser } from '@/shared/lib/data/team.mock';
 
 // Mock for @/app/api/[...nile]/nile
 export const nile = {

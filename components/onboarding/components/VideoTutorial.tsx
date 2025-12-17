@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent } from "@/shared/ui/card";
 import { Play } from "lucide-react";
 import { useCallback } from "react";
 

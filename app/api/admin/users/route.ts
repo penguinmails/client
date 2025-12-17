@@ -7,10 +7,10 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withStaffAccess } from '@/lib/niledb/middleware';
-import { withoutTenantContext } from '@/lib/niledb/client';
-import { transformUsersForAdminResponse } from '@/lib/admin/transformers';
-import { logDashboardAccess, logFilterApplied, extractClientIP, extractUserAgent } from '@/lib/admin/audit';
+import { withStaffAccess } from '@/shared/lib/niledb/middleware';
+import { withoutTenantContext } from '@/shared/lib/niledb/client';
+import { transformUsersForAdminResponse } from '@/shared/lib/admin/transformers';
+import { logDashboardAccess, logFilterApplied, extractClientIP, extractUserAgent } from '@/shared/lib/admin/audit';
 
 // Note: AdminUserRow interface is defined but not used in final implementation
 // Kept for potential future use with different data transformation approach

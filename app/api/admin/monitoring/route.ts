@@ -10,11 +10,11 @@ import { z } from 'zod';
 import { 
   withEnhancedStaffAccess,
   withValidation,
-} from '@/lib/niledb/enhanced-middleware';
+} from '@/shared/lib/niledb/enhanced-middleware';
 import { 
   createErrorResponse,
-} from '@/lib/niledb/errors';
-import { getMonitoringManager, type AlertRule } from '@/lib/niledb/monitoring';
+} from '@/shared/lib/niledb/errors';
+import { getMonitoringManager, type AlertRule } from '@/shared/lib/niledb/monitoring';
 
 // Validation schemas
 // Schema for future use

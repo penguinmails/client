@@ -4,8 +4,8 @@ import LeadsTab from "@/components/campaigns/campaignData/LeadsTab";
 import SequenceTab from "@/components/campaigns/campaignData/SequenceTab";
 import StatsTab from "@/components/campaigns/campaignData/StatsTab";
 import CampaignSKeleton from "@/components/campaigns/steps/CampaignSKeleton";
-import { TabsContent } from "@/components/ui/tabs";
-import { getCampaign } from "@/lib/actions/campaigns";
+import { TabsContent } from "@/shared/ui/tabs";
+import { getCampaign } from "@/shared/lib/actions/campaigns";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 

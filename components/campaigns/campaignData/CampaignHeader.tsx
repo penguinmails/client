@@ -2,8 +2,8 @@ import CampaignsActions, {
   CampaignActionsEnum,
 } from "../tables/CampaignsActions";
 import { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import BackArrow from "@/components/ui/custom/BackArrow";
+import { cn } from "@/shared/lib/utils";
+import BackArrow from "@/shared/ui/custom/BackArrow";
 import { CampaignDisplay } from "@/types";
 
 function CampaignHeader({

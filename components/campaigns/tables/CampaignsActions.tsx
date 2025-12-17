@@ -1,9 +1,9 @@
 "use client";
-import { campaignsData } from "@/lib/data/campaigns";
+import { campaignsData } from "@/shared/lib/data/campaigns";
 import { Copy, Edit, Eye, Pause, Play } from "lucide-react";
 import Link from "next/link";
-import AlertDialogDelete from "../../ui/custom/AlertDialogDelete";
-import { Button } from "../../ui/button/button";
+import AlertDialogDelete from "@/shared/ui/custom/AlertDialogDelete";
+import { Button } from "@/shared/ui/button/button";
 export enum CampaignActionsEnum {
   VIEW = "view",
   EDIT = "edit",

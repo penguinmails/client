@@ -8,12 +8,12 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/breadcrumb";
+import { Button } from "@/shared/ui/button";
+import { cn } from "@/shared/lib/utils";
 import { ArrowLeft, Home } from "lucide-react";
 import Link from "next/link";
-import { typography, spacing } from "@/lib/design-tokens";
+import { typography, spacing } from "@/shared/lib/design-tokens";
 
 interface PageHeaderProps {
   /**

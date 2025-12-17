@@ -21,7 +21,7 @@ interface CampaignMetrics {
 
 ```typescript
 // ✅ DO: Calculate rates dynamically
-import { AnalyticsCalculator } from "@/lib/services/analytics";
+import { AnalyticsCalculator } from "@/shared/lib/services/analytics";
 
 const openRate = AnalyticsCalculator.calculateOpenRate(
   metrics.opened,
@@ -51,7 +51,7 @@ const openRate = Math.round((opened / sent) * 100); // Yeriation!
 
 ```typescript
 // ✅ DO: Use centralized analytics service
-import { analyticsService } from "@/lib/services/analytics";
+import { analyticsService } from "@/shared/lib/services/analytics";
 
 const metrics = await analyticsService.getCampaignMetrics(campaignId);
 ```

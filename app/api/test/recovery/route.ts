@@ -10,12 +10,12 @@ import { z } from 'zod';
 import { 
   withEnhancedStaffAccess,
   withValidation,
-} from '@/lib/niledb/enhanced-middleware';
+} from '@/shared/lib/niledb/enhanced-middleware';
 import { 
   createErrorResponse,
-} from '@/lib/niledb/errors';
-import { getRecoveryManager } from '@/lib/niledb/recovery';
-import { performHealthCheck } from '@/lib/niledb/health';
+} from '@/shared/lib/niledb/errors';
+import { getRecoveryManager } from '@/shared/lib/niledb/recovery';
+import { performHealthCheck } from '@/shared/lib/niledb/health';
 
 // Validation schemas
 const RecoveryTestSchema = z.object({

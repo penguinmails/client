@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSubscriptionPlans } from "@/lib/actions/billing/subscription-plans";
+import { getSubscriptionPlans } from "@/shared/lib/actions/billing/subscription-plans";
 
 /**
  * Subscription Plans API Endpoints - Secure OLTP Operations

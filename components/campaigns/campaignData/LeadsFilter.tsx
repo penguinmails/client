@@ -1,12 +1,12 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 import { ArrowUpDown, Download } from "lucide-react";
 
 const exportCampaignLeads = async () => {

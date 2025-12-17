@@ -4,7 +4,7 @@ import React from "react";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 
 import { ChartDataPoint } from "@/types/analytics/ui";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 
 // Use standardized ChartDataPoint interface
 interface EmailStatusPieChartProps {

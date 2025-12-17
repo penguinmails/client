@@ -2,14 +2,14 @@
 
 import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
   SheetClose,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from "@/shared/ui/sheet";
 import {
   LogIn,
   Settings,

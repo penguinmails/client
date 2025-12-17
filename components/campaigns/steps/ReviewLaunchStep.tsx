@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { Check } from "lucide-react";
 

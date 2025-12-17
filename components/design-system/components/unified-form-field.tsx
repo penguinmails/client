@@ -7,16 +7,16 @@ import {
   type FieldValues,
 } from "react-hook-form";
 
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import { cn } from "@/shared/lib/utils";
+import { Input } from "@/shared/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/shared/ui/select";
+import { Checkbox } from "@/shared/ui/checkbox";
 import {
   FormItem,
   FormLabel,
@@ -24,7 +24,7 @@ import {
   FormMessage,
   FormDescription,
   FormField,
-} from "@/components/ui/form";
+} from "@/shared/ui/form";
 
 /**
  * FormField Types

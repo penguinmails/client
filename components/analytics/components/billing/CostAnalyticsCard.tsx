@@ -5,7 +5,7 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { TrendingUp, TrendingDown, Minus, DollarSign } from "lucide-react";
 import { CostAnalyticsCardSkeleton } from "../BillingAnalyticsSkeletons";
 

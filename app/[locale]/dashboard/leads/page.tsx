@@ -1,9 +1,9 @@
 import ListsTab from "@/components/leads/components/listsTab";
 import StatsCardSkeleton from "@/components/dashboard/cards/StatsCardSkeleton";
-import Icon from "@/components/ui/custom/Icon";
+import Icon from "@/shared/ui/custom/Icon";
 import StatsCard from "@/components/analytics/cards/StatsCard";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { getLeadsStats, getLeadLists } from "./actions";
 import { LeadStats } from "@/types/clients-leads";
 import { Suspense } from "react";

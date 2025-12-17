@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { useAddTemplateContext } from "@/context/AddTemplateContext";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";

@@ -1,33 +1,33 @@
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input/input";
-import { Switch } from "@/components/ui/switch";
+} from "@/shared/ui/card";
+import { Label } from "@/shared/ui/label";
+import { Input } from "@/shared/ui/input/input";
+import { Switch } from "@/shared/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
+} from "@/shared/ui/select";
+import { Separator } from "@/shared/ui/separator";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
+} from "@/shared/ui/accordion";
+import { Badge } from "@/shared/ui/badge";
 import { ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
-import { Textarea } from "@/components/ui/textarea";
-import { getDomainSettings } from "@/lib/actions/domains";
+import { Textarea } from "@/shared/ui/textarea";
+import { getDomainSettings } from "@/shared/lib/actions/domains";
 import { notFound } from "next/navigation";
 
 export default async function DomainSettingsPage({

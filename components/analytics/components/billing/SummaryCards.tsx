@@ -5,8 +5,8 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent } from "@/shared/ui/card";
+import { Progress } from "@/shared/ui/progress";
 import {
   TrendingUp,
   TrendingDown,

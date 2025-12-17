@@ -1,4 +1,4 @@
-import { Progress } from "@/components/ui/progress";
+import { Progress } from "@/shared/ui/progress";
 import {
   Table,
   TableBody,
@@ -6,14 +6,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/tooltip";
+import { cn } from "@/shared/lib/utils";
 import { Info } from "lucide-react";
 // NOTE: Migration change: prefer core PerformanceMetrics from the new core types.
 // This component accepts either the legacy display shape (temporary) or the
@@ -21,7 +21,7 @@ import { Info } from "lucide-react";
 // unsafe `as` casts and rely on AnalyticsCalculator for rate calculations.
 import { PerformanceMetrics } from "@/types/analytics/core";
 import { CampaignPerformanceData } from "@/types";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 
 interface CampaignPerformanceTableProps {
   // Accept either legacy CampaignPerformanceData (precomputed rates)

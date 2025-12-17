@@ -5,8 +5,8 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
+import { Form } from "@/shared/ui/form";
+import { Button } from "@/shared/ui/button";
 import {
   UnifiedFormField,
   TextFormField,

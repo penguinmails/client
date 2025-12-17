@@ -1,8 +1,8 @@
 import Stripe from 'stripe';
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { stripeApi } from '@/lib/stripe/stripe-server';
-import { handleCheckoutSessionCompleted, handleInvoicePaid, handleSubscriptionUpdated } from '@/lib/stripe/webhook-handlers';
+import { stripeApi } from '@/shared/lib/stripe/stripe-server';
+import { handleCheckoutSessionCompleted, handleInvoicePaid, handleSubscriptionUpdated } from '@/shared/lib/stripe/webhook-handlers';
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SIGNING_SECRET;
 

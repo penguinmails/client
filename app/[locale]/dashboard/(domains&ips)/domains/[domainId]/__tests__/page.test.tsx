@@ -5,7 +5,7 @@
  * metrics display, authentication status, and navigation.
  */
 
-import { getDomainById, getTopAccountsForDomain } from "@/lib/actions/domains";
+import { getDomainById, getTopAccountsForDomain } from "@/shared/lib/actions/domains";
 import { Domain, EmailAccount } from "@/types/domain";
 import { jest } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
@@ -37,7 +37,7 @@ jest.mock("next/link", () => ({
 }));
 
 // Mock domain actions
-jest.mock("@/lib/actions/domains", () => ({
+jest.mock("@/shared/lib/actions/domains", () => ({
   getDomainById: jest.fn(),
   getTopAccountsForDomain: jest.fn(),
 }));

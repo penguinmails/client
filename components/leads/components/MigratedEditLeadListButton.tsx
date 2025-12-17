@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/shared/ui/dialog";
 import {
   Form,
   FormField,
@@ -18,8 +18,8 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/shared/ui/form";
+import { Textarea } from "@/shared/ui/textarea";
 import { Lead } from "./MigratedLeadsTable";
 import { Pencil, Save } from "lucide-react";
 import { useForm } from "react-hook-form";

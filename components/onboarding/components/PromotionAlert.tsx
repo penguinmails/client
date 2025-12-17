@@ -1,6 +1,6 @@
 "use client";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button/button";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
+import { Button } from "@/shared/ui/button/button";
 import { Sparkles } from "lucide-react";
 import { useCallback } from "react";
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Badge } from "@/shared/ui/badge";
 import { useDomainHealthMonitoring } from "../hooks/useDomainAnalytics";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 import { DomainHealthDashboardSkeleton } from "./DomainAnalyticsSkeleton";
 import { DomainAnalytics } from "@/types/analytics/domain-specific";
 import { PerformanceMetrics } from "@/types/analytics/core";

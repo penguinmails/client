@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/shared/ui/button/button";
+import { TabsContent } from "@/shared/ui/tabs";
 import { Star } from "lucide-react";
 import { Email } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 import EmailActions from "../actions/EmailActions";

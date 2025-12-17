@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button/button";
-import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { Button } from "@/shared/ui/button/button";
+import { Dialog, DialogContent, DialogOverlay } from "@/shared/ui/dialog";
+import { cn } from "@/shared/lib/utils";
 import { Maximize2, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";

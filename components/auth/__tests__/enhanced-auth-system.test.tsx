@@ -18,11 +18,11 @@ import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Mock the NileDB client and services
-jest.mock("@/lib/niledb/client");
-jest.mock("@/lib/niledb/auth");
-jest.mock("@/lib/niledb/tenant");
-jest.mock("@/lib/niledb/company");
-jest.mock("@/lib/niledb/monitoring");
+jest.mock("@/shared/lib/niledb/client");
+jest.mock("@/shared/lib/niledb/auth");
+jest.mock("@/shared/lib/niledb/tenant");
+jest.mock("@/shared/lib/niledb/company");
+jest.mock("@/shared/lib/niledb/monitoring");
 
 // Mock Next.js navigation
 jest.mock("next/navigation", () => ({

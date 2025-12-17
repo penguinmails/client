@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { DomainAnalytics } from "@/types/analytics/domain-specific";
-import { convexDomainAnalytics } from "@/lib/data/analytics-convex.mock";
+import { convexDomainAnalytics } from "@/shared/lib/data/analytics-convex.mock";
 
 /**
  * Real-time domain analytics hook using Convex subscriptions.

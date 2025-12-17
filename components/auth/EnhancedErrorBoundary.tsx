@@ -8,10 +8,10 @@
 "use client";
 
 import React, { Component, ReactNode } from "react";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { Badge } from "@/shared/ui/badge";
 import {
   AlertTriangle,
   RefreshCw,

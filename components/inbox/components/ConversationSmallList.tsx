@@ -1,11 +1,11 @@
 import React from "react";
-import { getAllConversations } from "@/lib/actions/inbox";
+import { getAllConversations } from "@/shared/lib/actions/inbox";
 import ConversationsListHeader from "./ConversationsListHeader";
-import { cn, getRelativeTime, getTagColor } from "@/lib/utils";
+import { cn, getRelativeTime, getTagColor } from "@/shared/lib/utils";
 import { ArrowRight, Pin, Star } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/shared/ui/badge";
+import { Card, CardContent } from "@/shared/ui/card";
 
 export default async function ConversationSmallList() {
   const conversationsResult = await getAllConversations();

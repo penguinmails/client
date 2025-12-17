@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
+import { mapRawToLegacyMailboxData } from "@/shared/lib/utils/analytics-mappers";
 import { AlertTriangle, Mail, MessageSquare, Zap } from "lucide-react";
-import { gridLayouts } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { gridLayouts } from "@/shared/lib/design-tokens";
+import { cn } from "@/shared/lib/utils";
 
 interface Mailbox {
   id: string;

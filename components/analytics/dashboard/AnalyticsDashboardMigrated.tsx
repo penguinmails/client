@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import { AnalyticsProvider } from "@/context/AnalyticsContext";
 import { useMailboxes } from "@/hooks/useMailboxes";
 import { useCampaignAnalytics } from "@/hooks/useCampaignAnalytics";

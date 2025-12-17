@@ -1,6 +1,6 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Import from the new UI library
-import { cn } from "@/lib/utils"; // Import the cn utility
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"; // Import from the new UI library
+import { cn } from "@/shared/lib/utils"; // Import the cn utility
 
 interface SummaryCardProps {
   title: string;

@@ -8,7 +8,7 @@ import {
 } from "react";
 import { AnalyticsUIFilters, AnalyticsDomain, DateRangePreset } from "@/types/analytics/ui";
 import { DataGranularity } from "@/types/analytics/core";
-import { filterPropagationService } from "@/lib/services/analytics/FilterPropagationService";
+import { filterPropagationService } from "@/shared/lib/services/analytics/FilterPropagationService";
 
 interface FiltersContextState {
   // Filter State

@@ -72,9 +72,9 @@ Companies are scoped to tenants:
 The system provides TypeScript services for database operations:
 
 ```typescript
-import { getAuthService } from '@/lib/niledb/auth';
-import { getTenantService } from '@/lib/niledb/tenant';
-import { getCompanyService } from '@/lib/niledb/company';
+import { getAuthService } from '@/shared/lib/niledb/auth';
+import { getTenantService } from '@/shared/lib/niledb/tenant';
+import { getCompanyService } from '@/shared/lib/niledb/company';
 
 // Authenticate users
 const authService = getAuthService();

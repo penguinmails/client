@@ -1,4 +1,4 @@
-import { Accordion } from "@/components/ui/accordion";
+import { Accordion } from "@/shared/ui/accordion";
 import Folder from "./Folder";
 import { TemplateFolder } from "@/types";
 

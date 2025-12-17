@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/ui/card";
 import TemplateActions from "../template-actions";
 import Link from "next/link";
 import { Template } from "@/types";

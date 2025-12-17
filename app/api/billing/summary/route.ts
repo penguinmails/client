@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   getBillingSummary,
-} from "@/lib/actions/billing/billing-operations";
+} from "@/shared/lib/actions/billing/billing-operations";
 
 /**
  * Billing Summary API Endpoints - Secure OLTP Operations

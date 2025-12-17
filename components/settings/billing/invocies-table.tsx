@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 import {
   Table,
   TableBody,
@@ -6,8 +6,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/table";
+import { cn } from "@/shared/lib/utils";
 import { Check } from "lucide-react";
 import DownloadButton from "./download-button";
 

@@ -12,7 +12,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 
 // Force dynamic rendering to prevent SSR issues
 export const dynamic = "force-dynamic";

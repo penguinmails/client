@@ -1,10 +1,10 @@
 "use client";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
+import { Badge } from "@/shared/ui/badge";
 import { useConversation } from "@/context/ConversationContext";
 import { Calendar } from "lucide-react";
 import ConversationHeaderButtons from "./conversation-header-buttons";
-import { getTagColor } from "@/lib/utils";
+import { getTagColor } from "@/shared/lib/utils";
 function ConversationHeader() {
   const { selectedConversation } = useConversation();
 

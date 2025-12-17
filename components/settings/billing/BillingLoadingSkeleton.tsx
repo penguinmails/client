@@ -5,8 +5,8 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/shared/ui/card";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 export function BillingLoadingSkeleton() {
   return (

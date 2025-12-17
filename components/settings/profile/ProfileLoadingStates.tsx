@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { AlertTriangle, Loader2 } from "lucide-react";
 
 interface ProfileLoadingStatesProps {

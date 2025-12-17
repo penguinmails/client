@@ -1,8 +1,8 @@
-import { getMessages, type Message } from "@/lib/actions/inbox";
-import { getRelativeTime, cn } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getMessages, type Message } from "@/shared/lib/actions/inbox";
+import { getRelativeTime, cn } from "@/shared/lib/utils";
+import { Card } from "@/shared/ui/card";
+import { Badge } from "@/shared/ui/badge";
+import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
 
 export default async function ConversationMessages() {
   const messages = await getMessages();

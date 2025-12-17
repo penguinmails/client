@@ -7,9 +7,9 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withStaffAccess } from '@/lib/niledb/middleware';
-import { performHealthCheck } from '@/lib/niledb/health';
-import { withoutTenantContext } from '@/lib/niledb/client';
+import { withStaffAccess } from '@/shared/lib/niledb/middleware';
+import { performHealthCheck } from '@/shared/lib/niledb/health';
+import { withoutTenantContext } from '@/shared/lib/niledb/client';
 
 /**
  * GET /api/admin/health

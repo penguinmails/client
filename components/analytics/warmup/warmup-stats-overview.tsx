@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import StatsCard from "@/components/analytics/cards/StatsCard";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
+import { mapRawToLegacyMailboxData } from "@/shared/lib/utils/analytics-mappers";
 import { AlertTriangle, Mail, MessageSquare, Zap } from "lucide-react";
 
 interface Mailbox {

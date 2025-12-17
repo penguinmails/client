@@ -2,9 +2,9 @@
 
 import React from "react";
 import { LucideIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { typography, spacing, textColors } from "@/lib/design-tokens";
+import { Button } from "@/shared/ui/button";
+import { cn } from "@/shared/lib/utils";
+import { typography, spacing, textColors } from "@/shared/lib/design-tokens";
 import Link from "next/link";
 
 interface EmptyStateProps {

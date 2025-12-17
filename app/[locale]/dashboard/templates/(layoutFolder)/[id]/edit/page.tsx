@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input/input";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { getTemplateById, updateTemplate } from "@/lib/actions/templates";
+} from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input/input";
+import { Separator } from "@/shared/ui/separator";
+import { Textarea } from "@/shared/ui/textarea";
+import { getTemplateById, updateTemplate } from "@/shared/lib/actions/templates";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";

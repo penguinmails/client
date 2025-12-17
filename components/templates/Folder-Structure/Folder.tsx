@@ -3,14 +3,14 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/shared/ui/accordion";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from "@/components/ui/context-menu";
-import { Input } from "@/components/ui/input/input";
+} from "@/shared/ui/context-menu";
+import { Input } from "@/shared/ui/input/input";
 import { ContextMenuSeparator } from "@radix-ui/react-context-menu";
 import {
   Edit2,

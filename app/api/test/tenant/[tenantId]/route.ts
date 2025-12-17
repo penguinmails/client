@@ -7,7 +7,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withTenantAccess } from '@/lib/niledb/middleware';
+import { withTenantAccess } from '@/shared/lib/niledb/middleware';
 
 /**
  * GET /api/test/tenant/[tenantId]

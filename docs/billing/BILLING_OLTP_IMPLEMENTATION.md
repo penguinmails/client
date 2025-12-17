@@ -321,7 +321,7 @@ npm run migrate:billing:rollback
 ### 1. Create Billing Account
 
 ```typescript
-import { createCompanyBilling } from "@/lib/actions/billing";
+import { createCompanyBilling } from "@/shared/lib/actions/billing";
 
 const billingData = {
   billingEmail: "billing@company.com",
@@ -345,7 +345,7 @@ if (result.success) {
 ### 2. Add Payment Method
 
 ```typescript
-import { addPaymentMethod } from "@/lib/actions/billing";
+import { addPaymentMethod } from "@/shared/lib/actions/billing";
 
 const paymentData = {
   type: PaymentMethodType.CREDIT_CARD,
@@ -364,7 +364,7 @@ const result = await addPaymentMethod(paymentData, stripeToken.id);
 ### 3. Generate Invoice
 
 ```typescript
-import { generateUsageInvoice } from "@/lib/actions/billing";
+import { generateUsageInvoice } from "@/shared/lib/actions/billing";
 
 const periodStart = new Date("2024-01-01");
 const periodEnd = new Date("2024-01-31");

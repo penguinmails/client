@@ -1,6 +1,6 @@
 "use client";
 
-import AlertDialogDelete from "@/components/ui/custom/AlertDialogDelete";
+import AlertDialogDelete from "@/shared/ui/custom/AlertDialogDelete";
 function DeleteDomainDialog({ domainId }: { domainId: number }) {
   async function handleDelete() {
     console.log(`Deleting domain with ID: ${domainId}`);

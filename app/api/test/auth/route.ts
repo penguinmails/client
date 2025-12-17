@@ -7,7 +7,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { withAuthentication } from '@/lib/niledb/middleware';
+import { withAuthentication } from '@/shared/lib/niledb/middleware';
 
 /**
  * GET /api/test/auth

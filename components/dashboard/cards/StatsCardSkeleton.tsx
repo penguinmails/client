@@ -1,7 +1,7 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/shared/ui/card";
+import { cn } from "@/shared/lib/utils";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 function StatsCardSkeleton({ className }: { className?: string }) {
   return (

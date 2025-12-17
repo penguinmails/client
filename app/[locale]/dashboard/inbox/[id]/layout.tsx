@@ -3,7 +3,7 @@ import {
   SidebarContent,
   SidebarInset,
   SidebarProvider,
-} from "@/components/ui/sidebar";
+} from "@/shared/ui/sidebar";
 import ConversationSmallList from "@/components/inbox/components/ConversationSmallList";
 
 function layout({ children }: { children: React.ReactNode }) {

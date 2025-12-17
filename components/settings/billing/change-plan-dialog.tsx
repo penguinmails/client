@@ -8,23 +8,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button/button";
+} from "@/shared/ui/alert-dialog";
+import { Button } from "@/shared/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
+} from "@/shared/ui/dialog";
+import { Separator } from "@/shared/ui/separator";
 import { Crown, Loader2 } from "lucide-react";
 import { Plan } from "@/types/settings/plans";
 

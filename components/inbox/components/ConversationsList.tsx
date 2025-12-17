@@ -1,7 +1,7 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn, getRelativeTime, getTagColor } from "@/lib/utils";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button/button";
+import { Card, CardContent } from "@/shared/ui/card";
+import { cn, getRelativeTime, getTagColor } from "@/shared/lib/utils";
 import { Eye, Pin, Star } from "lucide-react";
 import Link from "next/link";
 import ConversationsListHeader from "./ConversationsListHeader";

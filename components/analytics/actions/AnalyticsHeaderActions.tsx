@@ -1,13 +1,13 @@
 "use client";
 
 import { Download, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import { useAnalytics, useDomainAnalytics } from "@/context/AnalyticsContext";
 import { ChartDataPoint } from "@/types/analytics/ui";
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { AnalyticsCalculator } from "@/shared/lib/utils/analytics-calculator";
 import { useState, useEffect } from "react";
 import { TimeSeriesDataPoint } from "@/types/analytics/core";
-import { CampaignAnalyticsService } from "@/lib/services/analytics/CampaignAnalyticsService";
+import { CampaignAnalyticsService } from "@/shared/lib/services/analytics/CampaignAnalyticsService";
 
 function AnalyticsHeaderActions() {
   const { filters, refreshAll } = useAnalytics();

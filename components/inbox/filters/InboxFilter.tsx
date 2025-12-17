@@ -1,17 +1,17 @@
 "use client";
-import { Filter, SearchInput } from "@/components/ui/custom/Filter";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button/button";
+import { Filter, SearchInput } from "@/shared/ui/custom/Filter";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { campaignsData } from "@/lib/data/campaigns";
-import { mailboxes } from "@/lib/data/mailboxes";
-import { cn } from "@/lib/utils";
+} from "@/shared/ui/select";
+import { campaignsData } from "@/shared/lib/data/campaigns";
+import { mailboxes } from "@/shared/lib/data/mailboxes";
+import { cn } from "@/shared/lib/utils";
 import {
   Archive,
   AtSign,

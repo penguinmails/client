@@ -5,7 +5,7 @@ import { ThemeProvider } from "next-themes";
 import { useState, useEffect } from "react";
 import { ClientPreferencesProvider } from "@/context/ClientPreferencesContext";
 import { ConvexProvider } from "@/components/analytics/ConvexProvider";
-import { initPostHog } from "@/lib/instrumentation-client";
+import { initPostHog } from "@/shared/lib/instrumentation-client";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(

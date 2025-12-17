@@ -6,8 +6,8 @@ import EmailMailboxesTable from "@/components/analytics/warmup/email-mailboxes-t
 // import MigratedEmailMailboxesTable from "@/components/analytics/warmup/MigratedEmailMailboxesTable";
 import WarmupAnalyticsFilter from "@/components/analytics/warmup/warmup-analytics-filter";
 import WarmUpLineChart from "@/components/analytics/warmup/warmup-line-chart";
-import { spacing } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { spacing } from "@/shared/lib/design-tokens";
+import { cn } from "@/shared/lib/utils";
 
 /**
  * Analytics Warmup Page Content

@@ -9,7 +9,7 @@ import {
 } from "@/types";
 import { EmailAccountFormValues, EmailAccountFormProps } from "@/types/forms";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import {
   Form,
   FormControl,
@@ -17,15 +17,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input/input";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/ui/select";
 import { toast } from "sonner";
 import {
   Card,
@@ -33,9 +33,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
+} from "@/shared/ui/card";
+import { Label } from "@/shared/ui/label";
+import { Progress } from "@/shared/ui/progress";
 import { emailAccountCopy } from "./copy";
 import { EmailProvider } from "./components/constants";
 import { WarmupStatus } from "@/types/mailbox";

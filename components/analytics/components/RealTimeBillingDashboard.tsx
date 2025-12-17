@@ -5,8 +5,8 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/shared/ui/button/button";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import {
   useBillingAnalyticsDashboard,

@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { config } from "@/lib/config";
-import { getBillingDataForSettings } from "@/lib/actions/billing";
+import { config } from "@/shared/lib/config";
+import { getBillingDataForSettings } from "@/shared/lib/actions/billing";
 import { useServerAction } from "@/hooks/useServerAction";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/shared/ui/button/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
