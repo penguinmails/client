@@ -1,5 +1,5 @@
 import { ConvexError } from "convex/values";
-import type { PerformanceMetrics, DataGranularity } from "@/types/analytics/core";
+import type { PerformanceMetrics, DataGranularity } from "../../types/analytics/core";
 import { validateMetrics } from "./validation";
 
 /**

@@ -1,6 +1,6 @@
 import { query } from "../_generated/server";
 import { v } from "convex/values";
-import type { MailboxHealthMetrics } from "../../lib/services/analytics/MailboxAnalyticsService";
+import type { MailboxHealthMetrics } from "../../shared/lib/services/analytics/MailboxAnalyticsService";
 import { fetchRecentMailboxData, fetchWarmupAnalyticsData } from "./dataFetchers";
 import { aggregateByMailbox, aggregateWarmupByMailbox } from "./aggregators";
 import { calculateComprehensiveHealthScore, calculateDeliverabilityScore } from "./calculations";

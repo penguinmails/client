@@ -2,7 +2,7 @@
 // TEMPLATE ANALYTICS TYPES
 // ============================================================================
 
-import { PerformanceMetrics } from "@/types/analytics/core";
+import { PerformanceMetrics } from "../../types/analytics/core";
 
 // Re-export for convenience
 export type { PerformanceMetrics };

@@ -3,7 +3,7 @@
 // ============================================================================
 
 import { query } from "../_generated/server";
-import type { CampaignStatus } from "@/types/campaign";
+import type { CampaignStatus } from "../../types/campaign";
 
 import {
   campaignAnalyticsQuerySchema,

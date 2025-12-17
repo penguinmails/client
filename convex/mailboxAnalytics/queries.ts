@@ -1,7 +1,7 @@
 import { query } from "../_generated/server";
 import { v } from "convex/values";
 import { Doc } from "../_generated/dataModel";
-import type { TimeSeriesDataPoint } from "@/types/analytics/core";
+import type { TimeSeriesDataPoint } from "../../types/analytics/core";
 import { fetchMailboxAnalyticsData } from "./dataFetchers";
 import { aggregateByMailbox, aggregateByTimePeriod } from "./aggregators";
 import type { MailboxAnalyticsResult } from "./types";

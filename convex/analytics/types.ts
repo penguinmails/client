@@ -3,7 +3,7 @@
 // ============================================================================
 
 // Import the centralized CampaignStatus type
-import type { CampaignStatus } from '@/types/campaign';
+import type { CampaignStatus } from '../../types/campaign';
 
 // ============================================================================
 // CORE METRICS INTERFACES

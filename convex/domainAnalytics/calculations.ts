@@ -1,4 +1,4 @@
-import type { PerformanceMetrics } from "@/types/analytics/core";
+import type { PerformanceMetrics } from "../../types/analytics/core";
 import type { DomainAnalyticsRecord, DomainAnalyticsResult, AggregatedDomainAnalytics, Authentication } from "./types";
 
 type InputDomainAnalyticsRecord = {

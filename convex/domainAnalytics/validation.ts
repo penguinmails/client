@@ -1,5 +1,5 @@
 import { ConvexError } from "convex/values";
-import type { PerformanceMetrics } from "@/types/analytics/core";
+import type { PerformanceMetrics } from "../../types/analytics/core";
 
 // Validate company ID is present and a string
 export function validateCompanyId(companyId: string): void {

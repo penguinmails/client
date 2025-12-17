@@ -1,4 +1,4 @@
-import type { PerformanceMetrics } from "@/types/analytics/core";
+import type { PerformanceMetrics } from "../../types/analytics/core";
 
 // Interfaces for query arguments and results
 export interface GetDomainAnalyticsArgs {

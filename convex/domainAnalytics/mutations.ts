@@ -1,6 +1,6 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
-import type { PerformanceMetrics } from "@/types/analytics/core";
+import type { PerformanceMetrics } from "../../types/analytics/core";
 import type { DomainAnalyticsRecord } from "./types";
 import {
   validateDate,

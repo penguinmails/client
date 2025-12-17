@@ -1,5 +1,5 @@
 import { ConvexError } from "convex/values";
-import type { PerformanceMetrics } from "@/types/analytics/core";
+import type { PerformanceMetrics } from "../../types/analytics/core";
 
 /**
  * Validates company ID parameter.

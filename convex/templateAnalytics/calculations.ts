@@ -267,7 +267,7 @@ export function calculateCategoryBreakdown(templates: TemplateUsageResult[]): Ar
 
     // Calculate average performance
     const averagePerformance = categoryTemplates.reduce(
-      (acc, template) => ({
+      (acc: Record<keyof PerformanceMetrics, number>, template) => ({
         sent: acc.sent + template.performance.sent,
         delivered: acc.delivered + template.performance.delivered,
         opened_tracked: acc.opened_tracked + template.performance.opened_tracked,
