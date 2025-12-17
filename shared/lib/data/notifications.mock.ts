@@ -1,6 +1,6 @@
-import type { NotificationFormValues, NotificationSettingsProps } from "../../types/settings";
-import type { Notification } from "../../types/notification";
-import { NotificationType as NotificationTypeEnum } from "../../types/notification";
+import type { NotificationFormValues, NotificationSettingsProps } from "@/types/settings";
+import type { Notification } from "@/types/notification";
+import { NotificationType as NotificationTypeEnum } from "@/types/notification";
 
 // Notification Preference Types
 export interface NotificationPreferences {

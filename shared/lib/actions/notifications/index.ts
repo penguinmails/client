@@ -20,7 +20,7 @@ import {
 import {
   NotificationFormValues,
   NotificationSettingsProps,
-} from '../../../types/settings';
+} from '@/types/settings';
 
 // Re-export types for convenience
 export type {

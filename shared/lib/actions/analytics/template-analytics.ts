@@ -37,8 +37,8 @@ import type {
   PerformanceMetrics,
   TimeSeriesDataPoint,
   CalculatedRates,
-} from '../../../types/analytics/core';
-import type { TemplateAnalytics } from '../../../types/analytics/domain-specific';
+} from '@/types/analytics/core';
+import type { TemplateAnalytics } from '@/types/analytics/domain-specific';
 
 // Initialize Convex client and helper
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);

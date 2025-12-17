@@ -1,5 +1,5 @@
 import type { UsageMetrics } from "../data/billing.mock";
-import type { PaymentMethod } from "../../types/billing";
+import type { PaymentMethod } from "@/types/billing";
 import { getUsagePercentage } from "../data/billing.mock";
 
 // Usage calculation functions (client-side utilities)

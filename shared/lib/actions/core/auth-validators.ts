@@ -7,7 +7,7 @@
 
 import { ActionResult, ActionContext, ActionError } from './types';
 import { ErrorFactory } from './errors';
-import { Permission, UserRole, RolePermissions } from '../../../types/auth';
+import { Permission, UserRole, RolePermissions } from '@/types/auth';
 import {
   getCurrentUser,
   getCurrentUserId as getAuthUserId,

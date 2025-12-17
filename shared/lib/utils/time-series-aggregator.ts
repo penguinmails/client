@@ -1,4 +1,4 @@
-import { TimeSeriesDataPoint, DataGranularity } from "../../types/analytics/core";
+import { TimeSeriesDataPoint, DataGranularity } from "@/types/analytics/core";
 
 /**
  * Time series data aggregation and analysis utilities.

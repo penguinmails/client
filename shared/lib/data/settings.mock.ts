@@ -1,12 +1,11 @@
 import type {
   UserPreferences,
   SecuritySettings,
-} from "../../types/settings";
+} from "@/types/settings";
 
 import type {
   AppearanceSettingsEntity as AppearanceSettings,
-} from "../../types/settings/appearance";
-
+} from "@/types/settings/appearance";
 // Company Information Types
 export interface CompanyInfo {
   id: string;

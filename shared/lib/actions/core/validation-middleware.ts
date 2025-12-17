@@ -24,7 +24,7 @@ import {
   paginationSchema,
   getAnalyticsSchema,
 } from './validation-schemas';
-import type { AnalyticsFilters } from '../../../types/analytics/core';
+import type { AnalyticsFilters } from '@/types/analytics/core';
 
 // ============================================================================
 // VALIDATION MIDDLEWARE TYPES

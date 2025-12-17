@@ -6,7 +6,7 @@
  */
 
 import { ValidationSchema } from './validation';
-import type { AnalyticsFilters } from '../../../types/analytics/core';
+import type { AnalyticsFilters } from '@/types/analytics/core';
 import type {
   CampaignAnalytics,
   DomainAnalytics,
@@ -17,7 +17,7 @@ import type {
   CampaignStatus,
   WarmupStatus,
   LeadStatus,
-} from '../../../types/analytics/domain-specific';
+} from '@/types/analytics/domain-specific';
 
 // ============================================================================
 // CORE ANALYTICS SCHEMAS

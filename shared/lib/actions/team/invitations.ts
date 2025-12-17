@@ -12,7 +12,7 @@ import { randomBytes } from 'crypto';
 import { ActionResult } from '../core/types';
 import { ErrorFactory, withErrorHandling } from '../core/errors';
 import { withFullAuth, RateLimits } from '../core/auth';
-import { TeamInvite, TeamRole, BulkInviteResult } from '../../../types/team';
+import { TeamInvite, TeamRole, BulkInviteResult } from '@/types/team';
 import { mockInvites } from '../../mocks/team';
 import { checkTeamPermission } from './permissions';
 import { logTeamActivity } from './activity';

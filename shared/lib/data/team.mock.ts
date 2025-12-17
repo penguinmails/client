@@ -1,4 +1,4 @@
-import type { TeamMember, TeamPermission } from "../../types/team";
+import type { TeamMember, TeamPermission } from "@/types/team";
 
 // Nile User Interface based on API docs
 export interface NileUser {

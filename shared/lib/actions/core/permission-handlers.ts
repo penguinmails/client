@@ -7,7 +7,7 @@
 
 import { ActionResult } from './types';
 import { ErrorFactory } from './errors';
-import { Permission } from '../../../types/auth';
+import { Permission } from '@/types/auth';
 import { getCurrentUserId as getAuthUserId } from '../../utils/auth';
 import { getCurrentCompanyId, getUserProfile } from './auth-validators';
 

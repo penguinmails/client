@@ -8,7 +8,7 @@ import { getUsageMetrics } from '../usage';
 import { getBillingHistory } from '../invoices';
 import { applyPromoCode } from '../subscriptions';
 import { requireAuth, withContextualRateLimit } from '../../core/auth';
-import { PaymentMethodType } from '../../../../types/billing';
+import { PaymentMethodType } from '@/types/billing';
 
 // Mock dependencies
 jest.mock('@/app/api/[...nile]/nile', () => ({

@@ -35,7 +35,8 @@
       "@/shared/*": ["./shared/*"],
       "@/entities/*": ["./entities/*"],
       "@/features/*": ["./features/*"],
-      "@/widgets/*": ["./widgets/*"]
+      "@/widgets/*": ["./widgets/*"],
+      "@/messages/*": ["./messages/*"]
     }
   },
   "include": [

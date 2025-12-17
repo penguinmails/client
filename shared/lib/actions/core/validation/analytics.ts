@@ -7,7 +7,7 @@
 
 import { ValidationResult, ValidationError, createValidationResult, createValidationError } from './core';
 import { validateString, validateNumber, validateDate, validateArray } from './core';
-import type { AnalyticsFilters, DataGranularity } from '../../../../types/analytics/core';
+import type { AnalyticsFilters, DataGranularity } from '@/types/analytics/core';
 
 // ============================================================================
 // ANALYTICS VALIDATION FUNCTIONS

@@ -7,7 +7,7 @@
 
 'use server';
 
-import { TeamPermission, TeamRole } from '../../../types/team';
+import { TeamPermission, TeamRole } from '@/types/team';
 import { ROLE_HIERARCHY, ROLE_PERMISSIONS } from '../../constants/team';
 import { mockTeamMembers } from '../../mocks/team';
 

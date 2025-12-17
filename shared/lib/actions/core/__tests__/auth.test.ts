@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
-import { Permission } from '../../../../types/auth';
+import { Permission } from '@/types/auth';
 import { ActionResult, RateLimitConfig, ActionContext } from '../types';
 
 // Mock the external dependencies
@@ -33,7 +33,7 @@ jest.mock('next/headers', () => ({
 // Import the module after mocking
 import * as authModule from '../auth';
 import * as authUtils from '../../../utils/auth';
-import * as authTypes from '../../../../types/auth';
+import * as authTypes from '@/types/auth';
 import { headers } from 'next/headers';
 
 const mockGetCurrentUser = authUtils.getCurrentUser as jest.MockedFunction<typeof authUtils.getCurrentUser>;

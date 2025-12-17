@@ -8,7 +8,7 @@
 import { ActionResult } from "../core/types";
 import { ErrorFactory } from "../core/errors";
 import { validateRequired, validateLength, validateNumber, validateEnum } from "../core/validation";
-import { TemplateCategoryType, TemplateCategory } from "../../../types/templates";
+import { TemplateCategoryType, TemplateCategory } from "@/types/templates";
 
 /**
  * Validate template ID

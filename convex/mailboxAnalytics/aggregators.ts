@@ -1,5 +1,5 @@
 import { Doc } from "../_generated/dataModel";
-import type { PerformanceMetrics, TimeSeriesDataPoint } from "../../types/analytics/core";
+import type { PerformanceMetrics, TimeSeriesDataPoint } from "@/types/analytics/core";
 import type { MailboxAnalyticsResult } from "./types";
 import { calculateHealthScore, getTimeKey, formatTimeLabel } from "./calculations";
 

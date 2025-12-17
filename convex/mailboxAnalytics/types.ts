@@ -1,5 +1,5 @@
-import type { PerformanceMetrics } from "../../types/analytics/core";
-import type { WarmupStatus } from "../../types/analytics/domain-specific";
+import type { PerformanceMetrics } from "@/types/analytics/core";
+import type { WarmupStatus } from "@/types/analytics/domain-specific";
 
 /**
  * Result interface for mailbox analytics queries.

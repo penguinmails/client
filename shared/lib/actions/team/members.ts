@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { ActionResult } from '../core/types';
 import { ErrorFactory, withErrorHandling } from '../core/errors';
 import { withFullAuth, RateLimits } from '../core/auth';
-import { TeamMember, TeamRole, TeamPermission, TeamMembersResponse, TeamStats, TeamMemberStatus } from '../../../types/team';
+import { TeamMember, TeamRole, TeamPermission, TeamMembersResponse, TeamStats, TeamMemberStatus } from '@/types/team';
 import { ROLE_HIERARCHY, ROLE_PERMISSIONS } from '../../constants/team';
 import { mockTeamMembers, mockInvites } from '../../mocks/team';
 import { checkTeamPermission } from './permissions';

@@ -118,13 +118,13 @@ export type {
   TeamMember,
   TeamInvite,
   TeamActivity,
-} from '../../types/team';
+} from '@/types/team';
 
 export type {
   Template,
   TemplateFolder,
   QuickReply,
-} from '../../types/templates';
+} from '@/types/templates';
 
 export type {
   NotificationPreferences,

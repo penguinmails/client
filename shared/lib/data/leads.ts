@@ -1,4 +1,4 @@
-import { Client, ClientStatus } from '../../types/clients-leads';
+import { Client, ClientStatus } from '@/types/clients-leads';
 
 export const leadLists = [
   {

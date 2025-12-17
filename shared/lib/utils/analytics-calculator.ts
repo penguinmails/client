@@ -4,7 +4,7 @@ import {
   FilteredDataset,
   AnalyticsFilters,
   AnalyticsComputeOptions
-} from "../../types/analytics/core";
+} from "@/types/analytics/core";
 
 // Re-export additional calculators for convenience
 export { PerformanceCalculator } from "./performance-calculator";

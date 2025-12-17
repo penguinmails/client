@@ -1,6 +1,6 @@
 import { query } from "../_generated/server";
 import { v } from "convex/values";
-import { CampaignStatus } from "../../types/analytics/domain-specific";
+import { CampaignStatus } from "@/types/analytics/domain-specific";
 import {
   CampaignAnalyticsRecord,
   DBCampaignAnalyticsRecord,

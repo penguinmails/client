@@ -10,8 +10,8 @@
 import { ActionResult } from '../core/types';
 import { ErrorFactory, withErrorHandling } from '../core/errors';
 import { withFullAuth, RateLimits } from '../core/auth';
-import { Permission } from '../../../types/auth';
-import { TeamActivity, TeamActivityResponse } from '../../../types/team';
+import { Permission } from '@/types/auth';
+import { TeamActivity, TeamActivityResponse } from '@/types/team';
 import { checkTeamPermission } from './permissions';
 
 // Mock activity storage (in production, this would be a database)

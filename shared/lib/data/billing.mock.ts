@@ -1,4 +1,4 @@
-import type { BillingData, BillingAndPlanSettings } from "../../types/settings";
+import type { BillingData, BillingAndPlanSettings } from "@/types/settings";
 import type { BillingAddress } from "./settings.mock";
 
 // Subscription Plan Types

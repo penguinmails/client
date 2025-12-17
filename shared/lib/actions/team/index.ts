@@ -30,7 +30,7 @@ export type {
   BulkInviteResult,
   TeamMembersResponse,
   TeamActivityResponse,
-} from '../../../types/team';
+} from '@/types/team';
 
 // Export constants
 export { TEAM_ERROR_CODES, ROLE_HIERARCHY, ROLE_PERMISSIONS } from '../../constants/team';

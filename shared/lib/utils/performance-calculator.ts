@@ -1,7 +1,7 @@
 import {
   PerformanceMetrics,
   CalculatedRates,
-} from "../../types/analytics/core";
+} from "@/types/analytics/core";
 import { AnalyticsCalculator } from "./analytics-calculator";
 
 /**

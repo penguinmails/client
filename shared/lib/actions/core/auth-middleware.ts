@@ -6,7 +6,7 @@
  */
 
 import { ActionResult, ActionContext, RateLimitConfig } from './types';
-import { Permission } from '../../../types/auth';
+import { Permission } from '@/types/auth';
 import { requireAuth, requireAuthWithCompany, isSuccessfulResult } from './auth-validators';
 import { requirePermission } from './permission-handlers';
 import { withContextualRateLimit, RateLimits } from './rate-limit-utils';

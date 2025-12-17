@@ -17,7 +17,7 @@ import { ErrorFactory } from '../../core/errors';
 import { validatePaymentMethod, validatePaymentMethodId } from '../validation';
 import { getBillingInfo } from '../index';
 import * as paymentMethodsModule from '../payment-methods';
-import { PaymentMethodType } from '../../../../types/billing';
+import { PaymentMethodType } from '@/types/billing';
 
 // Mock dependencies
 jest.mock('@/app/api/[...nile]/nile', () => ({

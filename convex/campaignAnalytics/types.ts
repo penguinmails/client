@@ -1,5 +1,5 @@
 import { Id } from "../_generated/dataModel";
-import { CampaignStatus } from "../../types/analytics/domain-specific";
+import { CampaignStatus } from "@/types/analytics/domain-specific";
 
 /**
  * Database record interface that matches the Convex schema
