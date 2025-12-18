@@ -1,36 +1,44 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from "react"
-import Link from "next/link"
-import { Button } from "@/shared/ui/button/button"
-import { PasswordInput } from "@/shared/ui/custom/password-input"
-import { Input } from "@/shared/ui/input/input"
-import { Label } from "@/shared/ui/label"
-import { LogIn, User } from "lucide-react"
-import { LandingLayout } from "@/components/landing/LandingLayout"
-import { loginContent } from "./content"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/context/AuthContext"
-import { AuthTemplate } from "@/components/auth/AuthTemplate"
-import { Turnstile } from "next-turnstile"
-import { verifyTurnstileToken } from "./signup/verifyToken"
-import { useTranslations } from "next-intl"
-import { initPostHog } from '@/shared/lib/instrumentation-client';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/shared/ui/button/button";
+import { PasswordInput } from "@/shared/ui/custom/password-input";
+import { Input } from "@/shared/ui/input/input";
+import { Label } from "@/shared/ui/label";
+import { LogIn, User } from "lucide-react";
+import { LandingLayout } from "@/components/landing/LandingLayout";
+import { loginContent } from "./content";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { AuthTemplate } from "@/components/auth/AuthTemplate";
+import { Turnstile } from "next-turnstile";
+import { verifyTurnstileToken } from "./signup/verifyToken";
+import { useTranslations } from "next-intl";
+import { initPostHog } from "@/shared/lib/instrumentation-client";
+import { getLoginAttemptStatus } from "@/shared/lib/auth/rate-limit";
 
-//PostHog
-import { ph } from '@/shared/lib/instrumentation-client'
+import { ph } from "@/shared/lib/instrumentation-client";
+
+const MAX_LOGIN_ATTEMPTS = parseInt(
+  process.env.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS || "3",
+  10
+);
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-  const { login, user, error: authError } = useAuth()
-  const [token, setToken] = useState("") // stores Turnstile token
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showTurnstile, setShowTurnstile] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const router = useRouter();
+  const { login, user, error: authError } = useAuth();
 
-  const t = useTranslations("Login")
+  const t = useTranslations("Login");
 
+  // Initialize from sessionStorage on component mount
   useEffect(() => {
     initPostHog().then((client) => {
       client.capture("login_page_loaded");

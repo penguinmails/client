@@ -27,7 +27,7 @@ import { mockUserSettings } from "@/shared/lib/data/settings.mock";
 import {
   recordFailedLoginAttempt,
   resetLoginAttempts,
-} from "@/lib/auth/rate-limit";
+} from "@/shared/lib/auth/rate-limit";
 
 interface EnhancedAuthContextType extends AuthContextType {
   // Enhanced user data
