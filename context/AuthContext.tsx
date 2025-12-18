@@ -24,6 +24,10 @@ import {
   InvalidCredentialsError,
 } from "@/shared/lib/niledb/errors";
 import { mockUserSettings } from "@/shared/lib/data/settings.mock";
+import {
+  recordFailedLoginAttempt,
+  resetLoginAttempts,
+} from "@/lib/auth/rate-limit";
 
 interface EnhancedAuthContextType extends AuthContextType {
   // Enhanced user data
@@ -64,7 +68,7 @@ const AuthContext = createContext<EnhancedAuthContextType>({
   selectedCompanyId: null,
   loading: true,
   error: null,
-  login: async () => {},
+  login: async (_email: string, _password: string) => {},
   signup: async () => {},
   logout: async () => {},
   updateUser: () => {},
@@ -225,81 +229,84 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const signInHook = useSignIn({
-    onSuccess: (data) => {
+    onSuccess: (data, { email }) => {
       console.log("[AuthContext] User signed in:", data);
-      if (data?.ok) {
-        const initializeUserSession = async () => {
-          try {
-
-            const isAuthenticated = await testAuthentication();
-            if (!isAuthenticated) {
-              throw new AuthenticationError("Authentication validation failed");
-            }
-
-            const profileData = await fetchProfile();
-
-            if (profileData) {
-              setNileUser(profileData);
-              setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
-
-              // Map to legacy User format for backward compatibility
-              const legacyUser = mapNileUserToLegacyUser(
-                profileData,
-                userCompanies,
-                selectedTenantId,
-                selectedCompanyId
-              );
-              setUser(legacyUser);
-
-              // Fetch tenants and companies in parallel
-              const [tenants, companies] = await Promise.all([
-                fetchUserTenants(),
-                fetchUserCompanies(profileData.id),
-              ]);
-
-              setUserTenants(tenants);
-              setUserCompanies(companies);
-
-              // Auto-select first tenant if available
-              if (tenants.length > 0 && !selectedTenantId) {
-                setSelectedTenantId(tenants[0].id);
-              }
-
-              // Auto-select first company if available
-              if (companies.length > 0 && !selectedCompanyId) {
-                setSelectedCompanyId(companies[0].id);
-              }
-
-              setAuthError(null);
-              toast.success("Successfully signed in!");
-            } else {
-              throw new AuthenticationError("Failed to load user profile");
-            }
-          } catch (error) {
-            console.error("Failed to initialize user session:", error);
-            setAuthError(error as Error);
-            if (error instanceof AuthenticationError) {
-              toast.error(error.message);
-            } else {
-              toast.error("Failed to complete sign in");
-            }
-          } finally {
-            setLoading(false);
-          }
-        };
-        initializeUserSession();
-      } else {
+      if (data?.ok === false) {
         if (data?.status === 401) {
-            setAuthError(new InvalidCredentialsError("Invalid email or password."));
-            toast.error("Invalid email or password.");
+          setAuthError(
+            new InvalidCredentialsError("Invalid email or password.")
+          );
+          recordFailedLoginAttempt(email || "");
+          toast.error("Invalid email or password.");
         } else {
-            setAuthError(new Error("Login failed."));
-            toast.error("Login failed.");
+          setAuthError(new Error("Login failed."));
+          recordFailedLoginAttempt(email || "");
+          toast.error("Login failed.");
         }
         setUser(null);
         setNileUser(null);
         setLoading(false);
       }
+      const initializeUserSession = async () => {
+        try {
+          const isAuthenticated = await testAuthentication();
+          if (!isAuthenticated) {
+            throw new AuthenticationError("Authentication validation failed");
+          }
+
+          const profileData = await fetchProfile();
+
+          if (profileData) {
+            setNileUser(profileData);
+            setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
+
+            // Map to legacy User format for backward compatibility
+            const legacyUser = mapNileUserToLegacyUser(
+              profileData,
+              userCompanies,
+              selectedTenantId,
+              selectedCompanyId
+            );
+            setUser(legacyUser);
+
+            // Fetch tenants and companies in parallel
+            const [tenants, companies] = await Promise.all([
+              fetchUserTenants(),
+              fetchUserCompanies(profileData.id),
+            ]);
+
+            setUserTenants(tenants);
+            setUserCompanies(companies);
+
+            // Auto-select first tenant if available
+            if (tenants.length > 0 && !selectedTenantId) {
+              setSelectedTenantId(tenants[0].id);
+            }
+
+            // Auto-select first company if available
+            if (companies.length > 0 && !selectedCompanyId) {
+              setSelectedCompanyId(companies[0].id);
+            }
+
+            setAuthError(null);
+            toast.success("Successfully signed in!");
+          } else {
+            throw new AuthenticationError("Failed to load user profile");
+          }
+        } catch (error) {
+          console.error("Failed to initialize user session:", error);
+          setAuthError(error as Error);
+          if (error instanceof AuthenticationError) {
+            toast.error(error.message);
+          } else {
+            toast.error("Failed to complete sign in");
+          }
+        } finally {
+          setLoading(false);
+        }
+      };
+      resetLoginAttempts(email || "");
+      initializeUserSession();
     },
     onError: (error: Error) => {
       console.error("SignIn error:", error);
@@ -326,7 +333,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setAuthError(error);
     },
     createTenant: true,
-    callbackUrl: "/email-confirmation",
+    callbackUrl:
+      typeof window !== "undefined"
+        ? window.location.origin + "/email-confirmation"
+        : "/email-confirmation",
   });
 
   // Enhanced mapping function for NileDB user to legacy User format
@@ -363,8 +373,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         profile: {
           timezone:
             (nileUser.profile?.preferences?.timezone as string) || "UTC",
-          language:
-            (nileUser.profile?.preferences?.language as string) || "en",
+          language: (nileUser.profile?.preferences?.language as string) || "en",
           firstName: nileUser.givenName,
           lastName: nileUser.familyName,
           avatar: nileUser.picture,
@@ -387,6 +396,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error("Login error:", error);
       setLoading(false);
+
+      // Record failed login attempt when signInHook fails
+      if (typeof window !== "undefined") {
+        recordFailedLoginAttempt(email);
+      }
+
       throw error;
     }
   };
@@ -408,7 +423,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error("Signup error:", error);
       setLoading(false);
-      
+
       // Generic error handling - signup now uses custom API endpoint directly
       setAuthError(error as Error);
       throw error;

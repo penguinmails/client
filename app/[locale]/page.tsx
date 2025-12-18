@@ -32,47 +32,68 @@ export default function LoginPage() {
   const t = useTranslations("Login")
 
   useEffect(() => {
-    initPostHog().then(client => {
-      client.capture('login_page_loaded');
+    initPostHog().then((client) => {
+      client.capture("login_page_loaded");
     });
   }, []);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError(null)
-    setIsLoading(true)
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
 
-    if (!token) {
-      setError("Please complete the CAPTCHA verification.")
-      setIsLoading(false)
-      return
+    // Check sessionStorage for existing attempts for this email
+    if (email?.includes("@")) {
+      const status = getLoginAttemptStatus(email);
+      // Update UI to reflect current attempt count
+      if (status.attempts > 0) {
+        setLoginAttempts(status.attempts);
+        setShowTurnstile(status.requiresTurnstile);
+      }
     }
 
     try {
-      // CAPTCHA verification
-      await verifyTurnstileToken(token)
-      ph().capture('captcha_completed', { email })
+      // Check if Turnstile is required
+      const requiresTurnstile = showTurnstile && !turnstileToken;
 
-      // Proceed with Nile login only if token is valid
+      if (requiresTurnstile) {
+        setError(t("errors.captchaRequired"));
+        setIsLoading(false);
+        return;
+      }
+
+      // If Turnstile is shown but we have a token, verify it
+      if (showTurnstile && turnstileToken) {
+        await verifyTurnstileToken(turnstileToken);
+        ph().capture("captcha_completed", { email });
+      }
+
+      // Proceed with login
       await login(email, password);
-      ph().capture('login_attempt', { email, success: true })
-      setToken(""); // ✅ reset after successful login
+      ph().capture("login_attempt", { email, success: true });
     } catch (err) {
-      console.error("Login failed:", err)
-      const errorMsg = (err as Error)?.message || loginContent.errors.generic
-      setError(errorMsg)
+      console.error("Login failed:", err);
+      const errorMessage =
+        (err as Error)?.message || loginContent.errors.generic;
+      setError(errorMessage);
+
+      // Get updated attempt status (AuthContext already recorded the failure)
+      const status = getLoginAttemptStatus(email);
+      setShowTurnstile(status.requiresTurnstile);
+      setLoginAttempts(status.attempts || 0);
+      setTurnstileToken(null);
 
       // Log failed login attempt
-      ph().capture('login_attempt', { 
-        email, 
-        success: false, 
-        error: 'Login failed' // ← FIX de Gemini
-      })
+      ph().capture("login_attempt", {
+        email,
+        success: false,
+        error: "Login failed",
+        attempts: status.attempts,
+      });
     } finally {
-      setToken("") // ← FIX de Gemini
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     if (user && !isLoading) {
@@ -83,11 +104,18 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (authError) {
-        setError(authError.message);
+      setError(authError.message);
+
+      // Also update attempt counter when there's an authError
+      if (email && email.includes("@")) {
+        const status = getLoginAttemptStatus(email);
+        setLoginAttempts(status.attempts || 0);
+        setShowTurnstile(status.requiresTurnstile);
+      }
     } else {
-        setError(null);
+      setError(null);
     }
-}, [authError]);
+  }, [authError, email]);
 
   const icon = user ? User : LogIn;
   const mode = user ? "loggedIn" : "form";
@@ -100,7 +128,7 @@ export default function LoginPage() {
         </Link>
       </p>
     </div>
-  )
+  );
 
   return (
     <LandingLayout>
@@ -130,12 +158,12 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{t("password.label")}</Label>
-                {/* <Link
+                <Link
                   href="/forgot-password"
                   className="text-sm font-medium text-primary hover:underline underline-offset-4"
                 >
                   {loginContent.forgotPassword}
-                </Link> */}
+                </Link>
               </div>
               <PasswordInput
                 name="password"
@@ -147,35 +175,63 @@ export default function LoginPage() {
               />
             </div>
 
-            {/*  NEW - Turnstile Widget */}
-            <div className="flex justify-center">
-              {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
-                <Turnstile
-                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                  onVerify={(token) => setToken(token)}
-                />
-              ) : (
-                <p className="text-sm text-destructive">
-                  CAPTCHA is not configured. Please contact support.
-                </p>
-              )}
-            </div>
+            {loginAttempts > 0 && (
+              <div
+                className={`px-3 py-2 rounded-md text-sm ${
+                  loginAttempts >= MAX_LOGIN_ATTEMPTS
+                    ? "bg-red-50 border border-red-200 text-red-800"
+                    : "bg-yellow-50 border border-yellow-200 text-yellow-800"
+                }`}
+              >
+                Failed attempts: {loginAttempts}/{MAX_LOGIN_ATTEMPTS}
+              </div>
+            )}
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? t("loginButton.loading") : t("loginButton.default")}
-            </Button>
-            <Link
-              href="/forgot-password"
-              className="block text-right text-sm text-muted-foreground hover:underline underline-offset-4"
+            {showTurnstile && (
+              <div className="space-y-3">
+                <div className="bg-orange-50 border border-orange-200 text-orange-800 px-3 py-2 rounded-md text-sm">
+                  For security, please complete the verification to continue.
+                </div>
+                <div className="flex justify-center py-2">
+                  {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+                    <Turnstile
+                      key={`turnstile-${loginAttempts}`}
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                      onVerify={(token: string) => setTurnstileToken(token)}
+                    />
+                  ) : (
+                    <p className="text-sm text-destructive">
+                      CAPTCHA is not configured. Please contact support.
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={
+                isLoading ||
+                !email ||
+                !email.includes("@") ||
+                (showTurnstile && !turnstileToken)
+              }
             >
-              Forgot Password?
-            </Link>
+              {isLoading
+                ? t("loginButton.loading")
+                : loginAttempts >= MAX_LOGIN_ATTEMPTS && !turnstileToken
+                  ? "Too many attempts. Complete verification."
+                  : showTurnstile && !turnstileToken
+                    ? "Complete verification to continue"
+                    : t("loginButton.default")}
+            </Button>
           </form>
         )}
       </AuthTemplate>
     </LandingLayout>
-  )
+  );
 }
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic";
