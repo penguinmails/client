@@ -48,6 +48,7 @@ import {
   computeTemplateAnalyticsOverview,
   computeTemplateAnalyticsOnFilteredData,
 } from "./calculations";
+import { api } from "@/convex/_generated/api";
 
 /**
  * Perform performance metrics query and mapping.

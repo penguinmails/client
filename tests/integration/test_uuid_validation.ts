@@ -5,9 +5,9 @@
  * and that invalid UUIDs are rejected appropriately.
  */
 
-import { getTenantService } from '../../lib/niledb/tenant';
-import { getAuthService } from '../../lib/niledb/auth';
-import { getCompanyService } from '../../lib/niledb/company';
+import { getAuthService } from '@/shared/lib/niledb';
+import { getCompanyService } from '@/shared/lib/niledb/company';
+import { getTenantService } from '@/shared/lib/niledb/tenant';
 
 const tenantService = getTenantService();
 const authService = getAuthService();

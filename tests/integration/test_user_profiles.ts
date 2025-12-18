@@ -4,7 +4,7 @@
  * Tests the user profile creation and management functionality.
  */
 
-import { getAuthService } from '../../lib/niledb/auth';
+import { getAuthService } from "@/shared/lib/niledb";
 
 const authService = getAuthService();
 

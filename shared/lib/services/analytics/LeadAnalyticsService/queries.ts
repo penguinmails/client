@@ -46,6 +46,7 @@ import {
   computeLeadSourceAnalytics,
   computeSegmentationAnalytics
 } from "./calculations";
+import { api } from "@/convex/_generated/api";
 
 /**
  * Perform lead list metrics query.

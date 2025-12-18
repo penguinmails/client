@@ -5,8 +5,8 @@
  * Provides database client and settings for schema creation and seeding.
  */
 
-import { getNileClient } from '../../lib/niledb/client';
-import { getNileConfig } from '../../lib/niledb/config';
+import { getNileClient } from '@/shared/lib/niledb/client';
+import { getNileConfig } from '@/shared/lib/niledb/config';
 
 /**
  * Get NileDB client configured for migrations

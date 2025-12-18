@@ -2,8 +2,8 @@
 // BASE ANALYTICS SERVICE - Abstract base class for domain services
 // ============================================================================
 
-import { 
-  AnalyticsFilters, 
+import {
+  AnalyticsFilters,
   PerformanceMetrics
 } from "@/types/analytics/core";
 import { analyticsCache, CACHE_TTL } from "@/shared/lib/utils/redis";

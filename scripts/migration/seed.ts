@@ -7,7 +7,7 @@
  * Prevents execution in production environments.
  */
 
-import { getNileClient, type Server } from '../../lib/niledb/client';
+import { getNileClient, type Server } from '@/shared/lib/niledb/client';
 
 // Simple type for database query results
 interface DbRow {

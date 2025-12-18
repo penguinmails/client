@@ -29,6 +29,7 @@ import {
   validateTemplateUpdatePayload,
   validateTemplateBatchUpdatePayload
 } from "./validation";
+import { api } from "@/convex/_generated/api";
 
 /**
  * Perform single template analytics update mutation.

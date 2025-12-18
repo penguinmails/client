@@ -6,10 +6,10 @@
  */
 
 // Jest globals are available globally in test environment
-import { getAuthService, resetAuthService } from '../../lib/niledb/auth';
-import { getTenantService, resetTenantService } from '../../lib/niledb/tenant';
-import { getCompanyService } from '../../lib/niledb/company';
-import { withoutTenantContext } from '../../lib/niledb/client';
+import { getAuthService, resetAuthService } from '@/shared/lib/niledb/auth';
+import { getTenantService, resetTenantService } from '@/shared/lib/niledb/tenant';
+import { getCompanyService } from '@/shared/lib/niledb/company';
+import { withoutTenantContext } from '@/shared/lib/niledb/client';
 
 // Test data interfaces
 interface TestUser {

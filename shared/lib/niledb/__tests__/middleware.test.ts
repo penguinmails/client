@@ -111,7 +111,7 @@ describe('Authentication Middleware', () => {
       expect(response.status).toBe(401);
       expect(mockHandler).not.toHaveBeenCalled();
 
-      const responseData = await response.json<{ error: string; code: string }>();
+      const responseData = await response.json();
       expect(responseData.error).toBe('Authentication required');
       expect(responseData.code).toBe('AUTH_REQUIRED');
     });
@@ -178,12 +178,7 @@ describe('Authentication Middleware', () => {
       expect(response.status).toBe(403);
       expect(mockHandler).not.toHaveBeenCalled();
 
-      const responseData = await response.json<{
-        error: string;
-        code: string;
-        required: string;
-        current: string;
-      }>();
+      const responseData = await response.json();
       expect(responseData.error).toBe('Insufficient staff privileges');
       expect(responseData.code).toBe('INSUFFICIENT_STAFF_LEVEL');
     });
@@ -279,7 +274,7 @@ describe('Authentication Middleware', () => {
       expect(response.status).toBe(400);
       expect(mockHandler).not.toHaveBeenCalled();
 
-      const responseData = await response.json<{ error: string; code: string }>();
+      const responseData = await response.json();
       expect(responseData.error).toBe('Tenant ID required');
     });
 

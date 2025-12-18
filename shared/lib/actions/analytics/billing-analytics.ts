@@ -7,7 +7,6 @@
  * for type safety and standardized error handling.
  */
 
-// import { api } from '@/convex/_generated/api';
 import { createAnalyticsConvexHelper } from '@/shared/lib/utils/convex-query-helper';
 import { ConvexHttpClient } from 'convex/browser';
 import {
@@ -29,7 +28,8 @@ import type {
   TimeSeriesDataPoint,
 } from '@/types/analytics/core';
 import type { BillingAnalytics } from '@/types/analytics/domain-specific';
-import type { CurrentUsageMetrics } from '../../../convex/billingAnalytics/types';
+import { api } from '@/convex/_generated/api';
+import { CurrentUsageMetrics } from '@/convex/billingAnalytics';
 
 // Initialize Convex client and helper
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);

@@ -1,12 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { withTests } from "@storybook/addon-jest";
-import results from '../../../.jest-test-results.json';
 import { Button } from "./button";
 
 const meta = {
   title: "components/ui/button",
   component: Button,
-  decorators: [withTests({ results })],
   tags: ["autodocs"],
   parameters: {
     docs: {

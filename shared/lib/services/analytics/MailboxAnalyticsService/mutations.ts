@@ -5,7 +5,7 @@
 import { AnalyticsError, AnalyticsErrorType } from "../BaseAnalyticsService";
 import { WarmupStatus } from "@/types/analytics/domain-specific";
 import { ConvexHttpClient } from "convex/browser";
-// import { api } from "@/convex/_generated/api";
+import { api } from "../../../../../convex/_generated/api";
 import { createAnalyticsConvexHelper } from "@/shared/lib/utils/convex-query-helper";
 import { validateMailboxAnalyticsUpdate, validateWarmupAnalyticsUpdate } from "./validation";
 import { MailboxAnalyticsUpdate, WarmupAnalyticsUpdate, BatchUpdateResult } from "./types";

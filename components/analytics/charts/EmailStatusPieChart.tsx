@@ -15,21 +15,8 @@ interface EmailStatusPieChartProps {
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#8884d8", "#FF8042"];
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle = 0,
-  innerRadius,
-  outerRadius,
-  percent = 0,
-}: {
-  cx: number;
-  cy: number;
-  midAngle?: number;
-  innerRadius: number;
-  outerRadius: number;
-  percent?: number;
-}) => {
+const renderCustomizedLabel = (props: any) => {
+  const { cx, cy, midAngle = 0, innerRadius, outerRadius, percent = 0 } = props;
   if (
     midAngle === undefined ||
     innerRadius === undefined ||

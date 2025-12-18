@@ -5,7 +5,7 @@
  * This test validates that the AuthService.getUserWithProfile method behaves according to its contract.
  */
 
-import { getAuthService } from '../../lib/niledb/auth';
+import { getAuthService } from '@/shared/lib/niledb/auth';
 
 const authService = getAuthService();
 

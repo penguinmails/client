@@ -5,8 +5,8 @@
  * access validation across all services.
  */
 
-import { getTenantService } from '../../lib/niledb/tenant';
-import { getCompanyService } from '../../lib/niledb/company';
+import { getTenantService } from '@/shared/lib/niledb/tenant';
+import { getCompanyService } from '@/shared/lib/niledb/company';
 
 const tenantService = getTenantService();
 const companyService = getCompanyService();

@@ -5,7 +5,7 @@
  * This test validates that the TenantService.validateTenantAccess method behaves according to its contract.
  */
 
-import { getTenantService } from '../../lib/niledb/tenant';
+import { getTenantService } from '@/shared/lib/niledb/tenant';
 
 const tenantService = getTenantService();
 

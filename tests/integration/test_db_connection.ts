@@ -5,7 +5,7 @@
  * Validates DATABASE_URL configuration and basic connectivity.
  */
 
-import { getNileClient } from '../../lib/niledb/client';
+import { getNileClient } from "@/shared/lib/niledb";
 
 describe('Database Connection Integration', () => {
   describe('Connection Configuration', () => {

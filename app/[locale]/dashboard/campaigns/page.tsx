@@ -25,36 +25,41 @@ export default function CampaignsPage({
   const { totalSent, openRate, replyRate, clickRate, campaigns } =
     useAnalytics();
 
-  const stats = [
+  const stats: {
+    title: string;
+    value: string;
+    icon: typeof Send;
+    color: "primary" | "secondary" | "success" | "warning" | "error" | "info";
+  }[] = [
     {
       title: "Total Campaigns",
       value: campaigns.length.toString(),
       icon: Send,
-      color: "bg-blue-100 text-blue-600",
+      color: "primary",
     },
     {
       title: "Total Sent",
       value: Number(totalSent).toLocaleString(),
       icon: Mail,
-      color: "text-purple-600 bg-purple-100",
+      color: "secondary",
     },
     {
       title: "Open Rate",
       value: openRate + "%",
       icon: Eye,
-      color: "text-orange-500  bg-orange-100",
+      color: "success",
     },
     {
       title: "Click Rate",
       value: clickRate + "%",
       icon: TrendingUp,
-      color: "bg-green-100 text-green-600",
+      color: "warning",
     },
     {
       title: "Reply Rate",
       value: replyRate + "%",
       icon: Users,
-      color: "text-pink-600 bg-pink-100",
+      color: "error",
     },
   ];
 

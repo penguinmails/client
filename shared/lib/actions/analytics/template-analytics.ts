@@ -7,7 +7,6 @@
  * for type safety and standardized error handling.
  */
 
-import { api } from '../../../convex/_generated/api';
 import { createAnalyticsConvexHelper } from '../../utils/convex-query-helper';
 import { ConvexHttpClient } from 'convex/browser';
 import { 
@@ -39,6 +38,7 @@ import type {
   CalculatedRates,
 } from '@/types/analytics/core';
 import type { TemplateAnalytics } from '@/types/analytics/domain-specific';
+import { api } from '@/convex/_generated/api';
 
 // Initialize Convex client and helper
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
