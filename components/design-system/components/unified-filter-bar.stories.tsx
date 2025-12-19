@@ -57,11 +57,21 @@ export const SearchOnly: Story = {
 
 export const WithBulkActions: Story = {
   args: {
-    filters: <Button variant="outline" size="sm">Filter by Date</Button>,
+    filters: (
+      <Button variant="outline" size="sm">
+        Filter by Date
+      </Button>
+    ),
     actions: (
       <>
-        <Badge variant="secondary" className="mr-2">3 Selected</Badge>
-        <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
+        <Badge variant="secondary" className="mr-2">
+          3 Selected
+        </Badge>
+        <Button
+          variant="outline"
+          size="sm"
+          className="text-destructive hover:text-destructive"
+        >
           Delete
         </Button>
         <Button variant="outline" size="sm">
@@ -105,6 +115,10 @@ export const Error: Story = {
         Error loading filters
       </Badge>
     ),
-    actions: <Button size="sm" variant="outline">Retry</Button>,
+    actions: (
+      <Button size="sm" variant="outline">
+        Retry
+      </Button>
+    ),
   },
 };

@@ -3,8 +3,7 @@ import { UnifiedDataTable } from "./unified-data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import React from "react";
-import { AlertTriangle } from "lucide-react"; 
-
+import { AlertTriangle } from "lucide-react";
 
 // Sample data type
 type Campaign = {
@@ -124,7 +123,7 @@ const meta = {
   decorators: [
     (Story, context) => {
       const theme = context.args.theme || "light";
-      
+
       React.useEffect(() => {
         const htmlElement = document.documentElement;
         if (theme === "dark") {
@@ -132,7 +131,7 @@ const meta = {
         } else {
           htmlElement.classList.remove("dark");
         }
-        
+
         return () => {
           htmlElement.classList.remove("dark");
         };
@@ -141,7 +140,9 @@ const meta = {
       return <Story />;
     },
   ],
-} satisfies Meta<React.ComponentProps<typeof UnifiedDataTable> & { theme?: string }>;
+} satisfies Meta<
+  React.ComponentProps<typeof UnifiedDataTable> & { theme?: string }
+>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -166,7 +167,11 @@ export const WithSearch: Story = {
 export const WithPagination: Story = {
   args: {
     columns,
-    data: [...sampleCampaigns, ...sampleCampaigns, ...sampleCampaigns] as unknown[],
+    data: [
+      ...sampleCampaigns,
+      ...sampleCampaigns,
+      ...sampleCampaigns,
+    ] as unknown[],
     title: "Paginated Campaigns",
     paginated: true,
   },
@@ -177,7 +182,8 @@ export const Empty: Story = {
     columns,
     data: [] as unknown[],
     title: "No Campaigns",
-    emptyMessage: "No campaigns found. Create your first campaign to get started.",
+    emptyMessage:
+      "No campaigns found. Create your first campaign to get started.",
   },
 };
 

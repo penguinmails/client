@@ -113,7 +113,7 @@ export function UnifiedFormField<
         const commonClasses = cn(
           "transition-colors",
           hasError && "border-destructive focus-visible:ring-destructive/20",
-          !hasError && "border-input focus-visible:ring-ring/50"
+          !hasError && "border-input focus-visible:ring-ring/50",
         );
 
         switch (type) {
@@ -125,7 +125,7 @@ export function UnifiedFormField<
                     className={cn(
                       "text-sm font-medium leading-none",
                       disabled && "cursor-not-allowed opacity-50",
-                      hasError && "text-destructive"
+                      hasError && "text-destructive",
                     )}
                   >
                     {label}
@@ -187,7 +187,7 @@ export function UnifiedFormField<
                     className={cn(
                       "text-sm font-medium leading-none cursor-pointer",
                       disabled && "cursor-not-allowed opacity-50",
-                      hasError && "text-destructive"
+                      hasError && "text-destructive",
                     )}
                   >
                     {label}
@@ -214,7 +214,7 @@ export function UnifiedFormField<
                     className={cn(
                       "text-sm font-medium leading-none",
                       disabled && "cursor-not-allowed opacity-50",
-                      hasError && "text-destructive"
+                      hasError && "text-destructive",
                     )}
                   >
                     {label}

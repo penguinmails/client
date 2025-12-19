@@ -7,7 +7,7 @@ import {
   Mail,
   FileText,
   Search,
-  AlertTriangle
+  AlertTriangle,
 } from "lucide-react";
 import React from "react";
 
@@ -52,7 +52,7 @@ const meta = {
   decorators: [
     (Story, context) => {
       const theme = context.args.theme || "light";
-      
+
       React.useEffect(() => {
         const htmlElement = document.documentElement;
         if (theme === "dark") {
@@ -60,7 +60,7 @@ const meta = {
         } else {
           htmlElement.classList.remove("dark");
         }
-        
+
         return () => {
           htmlElement.classList.remove("dark");
         };
@@ -85,7 +85,8 @@ export const WithDescription: Story = {
   args: {
     icon: FolderOpen,
     title: "No campaigns found",
-    description: "Your campaign list is empty. Create your first campaign to get started.",
+    description:
+      "Your campaign list is empty. Create your first campaign to get started.",
   },
 };
 
@@ -132,7 +133,8 @@ export const LargeSize: Story = {
   args: {
     icon: Inbox,
     title: "Welcome to PenguinMails",
-    description: "Get started by creating your first campaign and reaching out to your audience.",
+    description:
+      "Get started by creating your first campaign and reaching out to your audience.",
     size: "lg",
     actionLabel: "Create Campaign",
     onAction: () => alert("Create campaign dialog"),
@@ -142,11 +144,11 @@ export const Loading: Story = {
   args: {
     title: "Loading...",
     description: "Please wait while we fetch your data",
-    icon: Mail, 
+    icon: Mail,
   },
   parameters: {
     pseudoState: {
-      loading: true, 
+      loading: true,
     },
   },
 };
@@ -156,6 +158,6 @@ export const Error: Story = {
     description: "Failed to load data. Please try again.",
     actionLabel: "Retry",
     onAction: () => alert("Retry action"),
-    icon: AlertTriangle, 
+    icon: AlertTriangle,
   },
 };

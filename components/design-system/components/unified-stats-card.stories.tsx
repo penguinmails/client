@@ -8,6 +8,8 @@ import {
   DollarSign,
   Mail,
   Activity,
+  AlertCircle,
+  Clock,
 } from "lucide-react";
 import React from "react";
 
@@ -50,7 +52,7 @@ const meta = {
   decorators: [
     (Story, context) => {
       const theme = context.args.theme || "light";
-      
+
       React.useEffect(() => {
         const htmlElement = document.documentElement;
         if (theme === "dark") {
@@ -58,7 +60,7 @@ const meta = {
         } else {
           htmlElement.classList.remove("dark");
         }
-        
+
         return () => {
           htmlElement.classList.remove("dark");
         };
@@ -67,7 +69,9 @@ const meta = {
       return <Story />;
     },
   ],
-} satisfies Meta<React.ComponentProps<typeof UnifiedStatsCard> & { theme?: string }>;
+} satisfies Meta<
+  React.ComponentProps<typeof UnifiedStatsCard> & { theme?: string }
+>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -123,7 +127,7 @@ export const Warning: Story = {
     icon: Mail,
     color: "warning",
   },
-  render: (args) => (  
+  render: (args) => (
     <div className="w-[240px]">
       <UnifiedStatsCard {...args} />
     </div>
@@ -156,7 +160,7 @@ export const SmallSize: Story = {
     color: "primary",
     size: "sm",
   },
-  render: (args) => (  
+  render: (args) => (
     <div className="w-[240px]">
       <UnifiedStatsCard {...args} />
     </div>
@@ -187,7 +191,7 @@ export const HighlightedVariant: Story = {
     color: "info",
     variant: "highlighted",
   },
-  render: (args) => (  
+  render: (args) => (
     <div className="w-[240px]">
       <UnifiedStatsCard {...args} />
     </div>
@@ -205,7 +209,7 @@ export const MutedVariant: Story = {
     color: "success",
     variant: "muted",
   },
-  render: (args) => (  
+  render: (args) => (
     <div className="w-[240px]">
       <UnifiedStatsCard {...args} />
     </div>
@@ -298,19 +302,7 @@ export const ErrorState: Story = {
           <div className="space-y-1">
             <p className="text-2xl font-bold text-muted-foreground">--</p>
             <div className="flex items-center gap-2 text-sm text-destructive">
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <AlertCircle className="h-4 w-4" />
               <span>Failed to load data</span>
             </div>
           </div>
@@ -501,7 +493,7 @@ export const ResponsiveDashboard: Story = {
           change="+23.5% vs last year"
           variant="highlighted"
         />
-        
+
         {/* Secondary stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <UnifiedStatsCard

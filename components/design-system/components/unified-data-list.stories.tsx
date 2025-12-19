@@ -225,7 +225,8 @@ export const Default: Story = {
             <div>
               <h3 className="font-medium">{campaign.name}</h3>
               <p className="text-sm text-muted-foreground">
-                Sent: {campaign.sent.toLocaleString()} • Opens: {campaign.opens.toLocaleString()}
+                Sent: {campaign.sent.toLocaleString()} • Opens:{" "}
+                {campaign.opens.toLocaleString()}
               </p>
             </div>
           </div>
@@ -234,8 +235,8 @@ export const Default: Story = {
               campaign.status === "active"
                 ? "default"
                 : campaign.status === "completed"
-                ? "secondary"
-                : "outline"
+                  ? "secondary"
+                  : "outline"
             }
           >
             {campaign.status}
@@ -274,6 +275,7 @@ export const Empty: Story = {
           <div>{campaign.name}</div>
         </div>
       )}
+      keyExtractor={(campaign) => campaign.id.toString()}
     />
   ),
 };
@@ -300,7 +302,9 @@ export const WithSearch: Story = {
               <p className="text-sm text-muted-foreground">{campaign.date}</p>
             </div>
           </div>
-          <Badge variant={campaign.status === "active" ? "default" : "secondary"}>
+          <Badge
+            variant={campaign.status === "active" ? "default" : "secondary"}
+          >
             {campaign.status}
           </Badge>
         </div>
@@ -332,7 +336,9 @@ export const WithPagination: Story = {
               </div>
             </div>
           </div>
-          <Badge variant={campaign.status === "active" ? "default" : "secondary"}>
+          <Badge
+            variant={campaign.status === "active" ? "default" : "secondary"}
+          >
             {campaign.status}
           </Badge>
         </div>
@@ -366,7 +372,9 @@ export const FullFeatured: Story = {
               </div>
             </div>
           </div>
-          <Badge variant={campaign.status === "active" ? "default" : "secondary"}>
+          <Badge
+            variant={campaign.status === "active" ? "default" : "secondary"}
+          >
             {campaign.status}
           </Badge>
         </div>
@@ -423,8 +431,8 @@ export const TasksList: Story = {
                 task.priority === "high"
                   ? "bg-red-100 dark:bg-red-900/30"
                   : task.priority === "medium"
-                  ? "bg-orange-100 dark:bg-orange-900/30"
-                  : "bg-gray-100 dark:bg-gray-800"
+                    ? "bg-orange-100 dark:bg-orange-900/30"
+                    : "bg-gray-100 dark:bg-gray-800"
               }`}
             >
               {task.completed ? (
@@ -486,22 +494,30 @@ export const DetailedList: Story = {
                 <p className="text-sm text-muted-foreground">{campaign.date}</p>
               </div>
             </div>
-            <Badge variant={campaign.status === "active" ? "default" : "secondary"}>
+            <Badge
+              variant={campaign.status === "active" ? "default" : "secondary"}
+            >
               {campaign.status}
             </Badge>
           </div>
           <div className="grid grid-cols-3 gap-4 pt-3 border-t">
             <div>
               <p className="text-xs text-muted-foreground">Sent</p>
-              <p className="text-lg font-semibold">{campaign.sent.toLocaleString()}</p>
+              <p className="text-lg font-semibold">
+                {campaign.sent.toLocaleString()}
+              </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Opens</p>
-              <p className="text-lg font-semibold">{campaign.opens.toLocaleString()}</p>
+              <p className="text-lg font-semibold">
+                {campaign.opens.toLocaleString()}
+              </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Clicks</p>
-              <p className="text-lg font-semibold">{campaign.clicks.toLocaleString()}</p>
+              <p className="text-lg font-semibold">
+                {campaign.clicks.toLocaleString()}
+              </p>
             </div>
           </div>
         </div>
@@ -529,7 +545,9 @@ export const Clickable: Story = {
             <Mail className="h-5 w-5 text-muted-foreground" />
             <div>
               <h3 className="font-medium">{campaign.name}</h3>
-              <p className="text-sm text-muted-foreground">Click to view details</p>
+              <p className="text-sm text-muted-foreground">
+                Click to view details
+              </p>
             </div>
           </div>
           <Badge variant="outline">View →</Badge>
