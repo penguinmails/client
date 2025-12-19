@@ -56,7 +56,7 @@ class LoopService {
       //  LOG EMAIL SENT SUCCESS (async - fire and forget)
       BackendLogger.logEmailSent({
         userId: emailData.dataVariables?.userId || 'system',
-        emailId: contactId || `loop-${Date.now()}`,
+        emailId: contactId || `loop-${crypto.randomUUID()}`,
         recipientId: emailData.email,
         campaignId: emailData.transactionalId,
         subject: emailData.dataVariables?.subject || emailData.transactionalId,
@@ -200,7 +200,7 @@ class LoopService {
         service: 'loop',
         operation: 'createContact',
         email: contact.email,
-      });
+      }).catch(err => console.error('Failed to log contact deletion error:', err));
 
       return {
         success: false,
@@ -226,7 +226,7 @@ class LoopService {
         service: 'loop',
         operation: 'deleteContact',
         email,
-      });
+      }).catch(err => console.error('Failed to log contact deletion error:', err));
 
       return {
         success: false,
