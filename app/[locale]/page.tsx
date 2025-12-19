@@ -70,7 +70,7 @@ export default function LoginPage() {
       await login(email, password)
       ph().capture('login_attempt', { email, success: true })
 
-      router.push("/dashboard")
+      
     } catch (err) {
       console.error("Login failed:", err)
       const errorMessage = (err as Error)?.message || loginContent.errors.generic
@@ -80,7 +80,8 @@ export default function LoginPage() {
       ph().capture('login_attempt', { 
         email, 
         success: false, 
-        error: 'Login failed'
+        error: 'Login failed',
+        attempts: getLoginAttemptStatus(email).attempts,
       })
     } finally {
       setIsLoading(false)
