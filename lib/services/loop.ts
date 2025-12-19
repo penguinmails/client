@@ -3,9 +3,11 @@
  *
  * Handles transactional emails using the Loop SDK.
  * Focused on verification emails and other transactional use cases.
+ * Includes PostHog logging for email events and errors.
  */
 
 import { LoopsClient } from "loops";
+import { BackendLogger } from "../backend-logger";
 
 // Types for Loop API
 export interface LoopContact {
@@ -51,12 +53,30 @@ class LoopService {
       // Some SDK responses don't expose `contactId`; try common keys and fall back safely.
       const contactId = ('contactId' in response ? response.contactId : 'id' in response ? response.id : undefined) as string | undefined;
 
+      //  LOG EMAIL SENT SUCCESS (async - fire and forget)
+      BackendLogger.logEmailSent({
+        userId: emailData.dataVariables?.userId || 'system',
+        emailId: contactId || `loop-${Date.now()}`,
+        recipientId: emailData.email,
+        campaignId: emailData.transactionalId,
+        subject: emailData.dataVariables?.subject || emailData.transactionalId,
+      }).catch(err => console.error('Failed to log email sent:', err));
+
       return {
         success: true,
         contactId,
       };
     } catch (error) {
       console.error('Loop transactional email error:', error);
+      
+      // LOG EMAIL ERROR (async - fire and forget)
+      BackendLogger.logError(error as Error, {
+        service: 'loop',
+        operation: 'sendTransactionalEmail',
+        recipient: emailData.email,
+        transactionalId: emailData.transactionalId,
+      }).catch(err => console.error('Failed to log error:', err));
+
       return {
         success: false,
         message: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -76,6 +96,8 @@ class LoopService {
         userName: userName || 'User',
         verificationUrl: `${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${verificationToken}`,
         frontendUrl: process.env.NEXT_PUBLIC_APP_URL,
+        subject: 'Email Verification',
+        emailType: 'verification',
       },
     });
   }
@@ -91,6 +113,8 @@ class LoopService {
         resetToken,
         userName: userName || 'User',
         resetUrl: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`,
+        subject: 'Password Reset',
+        emailType: 'password_reset',
       },
     });
   }
@@ -106,6 +130,8 @@ class LoopService {
         userName,
         companyName: companyName || 'PenguinMails',
         loginUrl: `${process.env.NEXT_PUBLIC_APP_URL}/login`,
+        subject: 'Welcome to PenguinMails',
+        emailType: 'welcome',
       },
     });
   }
@@ -122,6 +148,7 @@ class LoopService {
         message,
         subject: subject || 'Notification from PenguinMails',
         timestamp: new Date().toISOString(),
+        emailType: 'notification',
       },
     });
   }
@@ -140,6 +167,7 @@ class LoopService {
         timestamp: new Date().toISOString(),
         verificationToken: 'test-notification-token',
         verificationUrl: `${process.env.NEXT_PUBLIC_APP_URL}/test-notification`,
+        emailType: 'test_notification',
       },
     });
   }
@@ -166,6 +194,14 @@ class LoopService {
       };
     } catch (error) {
       console.error('Loop create contact error:', error);
+      
+      //  LOG CONTACT CREATION ERROR
+      BackendLogger.logError(error as Error, {
+        service: 'loop',
+        operation: 'createContact',
+        email: contact.email,
+      });
+
       return {
         success: false,
         message: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -184,6 +220,14 @@ class LoopService {
       };
     } catch (error) {
       console.error('Loop delete contact error:', error);
+      
+      //  LOG CONTACT DELETION ERROR
+      BackendLogger.logError(error as Error, {
+        service: 'loop',
+        operation: 'deleteContact',
+        email,
+      });
+
       return {
         success: false,
         message: error instanceof Error ? error.message : 'Unknown error occurred',

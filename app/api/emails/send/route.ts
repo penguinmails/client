@@ -7,6 +7,7 @@ import {
   getVerificationTokenExpiry,
   storeVerificationToken
 } from '@/lib/utils/email-verification';
+import { BackendLogger } from '@/lib/backend-logger';
 
 // Schema for transactional email requests
 const transactionalEmailSchema = z.object({
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
           verificationToken,
           expiresAt
         );
-        
+
         if (!tokenStored) {
           console.warn('Failed to store verification token, but continuing with email');
         }
@@ -105,6 +106,13 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Email send error:', error);
 
+    //  LOG ERROR TO POSTHOG
+    BackendLogger.logError(error as Error, {
+      endpoint: '/api/emails/send',
+      method: 'POST',
+      service: 'loop',
+    });
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid request data', details: error.issues },
@@ -139,6 +147,15 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Test email error:', error);
+    
+    //  LOG ERROR TO POSTHOG
+    BackendLogger.logError(error as Error, {
+      endpoint: '/api/emails/send',
+      method: 'GET',
+      service: 'loop',
+      testMode: true,
+    });
+
     return NextResponse.json(
       { error: 'Failed to send test email' },
       { status: 500 }

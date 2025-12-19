@@ -8,6 +8,7 @@
 'use server';
 
 import { getLoopService } from '@/lib/services/loop';
+import { BackendLogger } from '@/lib/backend-logger';
 import { z } from 'zod';
 
 // Schema for email actions
@@ -53,6 +54,14 @@ export async function sendVerificationEmail(data: z.infer<typeof sendVerificatio
     };
   } catch (error) {
     console.error('Send verification email error:', error);
+    
+    //  LOG ERROR TO POSTHOG
+    BackendLogger.logError(error as Error, {
+      action: 'sendVerificationEmail',
+      service: 'loop',
+      email: data.email,
+    });
+
     throw error;
   }
 }
@@ -81,6 +90,14 @@ export async function sendPasswordResetEmail(data: z.infer<typeof sendPasswordRe
     };
   } catch (error) {
     console.error('Send password reset email error:', error);
+    
+    // LOG ERROR TO POSTHOG
+    BackendLogger.logError(error as Error, {
+      action: 'sendPasswordResetEmail',
+      service: 'loop',
+      email: data.email,
+    });
+
     throw error;
   }
 }
@@ -109,6 +126,15 @@ export async function sendWelcomeEmail(data: z.infer<typeof sendWelcomeEmailSche
     };
   } catch (error) {
     console.error('Send welcome email error:', error);
+    
+    //  LOG ERROR TO POSTHOG
+    BackendLogger.logError(error as Error, {
+      action: 'sendWelcomeEmail',
+      service: 'loop',
+      email: data.email,
+      userName: data.userName,
+    });
+
     throw error;
   }
 }
@@ -140,7 +166,15 @@ export async function sendTransactionalEmail(
     };
   } catch (error) {
     console.error('Send transactional email error:', error);
+    
+    //  LOG ERROR TO POSTHOG
+    BackendLogger.logError(error as Error, {
+      action: 'sendTransactionalEmail',
+      service: 'loop',
+      email,
+      transactionalId,
+    });
+
     throw error;
   }
 }
-

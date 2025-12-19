@@ -1,57 +1,117 @@
-/**
- * Email Notification Endpoint
- *
- * Handles sending notification emails using Loop service.
- * Accepts an email address and sends a notification message.
- */
-
 import { NextRequest, NextResponse } from 'next/server';
 import { getLoopService } from '@/lib/services/loop';
 import { getAuthService } from '@/lib/niledb/auth';
 import { z } from 'zod';
+import {
+  generateVerificationToken,
+  getVerificationTokenExpiry,
+  storeVerificationToken
+} from '@/lib/utils/email-verification';
+import { BackendLogger } from '@/lib/backend-logger';
 
-// Schema for notification email requests
-const notificationEmailSchema = z.object({
+// Schema for transactional email requests
+const transactionalEmailSchema = z.object({
+  type: z.enum(['verification', 'password-reset', 'welcome']),
   email: z.string().email(),
-  message: z.string().min(1),
-  subject: z.string().optional(),
   userName: z.string().optional(),
+  token: z.string().optional(),
+  companyName: z.string().optional(),
 });
 
 export async function POST(request: NextRequest) {
   try {
-    // Validate user session for security
-    const authService = getAuthService();
-    await authService.validateSession();
-
+    // For verification emails, we might not have a valid session yet
+    // So we'll skip session validation for verification emails
     const body = await request.json();
-    const validatedData = notificationEmailSchema.parse(body);
+    const validatedData = transactionalEmailSchema.parse(body);
 
     const loopService = getLoopService();
-    const result = await loopService.sendNotificationEmail(
-      validatedData.email,
-      validatedData.message,
-      validatedData.subject,
-      validatedData.userName
-    );
+    let result;
+
+    switch (validatedData.type) {
+      case 'verification': {
+        // Generate a secure token for email verification
+        const verificationToken = generateVerificationToken();
+        const expiresAt = getVerificationTokenExpiry();
+
+        // Store token in database for reliable verification
+        const tokenStored = await storeVerificationToken(
+          validatedData.email,
+          verificationToken,
+          expiresAt
+        );
+
+        if (!tokenStored) {
+          console.warn('Failed to store verification token, but continuing with email');
+        }
+
+        result = await loopService.sendVerificationEmail(
+          validatedData.email,
+          verificationToken,
+          validatedData.userName
+        );
+        break;
+      }
+
+      case 'password-reset':
+        if (!validatedData.token) {
+          return NextResponse.json(
+            { error: 'Token is required for password reset emails' },
+            { status: 400 }
+          );
+        }
+        result = await loopService.sendPasswordResetEmail(
+          validatedData.email,
+          validatedData.token,
+          validatedData.userName
+        );
+        break;
+
+      case 'welcome':
+        if (!validatedData.userName) {
+          return NextResponse.json(
+            { error: 'User name is required for welcome emails' },
+            { status: 400 }
+          );
+        }
+        result = await loopService.sendWelcomeEmail(
+          validatedData.email,
+          validatedData.userName,
+          validatedData.companyName
+        );
+        break;
+
+      default:
+        return NextResponse.json(
+          { error: 'Invalid email type' },
+          { status: 400 }
+        );
+    }
 
     if (result.success) {
       return NextResponse.json({
         success: true,
-        message: 'Notification email sent successfully',
+        message: 'Email sent successfully',
         contactId: result.contactId,
       });
     } else {
       return NextResponse.json(
         {
           success: false,
-          error: result.message || 'Failed to send notification email',
+          error: result.message || 'Failed to send email',
         },
         { status: 500 }
       );
     }
   } catch (error) {
-    console.error('Notification email error:', error);
+    console.error('Email send error:', error);
+
+    //  LOG ERROR TO POSTHOG
+    BackendLogger.logError(error as Error, {
+      endpoint: '/api/emails/send',
+      method: 'POST',
+      service: 'loop',
+    });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -67,46 +127,37 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint for testing notification email functionality
-export async function GET(request: Request) {
+// GET endpoint for testing email functionality
+export async function GET() {
   try {
-    const authService = getAuthService();
-    await authService.validateSession();
-    const { searchParams } = new URL(request.url);
-
-    // Validate email parameter with Zod for consistency
-    const emailValidation = z.string().email({ message: "Valid email parameter is required" }).safeParse(searchParams.get('email'));
-    if (!emailValidation.success) {
-      return NextResponse.json(
-        { error: emailValidation.error.issues[0].message, details: emailValidation.error.issues },
-        { status: 400 }
-      );
-    }
-
-    const email = emailValidation.data;
-    const message = searchParams.get('message') ?? 'This is a test notification from PenguinMails';
-    const subject = searchParams.get('subject') ?? 'Test Notification';
-    const userName = searchParams.get('userName') ?? 'Test User';
-
     const loopService = getLoopService();
-    const result = await loopService.sendNotificationEmail(email, message, subject, userName);
+
+    // Send a test verification email
+    const testResult = await loopService.sendVerificationEmail(
+      'test@example.com',
+      'test-verification-token-123',
+      'Test User'
+    );
 
     return NextResponse.json({
-      success: result.success,
-      message: result.success ? 'Notification email sent successfully' : 'Failed to send test notification email',
-      contactId: result.contactId,
-      error: result.message,
-      testData: {
-        email,
-        message,
-        subject,
-        userName,
-      },
+      success: testResult.success,
+      message: testResult.success ? 'Test email sent successfully' : 'Failed to send test email',
+      contactId: testResult.contactId,
+      error: testResult.message,
     });
   } catch (error) {
-    console.error('Notification email error:', error);
+    console.error('Test email error:', error);
+    
+    //  LOG ERROR TO POSTHOG
+    BackendLogger.logError(error as Error, {
+      endpoint: '/api/emails/send',
+      method: 'GET',
+      service: 'loop',
+      testMode: true,
+    });
+
     return NextResponse.json(
-      { error: 'Failed to send notification email' },
+      { error: 'Failed to send test email' },
       { status: 500 }
     );
   }
