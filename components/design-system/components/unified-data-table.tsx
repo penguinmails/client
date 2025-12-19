@@ -114,7 +114,7 @@ export function UnifiedDataTable<TData>({
     <div
       className={cn(
         "rounded-md border overflow-hidden",
-        tableContainerClassName
+        tableContainerClassName,
       )}
     >
       <Table>
@@ -126,14 +126,14 @@ export function UnifiedDataTable<TData>({
                   key={header.id}
                   className={cn(
                     "font-semibold",
-                    header.column.columnDef.meta?.headerClassName
+                    header.column.columnDef.meta?.headerClassName,
                   )}
                 >
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </TableHead>
               ))}
@@ -148,7 +148,7 @@ export function UnifiedDataTable<TData>({
                 data-state={row.getIsSelected() && "selected"}
                 className={cn(
                   "transition-colors hover:bg-muted/50 group",
-                  row.getIsSelected() && "bg-muted"
+                  row.getIsSelected() && "bg-muted",
                 )}
               >
                 {row.getVisibleCells().map((cell) => (

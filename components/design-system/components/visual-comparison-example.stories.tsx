@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { TrendingUp, Mail, Eye, MousePointer, Reply } from 'lucide-react';
-import { UnifiedStatsCard } from '@/components/design-system/components/unified-stats-card';
+import { TrendingUp, Mail, Eye, MousePointer, Reply } from "lucide-react";
+import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
 
 /**
  * Visual Comparison Story Example
- * 
+ *
  * This file demonstrates the visual verification strategy using Storybook.
- * Shows how to compare components BEFORE (legacy with hardcoded styles) and 
+ * Shows how to compare components BEFORE (legacy with hardcoded styles) and
  * AFTER (migrated to design tokens) side by side.
- * 
+ *
  * NOTE: This is a demonstrative example. In your real case:
  * 1. You would create a .legacy copy of the original component
  * 2. You would migrate the original component to use design tokens
@@ -16,9 +16,9 @@ import { UnifiedStatsCard } from '@/components/design-system/components/unified-
  */
 
 const meta: Meta = {
-  title: 'Design System/Visual Verification/Example Comparison',
+  title: "Design System/Visual Verification/Example Comparison",
   parameters: {
-    layout: 'padded',
+    layout: "padded",
     docs: {
       description: {
         component: `
@@ -45,32 +45,27 @@ type Story = StoryObj;
 
 /**
  * Simulated Legacy Component - SIMPLE Version without Design System
- * 
+ *
  * This represents how a StatsCard looked BEFORE the design system:
  * - Hardcoded inline styles
  * - Simpler structure
  * - Fewer features (no trends, no benchmarks)
- * 
+ *
  * UnifiedStatsCard is the EVOLUTION of this component, adding:
  * - Design tokens for colors
  * - Support for trends and benchmarks
  * - More customization options
  * - But maintaining VISUAL COMPATIBILITY with legacy
  */
-const LegacyStatsCard = ({ 
-  title, 
-  value, 
-}: any) => {
+const LegacyStatsCard = ({ title, value }: any) => {
   return (
     // EXACT simulation of UnifiedStatsCard + shadcn/ui Card
     // Container: Card (ui/card.tsx) + UnifiedStatsCard styles
     // Combines: py-6 (Card) + p-6 (Unified) + gap-6 (Card)
     <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm transition-all duration-200 hover:shadow-md p-6 border-border">
-      
       {/* Header: CardHeader (ui/card.tsx) + UnifiedStatsCard styles */}
       {/* Combina: px-6 (CardHeader) + pb-3 (Unified) */}
       <div className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] flex flex-row items-center justify-between space-y-0 pb-3">
-        
         {/* Title: CardTitle (ui/card.tsx) + UnifiedStatsCard styles */}
         {/* Combina: leading-none font-semibold (CardTitle) + text-muted-foreground text-sm font-medium (Unified) */}
         <div className="leading-none font-semibold text-muted-foreground text-sm font-medium">
@@ -83,9 +78,7 @@ const LegacyStatsCard = ({
       <div className="px-6 space-y-3">
         <div className="flex items-baseline space-x-2">
           {/* Value: UnifiedStatsCard styles */}
-          <p className="text-foreground text-2xl font-bold">
-            {value}
-          </p>
+          <p className="text-foreground text-2xl font-bold">{value}</p>
         </div>
       </div>
     </div>
@@ -94,7 +87,7 @@ const LegacyStatsCard = ({
 
 /**
  * Story 1: Basic Comparison
- * 
+ *
  * Shows a single component side by side to validate identical styles
  */
 export const BasicComparison: Story = {
@@ -102,7 +95,10 @@ export const BasicComparison: Story = {
     <div className="space-y-8">
       <div className="text-sm text-muted-foreground mb-4">
         <p className="font-medium mb-2">📋 Visual Parity Verification:</p>
-        <p>Demonstration that <strong>UnifiedStatsCard</strong> can look IDENTICAL to legacy by disabling optional features.</p>
+        <p>
+          Demonstration that <strong>UnifiedStatsCard</strong> can look
+          IDENTICAL to legacy by disabling optional features.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-8">
@@ -111,10 +107,7 @@ export const BasicComparison: Story = {
           <div className="mb-3 flex items-center gap-2">
             <h3 className="text-lg font-semibold">❌ Legacy (Simple)</h3>
           </div>
-          <LegacyStatsCard
-            title="Total Revenue"
-            value="$45,231"
-          />
+          <LegacyStatsCard title="Total Revenue" value="$45,231" />
           <p className="text-xs text-muted-foreground mt-2">
             Simple original component
           </p>
@@ -123,7 +116,9 @@ export const BasicComparison: Story = {
         {/* 2. UnifiedStatsCard (Strict Match) */}
         <div>
           <div className="mb-3 flex items-center gap-2">
-            <h3 className="text-lg font-semibold">✅ UnifiedStatsCard (Base)</h3>
+            <h3 className="text-lg font-semibold">
+              ✅ UnifiedStatsCard (Base)
+            </h3>
           </div>
           <UnifiedStatsCard
             title="Total Revenue"
@@ -143,7 +138,9 @@ export const BasicComparison: Story = {
       {/* 3. UnifiedStatsCard (With Features) */}
       <div>
         <div className="mb-3 flex items-center gap-2">
-          <h3 className="text-lg font-semibold">✨ UnifiedStatsCard (With Optional Features)</h3>
+          <h3 className="text-lg font-semibold">
+            ✨ UnifiedStatsCard (With Optional Features)
+          </h3>
           <span className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-2 py-1 rounded">
             Evolution
           </span>
@@ -173,8 +170,9 @@ export const BasicComparison: Story = {
               Optional Features
             </h4>
             <p className="text-sm text-green-700 dark:text-green-300">
-              The differences (icons, colors, trends) are <strong>completely optional</strong>.
-              If you don&apos;t pass those props, the component looks identical to legacy.
+              The differences (icons, colors, trends) are{" "}
+              <strong>completely optional</strong>. If you don&apos;t pass those
+              props, the component looks identical to legacy.
             </p>
           </div>
         </div>
@@ -185,12 +183,12 @@ export const BasicComparison: Story = {
 
 /**
  * Story 2: Multi-Variant Comparison
- * 
+ *
  * Shows all color variants side by side
  */
 /**
  * Story 2: Multi-Variant Comparison
- * 
+ *
  * Shows how UnifiedStatsCard can stay simple or evolve with variants
  */
 export const AllVariantsComparison: Story = {
@@ -198,7 +196,10 @@ export const AllVariantsComparison: Story = {
     <div className="space-y-8">
       <div className="text-sm text-muted-foreground mb-4">
         <p className="font-medium mb-2">📋 Variant Verification:</p>
-        <p>The Legacy component is simple (no variants). UnifiedStatsCard can match it (Base) or add variants (Evolution).</p>
+        <p>
+          The Legacy component is simple (no variants). UnifiedStatsCard can
+          match it (Base) or add variants (Evolution).
+        </p>
       </div>
 
       {/* 1. Base Comparison (Strict Parity) */}
@@ -213,12 +214,26 @@ export const AllVariantsComparison: Story = {
         </div>
 
         <div>
-          <h3 className="mb-4 text-lg font-semibold">✅ UnifiedStatsCard (Base)</h3>
+          <h3 className="mb-4 text-lg font-semibold">
+            ✅ UnifiedStatsCard (Base)
+          </h3>
           <div className="space-y-4">
             {/* Base configuration to match Legacy */}
-            <UnifiedStatsCard title="Open Rate" value="24.5%" color="secondary" />
-            <UnifiedStatsCard title="Click Rate" value="3.2%" color="secondary" />
-            <UnifiedStatsCard title="Reply Rate" value="8.7%" color="secondary" />
+            <UnifiedStatsCard
+              title="Open Rate"
+              value="24.5%"
+              color="secondary"
+            />
+            <UnifiedStatsCard
+              title="Click Rate"
+              value="3.2%"
+              color="secondary"
+            />
+            <UnifiedStatsCard
+              title="Reply Rate"
+              value="8.7%"
+              color="secondary"
+            />
           </div>
         </div>
       </div>
@@ -227,7 +242,9 @@ export const AllVariantsComparison: Story = {
 
       {/* 2. Evolution (Active Variants) */}
       <div>
-        <h3 className="mb-4 text-lg font-semibold">✨ UnifiedStatsCard (Evolution with Variants)</h3>
+        <h3 className="mb-4 text-lg font-semibold">
+          ✨ UnifiedStatsCard (Evolution with Variants)
+        </h3>
         <div className="grid grid-cols-3 gap-4">
           <UnifiedStatsCard
             title="Success Variant"
@@ -255,7 +272,8 @@ export const AllVariantsComparison: Story = {
           />
         </div>
         <p className="text-xs text-muted-foreground mt-2">
-          By enabling the `color` prop, the component evolves visually while maintaining the base structure.
+          By enabling the `color` prop, the component evolves visually while
+          maintaining the base structure.
         </p>
       </div>
     </div>
@@ -264,12 +282,12 @@ export const AllVariantsComparison: Story = {
 
 /**
  * Story 3: Dark Mode Comparison
- * 
+ *
  * Validates strict parity in dark mode
  */
 export const DarkModeComparison: Story = {
   parameters: {
-    backgrounds: { default: 'dark' },
+    backgrounds: { default: "dark" },
   },
   decorators: [
     (Story) => (
@@ -286,14 +304,15 @@ export const DarkModeComparison: Story = {
 
       <div className="grid grid-cols-2 gap-8">
         <div>
-          <h3 className="mb-4 text-lg font-semibold text-white">❌ Legacy - Dark</h3>
-          <LegacyStatsCard
-            title="Total Sent"
-            value="12,543"
-          />
+          <h3 className="mb-4 text-lg font-semibold text-white">
+            ❌ Legacy - Dark
+          </h3>
+          <LegacyStatsCard title="Total Sent" value="12,543" />
         </div>
         <div>
-          <h3 className="mb-4 text-lg font-semibold text-white">✅ Unified (Base) - Dark</h3>
+          <h3 className="mb-4 text-lg font-semibold text-white">
+            ✅ Unified (Base) - Dark
+          </h3>
           <UnifiedStatsCard
             title="Total Sent"
             value="12,543"
@@ -305,7 +324,9 @@ export const DarkModeComparison: Story = {
       <div className="border-t border-gray-700 my-6" />
 
       <div>
-        <h3 className="mb-4 text-lg font-semibold text-white">✨ Unified (Evolved) - Dark</h3>
+        <h3 className="mb-4 text-lg font-semibold text-white">
+          ✨ Unified (Evolved) - Dark
+        </h3>
         <div className="max-w-xs">
           <UnifiedStatsCard
             title="Total Sent"
@@ -324,7 +345,7 @@ export const DarkModeComparison: Story = {
 
 /**
  * Story 4: Complete Grid - Real Comparison
- * 
+ *
  * Shows a complete dashboard comparing Legacy vs Base vs Evolved
  */
 export const CompleteGridComparison: Story = {
@@ -332,7 +353,9 @@ export const CompleteGridComparison: Story = {
     <div className="space-y-8">
       {/* 1. Legacy Grid */}
       <div>
-        <h3 className="mb-4 text-lg font-semibold">❌ Legacy Dashboard (Simple)</h3>
+        <h3 className="mb-4 text-lg font-semibold">
+          ❌ Legacy Dashboard (Simple)
+        </h3>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <LegacyStatsCard title="Open Rate" value="24.5%" />
           <LegacyStatsCard title="Click Rate" value="3.2%" />
@@ -345,12 +368,18 @@ export const CompleteGridComparison: Story = {
 
       {/* 2. Unified Base Grid (Strict Parity) */}
       <div>
-        <h3 className="mb-4 text-lg font-semibold">✅ Unified Dashboard (Base - Exact Parity)</h3>
+        <h3 className="mb-4 text-lg font-semibold">
+          ✅ Unified Dashboard (Base - Exact Parity)
+        </h3>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <UnifiedStatsCard title="Open Rate" value="24.5%" color="secondary" />
           <UnifiedStatsCard title="Click Rate" value="3.2%" color="secondary" />
           <UnifiedStatsCard title="Reply Rate" value="8.7%" color="secondary" />
-          <UnifiedStatsCard title="Health Score" value="87/100" color="secondary" />
+          <UnifiedStatsCard
+            title="Health Score"
+            value="87/100"
+            color="secondary"
+          />
         </div>
       </div>
 
@@ -358,7 +387,9 @@ export const CompleteGridComparison: Story = {
 
       {/* 3. Unified Evolved Grid */}
       <div>
-        <h3 className="mb-4 text-lg font-semibold">✨ Unified Dashboard (Complete Evolution)</h3>
+        <h3 className="mb-4 text-lg font-semibold">
+          ✨ Unified Dashboard (Complete Evolution)
+        </h3>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <UnifiedStatsCard
             title="Open Rate"

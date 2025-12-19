@@ -43,7 +43,7 @@ export function DashboardLayout({
         <div className="rounded-lg shadow-sm">
           <DashboardHeader />
         </div>
-        
+
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 rounded-lg shadow-sm">
           <div className={cn("space-y-6", className)}>
             {/* Header Section */}

@@ -220,7 +220,8 @@ export const Error: Story = {
         <AlertTriangle className="h-12 w-12 text-destructive" />
         <h3 className="text-lg font-semibold">Failed to load dashboard</h3>
         <p className="text-muted-foreground max-w-md">
-          There was an error loading your dashboard data. Please refresh the page.
+          There was an error loading your dashboard data. Please refresh the
+          page.
         </p>
         <Button variant="outline">Retry</Button>
       </div>
@@ -410,28 +411,34 @@ const DashboardContentSample = () => (
               </div>
             </Button>
             */}
-           <Button 
-                variant="ghost" 
-                  className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-muted/50">
-             <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
-               <Plus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-             </div>
-             <div className="flex-1">
+            <Button
+              variant="ghost"
+              className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-muted/50"
+            >
+              <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Plus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="flex-1">
                 <p className="font-medium text-sm">Create Campaign</p>
-                <p className="text-xs text-muted-foreground">Start a new email campaign</p>
-             </div>
-           </Button>
-           <Button 
-                 variant="ghost" 
-                  className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-muted/50">
-             <div className="w-9 h-9 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <p className="text-xs text-muted-foreground">
+                  Start a new email campaign
+                </p>
+              </div>
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-muted/50"
+            >
+              <div className="w-9 h-9 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Upload className="w-4 h-4 text-green-600 dark:text-green-400" />
               </div>
-             <div className="flex-1">
-               <p className="font-medium text-sm">Upload Leads</p>
-               <p className="text-xs text-muted-foreground">Import your contact list</p>
-             </div>
-           </Button>
+              <div className="flex-1">
+                <p className="font-medium text-sm">Upload Leads</p>
+                <p className="text-xs text-muted-foreground">
+                  Import your contact list
+                </p>
+              </div>
+            </Button>
           </CardContent>
         </Card>
       </div>

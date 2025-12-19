@@ -37,7 +37,7 @@ const meta: Meta = {
   decorators: [
     (Story, context) => {
       const theme = context.args.theme || "light";
-      
+
       React.useEffect(() => {
         const htmlElement = document.documentElement;
         if (theme === "dark") {
@@ -45,7 +45,7 @@ const meta: Meta = {
         } else {
           htmlElement.classList.remove("dark");
         }
-        
+
         return () => {
           htmlElement.classList.remove("dark");
         };
@@ -673,24 +673,22 @@ export const InlineLabelLayout: Story = {
       <Form {...form}>
         <form className="w-[500px] space-y-3">
           <div className="flex items-center gap-4">
-            <label className="w-32 text-sm font-medium">Username:</label>
             <div className="flex-1">
               <TextFormField
                 control={form.control as any}
                 name="username"
-                label="Username"  // ← AGREGADO
+                label="Username"
                 placeholder="johndoe"
               />
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <label className="w-32 text-sm font-medium">Email:</label>
             <div className="flex-1">
               <TextFormField
                 control={form.control as any}
                 name="email"
                 inputType="email"
-                label="Email"  // ← AGREGADO
+                label="Email"
                 placeholder="john@example.com"
               />
             </div>

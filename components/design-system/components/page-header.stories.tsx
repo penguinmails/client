@@ -43,7 +43,7 @@ const meta = {
   decorators: [
     (Story, context) => {
       const theme = context.args.theme || "light";
-      
+
       React.useEffect(() => {
         const htmlElement = document.documentElement;
         if (theme === "dark") {
@@ -51,7 +51,7 @@ const meta = {
         } else {
           htmlElement.classList.remove("dark");
         }
-        
+
         return () => {
           htmlElement.classList.remove("dark");
         };
@@ -81,10 +81,7 @@ export const WithDescription: Story = {
 export const WithBreadcrumbs: Story = {
   args: {
     title: "Analytics",
-    breadcrumbs: [
-      { label: "Campaigns" },
-      { label: "Analytics" },
-    ],
+    breadcrumbs: [{ label: "Campaigns" }, { label: "Analytics" }],
   },
 };
 
@@ -156,4 +153,3 @@ export const Error: Story = {
     ),
   },
 };
-

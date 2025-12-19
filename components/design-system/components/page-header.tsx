@@ -20,12 +20,12 @@ interface PageHeaderProps {
    * Page title
    */
   title?: string;
-  
+
   /**
    * Page description/subtitle
    */
   description?: string;
-  
+
   /**
    * Breadcrumb navigation items
    */
@@ -33,22 +33,22 @@ interface PageHeaderProps {
     label: string;
     href?: string;
   }>;
-  
+
   /**
    * Action buttons or components to display in header
    */
   actions?: React.ReactNode;
-  
+
   /**
    * Show back button
    */
   showBackButton?: boolean;
-  
+
   /**
    * Back button destination URL
    */
   backHref?: string;
-  
+
   /**
    * Additional CSS classes
    */
@@ -57,10 +57,10 @@ interface PageHeaderProps {
 
 /**
  * PageHeader Component
- * 
+ *
  * Standardized page header with breadcrumbs, title, description, and actions.
  * Extracted from DashboardLayout pattern for reusability.
- * 
+ *
  * @example
  * ```tsx
  * <PageHeader
@@ -103,10 +103,7 @@ export function PageHeader({
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-2"
-                >
+                <Link href="/dashboard" className="flex items-center gap-2">
                   <Home className="h-4 w-4" />
                   Dashboard
                 </Link>
@@ -141,11 +138,7 @@ export function PageHeader({
               </Link>
             </Button>
           )}
-          {title && (
-            <h1 className={typography.h1}>
-              {title}
-            </h1>
-          )}
+          {title && <h1 className={typography.h1}>{title}</h1>}
           {description && (
             <p className={typography.cardSubtitle}>{description}</p>
           )}

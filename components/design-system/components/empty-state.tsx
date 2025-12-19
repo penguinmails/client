@@ -12,37 +12,37 @@ interface EmptyStateProps {
    * Icon to display (Lucide icon component)
    */
   icon?: LucideIcon;
-  
+
   /**
    * Title text
    */
   title: string;
-  
+
   /**
    * Description text
    */
   description?: string;
-  
+
   /**
    * Action button label
    */
   actionLabel?: string;
-  
+
   /**
    * Action button click handler
    */
   onAction?: () => void;
-  
+
   /**
    * Action button href (if link instead of button)
    */
   actionHref?: string;
-  
+
   /**
    * Additional CSS classes
    */
   className?: string;
-  
+
   /**
    * Size variant
    */
@@ -51,10 +51,10 @@ interface EmptyStateProps {
 
 /**
  * EmptyState Component
- * 
+ *
  * Displays a friendly message when there's no data to show.
  * Supports optional icon, description, and action button.
- * 
+ *
  * @example
  * ```tsx
  * // Simple empty state
@@ -63,7 +63,7 @@ interface EmptyStateProps {
  *   title="No messages yet"
  *   description="Your inbox is empty. Start a conversation to see messages here."
  * />
- * 
+ *
  * // With action button
  * <EmptyState
  *   icon={Folder}
@@ -72,7 +72,7 @@ interface EmptyStateProps {
  *   actionLabel="Create Campaign"
  *   actionHref="/campaigns/create"
  * />
- * 
+ *
  * // With click handler
  * <EmptyState
  *   icon={Users}
@@ -117,7 +117,7 @@ export function EmptyState({
       className={cn(
         "flex flex-col items-center justify-center text-center",
         currentSize.container,
-        className
+        className,
       )}
     >
       <div className={currentSize.spacing}>
@@ -132,9 +132,7 @@ export function EmptyState({
 
         {/* Text Content */}
         <div className={spacing.stackXs}>
-          <h3 className={cn(typography.h3, textColors.primary)}>
-            {title}
-          </h3>
+          <h3 className={cn(typography.h3, textColors.primary)}>{title}</h3>
           {description && (
             <p className={cn(typography.bodyDefault, textColors.secondary)}>
               {description}
@@ -143,7 +141,7 @@ export function EmptyState({
         </div>
 
         {/* Action Button */}
-        {(actionLabel && (onAction || actionHref)) && (
+        {actionLabel && (onAction || actionHref) && (
           <div className="mt-2">
             {actionHref ? (
               <Button asChild>

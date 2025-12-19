@@ -188,7 +188,7 @@ export const UnifiedStatsCard: React.FC<UnifiedStatsCardProps> = ({
         variantTokens[variant],
         sizeToken.container,
         colorToken.border,
-        className
+        className,
       )}
       aria-label={ariaLabel || `Statistics for ${title}`}
     >

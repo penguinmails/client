@@ -56,7 +56,7 @@ export function UnifiedFilterBar({
     <div
       className={cn(
         "flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 p-4 bg-background border rounded-lg shadow-sm mb-6",
-        className
+        className,
       )}
     >
       {/* Search Section */}
@@ -79,12 +79,14 @@ export function UnifiedFilterBar({
             {filters}
           </div>
         )}
-        
+
         {actions && (
           <div className="flex items-center gap-2 w-full sm:w-auto ml-auto sm:ml-0 border-t sm:border-t-0 pt-2 sm:pt-0 mt-2 sm:mt-0">
-             {/* Divider if both exist */}
-             {filters && <div className="hidden sm:block h-6 w-px bg-border mx-1" />}
-             {actions}
+            {/* Divider if both exist */}
+            {filters && (
+              <div className="hidden sm:block h-6 w-px bg-border mx-1" />
+            )}
+            {actions}
           </div>
         )}
       </div>
