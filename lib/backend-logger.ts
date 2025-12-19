@@ -55,10 +55,6 @@ export class BackendLogger {
           error_message: error.message,
           error_name: error.name,
           stack_trace: error.stack,
-          endpoint: context?.endpoint,
-          method: context?.method,
-          service: context?.service,
-          operation: context?.operation,
           ...context,
         },
       });

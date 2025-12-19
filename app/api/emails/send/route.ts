@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
 
     //  LOG ERROR TO POSTHOG
     BackendLogger.logError(error as Error, {
-      endpoint: '/api/emails/send',
+      endpoint: new URL(request.url).pathname,
       method: 'POST',
       service: 'loop',
     });
