@@ -651,3 +651,183 @@ export const CompleteFormExample: Story = {
     );
   },
 };
+/**
+ * Layout example - Inline label layout
+ */
+export const InlineLabelLayout: Story = {
+  render: () => {
+    const formSchema = z.object({
+      username: z.string(),
+      email: z.string(),
+    });
+
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        username: "",
+        email: "",
+      },
+    });
+
+    return (
+      <Form {...form}>
+        <form className="w-[500px] space-y-3">
+          <div className="flex items-center gap-4">
+            <label className="w-32 text-sm font-medium">Username:</label>
+            <div className="flex-1">
+              <TextFormField
+                control={form.control as any}
+                name="username"
+                label="Username"  // ← AGREGADO
+                placeholder="johndoe"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <label className="w-32 text-sm font-medium">Email:</label>
+            <div className="flex-1">
+              <TextFormField
+                control={form.control as any}
+                name="email"
+                inputType="email"
+                label="Email"  // ← AGREGADO
+                placeholder="john@example.com"
+              />
+            </div>
+          </div>
+        </form>
+      </Form>
+    );
+  },
+};
+
+/**
+ * Layout example - Responsive grid layout
+ */
+export const ResponsiveGridLayout: Story = {
+  render: () => {
+    type FormData = {
+      field1: string;
+      field2: string;
+      field3: string;
+      field4: string;
+    };
+
+    const formSchema = z.object({
+      field1: z.string(),
+      field2: z.string(),
+      field3: z.string(),
+      field4: z.string(),
+    });
+
+    const form = useForm<FormData>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        field1: "",
+        field2: "",
+        field3: "",
+        field4: "",
+      },
+    });
+
+    return (
+      <Form {...form}>
+        <form className="w-full max-w-4xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <TextFormField
+              control={form.control as any}
+              name="field1"
+              label="Field 1"
+              placeholder="Enter text"
+            />
+            <TextFormField
+              control={form.control as any}
+              name="field2"
+              label="Field 2"
+              placeholder="Enter text"
+            />
+            <TextFormField
+              control={form.control as any}
+              name="field3"
+              label="Field 3"
+              placeholder="Enter text"
+            />
+            <TextFormField
+              control={form.control as any}
+              name="field4"
+              label="Field 4"
+              placeholder="Enter text"
+            />
+          </div>
+        </form>
+      </Form>
+    );
+  },
+};
+
+/**
+ * Loading state - simulating data fetch with skeleton
+ */
+export const LoadingState: Story = {
+  render: () => {
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    const formSchema = z.object({
+      username: z.string(),
+      email: z.string(),
+    });
+
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        username: "",
+        email: "",
+      },
+    });
+
+    React.useEffect(() => {
+      // Simulate loading
+      const timer = setTimeout(() => setIsLoading(false), 2000);
+      return () => clearTimeout(timer);
+    }, []);
+
+    return (
+      <Form {...form}>
+        <form className="w-[350px] space-y-4">
+          {isLoading ? (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <div className="h-4 w-20 bg-muted animate-pulse rounded" />
+                <div className="h-10 w-full bg-muted animate-pulse rounded" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 w-24 bg-muted animate-pulse rounded" />
+                <div className="h-10 w-full bg-muted animate-pulse rounded" />
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                <span>Loading form data...</span>
+              </div>
+            </div>
+          ) : (
+            <>
+              <TextFormField
+                control={form.control as any}
+                name="username"
+                label="Username"
+                placeholder="Enter username"
+              />
+              <TextFormField
+                control={form.control as any}
+                name="email"
+                inputType="email"
+                label="Email"
+                placeholder="Enter email"
+              />
+            </>
+          )}
+        </form>
+      </Form>
+    );
+  },
+};

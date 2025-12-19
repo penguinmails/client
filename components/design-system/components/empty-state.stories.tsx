@@ -7,6 +7,7 @@ import {
   Mail,
   FileText,
   Search,
+  AlertTriangle
 } from "lucide-react";
 import React from "react";
 
@@ -135,5 +136,26 @@ export const LargeSize: Story = {
     size: "lg",
     actionLabel: "Create Campaign",
     onAction: () => alert("Create campaign dialog"),
+  },
+};
+export const Loading: Story = {
+  args: {
+    title: "Loading...",
+    description: "Please wait while we fetch your data",
+    icon: Mail, 
+  },
+  parameters: {
+    pseudoState: {
+      loading: true, 
+    },
+  },
+};
+export const Error: Story = {
+  args: {
+    title: "Something went wrong",
+    description: "Failed to load data. Please try again.",
+    actionLabel: "Retry",
+    onAction: () => alert("Retry action"),
+    icon: AlertTriangle, 
   },
 };

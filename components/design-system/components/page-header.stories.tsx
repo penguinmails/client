@@ -139,3 +139,21 @@ export const FullFeatured: Story = {
     showBackButton: true,
   },
 };
+export const Loading: Story = {
+  args: {
+    title: "Campaign Analytics",
+    description: "Loading your data...",
+  },
+};
+export const Error: Story = {
+  args: {
+    title: "Error",
+    description: "Failed to load page data",
+    actions: (
+      <Button variant="outline" size="sm" onClick={() => alert("Retry")}>
+        Retry
+      </Button>
+    ),
+  },
+};
+

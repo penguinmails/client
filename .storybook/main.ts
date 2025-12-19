@@ -23,6 +23,7 @@ const config: StorybookConfig = {
         ...config.resolve.alias,
         '@': path.resolve(__dirname, '../'),
         // Mock Nile database modules with actual mock files for Storybook
+        '@/convex/_generated/api': path.resolve(__dirname, './mocks/convex-api.js'),
         '@niledatabase/server': path.resolve(__dirname, './mocks/nile-server.js'),
         '@niledatabase/client': path.resolve(__dirname, './mocks/nile-server.js'),
         '@niledatabase/react': path.resolve(__dirname, './mocks/nile-server.js'),
