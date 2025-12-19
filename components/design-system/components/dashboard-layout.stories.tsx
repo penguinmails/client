@@ -196,7 +196,37 @@ export const FullFeatured: Story = {
     ),
   },
 };
+export const Loading: Story = {
+  args: {
+    title: "Dashboard",
+    children: (
+      <div className="space-y-4 p-8">
+        <div className="h-8 bg-muted rounded animate-pulse mb-4" />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
+          ))}
+        </div>
+      </div>
+    ),
+  },
+};
 
+export const Error: Story = {
+  args: {
+    title: "Dashboard",
+    children: (
+      <div className="flex flex-col items-center justify-center h-64 space-y-4 p-8 text-center">
+        <AlertTriangle className="h-12 w-12 text-destructive" />
+        <h3 className="text-lg font-semibold">Failed to load dashboard</h3>
+        <p className="text-muted-foreground max-w-md">
+          There was an error loading your dashboard data. Please refresh the page.
+        </p>
+        <Button variant="outline">Retry</Button>
+      </div>
+    ),
+  },
+};
 // Sample data for realistic dashboard
 interface MockReply {
   name: string;
@@ -257,7 +287,7 @@ const DashboardContentSample = () => (
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            {mockRecentReplies.map((reply, i) => (
+            {mockRecentReplies.map((reply) => (
               <div
                 // TODO: React key anti-pattern - using array index as key can cause rendering bugs
                 // when list items are reordered, added, or removed
@@ -269,7 +299,7 @@ const DashboardContentSample = () => (
                 // key={reply.id}
                 //
                 // This ensures stable keys and prevents React reconciliation bugs.
-                key={i}
+                key={reply.email}
                 className="flex items-start gap-3 p-4"
               >
                 <div className="w-9 h-9 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
@@ -380,28 +410,28 @@ const DashboardContentSample = () => (
               </div>
             </Button>
             */}
-            <button className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
-              <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Plus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div className="flex-1">
+           <Button 
+                variant="ghost" 
+                  className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-muted/50">
+             <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+               <Plus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+             </div>
+             <div className="flex-1">
                 <p className="font-medium text-sm">Create Campaign</p>
-                <p className="text-xs text-muted-foreground">
-                  Start a new email campaign
-                </p>
-              </div>
-            </button>
-            <button className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
-              <div className="w-9 h-9 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <p className="text-xs text-muted-foreground">Start a new email campaign</p>
+             </div>
+           </Button>
+           <Button 
+                 variant="ghost" 
+                  className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-muted/50">
+             <div className="w-9 h-9 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Upload className="w-4 h-4 text-green-600 dark:text-green-400" />
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-sm">Upload Leads</p>
-                <p className="text-xs text-muted-foreground">
-                  Import your contact list
-                </p>
-              </div>
-            </button>
+             <div className="flex-1">
+               <p className="font-medium text-sm">Upload Leads</p>
+               <p className="text-xs text-muted-foreground">Import your contact list</p>
+             </div>
+           </Button>
           </CardContent>
         </Card>
       </div>

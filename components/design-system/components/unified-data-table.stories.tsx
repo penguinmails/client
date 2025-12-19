@@ -3,6 +3,8 @@ import { UnifiedDataTable } from "./unified-data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import React from "react";
+import { AlertTriangle } from "lucide-react"; 
+
 
 // Sample data type
 type Campaign = {
@@ -186,4 +188,23 @@ export const Loading: Story = {
     title: "Loading Table",
     loading: true,
   },
+};
+export const Error: Story = {
+  args: {
+    columns,
+    data: [],
+    title: "Campaigns (Error State)",
+  },
+  render: (args) => (
+    <div className="p-8 text-center space-y-4">
+      <AlertTriangle className="h-12 w-12 text-destructive mx-auto" />
+      <div>
+        <h3 className="text-lg font-semibold mb-2">Failed to load campaigns</h3>
+        <p className="text-muted-foreground mb-4">
+          Network error. Please refresh the page.
+        </p>
+        <UnifiedDataTable {...args} />
+      </div>
+    </div>
+  ),
 };

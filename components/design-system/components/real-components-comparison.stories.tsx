@@ -165,7 +165,7 @@ export const MigratedKpiCardsExample: Story = {
         </p>
       </div>
 
-      <MigratedKpiCards campaignAnalytics={mockAnalyticsData as any} />
+      <MigratedKpiCards campaignAnalytics={mockAnalyticsData as any[]} />
 
       <div className="mt-8 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
         <div className="flex items-start gap-3">
@@ -222,7 +222,7 @@ export const SideBySideComparison: Story = {
             With analytics calculations
           </span>
         </div>
-        <MigratedKpiCards campaignAnalytics={mockAnalyticsData as any} />
+        <MigratedKpiCards campaignAnalytics={mockAnalyticsData as any[]} />
       </div>
 
       {/* Checklist */}
@@ -282,7 +282,7 @@ export const StateComparison: Story = {
       {/* With data state */}
       <div>
         <h3 className="text-lg font-semibold mb-4">State: With data</h3>
-        <MigratedKpiCards campaignAnalytics={mockAnalyticsData as any} />
+        <MigratedKpiCards campaignAnalytics={mockAnalyticsData as any[]} />
       </div>
     </div>
   ),
@@ -321,7 +321,7 @@ export const DarkModeComparison: Story = {
         <h3 className="text-lg font-semibold mb-4 text-white">
           MigratedKpiCards - Dark
         </h3>
-        <MigratedKpiCards campaignAnalytics={mockAnalyticsData as any} />
+        <MigratedKpiCards campaignAnalytics={mockAnalyticsData as any[]} />
       </div>
 
       <div className="mt-8 p-4 bg-green-900/30 rounded-lg border border-green-700">
