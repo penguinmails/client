@@ -106,7 +106,7 @@
     "next-turnstile": "^1.0.7",
     "papaparse": "^5.5.3",
     "posthog-js": "^1.299.0",
-    "posthog-node": "^5.15.0",
+    "posthog-node": "^5.17.4",
     "react": "19.1.0",
     "react-day-picker": "^9.9.0",
     "react-dom": "19.1.0",
