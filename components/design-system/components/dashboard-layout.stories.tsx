@@ -15,6 +15,7 @@ import {
   Upload,
   CalendarPlus,
   AlertTriangle,
+  Globe,
 } from "lucide-react";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
@@ -266,16 +267,41 @@ const mockRecentReplies: MockReply[] = [
 
 const DashboardContentSample = () => (
   <div className="space-y-4">
-    {/* Empty State - No Campaign Data (large dark area, NOT a card) */}
-    <div className="bg-muted/30 rounded-lg border border-border flex flex-col items-center justify-center py-20 mb-6">
-      <div className="w-16 h-16 rounded-full bg-background border border-border flex items-center justify-center mb-4">
-        <Mail className="h-8 w-8 text-muted-foreground" />
-      </div>
-      <h3 className="text-base font-semibold mb-1">No Campaign Data</h3>
-      <p className="text-sm text-muted-foreground">
-        Start a campaign to see KPI metrics.
-      </p>
+    {/* KPI Stats Cards - matching reference image exactly */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* Active Campaigns */}
+      <UnifiedStatsCard
+        title="Active Campaigns"
+        value="12"
+        icon={Mail}
+        color="primary"
+      />
+      
+      {/* Leads Contacted */}
+      <UnifiedStatsCard
+        title="Leads Contacted"
+        value="2,847"
+        icon={Upload}
+        color="warning"
+      />
+      
+      {/* Open Rate */}
+      <UnifiedStatsCard
+        title="Open Rate"
+        value="34.2%"
+        icon={Mail}
+        color="info"
+      />
+      
+      {/* Reply Rate */}
+      <UnifiedStatsCard
+        title="Reply Rate"
+        value="8.7%"
+        icon={CalendarPlus}
+        color="success"
+      />
     </div>
+
 
     {/* Main Grid: Recent Replies + Sidebar (matching reference image) */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -434,9 +460,14 @@ const DashboardContentSample = () => (
               </div>
               <div className="flex-1">
                 <p className="font-medium text-sm">Upload Leads</p>
-                <p className="text-xs text-muted-foreground">
-                  Import your contact list
-                </p>
+              </div>
+            </button>
+            <button className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
+              <div className="w-9 h-9 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Globe className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-sm">Add Domain</p>
               </div>
             </Button>
           </CardContent>

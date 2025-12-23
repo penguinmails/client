@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { DashboardLayout } from "./DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Plus, Settings, Mail, Upload, CalendarPlus, Users, CheckCircle2, AlertTriangle, ChevronRight, ArrowLeft } from "lucide-react";
+import { Plus, Settings, Mail, Upload, CalendarPlus, Users, CheckCircle2, AlertTriangle, ChevronRight, ArrowLeft, Globe } from "lucide-react";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
@@ -240,15 +240,67 @@ const DashboardContentSample = () => (
       </p>
     </div>
 
-    {/* Empty State - No Campaign Data (large dark area, NOT a card) */}
-    <div className="bg-muted/30 rounded-lg border border-border flex flex-col items-center justify-center py-20 mb-6">
-      <div className="w-16 h-16 rounded-full bg-background border border-border flex items-center justify-center mb-4">
-        <Mail className="h-8 w-8 text-muted-foreground" />
-      </div>
-      <h3 className="text-base font-semibold mb-1">No Campaign Data</h3>
-      <p className="text-sm text-muted-foreground">
-        Start a campaign to see KPI metrics.
-      </p>
+    {/* KPI Stats Cards - matching reference image exactly */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* Active Campaigns */}
+      <Card className="border border-border">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">Active Campaigns</p>
+              <p className="text-2xl font-bold">12</p>
+            </div>
+            <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+              <Mail className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Leads Contacted */}
+      <Card className="border border-border">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">Leads Contacted</p>
+              <p className="text-2xl font-bold">2,847</p>
+            </div>
+            <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Open Rate */}
+      <Card className="border border-border">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">Open Rate</p>
+              <p className="text-2xl font-bold">34.2%</p>
+            </div>
+            <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+              <Mail className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Reply Rate */}
+      <Card className="border border-border">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">Reply Rate</p>
+              <p className="text-2xl font-bold">8.7%</p>
+            </div>
+            <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
+              <CheckCircle2 className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
 
     {/* Main Grid: Recent Replies + Sidebar (matching reference image) */}
@@ -351,9 +403,14 @@ const DashboardContentSample = () => (
               </div>
               <div className="flex-1">
                 <p className="font-medium text-sm">Upload Leads</p>
-                <p className="text-xs text-muted-foreground">
-                  Import your contact list
-                </p>
+              </div>
+            </button>
+            <button className="w-full flex items-start gap-3 p-3 text-left hover:bg-muted/50 rounded-md transition-colors">
+              <div className="w-9 h-9 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Globe className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-sm">Add Domain</p>
               </div>
             </button>
           </CardContent>
