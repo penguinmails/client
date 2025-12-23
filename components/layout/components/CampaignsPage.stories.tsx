@@ -8,11 +8,8 @@ import { Button } from "@/components/ui/button";
 import {
   Send,
   Users,
-  Mail,
-  MousePointer,
   MessageSquare,
   Plus,
-  MoreHorizontal,
   Play,
   Pause,
   Copy,

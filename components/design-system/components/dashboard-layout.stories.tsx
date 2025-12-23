@@ -16,6 +16,8 @@ import {
   CalendarPlus,
   AlertTriangle,
   Globe,
+  Users,
+  CheckCircle2,
 } from "lucide-react";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
@@ -281,7 +283,7 @@ const DashboardContentSample = () => (
       <UnifiedStatsCard
         title="Leads Contacted"
         value="2,847"
-        icon={Upload}
+        icon={Users}
         color="warning"
       />
       
@@ -297,7 +299,7 @@ const DashboardContentSample = () => (
       <UnifiedStatsCard
         title="Reply Rate"
         value="8.7%"
-        icon={CalendarPlus}
+        icon={CheckCircle2}
         color="success"
       />
     </div>

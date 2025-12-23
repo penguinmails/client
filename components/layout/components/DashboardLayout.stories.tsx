@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { DashboardLayout } from "./DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Plus, Settings, Mail, Upload, CalendarPlus, Users, CheckCircle2, AlertTriangle, ChevronRight, ArrowLeft, Globe } from "lucide-react";
+import { Plus, Settings, Mail, Upload, Users, CheckCircle2, AlertTriangle, ChevronRight, ArrowLeft, Globe } from "lucide-react";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
