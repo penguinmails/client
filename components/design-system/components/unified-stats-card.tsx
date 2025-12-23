@@ -18,47 +18,46 @@ type SizeVariant = "sm" | "default" | "lg";
 type StatsVariant = "default" | "highlighted" | "muted";
 type TrendDirection = "up" | "down" | "stable";
 
-// Design token mappings - moved outside component to prevent recreation on every render
 const colorTokens = {
   primary: {
-    iconBg: "bg-primary/10 dark:bg-primary/20",
-    iconColor: "text-primary",
+    iconBg: "bg-blue-500",
+    iconColor: "text-white",
     border: "border-primary/20",
     badge: "bg-primary/10 text-primary border-primary/20",
   },
   secondary: {
-    iconBg: "bg-muted",
-    iconColor: "text-muted-foreground",
+    iconBg: "bg-gray-500",
+    iconColor: "text-white",
     border: "border-border",
     badge: "bg-muted text-muted-foreground",
   },
   success: {
-    iconBg: "bg-green-100 dark:bg-green-900/30",
-    iconColor: "text-green-600 dark:text-green-400",
+    iconBg: "bg-green-500",
+    iconColor: "text-white",
     border: "border-green-200 dark:border-green-800",
     badge:
       "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",
   },
   warning: {
-    iconBg: "bg-yellow-100 dark:bg-yellow-900/30",
-    iconColor: "text-yellow-600 dark:text-yellow-400",
-    border: "border-yellow-200 dark:border-yellow-800",
+    iconBg: "bg-orange-500",
+    iconColor: "text-white",
+    border: "border-orange-200 dark:border-orange-800",
     badge:
-      "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800",
+      "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-800",
   },
   error: {
-    iconBg: "bg-red-100 dark:bg-red-900/30",
-    iconColor: "text-red-600 dark:text-red-400",
+    iconBg: "bg-red-500",
+    iconColor: "text-white",
     border: "border-red-200 dark:border-red-800",
     badge:
       "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800",
   },
   info: {
-    iconBg: "bg-blue-100 dark:bg-blue-900/30",
-    iconColor: "text-blue-600 dark:text-blue-400",
-    border: "border-blue-200 dark:border-blue-800",
+    iconBg: "bg-purple-500",
+    iconColor: "text-white",
+    border: "border-purple-200 dark:border-purple-800",
     badge:
-      "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+      "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800",
   },
 };
 
@@ -68,19 +67,22 @@ const sizeTokens = {
     container: "p-4",
     title: "text-xs font-medium",
     value: "text-lg font-semibold",
-    icon: "w-4 h-4 p-1",
+    icon: "w-8 h-8",
+    iconInner: "w-4 h-4",
   },
   default: {
-    container: "p-6",
+    container: "p-5",
     title: "text-sm font-medium",
     value: "text-2xl font-bold",
-    icon: "w-5 h-5 p-2",
+    icon: "w-12 h-12",
+    iconInner: "w-6 h-6",
   },
   lg: {
     container: "p-8",
     title: "text-base font-medium",
     value: "text-4xl font-bold",
-    icon: "w-6 h-6 p-3",
+    icon: "w-14 h-14",
+    iconInner: "w-7 h-7",
   },
 };
 
@@ -197,8 +199,8 @@ export const UnifiedStatsCard: React.FC<UnifiedStatsCardProps> = ({
           {title}
         </CardTitle>
         {Icon && (
-          <div className={cn("rounded-lg", colorToken.iconBg, sizeToken.icon)}>
-            <Icon className={cn("w-full h-full", colorToken.iconColor)} />
+          <div className={cn("rounded-xl flex items-center justify-center", colorToken.iconBg, sizeToken.icon)}>
+            <Icon className={cn(sizeToken.iconInner, colorToken.iconColor)} />
           </div>
         )}
       </CardHeader>

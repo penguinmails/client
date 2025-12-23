@@ -89,11 +89,11 @@ export function DashboardSidebar() {
               className={cn(
                 "flex items-center transition-all",
                 collapsed ? "justify-center px-0" : "gap-3 px-3",
-                "rounded-md py-2 text-sm",
+                "rounded-lg py-2.5 text-sm",
                 pathname === item.href ||
                   (item.href !== "/dashboard" && pathname.startsWith(item.href))
-                  ? "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-medium border-r-2 border-blue-600"
+                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
               )}
               onClick={() => isMobile && setMobileOpen(false)}
             >
@@ -209,7 +209,7 @@ export function DashboardSidebar() {
       {/* Desktop Sidebar */}
       <div
         className={cn(
-          "hidden md:flex h-full bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-col transition-all duration-300",
+          "hidden md:flex h-full bg-slate-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-col transition-all duration-300",
           collapsed ? "w-20" : "w-64"
         )}
       >
@@ -219,7 +219,7 @@ export function DashboardSidebar() {
       {/* Mobile Sidebar */}
       {isMobile && mobileOpen && (
         <div className="fixed inset-0 z-50 flex">
-          <div className="w-64 bg-gray-100 dark:bg-gray-900 h-full flex flex-col shadow-lg border-r border-gray-200 dark:border-gray-800">
+          <div className="w-64 bg-slate-50 dark:bg-gray-900 h-full flex flex-col shadow-lg border-r border-gray-200 dark:border-gray-800">
             <div className="flex justify-end p-2">
               <Button
                 variant="ghost"
