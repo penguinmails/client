@@ -13,7 +13,6 @@ import {
   Star,
   Archive,
   Trash2,
-  MoreHorizontal,
   Search,
   Filter,
 } from "lucide-react";
