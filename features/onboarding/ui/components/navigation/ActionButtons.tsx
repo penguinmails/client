@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button/button";
-import { useOnboarding } from "@features/onboarding/ui/context/onboarding-context";
+import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
 import { ArrowRight, BookOpen, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
@@ -12,7 +12,7 @@ interface ActionButtonsProps {
 }
 
 export function ActionButtons({ step }: ActionButtonsProps) {
-  const { markStepCompleted } = useOnboarding();
+  const { markStepCompleted } = useEnhancedOnboarding();
 
   const handleStepAction = useCallback(() => {
     if (!step.completed) {

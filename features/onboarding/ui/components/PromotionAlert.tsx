@@ -15,7 +15,7 @@ interface PromotionAlertProps {
 
 export function PromotionAlert({ promotion }: PromotionAlertProps) {
   return (
-    <Alert className="border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50">
+    <Alert className="border-blue-200 bg-linear-to-r from-blue-50 to-purple-50">
       <AlertTitle className="flex gap-2 items-center">
         <Sparkles className="h-4 w-4 text-blue-600" />
         <h4 className="font-semibold text-blue-900">{promotion.title}</h4>
