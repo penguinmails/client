@@ -37,6 +37,7 @@ const defaultSteps: OnboardingStep[] = [
     buttonText: "Get Started",
     kbLink: "Getting started guide",
     videoId: "welcome",
+    videoUrl: "https://www.youtube.com/watch?v=welcome-guide",
     completed: false,
   },
   {
@@ -51,6 +52,7 @@ const defaultSteps: OnboardingStep[] = [
     buttonText: "Go to Domains",
     kbLink: "Domain setup guide",
     videoId: "domain",
+    videoUrl: "https://www.youtube.com/watch?v=domain-setup-guide",
     completed: false,
   },
   {
@@ -65,6 +67,7 @@ const defaultSteps: OnboardingStep[] = [
     buttonText: "Go to Mailboxes",
     kbLink: "Mailbox configuration",
     videoId: "mailbox",
+    videoUrl: "https://www.youtube.com/watch?v=mailbox-setup-guide",
     completed: false,
   },
   {
@@ -78,6 +81,7 @@ const defaultSteps: OnboardingStep[] = [
     buttonText: "Go to Templates",
     kbLink: "Template creation guide",
     videoId: "template",
+    videoUrl: "https://www.youtube.com/watch?v=template-creation-guide",
     completed: false,
     promotion: {
       title: "Need Professional Copy?",
@@ -97,6 +101,7 @@ const defaultSteps: OnboardingStep[] = [
     buttonText: "Create Campaign",
     kbLink: "Campaign setup guide",
     videoId: "campaign",
+    videoUrl: "https://www.youtube.com/watch?v=campaign-setup-guide",
     completed: false,
   },
 ];

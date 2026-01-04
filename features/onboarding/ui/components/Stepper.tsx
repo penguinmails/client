@@ -9,6 +9,7 @@ import { cn } from "@/shared/utils";
 import { CheckCircle } from "lucide-react";
 import { Fragment } from "react";
 import { OnboardingStep } from "@/types/onboarding";
+import { developmentLogger } from "@/lib/logger";
 
 interface StepIndicatorProps {
   step: OnboardingStep;
@@ -71,9 +72,17 @@ export function Stepper() {
                 step={step}
                 isActive={currentStep === step.id}
                 isAccessible={isStepAccessible(step.id)}
-                onClick={() =>
-                  isStepAccessible(step.id) && setCurrentStep(step.id)
-                }
+                onClick={() => {
+                  if (isStepAccessible(step.id)) {
+                    developmentLogger.debug(
+                      "Stepper navigation:",
+                      currentStep,
+                      "->",
+                      step.id
+                    );
+                    setCurrentStep(step.id);
+                  }
+                }}
               />
               {index < totalSteps - 1 && (
                 <Separator

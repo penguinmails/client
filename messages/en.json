@@ -7,8 +7,8 @@
     "500-LEADS": "A system error occurred while fetching lead data. The issue has been logged."
   },
   "Metadata": {
-      "title": "Penguin Mails - Email Outreach & Domain Warm-up",
-      "description": "Enter the world of Penguin Mails, where every message is a delightful surprise!"
+    "title": "Penguin Mails - Email Outreach & Domain Warm-up",
+    "description": "Enter the world of Penguin Mails, where every message is a delightful surprise!"
   },
   "Login": {
     "title": "Welcome Back!",
@@ -48,7 +48,8 @@
   "SignUp": {
     "header": {
       "title": "Create your Penguin Mails Account",
-      "description": "Get started with your secure email experience."
+      "description": "Get started with your secure email experience.",
+      "alreadySignedIn": "You are already signed in."
     },
     "form": {
       "name": {
@@ -85,7 +86,10 @@
       "passwordTooWeak": "Password is too weak. Please include at least 2 of: uppercase, lowercase, number, special character",
       "passwordMismatch": "Passwords do not match",
       "invalidEmail": "Please enter a valid email address",
-      "required": "This field is required"
+      "required": "This field is required",
+      "password": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters long",
+      "confirmPassword": "Password confirmation is required"
     },
     "success": {
       "accountCreated": "Account created successfully! Check your email for a verification link to activate your account.",
@@ -96,6 +100,9 @@
       "createAccount": "Create Account",
       "creatingAccount": "Creating Account...",
       "sending": "Sending..."
+    },
+    "captcha": {
+      "notConfigured": "CAPTCHA is not configured. Please contact support."
     },
     "footer": {
       "haveAccount": "Already have an account?",

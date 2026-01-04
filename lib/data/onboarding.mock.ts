@@ -20,6 +20,7 @@ export const onboardingSteps: OnboardingStep[] = [
     buttonText: 'Go to Domains Page',
     kbLink: 'https://docs.penguinmails.com/guides/domain-setup',
     videoId: null,
+    videoUrl: 'https://www.youtube.com/watch?v=domain-setup-guide',
     completed: false,
   },
   {
@@ -34,6 +35,7 @@ export const onboardingSteps: OnboardingStep[] = [
     buttonText: 'Go to Mailboxes Page',
     kbLink: 'https://docs.penguinmails.com/guides/mailbox-setup',
     videoId: null,
+    videoUrl: 'https://www.youtube.com/watch?v=mailbox-setup-guide',
     completed: false,
   },
   {
@@ -48,6 +50,7 @@ export const onboardingSteps: OnboardingStep[] = [
     buttonText: 'Go to Warmup Page',
     kbLink: 'https://docs.penguinmails.com/guides/warmup',
     videoId: null,
+    videoUrl: 'https://www.youtube.com/watch?v=warmup-guide',
     completed: false,
   },
   {
@@ -62,6 +65,7 @@ export const onboardingSteps: OnboardingStep[] = [
     buttonText: 'Go to Leads Page',
     kbLink: 'https://docs.penguinmails.com/guides/csv-format',
     videoId: null,
+    videoUrl: 'https://www.youtube.com/watch?v=leads-upload-guide',
     completed: false,
     promotion: {
       title: 'Need Quality Leads?',
@@ -83,6 +87,7 @@ export const onboardingSteps: OnboardingStep[] = [
     buttonText: 'Go to Campaign Builder',
     kbLink: 'https://docs.penguinmails.com/guides/campaign-setup',
     videoId: null,
+    videoUrl: 'https://www.youtube.com/watch?v=campaign-setup-guide',
     completed: false,
     promotion: {
       title: 'Need Help with Copy?',

@@ -15,7 +15,10 @@ export function Step({ step }: StepProps) {
       <p className="text-lg leading-relaxed text-muted-foreground">
         {step.explanation}
       </p>
-      <VideoTutorial stepTitle={step.title} />
+      <VideoTutorial
+        stepTitle={step.title}
+        videoUrl={step.videoUrl ?? undefined}
+      />
       <ActionButtons step={step} />
       {step.promotion && <PromotionAlert promotion={step.promotion} />}
     </div>
