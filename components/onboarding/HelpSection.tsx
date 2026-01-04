@@ -70,7 +70,7 @@ export function HelpSection() {
           <CardContent className="py-4">
             <div className="space-y-4">
               {faqItems.map((item, index) => (
-                <Card key={index} className="p-0 rounded-md">
+                <Card key={item.id} className="p-0 rounded-md">
                   <Collapsible
                     open={expandedFAQ === index}
                     onOpenChange={(open) => setExpandedFAQ(open ? index : null)}
@@ -80,7 +80,7 @@ export function HelpSection() {
                         variant="ghost"
                         className="w-full justify-between"
                       >
-                        <span className="text-sm ">{item.question}</span>
+                        <span className="text-sm">{item.question}</span>
                         {expandedFAQ === index ? (
                           <ChevronUp className="h-4 w-4 flex-shrink-0" />
                         ) : (
