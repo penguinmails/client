@@ -82,9 +82,9 @@ export function HelpSection() {
                       >
                         <span className="text-sm">{item.question}</span>
                         {expandedFAQ === index ? (
-                          <ChevronUp className="h-4 w-4 flex-shrink-0" />
+                          <ChevronUp className="h-4 w-4 shrink-0" />
                         ) : (
-                          <ChevronDown className="h-4 w-4 flex-shrink-0" />
+                          <ChevronDown className="h-4 w-4 shrink-0" />
                         )}
                       </Button>
                     </CollapsibleTrigger>
