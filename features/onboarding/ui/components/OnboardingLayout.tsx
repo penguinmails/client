@@ -15,7 +15,8 @@ interface OnboardingStepperContext {
 }
 
 export function OnboardingLayout() {
-  const { currentStepData, currentStep, steps, setCurrentStep } = useOnboarding();
+  const { currentStepData, currentStep, steps, setCurrentStep } =
+    useOnboarding();
 
   if (!currentStepData) {
     return (
@@ -46,19 +47,26 @@ export function OnboardingLayout() {
   });
 
   // Safely convert step ID to number, defaulting to currentStep + 1 if invalid
-  const stepNumber = typeof currentStepData.id === 'string' ? parseInt(currentStepData.id) : currentStepData.id;
+  const stepNumber =
+    typeof currentStepData.id === "string"
+      ? parseInt(currentStepData.id)
+      : currentStepData.id;
   const safeStepNumber = isNaN(stepNumber) ? currentStep + 1 : stepNumber;
 
   const stepData = {
     number: safeStepNumber,
     title: currentStepData.title,
-    description: currentStepData.description,
-    IconComponent: (currentStepData.icon as ComponentType<SVGProps<SVGSVGElement>>) || HelpCircle,
+    description: currentStepData.subtitle,
+    IconComponent:
+      (currentStepData.icon as ComponentType<SVGProps<SVGSVGElement>>) ||
+      HelpCircle,
   };
 
   return (
     <div className="space-y-6">
-      <StepperContext.Provider value={{ steps: stepperSteps, currentStep, setCurrentStep }}>
+      <StepperContext.Provider
+        value={{ steps: stepperSteps, currentStep, setCurrentStep }}
+      >
         <Stepper context={StepperContext} />
       </StepperContext.Provider>
       <StepCard {...stepData} />
