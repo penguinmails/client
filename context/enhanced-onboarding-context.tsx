@@ -83,7 +83,7 @@ function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
 
       setCurrentStep(stepId);
     },
-    [currentStep, developmentLogger]
+    [currentStep]
   );
 
   const contextValue = useMemo(
