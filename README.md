@@ -182,10 +182,10 @@ CLOUDFLARE_API_TOKEN=your-api-token
 CLOUDFLARE_ACCOUNT_ID=your-account-id
 
 # Database & Auth (Local Development)
-NILEDB_USER=00000000-0000-0000-0000-000000000000
-NILEDB_PASSWORD=nile
-NILEDB_API_URL=http://localhost:3000
-NILEDB_POSTGRES_URL=postgres://00000000-0000-0000-0000-000000000000:nile@localhost:5443/test
+NILEDB_USER=your_user_id_here
+NILEDB_PASSWORD=your_password_here
+NILEDB_API_URL=your_api_url_here
+NILEDB_POSTGRES_URL=postgres://username:password@host:port/database
 
 # Redis (Local Development)
 REDIS_URL=redis://localhost:6379
@@ -195,11 +195,11 @@ STRIPE_SECRET_KEY=your-stripe-key
 RESEND_API_KEY=your-resend-key
 
 # Loop Email Service (Transactional Emails)
-LOOP_API_KEY=your-loops-api-key
-LOOP_VERIFICATION_TRANSACTIONAL_ID=your-verification-id
-LOOP_RESET_TRANSACTIONAL_ID=your-password-reset-id
-LOOP_WELCOME_TRANSACTIONAL_ID=your-welcome-id
-LOOP_NOTIFICATION_TRANSACTIONAL_ID=your-notification-id
+LOOP_API_KEY=your_loop_api_key_here
+LOOP_VERIFICATION_TRANSACTIONAL_ID=your_verification_id_here
+LOOP_RESET_TRANSACTIONAL_ID=your_reset_id_here
+LOOP_WELCOME_TRANSACTIONAL_ID=your_welcome_id_here
+LOOP_NOTIFICATION_TRANSACTIONAL_ID=your_notification_id_here
 ```
 
 **Database Services** (when running `docker compose up -d`):

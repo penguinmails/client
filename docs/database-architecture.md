@@ -353,9 +353,9 @@ NILEDB_DATABASE_ID=your-database-id
 ```env
 # Local development with NileDB cloud
 NILEDB_API_URL=https://us-west-2.api.thenile.dev
-NILEDB_USER=019993a8-a8ad-7037-92ef-5c94e520d505
-NILEDB_PASSWORD=***
-NILEDB_POSTGRES_URL=postgres://019993a8-a8ad-7037-92ef-5c94e520d505:***@us-west-2.db.thenile.dev:5432/penguin_mails_dev
+NILEDB_USER=your_user_id_here
+NILEDB_PASSWORD=your_password_here
+NILEDB_POSTGRES_URL=postgres://username:password@host:port/database
 ```
 
 ## Debugging & Troubleshooting
