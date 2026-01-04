@@ -1,10 +1,10 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Stepper } from "@/components/onboarding/Stepper";
-import { Step } from "@/components/onboarding/Step";
-import { HelpSection } from "@/components/onboarding/HelpSection";
-import { NavigationButtons } from "@/components/onboarding/NavigationButtons";
+import { Stepper } from "@/features/onboarding/ui/components/Stepper";
+import { Step } from "@/features/onboarding/ui/components/steps/Step";
+import { HelpSection } from "@/features/onboarding/ui/components/HelpSection";
+import { NavigationButtons } from "@/features/onboarding/ui/components/navigation/NavigationButtons";
 import { EnhancedOnboardingProvider } from "@/context/enhanced-onboarding-context";
 import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
 

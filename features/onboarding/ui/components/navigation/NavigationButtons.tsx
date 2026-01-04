@@ -1,13 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button/button";
-import { useOnboarding } from "@features/onboarding/ui/context/onboarding-context";
+import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { useCallback } from "react";
 import { developmentLogger } from "@/lib/logger";
 
 export function NavigationButtons() {
   const { currentStep, steps, goToNextStep, goToPreviousStep } =
-    useOnboarding();
+    useEnhancedOnboarding();
 
   const handleSkipSetup = useCallback(() => {
     developmentLogger.debug("Skip setup clicked");

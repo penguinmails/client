@@ -1,17 +1,8 @@
-// Navigation components
 export { ActionButtons } from "./navigation/ActionButtons";
+export { HelpSection } from "./HelpSection";
 export { NavigationButtons } from "./navigation/NavigationButtons";
-
-// Layout components
-export { OnboardingLayout } from "./OnboardingLayout";
-
-// Step components
-export { Step } from "./steps/Step";
-export { StepCard } from "./steps/StepCard";
-
-// Other components
 export { PromotionAlert } from "./PromotionAlert";
+export { Step } from "./steps/Step";
+export { Stepper } from "./Stepper";
 export { VideoTutorial } from "./VideoTutorial";
-
-// Re-export types
 export type { OnboardingStep } from "@/types/onboarding";
