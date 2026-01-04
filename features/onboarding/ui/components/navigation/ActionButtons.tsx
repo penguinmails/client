@@ -21,10 +21,6 @@ export function ActionButtons({ step }: ActionButtonsProps) {
     developmentLogger.debug("Step action clicked:", step.title);
   }, [step.completed, step.id, step.title, markStepCompleted]);
 
-  const handleKnowledgeBase = useCallback(() => {
-    developmentLogger.debug("Knowledge base clicked:", step.kbLink);
-  }, [step.kbLink]);
-
   return (
     <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
       <Button
