@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { OnboardingStep, OnboardingContextType } from "@/types/onboarding";
+import { developmentLogger } from "@/lib/logger";
 
 const EnhancedOnboardingContext = createContext<
   OnboardingContextType | undefined
@@ -58,6 +59,33 @@ function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
     [currentStep, steps, totalSteps]
   );
 
+  const setCurrentStepWithCompletion = useCallback(
+    (stepId: number) => {
+      developmentLogger.debug("Stepper navigation:", currentStep, "->", stepId);
+
+      // Mark all previous steps as completed when navigating forward via stepper
+      if (stepId > currentStep) {
+        const stepsToComplete = Array.from(
+          { length: stepId - currentStep },
+          (_, i) => currentStep + i
+        );
+
+        developmentLogger.debug("Auto-completing steps:", stepsToComplete);
+
+        setSteps((prevSteps) =>
+          prevSteps.map((step) =>
+            stepsToComplete.includes(step.id)
+              ? { ...step, completed: true }
+              : step
+          )
+        );
+      }
+
+      setCurrentStep(stepId);
+    },
+    [currentStep, developmentLogger]
+  );
+
   const contextValue = useMemo(
     () => ({
       currentStep,
@@ -65,7 +93,7 @@ function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
       steps,
       currentStepData,
       setSteps,
-      setCurrentStep,
+      setCurrentStep: setCurrentStepWithCompletion,
       goToNextStep,
       goToPreviousStep,
       markStepCompleted,
@@ -80,6 +108,7 @@ function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
       goToPreviousStep,
       markStepCompleted,
       isStepAccessible,
+      setCurrentStepWithCompletion,
     ]
   );
 

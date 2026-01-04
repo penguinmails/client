@@ -12,7 +12,7 @@
   },
   "Login": {
     "title": "¡Bienvenido de nuevo!",
-    "description": "Introduce tus credenciales para acceder a tu panel de control.",
+    "description": "Ingrese sus credenciales para acceder a su panel de control.",
     "email": {
       "label": "Correo electrónico",
       "placeholder": "tu@ejemplo.com"
@@ -48,12 +48,13 @@
   "SignUp": {
     "header": {
       "title": "Crea tu cuenta de Penguin Mails",
-      "description": "Comienza con tu experiencia de correo electrónico seguro."
+      "description": "Comienza con tu experiencia de correo electrónico seguro.",
+      "alreadySignedIn": "Ya has iniciado sesión."
     },
     "form": {
       "name": {
         "label": "Nombre",
-        "placeholder": "Introduce tu nombre"
+        "placeholder": "Ingresa tu nombre"
       },
       "email": {
         "label": "Correo electrónico",
@@ -61,7 +62,7 @@
       },
       "password": {
         "label": "Contraseña",
-        "placeholder": "Introduce tu contraseña"
+        "placeholder": "Ingresa tu contraseña"
       },
       "confirmPassword": {
         "label": "Confirmar contraseña",
@@ -85,7 +86,10 @@
       "passwordTooWeak": "La contraseña es demasiado débil. Por favor, incluye al menos 2 de los siguientes: mayúsculas, minúsculas, números, caracteres especiales",
       "passwordMismatch": "Las contraseñas no coinciden",
       "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
-      "required": "Este campo es obligatorio"
+      "required": "Este campo es obligatorio",
+      "password": "La contraseña es obligatoria",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "confirmPassword": "La confirmación de contraseña es obligatoria"
     },
     "success": {
       "accountCreated": "¡Cuenta creada con éxito! Revisa tu correo electrónico para ver un enlace de verificación para activar tu cuenta.",
@@ -96,6 +100,9 @@
       "createAccount": "Crear cuenta",
       "creatingAccount": "Creando cuenta...",
       "sending": "Enviando..."
+    },
+    "captcha": {
+      "notConfigured": "CAPTCHA no está configurado. Por favor, contacta con soporte."
     },
     "footer": {
       "haveAccount": "¿Ya tienes una cuenta?",

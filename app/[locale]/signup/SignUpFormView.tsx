@@ -110,14 +110,16 @@ export default function SignUpFormView() {
 
     // This prevents the form from submitting if the CAPTCHA hasn't been completed.
     if (!token) {
-      const captchaError = new Error(t("errors.captchaRequired")) as SignupError;
+      const captchaError = new Error(
+        t("errors.captchaRequired")
+      ) as SignupError;
       setError(captchaError);
       return;
     }
 
     try {
       // Verify Turnstile token on your backend
-       await verifyTurnstileToken(token);
+      await verifyTurnstileToken(token);
 
       // Use custom API endpoint that properly handles duplicate email errors
       const signupResponse = await fetch("/api/auth/signup", {
@@ -135,7 +137,9 @@ export default function SignUpFormView() {
       // Check if signup failed
       if (!signupResponse.ok) {
         // Create error object with metadata
-        const error = new Error(signupData.error || "Signup failed") as SignupError;
+        const error = new Error(
+          signupData.error || "Signup failed"
+        ) as SignupError;
         if (signupData.code) error.code = signupData.code;
         if (signupData.i18nKey) error.i18nKey = signupData.i18nKey;
         if (signupData.actionType) error.actionType = signupData.actionType;
@@ -185,13 +189,14 @@ export default function SignUpFormView() {
       // Redirect to email confirmation
       router.push("/email-confirmation");
     } catch (err: unknown) {
-
       // Check if it's a duplicate email error with i18n key
       if (err && typeof err === "object" && "i18nKey" in err) {
         const errorObj = err as Record<string, unknown>;
         const i18nKey = errorObj.i18nKey as string;
         // Create proper SignupError with metadata
-        const duplicateError = new Error(t(`errors.${i18nKey}.title`)) as SignupError;
+        const duplicateError = new Error(
+          t(`errors.${i18nKey}.title`)
+        ) as SignupError;
         duplicateError.i18nKey = i18nKey;
         if (errorObj.actionType) {
           duplicateError.actionType = errorObj.actionType as string;
@@ -211,7 +216,9 @@ export default function SignUpFormView() {
         "message" in err &&
         typeof (err as { message?: unknown }).message === "string"
       ) {
-        const errorObj = new Error((err as { message: string }).message) as SignupError;
+        const errorObj = new Error(
+          (err as { message: string }).message
+        ) as SignupError;
         setError(errorObj);
         toast.error((err as { message: string }).message);
       } else {
