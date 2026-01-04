@@ -71,7 +71,6 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 - Node.js 18+ and npm
 - Git for version control
 
-
 ### Environment Setup
 
 1. **Clone and install dependencies**:
@@ -91,16 +90,16 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 3. **Start development services**:
 
-    ```bash
-    # Start local infrastructure (NileDB + Redis)
-    docker compose up -d
+   ```bash
+   # Start local infrastructure (NileDB + Redis)
+   docker compose up -d
 
-    # Start NileDB + Redis
-    npm run db:start
+   # Start NileDB + Redis
+   npm run db:start
 
-    # Start Next.js frontend (in another terminal)
-    npm run dev
-    ```
+   # Start Next.js frontend (in another terminal)
+   npm run dev
+   ```
 
 ### Available Scripts
 
@@ -204,6 +203,7 @@ LOOP_NOTIFICATION_TRANSACTIONAL_ID=your-notification-id
 ```
 
 **Database Services** (when running `docker compose up -d`):
+
 - **OLTP Database**: Port 5443, Database: `oltp`
 - **OLAP Database**: Port 5444, Database: `olap`
 - **Messages Database**: Port 5445, Database: `messages`
@@ -225,19 +225,20 @@ The application uses Loop (loops.so) for sending transactional emails including 
 2. **Get API Key**: Navigate to Settings → API Keys in your Loops dashboard
 
 3. **Configure Environment**: Add your API key to `.env`:
+
    ```bash
    LOOP_API_KEY=your-api-key-here
    ```
 
 4. **Create Transactional Emails**: In your Loops dashboard, create the following transactional emails with these IDs:
-    - **Verification Email** (ID: `verification`)
-      - Variables: `{{userName}}`, `{{verificationToken}}`, `{{verificationUrl}}`
-    - **Password Reset Email** (ID: `password-reset`)
-      - Variables: `{{userName}}`, `{{resetToken}}`, `{{resetUrl}}`
-    - **Welcome Email** (ID: `welcome`)
-      - Variables: `{{userName}}`, `{{companyName}}`, `{{loginUrl}}`
-    - **Notification Email** (ID: `notification`)
-      - Variables: `{{userName}}`, `{{message}}`, `{{subject}}`, `{{timestamp}}`
+   - **Verification Email** (ID: `verification`)
+     - Variables: `{{userName}}`, `{{verificationToken}}`, `{{verificationUrl}}`
+   - **Password Reset Email** (ID: `password-reset`)
+     - Variables: `{{userName}}`, `{{resetToken}}`, `{{resetUrl}}`
+   - **Welcome Email** (ID: `welcome`)
+     - Variables: `{{userName}}`, `{{companyName}}`, `{{loginUrl}}`
+   - **Notification Email** (ID: `notification`)
+     - Variables: `{{userName}}`, `{{message}}`, `{{subject}}`, `{{timestamp}}`
 
 5. **Test Integration**: Use the test endpoint to verify email sending:
    ```bash
@@ -247,23 +248,23 @@ The application uses Loop (loops.so) for sending transactional emails including 
 #### Usage in Code
 
 ```typescript
-import { sendVerificationEmail } from '@/lib/actions/emailActions';
-import { getLoopService } from '@/lib/services/loop';
+import { sendVerificationEmail } from "@/lib/actions/emailActions";
+import { getLoopService } from "@/lib/services/loop";
 
 // Send verification email
 await sendVerificationEmail({
-  email: 'user@example.com',
-  token: 'verification-token',
-  userName: 'John Doe'
+  email: "user@example.com",
+  token: "verification-token",
+  userName: "John Doe",
 });
 
 // Send notification email
 const loopService = getLoopService();
 await loopService.sendNotificationEmail(
-  'user@example.com',
-  'Your account has been updated successfully.',
-  'Account Update Notification',
-  'John Doe'
+  "user@example.com",
+  "Your account has been updated successfully.",
+  "Account Update Notification",
+  "John Doe"
 );
 ```
 
@@ -356,12 +357,14 @@ npm run type-analysis -- --verbose
 #### Report Structure
 
 The generated report includes:
+
 - **Summary Statistics**: Total types, conflicts, and category breakdowns
 - **Type Categories**: Detailed breakdown by architectural layer
 - **Conflict Analysis**: Specific conflicts with resolution strategies
 - **Recommendations**: Actionable suggestions for type consolidation
 
 For more information, see the [Type Analysis Documentation](./docs/development/type-analysis.md).
+
 - **Documentation**: Comprehensive guides in [`docs/`](./docs/) directory
 - **Troubleshooting**: Common issues in [`docs/development/troubleshooting.md`](./docs/development/troubleshooting.md)
 - **Architecture**: System design in [`docs/analytics/README.md`](./docs/analytics/README.md)

@@ -9,6 +9,7 @@ This application uses **NileDB** as the primary database system, providing built
 ### NileDB Core Concepts
 
 **NileDB** provides:
+
 - **Built-in Multi-Tenancy**: Automatic tenant isolation at the database level
 - **Authentication System**: Server-side session management with JWT tokens
 - **PostgreSQL Compatibility**: Standard SQL with tenant-aware queries
@@ -26,13 +27,14 @@ This application uses **NileDB** as the primary database system, providing built
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-*Note: In our implementation, **tenants ARE companies**. We don't use separate company tables.
+\*Note: In our implementation, **tenants ARE companies**. We don't use separate company tables.
 
 ## Key Tables & Schema
 
 ### NileDB Managed Tables
 
 #### `users` (NileDB Core)
+
 ```sql
 users {
   id UUID PRIMARY KEY,
@@ -49,6 +51,7 @@ users {
 ```
 
 #### `tenants` (NileDB Core)
+
 ```sql
 tenants {
   id UUID PRIMARY KEY,
@@ -61,6 +64,7 @@ tenants {
 ```
 
 #### `tenant_users` (NileDB Core)
+
 ```sql
 tenant_users {
   tenant_id UUID REFERENCES tenants(id),
@@ -77,6 +81,7 @@ tenant_users {
 ### Custom Application Tables
 
 #### `user_profiles` (Application Extension)
+
 ```sql
 CREATE TABLE user_profiles (
   user_id UUID PRIMARY KEY REFERENCES users(id),
@@ -140,7 +145,7 @@ const results = await queryWithContext(sql, params, req);
 const profile = await getUserProfile(req);
 
 // Update user profile
-await updateUserProfile({ role: 'admin' }, req);
+await updateUserProfile({ role: "admin" }, req);
 
 // Initialize profile on first login
 await initializeUserProfile(userId, req);
@@ -156,7 +161,7 @@ const companies = await getUserCompanies(userId, req);
 const company = await getCompanyById(companyId, req);
 
 // Create new company (tenant)
-const company = await createCompany({ name: 'Acme Inc' }, req);
+const company = await createCompany({ name: "Acme Inc" }, req);
 ```
 
 ## Authentication Patterns
@@ -164,17 +169,17 @@ const company = await createCompany({ name: 'Acme Inc' }, req);
 ### 1. API Route Authentication
 
 ```typescript
-import { requireAuth, getUserProfile } from '@/shared/queries/auth';
-import { createErrorResponse } from '@/shared/queries/utils';
+import { requireAuth, getUserProfile } from "@/shared/queries/auth";
+import { createErrorResponse } from "@/shared/queries/utils";
 
 export async function GET(req: NextRequest) {
   try {
     // Require authentication - throws if not authenticated
     const user = await requireAuth(req);
-    
+
     // Get enhanced profile with custom data
     const profile = await getUserProfile(req);
-    
+
     return NextResponse.json({ profile });
   } catch (error) {
     const { body, status } = createErrorResponse(error);
@@ -191,13 +196,13 @@ import { redirect } from 'next/navigation';
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  
+
   if (!user) {
     redirect('/login');
   }
-  
+
   const tenants = await getUserTenants();
-  
+
   return <Dashboard user={user} tenants={tenants} />;
 }
 ```
@@ -208,19 +213,19 @@ export default async function DashboardPage() {
 import { useAuth } from '@features/auth/ui/context/auth-context';
 
 function Dashboard() {
-  const { 
-    user, 
-    nileUser, 
-    userTenants, 
+  const {
+    user,
+    nileUser,
+    userTenants,
     selectedTenantId,
-    setSelectedTenant 
+    setSelectedTenant
   } = useAuth();
-  
+
   if (!user) return <LoginForm />;
-  
+
   return (
     <div>
-      <TenantSelector 
+      <TenantSelector
         tenants={userTenants}
         selected={selectedTenantId}
         onSelect={setSelectedTenant}
@@ -235,6 +240,7 @@ function Dashboard() {
 ### ⚠️ Common Pitfalls to Avoid
 
 #### 1. **Infinite Loops in React Context**
+
 ```typescript
 // ❌ BAD: Dependencies cause infinite re-renders
 const restoreSession = useCallback(async () => {
@@ -245,11 +251,12 @@ const restoreSession = useCallback(async () => {
 // ✅ GOOD: Use setState callback pattern
 const restoreSession = useCallback(async () => {
   // ... session logic
-  setSelectedTenant(current => current || tenants[0].id);
+  setSelectedTenant((current) => current || tenants[0].id);
 }, [fetchProfile, fetchTenants]); // Stable dependencies only
 ```
 
 #### 2. **Column Name Mismatches**
+
 ```typescript
 // ❌ BAD: Assuming column names
 SELECT created_at, updated_at FROM user_profiles; -- These don't exist!
@@ -259,6 +266,7 @@ SELECT created, updated FROM user_profiles; -- NileDB uses these names
 ```
 
 #### 3. **Missing Table Relationships**
+
 ```typescript
 // ❌ BAD: Assuming custom junction tables exist
 SELECT * FROM companies c
@@ -270,6 +278,7 @@ JOIN tenant_users tu ON t.id = tu.tenant_id; -- Use NileDB tables
 ```
 
 #### 4. **Incorrect Tenant Mapping**
+
 ```typescript
 // ❌ BAD: Treating tenants and companies as separate
 const companies = await getCompanies(tenantId);
@@ -282,6 +291,7 @@ const company = await getCompanyById(tenantId); // tenantId === companyId
 ### ✅ Best Practices
 
 #### 1. **Always Use Request Context**
+
 ```typescript
 // Pass NextRequest to maintain session context
 const profile = await getUserProfile(req);
@@ -289,19 +299,21 @@ const companies = await getUserCompanies(userId, req);
 ```
 
 #### 2. **Handle Errors Consistently**
+
 ```typescript
 try {
   const user = await requireAuth(req);
   // ... business logic
 } catch (error) {
   if (error instanceof AuthenticationError) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   // Handle other errors...
 }
 ```
 
 #### 3. **Use TypeScript Types**
+
 ```typescript
 // Define proper types for database results
 const rows = await queryWithContext<{
@@ -312,6 +324,7 @@ const rows = await queryWithContext<{
 ```
 
 #### 4. **Batch State Updates**
+
 ```typescript
 // Minimize re-renders by batching related updates
 setUserTenants(tenants);
@@ -350,33 +363,42 @@ NILEDB_POSTGRES_URL=postgres://019993a8-a8ad-7037-92ef-5c94e520d505:***@us-west-
 ### Common Issues
 
 #### 1. **Column Does Not Exist**
+
 ```
 Error: column "created_at" does not exist
 Hint: Perhaps you meant to reference the column "user_profiles.created".
 ```
+
 **Solution**: Use NileDB column names (`created`, `updated`) not Rails-style (`created_at`, `updated_at`)
 
 #### 2. **Relation Does Not Exist**
+
 ```
 Error: relation "company_users" does not exist
 ```
+
 **Solution**: Use NileDB's `tenant_users` table instead of custom junction tables
 
 #### 3. **Infinite API Calls**
+
 ```
 [niledb][DEBUG][REQUEST] [GET] /api/profile (repeating)
 ```
+
 **Solution**: Check React Context dependencies and use stable callback patterns
 
 #### 4. **Session Context Missing**
+
 ```
 [niledb][WARN] nile.userId is not set
 ```
+
 **Solution**: Ensure `NextRequest` is passed to all database functions
 
 ### Debug Logging
 
 Enable NileDB debug logging:
+
 ```env
 NILEDB_LOG_LEVEL=DEBUG
 ```
@@ -388,28 +410,31 @@ This shows all SQL queries and API calls for debugging.
 ### From Custom Auth to NileDB
 
 1. **Update imports**:
+
    ```typescript
    // Old
-   import { getUser } from '@/shared/auth';
-   
+   import { getUser } from "@/shared/auth";
+
    // New
-   import { getCurrentUser } from '@/shared/queries/auth';
+   import { getCurrentUser } from "@/shared/queries/auth";
    ```
 
 2. **Update database queries**:
+
    ```typescript
    // Old
    SELECT * FROM users WHERE id = $1;
-   
+
    // New - uses NileDB session context
    const user = await getCurrentUser(req);
    ```
 
 3. **Update tenant handling**:
+
    ```typescript
    // Old - separate company concept
    const company = await getCompany(companyId);
-   
+
    // New - tenant IS the company
    const company = await getCompanyById(tenantId, req);
    ```
