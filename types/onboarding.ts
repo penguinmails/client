@@ -10,7 +10,7 @@ export interface OnboardingStep {
   href: string;
   buttonText: string;
   kbLink: string;
-  videoId: string;
+  videoId?: string | null;
   completed: boolean;
   promotion?: {
     title: string;

@@ -18,8 +18,8 @@ export const onboardingSteps: OnboardingStep[] = [
     color: 'bg-blue-500',
     href: '/en/dashboard/domains',
     buttonText: 'Go to Domains Page',
-    kbLink: 'How to connect a domain',
-    videoId: 'dQw4w9WgXcQ',
+    kbLink: 'https://docs.penguinmails.com/guides/domain-setup',
+    videoId: null,
     completed: false,
   },
   {
@@ -32,8 +32,8 @@ export const onboardingSteps: OnboardingStep[] = [
     color: 'bg-purple-500',
     href: '/en/dashboard/mailboxes',
     buttonText: 'Go to Mailboxes Page',
-    kbLink: 'Guide to mailbox setup',
-    videoId: 'dQw4w9WgXcQ',
+    kbLink: 'https://docs.penguinmails.com/guides/mailbox-setup',
+    videoId: null,
     completed: false,
   },
   {
@@ -46,8 +46,8 @@ export const onboardingSteps: OnboardingStep[] = [
     color: 'bg-orange-500',
     href: '/en/dashboard/warmup',
     buttonText: 'Go to Warmup Page',
-    kbLink: 'How warmup works',
-    videoId: 'dQw4w9WgXcQ',
+    kbLink: 'https://docs.penguinmails.com/guides/warmup',
+    videoId: null,
     completed: false,
   },
   {
@@ -60,14 +60,14 @@ export const onboardingSteps: OnboardingStep[] = [
     color: 'bg-green-500',
     href: '/en/dashboard/leads',
     buttonText: 'Go to Leads Page',
-    kbLink: 'CSV format guide',
-    videoId: 'dQw4w9WgXcQ',
+    kbLink: 'https://docs.penguinmails.com/guides/csv-format',
+    videoId: null,
     completed: false,
     promotion: {
       title: 'Need Quality Leads?',
       description:
         'Our lead generation service finds verified prospects in your target market.',
-      link: 'Learn about Lead Generation',
+      link: 'https://penguinmails.com/services/lead-generation',
     },
   },
   {
@@ -81,14 +81,14 @@ export const onboardingSteps: OnboardingStep[] = [
     color: 'bg-emerald-500',
     href: '/en/dashboard/campaigns/create',
     buttonText: 'Go to Campaign Builder',
-    kbLink: 'How to create a campaign',
-    videoId: 'dQw4w9WgXcQ',
+    kbLink: 'https://docs.penguinmails.com/guides/campaign-setup',
+    videoId: null,
     completed: false,
     promotion: {
       title: 'Need Help with Copy?',
       description:
         'Our copywriting experts create high-converting email sequences for you.',
-      link: 'Learn about Copywriting Service',
+      link: 'https://penguinmails.com/services/copywriting',
     },
   },
 ];
