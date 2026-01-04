@@ -4,18 +4,42 @@ import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { useCallback } from "react";
 import { developmentLogger } from "@/lib/logger";
+import { useRouter } from "next/navigation";
 
 export function NavigationButtons() {
   const { currentStep, steps, goToNextStep, goToPreviousStep } =
     useEnhancedOnboarding();
+  const router = useRouter();
 
   const handleSkipSetup = useCallback(() => {
-    developmentLogger.debug("Skip setup clicked");
-  }, []);
+    developmentLogger.debug(
+      "Skip setup clicked - navigating away from onboarding"
+    );
+    // Navigate to dashboard main page when skipping setup
+    router.push("/dashboard");
+  }, [router]);
 
   const handleCompleteSetup = useCallback(() => {
-    developmentLogger.debug("Complete setup clicked");
-  }, []);
+    developmentLogger.debug("Complete setup clicked - onboarding finished");
+
+    // Placeholder for workspace status verification in database
+    // TODO: Implement actual workspace status check
+    developmentLogger.info("Verifying workspace status in database...");
+
+    // TODO: Add actual database verification logic here
+    // For now, we'll just log that this would happen
+    developmentLogger.debug(
+      "Workspace verification placeholder - would check:",
+      {
+        userSetupComplete: true,
+        onboardingCompleted: true,
+        timestamp: new Date().toISOString(),
+      }
+    );
+
+    // Navigate to dashboard main page after completion
+    router.push("/dashboard");
+  }, [router]);
 
   return (
     <div className="flex items-center justify-between w-full">

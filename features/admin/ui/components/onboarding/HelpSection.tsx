@@ -26,16 +26,19 @@ export function HelpSection() {
   const faqItems = [
     {
       question: "How do I get started?",
-      answer: "You can start by setting up your account and configuring your email settings."
+      answer:
+        "You can start by setting up your account and configuring your email settings.",
     },
     {
       question: "How can I contact support?",
-      answer: "Use the contact support button above or email us at support@example.com."
+      answer:
+        "Use the contact support button above or email us at support@example.com.",
     },
     {
       question: "What features are available?",
-      answer: "We offer email marketing, lead management, and analytics features."
-    }
+      answer:
+        "We offer email marketing, lead management, and analytics features.",
+    },
   ];
 
   return (
@@ -76,14 +79,17 @@ export function HelpSection() {
             </Button>
           </div>
         </div>
-      </CardHeader>   
-   <Collapsible open={showFAQ} onOpenChange={setShowFAQ}>
+      </CardHeader>
+      <Collapsible open={showFAQ} onOpenChange={setShowFAQ}>
         <CollapsibleContent>
           <Separator />
           <CardContent className="py-4">
             <div className="space-y-4">
               {faqItems.map((item, index) => (
-                <Card key={index} className="p-0 rounded-md">
+                <Card
+                  key={`${index}-${encodeURIComponent(item.question)}-${encodeURIComponent(item.answer)}`}
+                  className="p-0 rounded-md"
+                >
                   <Collapsible
                     open={expandedFAQ === index}
                     onOpenChange={(open) => setExpandedFAQ(open ? index : null)}
@@ -95,9 +101,9 @@ export function HelpSection() {
                       >
                         <span className="text-sm ">{item.question}</span>
                         {expandedFAQ === index ? (
-                          <ChevronUp className="h-4 w-4 flex-shrink-0" />
+                          <ChevronUp className="h-4 w-4 shrink-0" />
                         ) : (
-                          <ChevronDown className="h-4 w-4 flex-shrink-0" />
+                          <ChevronDown className="h-4 w-4 shrink-0" />
                         )}
                       </Button>
                     </CollapsibleTrigger>
