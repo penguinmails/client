@@ -1,5 +1,35 @@
-import { OnboardingLayout } from "@/features/onboarding/ui/components";
-import { OnboardingProvider } from "@features/onboarding/ui/context/onboarding-context";
+"use client";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { Stepper } from "@/components/onboarding/Stepper";
+import { Step } from "@/components/onboarding/Step";
+import { HelpSection } from "@/components/onboarding/HelpSection";
+import { NavigationButtons } from "@/components/onboarding/NavigationButtons";
+import { EnhancedOnboardingProvider } from "@/context/enhanced-onboarding-context";
+import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
+
+function OnboardingContent() {
+  const { currentStepData } = useEnhancedOnboarding();
+
+  if (!currentStepData) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-center">
+          <p className="text-muted-foreground">No onboarding steps available</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <Stepper />
+      <Step step={currentStepData} />
+      <NavigationButtons />
+      <HelpSection />
+    </div>
+  );
+}
 
 function OnboardingPage() {
   return (
@@ -12,9 +42,9 @@ function OnboardingPage() {
           Let&apos;s get you set up for cold email success
         </p>
       </div>
-      <OnboardingProvider>
-        <OnboardingLayout />
-      </OnboardingProvider>
+      <EnhancedOnboardingProvider>
+        <OnboardingContent />
+      </EnhancedOnboardingProvider>
     </div>
   );
 }
