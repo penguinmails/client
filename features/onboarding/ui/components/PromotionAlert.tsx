@@ -3,6 +3,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button/button";
 import { Sparkles } from "lucide-react";
 import { useCallback } from "react";
+import Link from "next/link";
 import { developmentLogger } from "@/lib/logger";
 
 interface PromotionAlertProps {
@@ -26,11 +27,10 @@ export function PromotionAlert({ promotion }: PromotionAlertProps) {
       </AlertTitle>
       <AlertDescription className="flex items-center justify-between">
         <p className="text-blue-700">{promotion.description}</p>
-        <Button
-          className="bg-blue-600 hover:bg-blue-700 ml-4"
-          onClick={handlePromotionClick}
-        >
-          {promotion.link}
+        <Button className="bg-blue-600 hover:bg-blue-700 ml-4" asChild>
+          <Link href={promotion.link} target="_blank" rel="noopener noreferrer">
+            Learn More
+          </Link>
         </Button>
       </AlertDescription>
     </Alert>
