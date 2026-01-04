@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { config } from "@/lib/config";
-import { getBillingDataForSettings } from "@/lib/actions/billing";
-import { useServerAction } from "@/hooks/useServerAction";
+import { appConfig as config } from "@/shared/config";
+import { getBillingDataForSettings } from "@features/billing/actions";
+import { useServerAction } from "@/shared/hooks/use-server-action";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
-import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
-import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { ChangePlanTrigger } from "@features/billing/ui/components/change-plan-dialog";
+import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checkout";
+import { productionLogger } from "@/lib/logger";
 
 // Simple loading skeleton component
 function BillingLoadingSkeleton() {
@@ -32,7 +33,7 @@ export default function BillingSettingsPage() {
   // Server action hooks for billing data
   const billingOptions = {
     onError: (error: string) => {
-      console.error("Failed to load billing data", error);
+      productionLogger.error("Failed to load billing data", error);
     },
   };
 
@@ -60,7 +61,7 @@ export default function BillingSettingsPage() {
           <AlertTriangle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
           <p className="text-muted-foreground">Failed to load billing data</p>
           <Button
-            onClick={loadBilling}
+            onClick={() => loadBilling()}
             variant="outline"
             size="sm"
             className="mt-2"

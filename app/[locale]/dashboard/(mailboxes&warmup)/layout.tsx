@@ -1,14 +1,14 @@
-import { ClientAnalyticsProvider } from "@/components/analytics/AnalyticsProviderClient";
-import OverviewCards from "@/components/domains/components/overview-cards";
-import TabTrigger from "@/components/domains/components/TabTrigger";
+import AnalyticsProviderClient from "@/features/analytics/ui/components/AnalyticsProviderClient";
+import OverviewCards from "@features/domains/ui/components/overview-cards";
+import TabTrigger from "@features/domains/ui/components/TabTrigger";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsList } from "@/components/ui/tabs";
-import { tabs } from "@/lib/data/mailboxes";
+import { mailboxTabs as tabs } from "@/features/settings/data/mailboxes.mock";
 import { Suspense } from "react";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <ClientAnalyticsProvider>
+    <AnalyticsProviderClient>
       <div className="space-y-8">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold text-foreground">
@@ -31,7 +31,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                     href={`/dashboard/${tab.id}`}
                     id={tab.id}
                   >
-                    <tab.icon className="h-4 w-4 mr-2 inline-block" />
+                    <tab.icon />
                     {tab.label}
                     {tab.count > 0 && (
                       <span className="ml-2 text-sm ">({tab.count})</span>
@@ -44,7 +44,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           </Tabs>
         </Card>
       </div>
-    </ClientAnalyticsProvider>
+    </AnalyticsProviderClient>
   );
 }
 export default Layout;

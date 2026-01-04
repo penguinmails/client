@@ -1,13 +1,8 @@
 "use client";
 
-import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
-import EmailMailboxesTable from "@/components/analytics/warmup/email-mailboxes-table";
-// For testing: Uncomment the line below to use migrated version
-// import MigratedEmailMailboxesTable from "@/components/analytics/warmup/MigratedEmailMailboxesTable";
-import WarmupAnalyticsFilter from "@/components/analytics/warmup/warmup-analytics-filter";
-import WarmUpLineChart from "@/components/analytics/warmup/warmup-line-chart";
-import { spacing } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { AnalyticsNavLinks, EmailMailboxesTable, WarmupAnalyticsFilter, WarmUpLineChart } from "@/features/analytics/ui/components";
+import { spacing } from "@/shared/config/design-tokens";
+import { cn } from "@/shared/utils";
 
 /**
  * Analytics Warmup Page Content
@@ -23,7 +18,7 @@ import { cn } from "@/lib/utils";
  */
 function AnalyticsWarmupPageContent() {
   return (
-    <div className={cn(spacing.stackXl)}>
+    <div className={cn(spacing.xl)}>
       <AnalyticsNavLinks />
       <WarmupAnalyticsFilter />
       <WarmUpLineChart />

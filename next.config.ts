@@ -4,11 +4,23 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   eslint: {
-    ignoreDuringBuilds: true,
+    dirs: [
+      "app",
+      "components",
+      "lib",
+      "types",
+      "hooks",
+      "context",
+      "i18n",
+      "src",
+      "features",
+      "shared",
+    ],
+    ignoreDuringBuilds: false,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // typescript: {
+  //   ignoreBuildErrors: true,
+  // },
   images: {
     remotePatterns: [
       {
@@ -27,6 +39,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withNextIntl = createNextIntlPlugin();
+const withNextIntl = createNextIntlPlugin('./shared/config/i18n/request.ts');
 
 export default withNextIntl(nextConfig);

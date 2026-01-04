@@ -1,7 +1,8 @@
 "use server";
 
-import { inboxMockEmails, inboxMockFroms, inboxMockCampaigns } from "@/lib/data/emails.mock";
-import { conversations } from "@/lib/data/Inbox.mock";
+import { inboxMockEmails, inboxMockFroms, inboxMockCampaigns } from "@/features/inbox/data/emails.mock";
+import { conversations } from "@/features/inbox/data/mock";
+import { developmentLogger, productionLogger } from "@/lib/logger";
 
 interface Query {
   email?: string[];
@@ -27,7 +28,7 @@ export const getAllMessagesAction = async (
   const { email = [], from = [], campaign = [], hidden = false } = query;
   const { page = 1, limit = 10 } = pagination;
 
-  console.log({
+  developmentLogger.debug("Getting all messages", {
     query,
     type,
     pagination,
@@ -51,7 +52,7 @@ export const getAllMessagesAction = async (
       currentPage: page,
     };
   } catch (error) {
-    console.error("Error in getAllMessagesAction:", error);
+    productionLogger.error("Error in getAllMessagesAction:", error);
     throw new Error("Failed to get all messages.");
   }
 };
@@ -88,7 +89,7 @@ export const getUniqueFiltersAction = async (_idToken = "") => {
       campaign,
     };
   } catch (error) {
-    console.error("Error in getUniqueFiltersAction:", error);
+    productionLogger.error("Error in getUniqueFiltersAction:", error);
     throw new Error("Failed to get filters.");
   }
 };
@@ -105,7 +106,7 @@ export async function fetchEmailByIdAction(id: string, _idToken = "") {
       htmlContent: email.body,
     };
   } catch (error) {
-    console.error("Error in fetchEmailByIdAction:", error);
+    productionLogger.error("Error in fetchEmailByIdAction:", error);
     throw new Error("Failed to fetch by id the email.");
   }
 }
@@ -118,7 +119,7 @@ export async function fetchConversationByIdAction(id: string, _idToken = "") {
     }
     return conversation;
   } catch (error) {
-    console.error("Error in fetchConversationByIdAction:", error);
+    productionLogger.error("Error in fetchConversationByIdAction:", error);
     throw new Error("Failed to fetch conversation.");
   }
 }
@@ -132,7 +133,7 @@ export async function markEmailAsReadAction(
 
     return email;
   } catch (error) {
-    console.error("Error in markEmailAsReadAction:", error);
+    productionLogger.error("Error in markEmailAsReadAction:", error);
     throw new Error("Failed to mark as read the email.");
   }
 }
@@ -143,12 +144,12 @@ export async function markEmailAsStarredAction(
   idToken = "",
 ) {
   try {
-    console.log("User idToken:", idToken);
+    developmentLogger.debug("User idToken:", idToken);
     const email = inboxMockEmails[0];
 
     return email;
   } catch (error) {
-    console.error("Error in markEmailAsStarredAction:", error);
+    productionLogger.error("Error in markEmailAsStarredAction:", error);
     throw new Error("Failed to starred the email.");
   }
 }
@@ -181,7 +182,7 @@ export async function softDeleteEmailAction(
 
     return email;
   } catch (error) {
-    console.error("Error performing soft delete:", error);
+    productionLogger.error("Error performing soft delete:", error);
     throw new Error("Failed to soft delete the email.");
   }
 }
@@ -214,7 +215,7 @@ export async function hideEmailAction(
 
     return email;
   } catch (error) {
-    console.error("Error performing hide action:", error);
+    productionLogger.error("Error performing hide action:", error);
     throw new Error("Failed to hide the email.");
   }
 }

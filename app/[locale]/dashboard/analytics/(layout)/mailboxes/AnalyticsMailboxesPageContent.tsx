@@ -1,11 +1,12 @@
 "use client";
-import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
-import AnalyticsStatistics from "@/components/analytics/components/analytics-statistics";
-import { useAnalytics } from "@/context/AnalyticsContext";
-import EmailMailboxesTable from "@/components/analytics/warmup/email-mailboxes-table";
+import { AnalyticsNavLinks, AnalyticsStatistics } from "@/features/analytics/ui/components";
+import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
+import { EmailMailboxesTable } from "@/features/analytics/ui/components";
 
 function AnalyticsMailboxesPageContent() {
-  const { totalSent, openRate, replyRate, clickRate } = useAnalytics();
+  const { useFormattedAnalytics } = useAnalytics();
+  const { formattedStats } = useFormattedAnalytics();
+  const { totalSent, openRate, replyRate, clickRate } = formattedStats;
 
   return (
     <div className="space-y-10">

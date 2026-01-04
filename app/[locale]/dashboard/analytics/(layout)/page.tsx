@@ -1,7 +1,7 @@
 "use client";
 
 // Import the migrated analytics dashboard
-import MigratedAnalyticsDashboard from "@/components/analytics/dashboard/AnalyticsDashboardMigrated";
+import { AnalyticsDashboard } from "@/features/analytics/ui/components";
 
 // Force dynamic rendering to prevent SSR issues
 export const dynamic = 'force-dynamic';
@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
  * - KPIDisplayConfig interface for dashboard cards
  */
 function AnalyticsPage() {
-  return <MigratedAnalyticsDashboard />;
+  return <AnalyticsDashboard />;
 }
 
 export default AnalyticsPage;

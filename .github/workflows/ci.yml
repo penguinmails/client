@@ -1,67 +1,46 @@
-name: Lint Check
+name: CI
 
 on:
   push:
-    branches: ["main"]
-
+    branches: [ main ]
   pull_request:
-    types: [opened, synchronize, reopened]
-    branches: ["main", "dev", "**"]
+    branches: [ main ]
 
 jobs:
-  lint:
-    name: Run ESLint and Prettier
+  build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+    - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: v23.6.0
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
-      - name: Restore cached dependencies
-        id: cache-restore
-        uses: actions/cache@v3
-        with:
-          path: ./src/node_modules
-          key: npm-${{ hashFiles('./src/package-lock.json') }}
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Install dependencies
-        if: steps.cache-restore.outputs.cache-hit != 'true'
-        run: |
-          echo "Installing dependencies with legacy-peer-deps..."
-          npm ci --legacy-peer-deps
+    - name: Run linting
+      run: npm run lint
 
-      - name: Run ESLint
-        run: npm run lint
-        env:
-          CI: true
+    - name: Run tests
+      run: npm run test
+      env:
+        CI: true
 
-      # - name: Run TypeScript type check
-      #   run: npm run typecheck
-      #   Note: Temporarily disabled due to existing TypeScript errors
-      #   TODO: Create ticket to resolve TypeScript compilation issues before re-enabling
-
-      - name: Run Jest tests
-        run: npm test -- --watchAll=false --passWithNoTests
-        continue-on-error: true
-        env:
-          CI: true
-
-      - name: Run build
-        run: CONVEX_DEPLOY_KEY='${{ secrets.CONVEX_DEPLOY_KEY }}' npx convex dev --once && npm run build
-        env:
-          NILEDB_API_URL: ${{ secrets.NILEDB_API_URL }}
-          NILEDB_USER: ${{ secrets.NILEDB_USER }}
-          NILEDB_PASSWORD: ${{ secrets.NILEDB_PASSWORD }}
-          NILEDB_POSTGRES_URL: ${{ secrets.NILEDB_POSTGRES_URL }}
-          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
-          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
-          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+    - name: Run build
+      run: npm run build
+      env:
+        NILEDB_API_URL: ${{ secrets.NILEDB_API_URL }}
+        NILEDB_USER: ${{ secrets.NILEDB_USER }}
+        NILEDB_PASSWORD: ${{ secrets.NILEDB_PASSWORD }}
+        NILEDB_POSTGRES_URL: ${{ secrets.NILEDB_POSTGRES_URL }}
+        CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
+        NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
+        REDIS_URL: ${{ secrets.REDIS_URL }}

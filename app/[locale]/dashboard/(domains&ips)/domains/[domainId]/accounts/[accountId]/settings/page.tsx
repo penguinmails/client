@@ -4,16 +4,17 @@ import { use, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import EmailAccountForm from "@/components/domains/email-account-form";
-import { EmailAccountFormValues } from "@/types/forms";
-import { getAccountDetails } from "@/lib/actions/domains";
+import EmailAccountForm from "@features/domains/ui/components/forms/email-account-form";
+import { EmailAccountFormValues } from "@/types";
+import { getAccountDetails } from "@features/domains/actions";
+import { developmentLogger } from "@/lib/logger";
 
 // Define the type for the data EmailAccountForm expects for its initialData prop
 type EmailAccountFormInitialData = Partial<EmailAccountFormValues> & {
   domainAuthStatus?: {
-    spfVerified?: boolean;
-    dkimVerified?: boolean;
-    dmarcVerified?: boolean;
+    spfVerified: boolean;
+    dkimVerified: boolean;
+    dmarcVerified: boolean;
   };
 };
 
@@ -34,9 +35,15 @@ function AccountSettingsClient({
       setIsFetchingData(true);
       try {
         const data = await getAccountDetails(Number(accountId));
-        setInitialData(data);
+        // Transform Mailbox to EmailAccountFormInitialData compatibility
+        const transformedData = data ? {
+          ...data,
+          provider: data.provider as EmailAccountFormValues['provider'],
+          accountType: data.accountType as EmailAccountFormValues['accountType']
+        } : null;
+        setInitialData(transformedData);
       } catch (error) {
-        console.error("Failed to fetch account details:", error);
+        developmentLogger.error("Failed to fetch account details:", error);
         // Handle error (e.g., show toast, set error state)
       } finally {
         setIsFetchingData(false);
@@ -47,7 +54,7 @@ function AccountSettingsClient({
 
   const handleSubmit = async (data: EmailAccountFormValues) => {
     setIsLoading(true);
-    console.log("Submitting account settings:", data);
+    developmentLogger.debug("Submitting account settings:", data);
     // TODO: Implement actual API call to update account settings
     await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
     // On success:

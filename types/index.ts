@@ -1,123 +1,192 @@
 // Barrel exports for all centralized TypeScript types
-// This allows importing types from '@types/...' using the tsconfig path mapping
+// This allows importing types from '@/types' 
 
-// Export all campaign related types
-export * from "./campaign";
+// ============================================================================
+// SHARED TYPES (Root types directory) - EXPORT FIRST
+// ============================================================================
 
-// Export all domain related types
-export * from "./domains";
+// Common utility types
+export {
+  type ID,
+  type Timestamp,
+  type Status,
+  type DisplayStatus,
+  type BaseEntity,
+  type PaginationParams,
+  type PaginatedResponse,
+  type SelectOption,
+  type MetricData,
+  type BillingAddress,
+  type TeamMember,
+  type MailboxWarmupData,
+  type WarmupChartData,
+} from "./common";
 
-// Export all mailbox related types
-export * from "./mailbox";
+// Core types for utilities (exported to avoid circular deps)
+export {
+  type CoreUser,
+  type CoreCompany,
+  type CoreTeam,
+  type CoreTenant,
+  CoreUserRole,
+  CoreTeamRole,
+} from "./core";
 
-// Export all template related types
-export * from "./templates";
+// Utility functions
+export * from "./utils";
 
-// Export all conversation/inbox related types
-export * from "./conversation";
 
-// Export navigation related types
-export * from "./nav-link";
+// Company types (Auth/Relationship-aware)
+export {
+  type CompanySettings,
+  type CompanyInfo,
+  mapCompanyInfoToCompany,
+  createDefaultCompanySettings,
+} from "./company";
 
-// Export notification related types
-export * from "./notification";
+// API Response types (Standard ActionResult, ApiResponse)
+export * from "./api";
 
-// Export authentication and user related types
-export * from "./auth";
-
-// Export tab/ui related types
-export * from "./tab";
-
-// Export common/shared utility types
-// Export settings and configuration types
-export type { TeamMember as SettingsTeamMember } from "./settings";
-// Export client and lead related types
-export * from "./clients-leads";
-export * from "./common";
-
-// Export UI and component prop types
+// UI and component prop types (Includes ComponentProps)
 export * from "./ui";
 
-// Export analytics related types (selectively to avoid conflicts)
-export type {
-  // Non-conflicting analytics types
-  CampaignAnalytics,
-  MailboxAnalytics,
-  LeadAnalytics,
-  TemplateAnalytics,
-  BillingAnalytics,
-  SequenceStepAnalytics,
-  WarmupAnalytics,
-  DailyWarmupStats,
-  // Core analytics types
-  PerformanceMetrics,
-  CalculatedRates,
-  TimeSeriesDataPoint,
-  BaseAnalytics,
-  AnalyticsFilters,
-  AnalyticsComputeOptions,
-  FilteredDataset,
-  DataGranularity,
-  // Mailbox analytics types
-  MailboxWarmupData,
-  MailboxAnalyticsData,
-  ProgressiveAnalyticsState,
-  WarmupChartData,
-  CampaignPerformanceData,
-  // UI analytics types
-  DateRangePreset,
-  AnalyticsUIFilters,
-  AnalyticsMetricConfig,
-  KPIDisplayConfig,
-  ChartDataPoint,
-  SmartInsightDisplay,
-  AnalyticsLoadingState,
-  AnalyticsDomain,
-  MetricToggleProps,
-  DateRangePickerProps,
-  EntityFilterProps,
-  FormattedAnalyticsStats,
-  PerformanceThresholds,
-} from "./analytics";
+// Other legacy/unmigrated types
+export * from "./templates";
+export * from "./accounts"; // Added accounts exports
+export * from "./nav-link";
+export * from "./notification";
+export * from "./tab";
+export * from "./test-utils";
+export * from "./utils";
+export * from "./onboarding";
 
-// Explicit re-exports for analytics types that conflict - use "Analytics" prefixed versions
-export type {
-  DomainAnalytics as AnalyticsDomainAnalytics, // Conflicts with types/domains.ts DomainAnalytics
-} from "./analytics/domain-specific";
+// ============================================================================
+// FEATURE TYPES (Re-exported from features)
+// ============================================================================
 
-export type {
-  CampaignStatus as AnalyticsCampaignStatus, // Conflicts with types/campaign.ts CampaignStatus
-} from "./analytics/domain-specific";
-
-export type {
-  WarmupStatus as AnalyticsWarmupStatus,   // Conflicts with types/mailbox.ts WarmupStatus & domains WarmupStatusType
-} from "./analytics/domain-specific";
-
-export type {
-  LeadStatus as AnalyticsLeadStatus,        // Conflicts with types/clients-leads.ts LeadStatus
-} from "./analytics/domain-specific";
-
-// Export team management related types
-export * from "./team";
-
-// Export company related types
-export * from "./company";
-
-// Export consolidated auth types
-export type {
-  Tenant,
-  ConsolidatedUser as User, // Consolidated User as main User type
-  UserClaims,
-  UserProfile,
-  NileDBUser,
-} from "./auth";
-
+// Auth
 export {
-  mapNileDBUserToConsolidatedUser,
-  mapTenantInfoToTenant,
-} from "./auth";
+  UserRole,
+  AuthErrorCodes,
+  type Tenant,
+  type AuthErrorCode,
+  type NileDBUser,
+} from "@features/auth/types";
 
-// Keep legacy types with prefix for backward compatibility
+// Billing (Selective to avoid BillingAddress conflict)
+export * from "@features/billing/types";
+
+// Campaigns (Avoiding CampaignStatus collision)
+export {
+  CampaignStatusEnum,
+  CampaignEventCondition,
+  type CampaignStatusType,
+  type EmailEventType,
+  type CampaignMetrics,
+  type Campaign, 
+  type CampaignLead,
+  type CampaignDisplay,
+  type StatsCardData,
+  type Step,
+  type ChartData,
+  type MetricToggle,
+  type CampaignStep,
+  type SequenceStep,
+  type CampaignFormValues,
+  type CampaignFormProps,
+  type CampaignSteps,
+  type PartialCampaignStep,
+  type CampaignPerformanceData,
+  type WarmupSummaryData,
+  type Client,
+} from "@features/campaigns/types";
+
+
+// Domains (Avoiding DomainAnalytics collision)
+export {
+  type DNSRecordType,
+  type DNSRecordStatus,
+  type DomainStatus,
+  type EmailAccountStatus,
+  VerificationStatus,
+  RelayType,
+  DomainAccountCreationType,
+  ACCOUNT_STATUSES,
+  WarmupStatus,
+  type WarmupStatusType,
+
+
+  type DNSRecord,
+  type Domain,
+  type DomainDB,
+  type EmailAccount,
+  type AddDomainFormValues,
+  type DomainSettingsFormValues,
+  type EmailAccountFormValues,
+  type EmailAccountFormProps,
+} from "@features/domains/types";
+
+// Inbox
+export {
+  type MessageType,
+  type ConversationStatus,
+  type Message,
+  type Conversation,
+  type Email,
+  type EmailsType,
+  type InboxMessage,
+  MessageSchema,
+  ConversationSchema,
+  EmailSchema,
+} from "@features/inbox/types";
+
+// Settings (Selective exports to avoid circular deps)
+export {
+  type AppearanceSettingsEntity,
+  type SecuritySettings,
+  type NotificationPreferences,
+  type TeamMembersResponse as SettingsTeamMembersResponse,
+  type TeamSettingsProps,
+  type TeamMemberUpdate,
+  type CreateTeamMember,
+  type GeneralSettings,
+  type AllSettings,
+  type TrackingSettings,
+  type CompanyProfile,
+  type ProfileFormValues,
+  profileFormSchema,
+} from "@features/settings/types";
+
+// Team
+export {
+  type TeamRole,
+  type TeamMemberStatus,
+  type TeamPermission,
+  type TeamInvite,
+  type TeamActivity,
+  type Team,
+  type TeamStats,
+  type TeamMembersResponse,
+} from "@features/team/types";
+
+// Analytics
+export * from "@features/analytics/types";
+
+// ============================================================================
+// EXPLICIT RE-EXPORTS & ALIASES (Resolving Conflicts)
+// ============================================================================
+
+// Resolve collisions and provide primary types
+export type { AppearanceSettingsEntity as AppearanceSettings } from "@features/settings/types";
+export type { TeamMember as SettingsTeamMember } from "@features/settings/types";
+export type { Campaign as InboxCampaign } from "@features/inbox/types";
+export type { Client as InboxClient } from "@features/inbox/types";
+
+
+// Analytics aliases
 export type {
-  User as LegacyUser, // Legacy User type for migration
-} from "./auth";
+  DomainAnalytics as AnalyticsDomainAnalytics,
+  CampaignStatus as AnalyticsCampaignStatus,
+  WarmupStatus as AnalyticsWarmupStatus,
+  LeadStatus as AnalyticsLeadStatus,
+} from "@features/analytics/types/domain-specific";

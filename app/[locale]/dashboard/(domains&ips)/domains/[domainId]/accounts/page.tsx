@@ -6,10 +6,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { EmailsTable } from "@/components/domains/components/emails-table";
+import { EmailsTable } from "@features/domains/ui/components/emails-table";
 import { ArrowLeft, PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { getDomainWithAccounts } from "@/lib/actions/domains";
+import { getDomainWithAccounts } from "@features/domains/actions";
 import { notFound } from "next/navigation";
 
 export default async function DomainAccountsPage({
@@ -56,7 +56,7 @@ export default async function DomainAccountsPage({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <EmailsTable emailAccounts={emailAccounts} domainId={domainId} />
+          <EmailsTable emailAccounts={emailAccounts || []} domainId={domainId} />
         </CardContent>
       </Card>
     </div>

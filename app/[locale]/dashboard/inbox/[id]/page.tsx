@@ -1,50 +1,15 @@
-import ConversationHeader from "@/components/inbox/conversation/conversation-header";
-import ConversationMessages from "@/components/inbox/conversation/conversation-messages";
-import ConversationReplay from "@/components/inbox/conversation/conversation-replay";
-import ConversationSkeleton from "@/components/inbox/conversation/conversation-skeleton";
-import NotesPanel from "@/components/inbox/conversation/notes-panel";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { ConversationProvider } from "@/context/ConversationContext";
-import { fetchConversationByIdAction } from "@/app/[locale]/dashboard/inbox/actions";
-import { notFound } from "next/navigation";
+import ConversationSkeleton from "@features/inbox/ui/components/conversation/conversation-skeleton";
+import { ConversationProvider } from "@features/inbox/ui/context/conversation-context";
 import { Suspense } from "react";
+import ClientConversationWrapper from "./wrapper";
 
-async function page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  if (!id) {
-    return notFound();
-  }
+function page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <Suspense fallback={<ConversationSkeleton />}>
-      <Conversation id={id} />
+      <ConversationProvider>
+        <ClientConversationWrapper params={params} />
+      </ConversationProvider>
     </Suspense>
   );
 }
 export default page;
-async function Conversation({ id }: { id: string }) {
-  const conversation = await fetchConversationByIdAction(id);
-  if (!conversation) {
-    return notFound();
-  }
-  return (
-    <ConversationProvider conversation={conversation}>
-      <Card className="shadow-none border-0 rounded-none gap-0 p-0">
-        <CardHeader className="p-0">
-          <ConversationHeader />
-          <NotesPanel />
-        </CardHeader>
-        <CardContent className="p-0">
-          <ConversationMessages />
-        </CardContent>
-        <CardFooter className="p-0">
-          <ConversationReplay />
-        </CardFooter>
-      </Card>
-    </ConversationProvider>
-  );
-}

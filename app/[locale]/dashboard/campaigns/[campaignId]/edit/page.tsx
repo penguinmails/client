@@ -1,15 +1,16 @@
-import AddCampaignForm from "@/components/campaigns/steps/AddCampaignForm";
-import AddCampaignHeader from "@/components/campaigns/steps/AddCampaignHeader";
-import AddCampaignSteps from "@/components/campaigns/steps/AddCampaignSteps";
-import NavigationButtons from "@/components/campaigns/steps/NavigationButtons";
+import AddCampaignForm from "@features/campaigns/ui/components/steps/AddCampaignForm";
+import AddCampaignHeader from "@features/campaigns/ui/components/steps/AddCampaignHeader";
+import AddCampaignSteps from "@features/campaigns/ui/components/steps/AddCampaignSteps";
+import NavigationButtons from "@features/campaigns/ui/components/steps/NavigationButtons";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { AddCampaignProvider } from "@/context/AddCampaignContext";
-import { getCampaign } from "@/lib/actions/campaigns";
+import { AddCampaignProvider } from "@features/campaigns/ui/context/add-campaign-context";
+import { getCampaign } from "@features/campaigns/actions";
+import { CampaignStatus } from "@features/campaigns/types";
 import { notFound } from "next/navigation";
 
 export default async function CampaignCreatePage({
@@ -23,8 +24,33 @@ export default async function CampaignCreatePage({
     notFound();
   }
   const campaign = campaignResult.data;
+  
+  // Transform Campaign to CampaignFormValues format
+  const transformedCampaign = {
+    name: campaign.name,
+    fromName: campaign.fromName,
+    fromEmail: campaign.fromEmail,
+    status: (campaign.status === 'active' ? 'ACTIVE' : 
+             campaign.status === 'paused' ? 'PAUSED' :
+             campaign.status === 'completed' ? 'COMPLETED' : 'DRAFT') as CampaignStatus,
+    steps: [], // Will be populated by the form
+    clients: [], // Will be populated by the form
+    timezone: 'UTC', // Default value
+    description: '',
+    companyId: 0,
+    createdById: '',
+    sendDays: [],
+    sendTimeStart: '',
+    sendTimeEnd: '',
+    emailsPerDay: 0,
+    selectedMailboxes: [],
+    metrics: campaign.metrics,
+    createdAt: new Date(campaign.lastUpdated),
+    updatedAt: new Date(campaign.lastUpdated),
+  };
+  
   return (
-    <AddCampaignProvider initialValues={campaign}>
+    <AddCampaignProvider initialData={transformedCampaign} campaign={transformedCampaign} editingMode={true}>
       <Card className="border-none shadow-none">
         <CardHeader>
           <AddCampaignHeader>

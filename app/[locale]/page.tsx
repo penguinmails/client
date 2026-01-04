@@ -1,142 +1,125 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button/button";
-import { PasswordInput } from "@/components/ui/custom/password-input";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
-import { LogIn, User } from "lucide-react";
-import { LandingLayout } from "@/components/landing/LandingLayout";
-import { loginContent } from "./content";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import { AuthTemplate } from "@/components/auth/AuthTemplate";
-import { Turnstile } from "next-turnstile";
-import { verifyTurnstileToken } from "./signup/verifyToken";
-import { useTranslations } from "next-intl";
-import { initPostHog } from "@/lib/instrumentation-client";
-import { getLoginAttemptStatus } from "@/lib/auth/rate-limit";
-
-import { ph } from "@/lib/instrumentation-client";
+import React, { useState, useEffect } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button/button"
+import { PasswordInput } from "@/features/auth/ui/components"
+import { Input } from "@/components/ui/input/input"
+import { Label } from "@/components/ui/label"
+import { LogIn, User } from "lucide-react"
+import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@features/auth/ui/context/auth-context"
+import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate"
+import { Turnstile } from "next-turnstile"
+import { verifyTurnstileToken } from "./signup/verifyToken"
+import { useTranslations } from "next-intl"
+import { initPostHog, ph } from "@/lib/posthog"
+import { getLoginAttemptStatus } from "@/features/auth/lib/rate-limit"
+import { productionLogger } from "@/lib/logger"
 
 const MAX_LOGIN_ATTEMPTS = parseInt(
   process.env.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS || "3",
   10
-);
+)
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showTurnstile, setShowTurnstile] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [loginAttempts, setLoginAttempts] = useState(0);
-  const router = useRouter();
-  const { login, user, error: authError } = useAuth();
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [showTurnstile, setShowTurnstile] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const [loginAttempts, setLoginAttempts] = useState(0)
+  const router = useRouter()
+  const { login, user, error: authError } = useAuth()
+  const t = useTranslations("Login")
 
-  const t = useTranslations("Login");
-
-  // Initialize from sessionStorage on component mount
   useEffect(() => {
-    initPostHog().then((client) => {
-      client.capture("login_page_loaded");
-    });
-  }, []);
+    initPostHog().then(client => {
+      client.capture('login_page_loaded')
+    })
+  }, [])
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+    e.preventDefault()
+    setError(null)
+    setIsLoading(true)
 
-    // Check sessionStorage for existing attempts for this email
     if (email?.includes("@")) {
-      const status = getLoginAttemptStatus(email);
-      // Update UI to reflect current attempt count
+      const status = getLoginAttemptStatus(email)
       if (status.attempts > 0) {
-        setLoginAttempts(status.attempts);
-        setShowTurnstile(status.requiresTurnstile);
+        setLoginAttempts(status.attempts)
+        setShowTurnstile(status.requiresTurnstile)
       }
+    }
+
+    if (showTurnstile && !turnstileToken) {
+      setError(t("errors.captchaRequired"))
+      setIsLoading(false)
+      return
     }
 
     try {
-      // Check if Turnstile is required
-      const requiresTurnstile = showTurnstile && !turnstileToken;
-
-      if (requiresTurnstile) {
-        setError(t("errors.captchaRequired"));
-        setIsLoading(false);
-        return;
-      }
-
-      // If Turnstile is shown but we have a token, verify it
       if (showTurnstile && turnstileToken) {
-        await verifyTurnstileToken(turnstileToken);
-        ph().capture("captcha_completed", { email });
+        await verifyTurnstileToken(turnstileToken)
+        ph().capture('captcha_completed', { email })
       }
 
-      // Proceed with login
-      await login(email, password);
-      ph().capture("login_attempt", { email, success: true });
-    } catch (err) {
-      console.error("Login failed:", err);
-      const errorMessage =
-        (err as Error)?.message || loginContent.errors.generic;
-      setError(errorMessage);
+      // Login attempt
+      await login(email, password)
+      ph().capture('login_attempt', { email, success: true })
 
-      // Get updated attempt status (AuthContext already recorded the failure)
-      const status = getLoginAttemptStatus(email);
-      setShowTurnstile(status.requiresTurnstile);
-      setLoginAttempts(status.attempts || 0);
-      setTurnstileToken(null);
+      router.push("/dashboard")
+    } catch (err) {
+      productionLogger.error("Login failed", err)
+      const errorMessage = (err as Error)?.message || t("errors.generic")
+      setError(errorMessage)
 
       // Log failed login attempt
-      ph().capture("login_attempt", {
-        email,
-        success: false,
-        error: "Login failed",
-        attempts: status.attempts,
-      });
+      ph().capture('login_attempt', { 
+        email, 
+        success: false, 
+        error: 'Login failed'
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
     if (user && !isLoading) {
-      router.push("/dashboard");
-      setError(null);
+      router.push("/dashboard")
+      setError(null)
     }
-  }, [user, router, isLoading]);
+  }, [user, router, isLoading])
 
   useEffect(() => {
     if (authError) {
-      setError(authError.message);
-
-      // Also update attempt counter when there's an authError
+      setError(authError.message)
       if (email && email.includes("@")) {
-        const status = getLoginAttemptStatus(email);
-        setLoginAttempts(status.attempts || 0);
-        setShowTurnstile(status.requiresTurnstile);
+        const status = getLoginAttemptStatus(email)
+        setLoginAttempts(status.attempts || 0)
+        setShowTurnstile(status.requiresTurnstile)
       }
     } else {
-      setError(null);
+      setError(null)
     }
-  }, [authError, email]);
+  }, [authError, email])
 
-  const icon = user ? User : LogIn;
-  const mode = user ? "loggedIn" : "form";
+  const icon = user ? User : LogIn
+  const mode = user ? "loggedIn" : "form"
+
   const footer = user ? undefined : (
     <div className="flex flex-col items-center space-y-2">
       <p className="text-xs text-muted-foreground">
-        {loginContent.signup.text}{" "}
+        {t("signup.text")}{" "}
         <Link href="/signup" className="underline font-medium text-primary">
-          {loginContent.signup.link}
+          {t("signup.link")}
         </Link>
       </p>
     </div>
-  );
+  )
 
   return (
     <LandingLayout>
@@ -162,16 +145,12 @@ export default function LoginPage() {
                 disabled={isLoading}
               />
             </div>
-
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{t("password.label")}</Label>
-                <Link
-                  href="/forgot-password"
-                  className="text-sm font-medium text-primary hover:underline underline-offset-4"
-                >
-                  {loginContent.forgotPassword}
-                </Link>
+                {/* <Link href="/forgot-password" className="text-sm font-medium text-primary hover:underline underline-offset-4">
+                  {t("forgotPassword")}
+                </Link> */}
               </div>
               <PasswordInput
                 name="password"
@@ -229,17 +208,17 @@ export default function LoginPage() {
               {isLoading
                 ? t("loginButton.loading")
                 : loginAttempts >= MAX_LOGIN_ATTEMPTS && !turnstileToken
-                  ? "Too many attempts. Complete verification."
-                  : showTurnstile && !turnstileToken
-                    ? "Complete verification to continue"
-                    : t("loginButton.default")}
+                ? "Too many attempts. Complete verification."
+                : showTurnstile && !turnstileToken
+                ? "Complete verification to continue"
+                : t("loginButton.default")}
             </Button>
           </form>
         )}
       </AuthTemplate>
     </LandingLayout>
-  );
+  )
 }
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic"

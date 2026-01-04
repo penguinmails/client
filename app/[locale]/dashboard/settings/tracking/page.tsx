@@ -1,4 +1,4 @@
-import TrackingPreferences from "@/components/settings/tracking/tracking-preferences";
+import { TrackingPreferences } from "@/features/settings";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function page() {

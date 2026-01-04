@@ -8,6 +8,9 @@ A modern email marketing platform built with Next.js, featuring real-time analyt
 # Install dependencies
 npm install
 
+# Start local infrastructure (NileDB + Redis)
+docker compose up -d
+
 # Start development server
 npm run dev
 
@@ -24,9 +27,10 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ### Core Stack
 
-- **Frontend**: Next.js 14 with App Router and TypeScript
-- **Backend**: Convex for real-time data and server functions
-- **Database**: NileDB for multi-tenant data isolation
+- **Frontend**: Next.js 15 with App Router and TypeScript
+- **Database**: NileDB for multi-tenant data isolation (4 separate databases: OLTP, OLAP, Messages, Queue)
+- **ORM**: Drizzle ORM with PostgreSQL connections for each database
+- **Cache**: Redis for analytics caching and performance optimization
 - **Authentication**: NileDB integrated auth with role-based permissions
 - **Deployment**: Cloudflare Workers with OpenNext adapter
 - **Styling**: Tailwind CSS with shadcn/ui components
@@ -57,7 +61,8 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ### Infrastructure
 
 - **Cloudflare Setup**: [`docs/infrastructure/cloudflare.md`](./docs/infrastructure/cloudflare.md) - Deployment and configuration
-- **Convex Integration**: [`docs/infrastructure/convex.md`](./docs/infrastructure/convex.md) - Backend setup and patterns
+
+- **NileDB Setup**: [`docs/infrastructure/docker-niledb.md`](./docs/infrastructure/docker-niledb.md) - Local database and Redis setup with Docker
 
 ## \U0001f6e0\ufe0f Development
 
@@ -65,7 +70,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 - Node.js 18+ and npm
 - Git for version control
-- [Convex CLI](https://docs.convex.dev/cli) for backend development
+
 
 ### Environment Setup
 
@@ -86,21 +91,30 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 3. **Start development services**:
 
-   ```bash
-   # Start Convex backend
-   npm run convex:dev
+    ```bash
+    # Start local infrastructure (NileDB + Redis)
+    docker compose up -d
 
-   # Start Next.js frontend (in another terminal)
-   npm run dev
-   ```
+    # Start NileDB + Redis
+    npm run db:start
+
+    # Start Next.js frontend (in another terminal)
+    npm run dev
+    ```
 
 ### Available Scripts
 
 ```bash
 # Development
 npm run dev              # Start development server
-npm run convex:dev       # Start Convex backend
-npm run convex:dashboard # Open Convex dashboard
+
+npm run db:start         # Start NileDB + Redis
+npm run db:stop          # Stop NileDB + Redis
+
+# Infrastructure
+docker compose up -d     # Start local NileDB + Redis containers
+docker compose down      # Stop local containers
+docker compose logs      # View container logs
 
 # Building
 npm run build            # Build Next.js application
@@ -128,13 +142,13 @@ npm run docs:maintenance # Validate documentation
 \u2502   \u251c\u2500\u2500 actions/         # Server actions (modular architecture)
 \u2502   \u251c\u2500\u2500 services/        # Business logic services
 \u2502   \u2514\u2500\u2500 utils/           # Shared utilities
-\u251c\u2500\u2500 convex/              # Convex backend functions and schema
+\u251c\u2500\u2500├── database/           # Database migrations and schemas
 \u251c\u2500\u2500 types/               # TypeScript type definitions
 \u251c\u2500\u2500 docs/                # Comprehensive documentation
 \u2514\u2500\u2500 scripts/             # Build and maintenance scripts
 ```
 
-## \U0001f680 Deployment
+## 🚀 Deployment
 
 ### Cloudflare Workers (Recommended)
 
@@ -168,9 +182,14 @@ Required environment variables:
 CLOUDFLARE_API_TOKEN=your-api-token
 CLOUDFLARE_ACCOUNT_ID=your-account-id
 
-# Database & Auth
-DATABASE_URL=your-niledb-url
-NEXTAUTH_SECRET=your-auth-secret
+# Database & Auth (Local Development)
+NILEDB_USER=00000000-0000-0000-0000-000000000000
+NILEDB_PASSWORD=nile
+NILEDB_API_URL=http://localhost:3000
+NILEDB_POSTGRES_URL=postgres://00000000-0000-0000-0000-000000000000:nile@localhost:5443/test
+
+# Redis (Local Development)
+REDIS_URL=redis://localhost:6379
 
 # External Services
 STRIPE_SECRET_KEY=your-stripe-key
@@ -183,6 +202,13 @@ LOOP_RESET_TRANSACTIONAL_ID=your-password-reset-id
 LOOP_WELCOME_TRANSACTIONAL_ID=your-welcome-id
 LOOP_NOTIFICATION_TRANSACTIONAL_ID=your-notification-id
 ```
+
+**Database Services** (when running `docker compose up -d`):
+- **OLTP Database**: Port 5443, Database: `oltp`
+- **OLAP Database**: Port 5444, Database: `olap`
+- **Messages Database**: Port 5445, Database: `messages`
+- **Queue Database**: Port 5446, Database: `queue`
+- **Redis Cache**: Port 6380, URL: `redis://localhost:6379`
 
 For complete setup instructions, see [`docs/infrastructure/cloudflare.md`](./docs/infrastructure/cloudflare.md).
 
@@ -340,21 +366,4 @@ For more information, see the [Type Analysis Documentation](./docs/development/t
 - **Troubleshooting**: Common issues in [`docs/development/troubleshooting.md`](./docs/development/troubleshooting.md)
 - **Architecture**: System design in [`docs/analytics/README.md`](./docs/analytics/README.md)
 
-Built with ❤️ for modern email marketing workflows.
-
-<!-- CONTRIBUTORS START -->
-<h2>Contributors</h2>
-<table border='1' cellspacing='0' cellpadding='5'>
-  <thead>
-    <tr><th>Avatar</th><th>Username</th><th>Insights</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/36519478?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Israel-Laguan">Israel-Laguan</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/52115726?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/ARenzDev">ARenzDev</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/53250640?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/yodit93">yodit93</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/112190828?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/Mhmd0Mhmod">Mhmd0Mhmod</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/229774540?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/penguinmails-dev">penguinmails-dev</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
-    <tr><td><img src="https://avatars.githubusercontent.com/u/241014428?v=4?s=50" alt="Avatar" width="50" height="50"></td><td><a href="https://github.com/ajrenz531-boop">ajrenz531-boop</a></td><td><a href="https://github.com/penguinmails/client/graphs/contributors">📈</a></td></tr>
-  </tbody>
-</table>
-<!-- CONTRIBUTORS END -->
+Built with \u2764\ufe0f for modern email marketing workflows.

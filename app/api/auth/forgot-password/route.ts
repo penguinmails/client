@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { nile } from '@/app/api/[...nile]/nile';
 import { z } from 'zod';
+import { productionLogger } from '@/lib/logger';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email(),
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     // Log response for debugging (remove in production)
     if (process.env.NODE_ENV === 'development') {
-      console.log('NileDB forgotPassword response:', response);
+      productionLogger.debug('NileDB forgotPassword response:', response);
     }
 
     // Always return success for security reasons (don't reveal if email exists)
@@ -42,20 +43,27 @@ export async function POST(request: NextRequest) {
       message: 'If an account with this email exists, you will receive a password reset link shortly.',
     });
   } catch (error) {
-    console.error('Forgot password error:', error);
+    productionLogger.error('Forgot password error:', error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid email format', details: error.issues },
+        { 
+          success: false, 
+          error: 'Invalid email format', 
+          code: 'VALIDATION_ERROR',
+          details: error.issues 
+        },
         { status: 400 },
       );
     }
 
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        success: false, 
+        error: 'Internal server error', 
+        code: 'INTERNAL_ERROR' 
+      },
       { status: 500 },
     );
   }
 }
-
-

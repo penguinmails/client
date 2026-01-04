@@ -1,12 +1,13 @@
-// Mock for @niledatabase/server in Storybook
-// This prevents errors when components import server-side Nile code
-
-export const Nile = () => ({
-  db: {},
-  tenants: {},
-  users: {},
-});
-
-export default {
-  Nile,
+// Mock Nile database modules for Storybook
+export const server = {
+  // Mock server functionality
+  query: () => Promise.resolve([]),
+  mutation: () => Promise.resolve({}),
+  auth: {
+    getUser: () => Promise.resolve(null),
+    signIn: () => Promise.resolve({}),
+    signOut: () => Promise.resolve({}),
+  },
 };
+
+export default server;

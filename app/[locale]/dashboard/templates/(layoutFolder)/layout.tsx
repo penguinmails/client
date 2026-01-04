@@ -1,12 +1,12 @@
 import NavLink from "@/components/ui/custom/NavLink";
-import CreateNewFolderButton from "@/components/templates/create-new-folder-button";
-import ConditionalNewTemplateButton from "@/components/templates/ConditionalNewTemplateButton";
+import CreateNewFolderButton from "@/features/campaigns/ui/components/templates/CreateNewFolderButton";
+import ConditionalNewTemplateButton from "@/features/campaigns/ui/components/templates/ConditionalNewTemplateButton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import GalleryTab from "@/components/templates/gallery-tab";
-import MyTemplatesTab from "@/components/templates/my-templates-tab";
-import QuickRepliesTab from "@/components/templates/qucik-replies-tab";
+import GalleryTab from "@/features/campaigns/ui/components/templates/GalleryTab";
+import MyTemplatesTab from "@/features/campaigns/ui/components/templates/MyTemplatesTab";
+import QuickRepliesTab from "@/features/campaigns/ui/components/templates/QuickRepliesTab";
 import { Tab } from "@/types/tab";
-import { getTabCounts } from "@/lib/actions/templates";
+import { getTabCounts } from "@features/campaigns/actions/templates";
 
 // Tab definitions - UI structure
 const tabs: Tab[] = [
@@ -36,9 +36,7 @@ async function layout({
   templateFolders: React.ReactNode;
   children: React.ReactNode;
 }) {
-  const tabCountsResult = await getTabCounts();
-  const tabCounts =
-    tabCountsResult.success && tabCountsResult.data ? tabCountsResult.data : {};
+  const tabCounts: Record<string, number> = await getTabCounts();
 
   return (
     <div className="space-y-5 flex flex-col h-full">

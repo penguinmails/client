@@ -3,178 +3,195 @@
  * These tests verify the consolidated User type matches the specification
  */
 
-import { User, UserClaims, UserProfile, Permission, UserRole } from '../auth';
+import { AuthUser, Permission, UserRole } from '@features/auth/types';
+import { UserPreferences } from '@features/auth/types/auth-user';
 
 // Test consolidated User interface structure
 describe('Consolidated User Interface', () => {
   it('should have all required string ID fields', () => {
-    const testUser: User = {
+    const testUser: AuthUser = {
       id: 'user-123',
-      tenantId: 'tenant-456',
       email: 'test@example.com',
-      displayName: 'Test User',
-      claims: {} as UserClaims,
-      profile: {} as UserProfile,
+      name: 'Test User',
     };
 
     expect(typeof testUser.id).toBe('string');
-    expect(typeof testUser.tenantId).toBe('string');
     expect(typeof testUser.email).toBe('string');
-    expect(typeof testUser.displayName).toBe('string');
+    expect(typeof testUser.name).toBe('string');
+    
+    // Test optional tenant membership
+    if (testUser.tenantMembership) {
+      expect(typeof testUser.tenantMembership.tenantId).toBe('string');
+    }
   });
 
-  it('should support optional teamId', () => {
-    const userWithTeam: User = {
+  it('should support optional tenant membership', () => {
+    const userWithMembership: AuthUser = {
       id: 'user-123',
-      tenantId: 'tenant-456',
-      teamId: 'team-789',
       email: 'test@example.com',
-      displayName: 'Test User',
-      claims: {} as UserClaims,
-      profile: {} as UserProfile,
+      name: 'Test User',
+      tenantMembership: {
+        tenantId: 'tenant-456',
+        user_id: 'user-123',
+        roles: ['user'],
+        email: 'test@example.com',
+      },
     };
 
-    expect(userWithTeam.teamId).toBeDefined();
+    expect(userWithMembership.tenantMembership).toBeDefined();
 
-    const userWithoutTeam: User = {
+    const userWithoutMembership: AuthUser = {
       id: 'user-123',
-      tenantId: 'tenant-456',
       email: 'test@example.com',
-      displayName: 'Test User',
-      claims: {} as UserClaims,
-      profile: {} as UserProfile,
+      name: 'Test User',
     };
 
-    expect(userWithoutTeam.teamId).toBeUndefined();
+    expect(userWithoutMembership.tenantMembership).toBeUndefined();
   });
 
-  it('should have required photoURL and profile fields as optional', () => {
-    const minimalUser: User = {
+  it('should have optional picture and name fields', () => {
+    const minimalUser: AuthUser = {
       id: 'user-123',
-      tenantId: 'tenant-456',
       email: 'test@example.com',
-      displayName: 'Test User',
-      claims: {} as UserClaims,
-      profile: {} as UserProfile,
     };
 
-    expect(minimalUser.photoURL).toBeUndefined();
+    expect(minimalUser.picture).toBeUndefined();
+    expect(minimalUser.name).toBeUndefined();
 
-    const userWithPhoto: User = {
+    const userWithPhoto: AuthUser = {
       id: 'user-123',
-      tenantId: 'tenant-456',
       email: 'test@example.com',
-      displayName: 'Test User',
-      photoURL: 'https://example.com/photo.jpg',
-      claims: {} as UserClaims,
-      profile: {} as UserProfile,
+      name: 'Test User',
+      picture: 'https://example.com/photo.jpg',
     };
 
-    expect(userWithPhoto.photoURL).toBeDefined();
+    expect(userWithPhoto.picture).toBeDefined();
+    expect(userWithPhoto.name).toBeDefined();
   });
 
-  it('should have claims and profile as required objects', () => {
-    const testUser: User = {
+  it('should have optional preferences', () => {
+    const testUser: AuthUser = {
       id: 'user-123',
-      tenantId: 'tenant-456',
       email: 'test@example.com',
-      displayName: 'Test User',
-      claims: {} as UserClaims,
-      profile: {} as UserProfile,
+      name: 'Test User',
     };
 
-    expect(testUser.claims).toBeDefined();
-    expect(testUser.profile).toBeDefined();
+    expect(testUser.preferences).toBeUndefined();
+
+    const userWithPreferences: AuthUser = {
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      preferences: {
+        theme: 'dark',
+        language: 'en',
+        timezone: 'UTC',
+      },
+    };
+
+    expect(userWithPreferences.preferences).toBeDefined();
   });
 });
 
-// Test UserClaims interface
-describe('UserClaims Interface', () => {
-  it('should have required role and tenantId', () => {
-    const claims: UserClaims = {
-      role: UserRole.USER,
-      tenantId: 'tenant-123',
-      permissions: [],
+// Test backward compatibility claims alias
+describe('Claims Alias (Backward Compatibility)', () => {
+  it('should support claims object with role and permissions', () => {
+    const userWithClaims: AuthUser = {
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      claims: {
+        role: UserRole.USER,
+        tenantId: 'tenant-123',
+        permissions: [Permission.VIEW_USERS],
+      },
     };
 
-    expect(typeof claims.role).toBe('string');
-    expect(typeof claims.tenantId).toBe('string');
-    expect(Array.isArray(claims.permissions)).toBe(true);
+    expect(userWithClaims.claims).toBeDefined();
+    expect(typeof userWithClaims.claims?.role).toBe('string');
+    expect(Array.isArray(userWithClaims.claims?.permissions)).toBe(true);
   });
 
-  it('should support optional companyId', () => {
-    const claimsWithCompany: UserClaims = {
-      role: UserRole.USER,
-      tenantId: 'tenant-123',
-      companyId: 'company-456',
-      permissions: [],
+  it('should support optional companyId in claims', () => {
+    const userWithCompany: AuthUser = {
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      claims: {
+        role: UserRole.USER,
+        tenantId: 'tenant-123',
+        companyId: 'company-456',
+        permissions: [],
+      },
     };
 
-    expect(claimsWithCompany.companyId).toBeDefined();
+    expect(userWithCompany.claims?.companyId).toBeDefined();
 
-    const claimsWithoutCompany: UserClaims = {
-      role: UserRole.USER,
-      tenantId: 'tenant-123',
-      permissions: [],
+    const userWithoutCompany: AuthUser = {
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      claims: {
+        role: UserRole.USER,
+        tenantId: 'tenant-123',
+        permissions: [],
+      },
     };
 
-    expect(claimsWithoutCompany.companyId).toBeUndefined();
+    expect(userWithoutCompany.claims?.companyId).toBeUndefined();
   });
 });
 
-// Test UserProfile interface
-describe('UserProfile Interface', () => {
-  it('should have required timezone and language', () => {
-    const profile: UserProfile = {
+// Test UserPreferences interface
+describe('UserPreferences Interface', () => {
+  it('should have optional theme and language', () => {
+    const preferences: UserPreferences = {
+      theme: 'dark',
+      language: 'en',
       timezone: 'UTC',
-      language: 'en',
     };
 
-    expect(profile.timezone).toBe('UTC');
-    expect(profile.language).toBe('en');
+    expect(preferences.theme).toBe('dark');
+    expect(preferences.language).toBe('en');
+    expect(preferences.timezone).toBe('UTC');
   });
 
-  it('should have all optional fields', () => {
-    const profile: UserProfile = {
-      firstName: 'John',
-      lastName: 'Doe',
-      avatar: 'https://example.com/avatar.jpg',
+  it('should have all optional notification fields', () => {
+    const preferences: UserPreferences = {
+      theme: 'light',
+      language: 'es',
       timezone: 'America/New_York',
-      language: 'en',
-      lastLogin: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      emailNotifications: true,
+      pushNotifications: false,
+      weeklyReports: true,
+      marketingEmails: false,
     };
 
-    expect(profile.firstName).toBeDefined();
-    expect(profile.lastName).toBeDefined();
-    expect(profile.avatar).toBeDefined();
-    expect(profile.lastLogin).toBeInstanceOf(Date);
-    expect(profile.createdAt).toBeInstanceOf(Date);
-    expect(profile.updatedAt).toBeInstanceOf(Date);
+    expect(preferences.emailNotifications).toBeDefined();
+    expect(preferences.pushNotifications).toBeDefined();
+    expect(preferences.weeklyReports).toBeDefined();
+    expect(preferences.marketingEmails).toBeDefined();
   });
 });
 
 // Type assertion tests to ensure type safety
 describe('Type Safety Assertions', () => {
-  it('should accept valid User object', () => {
-    const validUser: User = {
+  it('should accept valid AuthUser object', () => {
+    const validUser: AuthUser = {
       id: 'user-123',
-      tenantId: 'tenant-456',
       email: 'test@example.com',
-      displayName: 'Test User',
-      photoURL: 'https://example.com/photo.jpg',
+      name: 'Test User',
+      picture: 'https://example.com/photo.jpg',
       claims: {
         role: UserRole.USER,
         tenantId: 'tenant-456',
         companyId: 'company-789',
         permissions: [Permission.VIEW_USERS],
       },
-      profile: {
-        firstName: 'Test',
-        lastName: 'User',
-        timezone: 'UTC',
+      preferences: {
+        theme: 'dark',
         language: 'en',
+        timezone: 'UTC',
       },
     };
 
@@ -182,20 +199,14 @@ describe('Type Safety Assertions', () => {
     expect(validUser).toBeDefined();
   });
 
-  it('should reject User with invalid email format', () => {
-    // This test will pass when types are consolidated
-    // For now, it documents the expected validation
+  it('should accept user object with minimal required fields', () => {
     expect(() => {
-      const invalidUser = {
+      const minimalUser = {
         id: 'user-123',
-        tenantId: 'tenant-456',
-        email: 'invalid-email', // Should be validated at runtime
-        displayName: 'Test User',
-        claims: {} as UserClaims,
-        profile: {} as UserProfile,
+        email: 'test@example.com',
       };
 
-      return invalidUser;
+      return minimalUser;
     }).not.toThrow();
   });
 });

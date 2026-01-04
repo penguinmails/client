@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AuthService } from "@/lib/niledb/auth";
-import { isDuplicateEmailError } from "@/lib/niledb/errors";
+import { AuthService } from "@/lib/nile/auth";
+import { isDuplicateEmailError } from "@/lib/nile/errors";
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,18 +19,22 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, user }, { status: 200 });
   } catch (error) {
-    console.error("Signup API error:", error);
 
     // Handle duplicate email errors
     if (isDuplicateEmailError(error)) {
+      const duplicateError = error as {
+        message: string;
+        code: string;
+        isVerified: boolean;
+      };
       return NextResponse.json(
         {
-          error: error.message,
-          code: error.code,
-          i18nKey: error.isVerified
+          error: duplicateError.message,
+          code: duplicateError.code,
+          i18nKey: duplicateError.isVerified
             ? "emailAlreadyExistsVerified"
             : "emailAlreadyExistsUnverified",
-          actionType: error.isVerified ? "LOGIN" : "RESEND_VERIFICATION",
+          actionType: duplicateError.isVerified ? "LOGIN" : "RESEND_VERIFICATION",
         },
         { status: 409 } // Conflict status
       );

@@ -1,4 +1,4 @@
-import NotificationsSettings from "@/components/settings/notifications/notifications-settings";
+import { NotificationSettings } from "@features/settings/ui/components";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function page() {
@@ -15,7 +15,7 @@ function page() {
           <CardTitle>Email Notifications</CardTitle>
         </CardHeader>
         <CardContent>
-          <NotificationsSettings />
+          <NotificationSettings />
         </CardContent>
       </Card>
     </div>

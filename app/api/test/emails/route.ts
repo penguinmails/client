@@ -6,7 +6,12 @@
  */
 
 import { NextResponse } from 'next/server';
-import { getLoopService } from '@/lib/services/loop';
+import { getLoopService } from '@/lib/loop/client';
+import { productionLogger } from '@/lib/logger';
+import {
+  ApiSuccessResponse,
+  ApiErrorResponse
+} from '@/types';
 
 // Test endpoint to send verification email
 export async function GET(request: Request) {
@@ -26,32 +31,43 @@ export async function GET(request: Request) {
     const loopService = getLoopService();
     const result = await loopService.sendVerificationEmail(email, token, userName);
 
-    return NextResponse.json({
-      success: result.success,
-      message: result.success ? 'Test verification email sent successfully' : 'Failed to send test email',
-      contactId: result.contactId,
-      error: result.message,
+    const successResponse: ApiSuccessResponse<{
+      message: string,
+      contactId: string | undefined,
       testData: {
-        email,
-        userName,
-        token,
+        email: string,
+        userName: string,
+        token: string
+      }
+    }> = {
+      success: true,
+      data: {
+        message: 'Test verification email sent successfully',
+        contactId: result.contactId,
+        testData: {
+          email,
+          userName,
+          token,
+        },
       },
-    });
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(successResponse);
   } catch (error) {
-    console.error('Test verification email error:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to send test verification email',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    productionLogger.error('Test verification email error:', error);
+    const errorResponse: ApiErrorResponse = {
+      success: false,
+      error: 'Failed to send test verification email',
+      code: 'EMAIL_SEND_FAILED',
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }
 
 // Test connection endpoint (no published emails required)
-export async function PATCH(request: Request) {
+export async function PATCH(_request: Request) {
   try {
     const loopService = getLoopService();
 
@@ -69,33 +85,44 @@ export async function PATCH(request: Request) {
 
     const contactResult = await loopService.createContact(testContact);
 
-    return NextResponse.json({
-      success: true,
-      message: 'Loop connection test successful',
+    const successResponse: ApiSuccessResponse<{
+      message: string,
       tests: {
-        apiKey: connectionTest,
+        apiKey: { success: boolean, message: string },
         contactCreation: {
-          success: contactResult.success,
-          contactId: contactResult.contactId,
-          error: contactResult.message,
+          success: boolean,
+          contactId: string | undefined,
+          error: string | undefined
+        }
+      }
+    }> = {
+      success: true,
+      data: {
+        message: 'Loop connection test successful',
+        tests: {
+          apiKey: connectionTest,
+          contactCreation: {
+            success: contactResult.success,
+            contactId: contactResult.contactId,
+            error: contactResult.message,
+          },
         },
       },
-      timestamp: new Date().toISOString(),
-    });
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(successResponse);
   } catch (error) {
-    console.error('Loop connection test error:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Loop connection test failed',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString(),
-      },
-      { status: 500 }
-    );
+    productionLogger.error('Loop connection test error:', error);
+    const errorResponse: ApiErrorResponse = {
+      success: false,
+      error: 'Loop connection test failed',
+      code: 'CONNECTION_TEST_FAILED',
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }
-
 
 // Test endpoint to send different types of emails
 export async function POST(request: Request) {
@@ -123,34 +150,50 @@ export async function POST(request: Request) {
         result = await loopService.sendWelcomeEmail(email, userName, companyName);
         break;
       default:
-        return NextResponse.json(
-          { error: 'Invalid email type. Use: verification, password-reset, or welcome' },
-          { status: 400 }
-        );
+        const errorResponse: ApiErrorResponse = {
+          success: false,
+          error: 'Invalid email type. Use: verification, password-reset, or welcome',
+          code: 'INVALID_EMAIL_TYPE',
+          timestamp: new Date().toISOString()
+        };
+        return NextResponse.json(errorResponse, { status: 400 });
     }
 
-    return NextResponse.json({
-      success: result.success,
-      message: result.success ? `Test ${type} email sent successfully` : `Failed to send test ${type} email`,
-      contactId: result.contactId,
-      error: result.message,
+    const successResponse: ApiSuccessResponse<{
+      message: string,
+      contactId: string | undefined,
       testData: {
-        type,
-        email,
-        userName,
-        token,
-        companyName,
+        type: string,
+        email: string,
+        userName: string,
+        token: string,
+        companyName: string
+      }
+    }> = {
+      success: true,
+      data: {
+        message: `Test ${type} email sent successfully`,
+        contactId: result.contactId,
+        testData: {
+          type,
+          email,
+          userName,
+          token,
+          companyName,
+        },
       },
-    });
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(successResponse);
   } catch (error) {
-    console.error('Test email error:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to send test email',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    productionLogger.error('Test email error:', error);
+    const errorResponse: ApiErrorResponse = {
+      success: false,
+      error: 'Failed to send test email',
+      code: 'EMAIL_SEND_FAILED',
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }

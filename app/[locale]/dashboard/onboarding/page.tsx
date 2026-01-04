@@ -1,5 +1,5 @@
-import { OnboardingLayout } from "@/components/onboarding";
-import { OnboardingProvider } from "@/context/onboarding-context";
+import { OnboardingLayout } from "@/features/onboarding/ui/components";
+import { OnboardingProvider } from "@features/onboarding/ui/context/onboarding-context";
 
 function OnboardingPage() {
   return (

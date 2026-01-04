@@ -4,9 +4,10 @@ import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle, XCircle, RefreshCw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LandingLayout } from "@/components/landing/LandingLayout";
-import { AuthTemplate } from "@/components/auth/AuthTemplate";
+import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
+import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate";
 import { toast } from "sonner";
+import { productionLogger } from "@/lib/logger";
 
 interface VerificationResult {
   success: boolean;
@@ -71,7 +72,7 @@ export default function VerifyEmailPage() {
         });
       }
     } catch (error) {
-      console.error('Verification error:', error);
+      productionLogger.error('Verification error:', error);
       setVerificationResult({
         success: false,
         message: "An error occurred during verification. Please try again later.",
@@ -112,7 +113,7 @@ export default function VerifyEmailPage() {
         });
       }
     } catch (error) {
-      console.error('Error resending verification email:', error);
+      productionLogger.error('Error resending verification email:', error);
       toast.error("Failed to resend verification email. Please try again.", {
         duration: 4000,
       });
@@ -198,7 +199,7 @@ export default function VerifyEmailPage() {
               {/* Additional Help Text */}
               {!verificationResult?.success && (
                 <p className="text-xs text-muted-foreground">
-                  If you&apos;re still having trouble, please contact our support team.
+                  If you&#39;re still having trouble, please contact our support team.
                 </p>
               )}
             </>

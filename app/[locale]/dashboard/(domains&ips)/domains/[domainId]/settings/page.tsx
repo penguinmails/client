@@ -27,7 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
-import { getDomainSettings } from "@/lib/actions/domains";
+import { getDomainSettings } from "@features/domains/actions";
 import { notFound } from "next/navigation";
 
 export default async function DomainSettingsPage({
@@ -36,7 +36,7 @@ export default async function DomainSettingsPage({
   params: Promise<{ domainId: string }>;
 }) {
   const { domainId } = await params;
-  const domainSettings = await getDomainSettings(parseInt(domainId));
+  const domainSettings = await getDomainSettings(domainId);
 
   if (!domainSettings) {
     notFound();
@@ -45,17 +45,17 @@ export default async function DomainSettingsPage({
   // Transform DomainSettings to the structure expected by the component
   const domain = {
     id: parseInt(domainId),
-    name: domainSettings.domain,
-    warmupEnabled: domainSettings.warmup.enabled,
-    dailyIncrease: domainSettings.warmup.dailyIncrease,
-    maxDailyEmails: domainSettings.warmup.maxDailyEmails,
-    initialDailyVolume: domainSettings.warmup.initialDailyVolume,
-    warmupSpeed: domainSettings.warmup.warmupSpeed,
-    replyRate: domainSettings.warmup.replyRate,
-    threadDepth: domainSettings.warmup.threadDepth,
-    autoAdjustWarmup: domainSettings.warmup.autoAdjustWarmup,
-    reputationFactors: domainSettings.reputationFactors,
-    authentication: domainSettings.authentication,
+    name: domainSettings.data.domain,
+    warmupEnabled: domainSettings.data.warmup.enabled,
+    dailyIncrease: domainSettings.data.warmup.dailyIncrease,
+    maxDailyEmails: domainSettings.data.warmup.maxDailyEmails,
+    initialDailyVolume: domainSettings.data.warmup.initialDailyVolume,
+    warmupSpeed: domainSettings.data.warmup.warmupSpeed,
+    replyRate: domainSettings.data.warmup.replyRate,
+    threadDepth: domainSettings.data.warmup.threadDepth,
+    autoAdjustWarmup: domainSettings.data.warmup.autoAdjustWarmup,
+    reputationFactors: domainSettings.data.reputationFactors,
+    authentication: domainSettings.data.authentication,
   };
 
   return (

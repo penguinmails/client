@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import { getClient } from "@/lib/queries/clients";
-import ClientForm from "@/components/clients/forms/client-form";
-import { ClientHeader } from "@/components/clients/forms/client-header";
+import { getClient } from "@/shared/queries/clients";
+import ClientForm from "@/features/leads/ui/components/forms/LeadForm";
+import { LeadHeader } from "@/features/leads/ui/components/forms/LeadHeader";
 
 interface EditClientPageProps {
   params: Promise<{ campaignId: string; clientId: string }>;
@@ -14,7 +14,7 @@ export default async function EditClientPage({ params }: EditClientPageProps) {
     notFound();
   }
 
-  const client = await getClient(Number(clientId));
+  const client = await getClient(clientId);
 
   if (!client) {
     notFound();
@@ -22,7 +22,7 @@ export default async function EditClientPage({ params }: EditClientPageProps) {
 
   return (
     <div className="container py-8">
-      <ClientHeader client={client} campaignId={campaignId} />
+      <LeadHeader client={{...client, id: client.id.toString()}} campaignId={campaignId} />
       <ClientForm client={client} campaignId={campaignId} isEditMode={true} />
     </div>
   );

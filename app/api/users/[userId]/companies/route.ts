@@ -1,60 +1,42 @@
 /**
- * User Company Management API Routes
- * 
- * GET /api/users/[userId]/companies - Get all companies for a user across tenants
- * 
- * These routes handle cross-tenant user company operations.
+ * User Companies API Route - NileDB Integration
+ *
+ * Fetches user's companies using NileDB SDK with proper tenant isolation
  */
 
-import { NextResponse } from 'next/server';
-import { withAuthentication } from '@/lib/niledb/middleware';
-import { getCompanyService } from '@/lib/niledb/company';
-import { getAuthService } from '@/lib/niledb/auth';
+import { NextRequest } from "next/server";
+import { getUserCompanies } from "@/features/auth/lib/companies";
+import { requireAuth } from "@/features/auth/queries";
+import { withQueryErrorCatch } from "@/shared/utils/api";
+import { developmentLogger } from "@/lib/logger";
 
-/**
- * GET /api/users/[userId]/companies
- * Get all companies for a user across tenants (staff or self only)
- */
-export const GET = withAuthentication(async (request, context) => {
-  try {
-    const companyService = getCompanyService();
-    const authService = getAuthService();
-    const { userId } = await context.params;
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ userId: string }> }
+) {
+  const { userId } = await params;
+  return withQueryErrorCatch(
+    async () => {
+      // Ensure user is authenticated
+      await requireAuth(req);
 
-    // Handle 'me' parameter for current user
-    const targetUserId = userId === 'me' ? request.user.id : userId;
-
-    // Check if user can access this data (staff or self)
-    const isStaff = await authService.isStaffUser(request.user.id);
-    if (!isStaff && request.user.id !== targetUserId) {
-      return NextResponse.json(
-        {
-          error: 'Access denied. You can only view your own companies',
-          code: 'ACCESS_DENIED',
-        },
-        { status: 403 }
+      developmentLogger.debug(
+        `[API/Users/Companies] Fetching companies for user: ${userId}`
       );
-    }
 
-    const companies = await companyService.getUserCompanies(
-      targetUserId,
-      request.user.id
-    );
+      // Get user's companies using NileDB SDK with access control
+      const companies = await getUserCompanies(userId, req);
 
-    return NextResponse.json({
-      companies,
-      count: companies.length,
-      userId: targetUserId,
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error('Failed to get user companies:', error);
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Failed to retrieve user companies',
-        code: 'USER_COMPANIES_FETCH_ERROR',
+      return { companies };
+    },
+    {
+      controllerName: "UserCompanies",
+      operation: "get_user_companies",
+      req,
+      logContext: {
+        userId,
       },
-      { status: 500 }
-    );
-  }
-});
+      // successMessage is now optional - will be auto-generated as "UserCompanies retrieved successfully"
+    }
+  );
+}

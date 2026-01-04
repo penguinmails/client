@@ -1,4 +1,4 @@
-import TemplateActions from "@/components/templates/template-actions";
+import TemplateActions from "@/features/campaigns/ui/components/templates/TemplateActions";
 import { Button } from "@/components/ui/button/button";
 import {
   Card,
@@ -8,20 +8,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getQuickReplyById } from "@/lib/actions/templates";
+import { getQuickReplyById } from "@features/campaigns/actions";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-async function page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+async function page({ params }: { params: { id: string } }) {
+  const { id } = params;
   const result = await getQuickReplyById(id);
+  const quickReply = result && result.success ? result.data : null;
 
-  if (!result.success || !result.data) {
+  if (!quickReply) {
     notFound();
   }
-
-  const quickReply = result.data;
 
   return (
     <div className="p-4 h-full">

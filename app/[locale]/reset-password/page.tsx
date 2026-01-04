@@ -2,13 +2,15 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { KeyRound, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
-import { LandingLayout } from "@/components/landing/LandingLayout";
-import { AuthTemplate } from "@/components/auth/AuthTemplate";
+import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
+import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate";
+import { useTranslations } from "next-intl";
+import { developmentLogger } from "@/lib/logger";
 
 /**
  * Reset Password Page
@@ -19,6 +21,9 @@ import { AuthTemplate } from "@/components/auth/AuthTemplate";
  */
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
+  const params = useParams();
+  const locale = params.locale as string;
+  const t = useTranslations("ResetPassword");
   // NileDB sends 'identifier' with the email, but also check 'email' for compatibility
   const email = searchParams.get('identifier') || searchParams.get('email');
 
@@ -37,14 +42,14 @@ export default function ResetPasswordPage() {
         <AuthTemplate
           mode="form"
           icon={AlertCircle}
-          title="Invalid Reset Link"
-          description="This password reset link is invalid or has expired."
+          title={t('error.title')}
+          description={t('error.invalidLink')}
           footer={
             <div className="flex flex-col items-center space-y-2">
               <p className="text-xs text-muted-foreground">
-                Need a new reset link?{' '}
-                <Link href="/forgot-password" className="underline font-medium text-primary">
-                  Request another one
+                {t('footer.needNewLink')}{' '}
+                <Link href={`/${locale}/forgot-password`} className="underline font-medium text-primary">
+                  {t('footer.requestAnother')}
                 </Link>
               </p>
             </div>
@@ -61,13 +66,13 @@ export default function ResetPasswordPage() {
 
     // Client-side validation
     if (formData.newPassword.length < 8) {
-      setError('Password must be at least 8 characters long');
+      setError(t('error.minLength'));
       setIsLoading(false);
       return;
     }
 
     if (formData.newPassword !== formData.confirmPassword) {
-      setError("Passwords don't match");
+      setError(t('error.passwordMismatch'));
       setIsLoading(false);
       return;
     }
@@ -89,13 +94,13 @@ export default function ResetPasswordPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to reset password');
+        throw new Error(data.error || t('error.generic'));
       }
 
       setIsSubmitted(true);
     } catch (err) {
-      console.error('Reset password error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to reset password. Please try again.');
+      developmentLogger.error('Reset password error:', err);
+      setError(err instanceof Error ? err.message : t('error.generic'));
     } finally {
       setIsLoading(false);
     }
@@ -115,12 +120,12 @@ export default function ResetPasswordPage() {
         <AuthTemplate
           mode="form"
           icon={CheckCircle}
-          title="Password Reset Successful!"
-          description="Your password has been successfully reset. You can now sign in with your new password."
+          title={t('success.title')}
+          description={t('success.description')}
           footer={
             <div className="flex flex-col items-center space-y-2">
-              <Link href="/">
-                <Button>Sign In</Button>
+              <Link href={`/${locale}/login`}>
+                <Button>{t('success.signIn')}</Button>
               </Link>
             </div>
           }
@@ -134,19 +139,19 @@ export default function ResetPasswordPage() {
       <AuthTemplate
         mode="form"
         icon={KeyRound}
-        title="Reset Your Password"
-        description={`Enter a new password for ${email}`}
+        title={t('header.title')}
+        description={`${t('header.description')} ${email}`}
         error={error}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="newPassword">
-              New Password
+              {t('form.newPassword.label')}
             </Label>
             <Input
               id="newPassword"
               type="password"
-              placeholder="Enter new password"
+              placeholder={t('form.newPassword.placeholder')}
               required
               value={formData.newPassword}
               onChange={handleInputChange('newPassword')}
@@ -157,12 +162,12 @@ export default function ResetPasswordPage() {
 
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">
-              Confirm New Password
+              {t('form.confirmPassword.label')}
             </Label>
             <Input
               id="confirmPassword"
               type="password"
-              placeholder="Confirm new password"
+              placeholder={t('form.confirmPassword.placeholder')}
               required
               value={formData.confirmPassword}
               onChange={handleInputChange('confirmPassword')}
@@ -175,10 +180,10 @@ export default function ResetPasswordPage() {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Resetting Password...
+                {t('button.loading')}
               </>
             ) : (
-              'Reset Password'
+              t('button.default')
             )}
           </Button>
         </form>
@@ -186,4 +191,3 @@ export default function ResetPasswordPage() {
     </LandingLayout>
   );
 }
-

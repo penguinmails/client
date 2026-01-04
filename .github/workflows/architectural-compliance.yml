@@ -1,0 +1,252 @@
+name: Architectural Compliance
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  architectural-compliance:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2  # Need previous commit for diff analysis
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: TypeScript compilation check
+      run: npm run typecheck
+    
+    - name: ESLint FSD compliance check
+      run: npm run lint
+    
+    - name: Run FSD import path validation
+      run: npm run fsd:validate
+    
+    - name: Run comprehensive architectural tests
+      run: npm run test:architecture:ci
+      env:
+        CI: true
+        NODE_ENV: test
+    
+    - name: Generate architectural compliance report
+      if: always()
+      run: npm run architecture:report
+    
+    - name: Upload architectural report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: architectural-compliance-report-${{ matrix.node-version }}
+        path: reports/
+        retention-days: 30
+    
+    - name: Comment PR with compliance results
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          try {
+            const reportPath = path.join('reports', 'architectural-compliance-report.json');
+            if (fs.existsSync(reportPath)) {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              
+              const body = `## 🏗️ Architectural Compliance Report
+              
+              **Overall Compliance**: ${report.overallCompliance}%
+              **Tests Passed**: ${report.summary.passedTests}/${report.summary.totalTests}
+              **Critical Issues**: ${report.summary.criticalViolations}
+              **Error Violations**: ${report.summary.errorViolations}
+              
+              ${report.summary.criticalViolations > 0 ? '🚨 **Critical issues found that must be fixed before merge**' : ''}
+              ${report.summary.failedTests > 0 ? '❌ **Some architectural tests failed**' : '✅ **All architectural tests passed**'}
+              
+              ### Recommendations
+              ${report.recommendations.map(rec => `- ${rec}`).join('\n')}
+              
+              <details>
+              <summary>View detailed test results</summary>
+              
+              ${report.testResults.map(result => 
+                `**${result.passed ? '✅' : '❌'} ${result.suite}** (${result.duration}ms)${result.errors.length > 0 ? '\n  - Errors: ' + result.errors.join(', ') : ''}`
+              ).join('\n')}
+              
+              </details>`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }
+          } catch (error) {
+            console.log('Could not post compliance report:', error);
+          }
+
+  fsd-validation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for comprehensive analysis
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run FSD compliance checker
+      run: npm run check:fsd
+    
+    - name: Validate FSD import paths
+      run: npm run fsd:validate -- --report=json
+    
+    - name: Check for auto-fixable violations
+      run: npm run fsd:validate -- --dry-run --fix
+    
+    - name: Validate feature API boundaries
+      run: npm run validate:feature-apis
+
+  design-token-compliance:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run design token compliance tests
+      run: npm run test:design-tokens
+    
+    - name: Check for hardcoded styles
+      run: |
+        echo "Checking for hardcoded hex colors..."
+        if grep -r "#[0-9A-Fa-f]\{3,8\}" components/ features/ app/ --include="*.tsx" --include="*.ts" | head -20; then
+          echo "⚠️ Hardcoded colors found (showing first 20)"
+        else
+          echo "✅ No hardcoded colors found"
+        fi
+        
+        echo "Checking for arbitrary spacing values..."
+        if grep -r "\w\+-\[[^\]]\+\]" components/ features/ app/ --include="*.tsx" --include="*.ts" | head -10; then
+          echo "⚠️ Arbitrary spacing values found (showing first 10)"
+        else
+          echo "✅ No arbitrary spacing values found"
+        fi
+
+  regression-prevention:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Get changed files
+      id: changed-files
+      run: |
+        echo "files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -E '\.(ts|tsx)$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+    
+    - name: Validate changed files for FSD compliance
+      if: steps.changed-files.outputs.files != ''
+      run: |
+        echo "Validating changed files: ${{ steps.changed-files.outputs.files }}"
+        for file in ${{ steps.changed-files.outputs.files }}; do
+          if [ -f "$file" ]; then
+            echo "Checking $file..."
+            npm run fsd:validate -- "$file" || echo "⚠️ Issues found in $file"
+          fi
+        done
+    
+    - name: Check for new architectural violations
+      run: |
+        echo "Running regression prevention checks..."
+        npm run test:ci-integration
+    
+    - name: Fail on critical violations
+      run: |
+        # This step ensures the workflow fails if critical violations are found
+        npm run fsd:validate --silent || {
+          echo "❌ Critical FSD violations found"
+          echo "Please fix architectural violations before merging"
+          exit 1
+        }
+
+  quality-gates:
+    runs-on: ubuntu-latest
+    needs: [architectural-compliance, fsd-validation, design-token-compliance]
+    if: always()
+    
+    steps:
+    - name: Check quality gates
+      run: |
+        echo "Checking quality gates..."
+        
+        # Check if any required jobs failed
+        if [[ "${{ needs.architectural-compliance.result }}" == "failure" ]]; then
+          echo "❌ Architectural compliance tests failed"
+          exit 1
+        fi
+        
+        if [[ "${{ needs.fsd-validation.result }}" == "failure" ]]; then
+          echo "❌ FSD validation failed"
+          exit 1
+        fi
+        
+        if [[ "${{ needs.design-token-compliance.result }}" == "failure" ]]; then
+          echo "❌ Design token compliance failed"
+          exit 1
+        fi
+        
+        echo "✅ All quality gates passed"
+    
+    - name: Post success status
+      if: success()
+      run: |
+        echo "🎉 All architectural compliance checks passed!"
+        echo "The codebase maintains proper FSD architecture and design token usage."

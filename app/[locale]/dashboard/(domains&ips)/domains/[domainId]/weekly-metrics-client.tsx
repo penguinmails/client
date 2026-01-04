@@ -1,14 +1,14 @@
 "use client";
 
 import { CardContent } from "@/components/ui/card";
-import { useAnalytics } from "@/context/AnalyticsContext";
+import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 
 export default function WeeklyMetricsClient() {
-  const { chartData } = useAnalytics();
+  const { warmupChartData } = useAnalytics();
   return (
     <CardContent>
-      <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-        Charts using AnalyticsContext: {chartData.length} data points
+      <div className="h-48 flex items-center justify-center text-muted-foreground">
+        Charts using AnalyticsContext: {warmupChartData.length} data points
       </div>
     </CardContent>
   );

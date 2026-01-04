@@ -1,5 +1,5 @@
-import DomainsTab from "@/components/domains/components/domains-tab";
-import { getDomainsData } from "@/lib/actions/domains";
+import DomainsTab from "@features/domains/ui/components/domains-tab";
+import { getDomainsData } from "@features/domains/actions";
 
 async function page() {
   const { domains, dnsRecords } = await getDomainsData();
@@ -9,14 +9,14 @@ async function page() {
     id: domain.id,
     domain: domain.domain,
     status: domain.status,
-    mailboxes: domain.emailAccounts,
+    mailboxes: domain.emailAccounts || 0,
     records: {
       spf: domain.records?.spf || "pending",
       dkim: domain.records?.dkim || "pending",
       dmarc: domain.records?.dmarc || "pending",
       mx: domain.records?.mx || "pending",
     },
-    addedDate: domain.createdAt,
+    addedDate: domain.createdAt || new Date().toISOString(),
   }));
 
   return <DomainsTab domains={transformedDomains} dnsRecords={dnsRecords} />;

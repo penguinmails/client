@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Mail, RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { productionLogger } from "@/lib/logger";
 
 interface EmailConfirmationViewProps {
   email?: string;
@@ -13,7 +14,7 @@ export function EmailConfirmationView({ email }: EmailConfirmationViewProps) {
   const [isResending, setIsResending] = useState(false);
   const [resendMessage, setResendMessage] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(0);
-  const router = useRouter();
+  const t = useTranslations("EmailConfirmation");
 
   // Set up countdown timer for resend button
   useEffect(() => {
@@ -33,7 +34,7 @@ export function EmailConfirmationView({ email }: EmailConfirmationViewProps) {
       const userEmail = email || localStorage.getItem('pendingVerificationEmail');
 
       if (!userEmail) {
-        setResendMessage("Unable to resend email. Please try signing up again.");
+        setResendMessage(t('errors.unableToResend'));
         setIsResending(false);
         return;
       }
@@ -53,15 +54,15 @@ export function EmailConfirmationView({ email }: EmailConfirmationViewProps) {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setResendMessage("A new verification link has been sent to your email.");
+        setResendMessage(t('success.resendMessage'));
         // Start 60-second countdown for resend button
         setCountdown(60);
       } else {
-        setResendMessage(data.error || "Failed to resend verification email. Please try again.");
+        setResendMessage(data.error || t('errors.resendFailed'));
       }
     } catch (error) {
-      console.error('Error resending verification email:', error);
-      setResendMessage("Failed to resend verification email. Please try again.");
+      productionLogger.error('Error resending verification email:', error);
+      setResendMessage(t('errors.resendFailed'));
     } finally {
       setIsResending(false);
     }
@@ -76,15 +77,15 @@ export function EmailConfirmationView({ email }: EmailConfirmationViewProps) {
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-xl font-semibold">Check your email</h2>
+        <h2 className="text-xl font-semibold">{t('title')}</h2>
         <p className="text-sm text-muted-foreground">
           {email
-            ? `We've sent a verification link to ${email}`
-            : "We've sent a verification link to your email address"
+            ? t('description.withEmail', { email })
+            : t('description.withoutEmail')
           }
         </p>
         <p className="text-sm text-muted-foreground">
-          Click the link in the email to activate your account.
+          {t('instructions')}
         </p>
       </div>
 
@@ -104,29 +105,29 @@ export function EmailConfirmationView({ email }: EmailConfirmationViewProps) {
           {isResending ? (
             <>
               <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-              Sending...
+              {t('button.sending')}
             </>
           ) : countdown > 0 ? (
             <>
               <RefreshCw className="mr-2 h-4 w-4" />
-              Resend in {countdown}s
+              {t('button.resendCountdown', { countdown })}
             </>
           ) : (
             <>
               <RefreshCw className="mr-2 h-4 w-4" />
-              Resend confirmation email
+              {t('button.resendEmail')}
             </>
           )}
         </Button>
 
         <div className="text-xs text-muted-foreground">
-          Didn&apos;t receive the email? Check your spam folder or{" "}
+          {t('help.text')}{" "}
           <button
             onClick={handleResendEmail}
             disabled={isResending || countdown > 0}
             className="text-primary underline hover:no-underline disabled:opacity-50"
           >
-            {countdown > 0 ? `click here to resend in ${countdown}s` : 'click here to resend'}
+            {countdown > 0 ? t('help.link.countdown', { countdown }) : t('help.link.default')}
           </button>
         </div>
       </div>

@@ -2,25 +2,26 @@
 
 import React from "react";
 import { User } from "lucide-react";
-import { LandingLayout } from "@/components/landing/LandingLayout";
-import { AuthTemplate } from "@/components/auth/AuthTemplate";
+import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
+import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate";
 import { EmailConfirmationView } from "./EmailConfirmationView";
+import { useTranslations } from "next-intl";
 
 export default function EmailConfirmationPage() {
-  const icon = User;
-  const title = "Check your email";
-  const description = "We've sent you a verification link to activate your account.";
-  const mode = "form";
+  const t = useTranslations("EmailConfirmation");
+  
+  // Get the user's email from localStorage (set during signup)
+  const email = typeof window !== 'undefined' ? localStorage.getItem('pendingVerificationEmail') || undefined : undefined;
 
   return (
     <LandingLayout>
       <AuthTemplate
-        mode={mode}
-        icon={icon}
-        title={title}
-        description={description}
+        mode="form"
+        icon={User}
+        title={t('title')}
+        description={t('description.withoutEmail')}
       >
-        <EmailConfirmationView />
+        <EmailConfirmationView email={email} />
       </AuthTemplate>
     </LandingLayout>
   );

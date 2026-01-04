@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { stripeApi } from '@/lib/stripe/stripe-server';
 import { handleCheckoutSessionCompleted, handleInvoicePaid, handleSubscriptionUpdated } from '@/lib/stripe/webhook-handlers';
+import { developmentLogger } from '@/lib/logger';
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SIGNING_SECRET;
 
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
     try {
       event = stripeApi.webhooks.constructEvent(body, sig, endpointSecret);
     } catch (err) {
-      console.error('Webhook signature verification failed:', err);
+      developmentLogger.error('Webhook signature verification failed:', err);
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
 
@@ -43,14 +44,14 @@ export async function POST(request: NextRequest) {
         await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
         break;
 
-
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        // Unhandled event types are normal and don't need logging
+        break;
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error('Webhook processing error:', error);
+    developmentLogger.error('Webhook processing error:', error);
     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
 }

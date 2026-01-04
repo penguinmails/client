@@ -2,39 +2,32 @@
 
 import React from "react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@features/auth/ui/context/auth-context";
 import { User } from "lucide-react";
-import { LandingLayout } from "@/components/landing/LandingLayout";
-import { signupContent } from "./content";
-import { AuthTemplate } from "@/components/auth/AuthTemplate";
+import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
+import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate";
 import SignUpFormView from "./SignUpFormView";
+import { useTranslations } from "next-intl";
 
 export default function SignUpPage() {
   const { user } = useAuth();
-
-  const icon = User;
-  const title = user
-    ? "You are already signed in."
-    : signupContent.header.title;
-  const description = user ? "" : signupContent.header.description;
-  const mode = user ? "loggedIn" : "form";
-  const footer = user ? undefined : (
-      <p className="text-xs text-muted-foreground">
-        {signupContent.footer.haveAccount}{" "}
-        <Link href="/" className="underline font-medium text-primary">
-          {signupContent.footer.login}
-        </Link>
-      </p>
-  );
+  const t = useTranslations("SignUp");
 
   return (
     <LandingLayout>
       <AuthTemplate
-        mode={mode}
-        icon={icon}
-        title={title}
-        description={description}
-        footer={footer}
+        mode={user ? "loggedIn" : "form"}
+        icon={User}
+        title={user ? t("header.alreadySignedIn") : t("header.title")}
+        description={user ? "" : t("header.description")}
+        footer={user ? undefined : (
+          <p className="text-xs text-muted-foreground">
+            {t("footer.haveAccount")}{" "}
+            <Link href="/" className="underline font-medium text-primary">
+              {t("footer.login")}
+            </Link>
+          </p>
+        )}
       >
         {user ? undefined : <SignUpFormView />}
       </AuthTemplate>

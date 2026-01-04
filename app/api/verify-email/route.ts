@@ -5,7 +5,9 @@ import {
   markTokenAsUsed,
   updateUserVerificationStatus,
   storeVerificationToken
-} from '@/lib/utils/email-verification';
+} from '@features/auth/lib/email-verification';
+import { productionLogger } from '@/lib/logger';
+import { ApiErrorResponse, ApiSuccessResponse } from '@/types';
 
 // Schema for email verification requests
 const verifyEmailSchema = z.object({
@@ -22,81 +24,106 @@ export async function POST(request: NextRequest) {
 
     if (!tokenValidation.valid) {
       if (tokenValidation.expired) {
-        return NextResponse.json({
+        const response: ApiErrorResponse = {
           success: false,
-          error: 'expired',
-          message: 'This verification link has expired.',
-          email: tokenValidation.email,
-        }, { status: 400 });
+          error: 'This verification link has expired.',
+          code: 'TOKEN_EXPIRED',
+          details: { email: tokenValidation.email },
+          timestamp: new Date().toISOString()
+        };
+        return NextResponse.json(response, { status: 400 });
       }
       
       if (tokenValidation.used) {
-        return NextResponse.json({
+        const response: ApiErrorResponse = {
           success: false,
-          error: 'used',
-          message: 'This verification link has already been used.',
-          email: tokenValidation.email,
-        }, { status: 400 });
+          error: 'This verification link has already been used.',
+          code: 'TOKEN_ALREADY_USED',
+          details: { email: tokenValidation.email },
+          timestamp: new Date().toISOString()
+        };
+        return NextResponse.json(response, { status: 400 });
       }
 
-      return NextResponse.json({
+      const response: ApiErrorResponse = {
         success: false,
         error: 'Invalid verification link. The token does not exist.',
-      }, { status: 400 });
+        code: 'INVALID_TOKEN',
+        timestamp: new Date().toISOString()
+      };
+      return NextResponse.json(response, { status: 400 });
     }
 
     // Token is valid, mark it as used
     const tokenMarked = await markTokenAsUsed(validatedData.token);
     if (!tokenMarked) {
-      console.error(`Critical: Failed to mark token as used: ${validatedData.token}`);
-      return NextResponse.json({
+      productionLogger.error(`Critical: Failed to mark token as used: ${validatedData.token}`);
+      const response: ApiErrorResponse = {
         success: false,
-        error: 'Verification process failed. Please try again.'
-      }, { status: 500 });
+        error: 'Verification process failed. Please try again.',
+        code: 'TOKEN_MARKING_FAILED',
+        timestamp: new Date().toISOString()
+      };
+      return NextResponse.json(response, { status: 500 });
     }
 
     // Update user verification status
     if (tokenValidation.email) {
       const userUpdated = await updateUserVerificationStatus(tokenValidation.email);
       if (!userUpdated) {
-        console.error(`Critical: Failed to update verification status for email: ${tokenValidation.email}`);
-        return NextResponse.json({
+        productionLogger.error(`Critical: Failed to update verification status for email: ${tokenValidation.email}`);
+        const response: ApiErrorResponse = {
           success: false,
-          error: 'Verification process failed. Please try again.'
-        }, { status: 500 });
+          error: 'Verification process failed. Please try again.',
+          code: 'USER_UPDATE_FAILED',
+          timestamp: new Date().toISOString()
+        };
+        return NextResponse.json(response, { status: 500 });
       }
     }
 
-    return NextResponse.json({
+    const successResponse: ApiSuccessResponse<{email?: string}> = {
       success: true,
+      data: { email: tokenValidation.email },
       message: 'Email verified successfully',
-      email: tokenValidation.email,
-    });
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(successResponse);
 
   } catch (error) {
-    console.error('Email verification error:', error);
+    productionLogger.error('Email verification error:', error);
 
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid request data', details: error.issues },
-        { status: 400 }
-      );
+      const response: ApiErrorResponse = {
+        success: false,
+        error: 'Invalid request data',
+        code: 'VALIDATION_ERROR',
+        details: error.issues,
+        timestamp: new Date().toISOString()
+      };
+      return NextResponse.json(response, { status: 400 });
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    const response: ApiErrorResponse = {
+      success: false,
+      error: 'Internal server error',
+      code: 'INTERNAL_ERROR',
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(response, { status: 500 });
   }
 }
 
 // GET endpoint for testing verification (development only)
 export async function GET() {
   if (process.env.NODE_ENV !== 'development') {
-    return NextResponse.json(
-      { error: 'Not available in production' },
-      { status: 404 }
-    );
+    const response: ApiErrorResponse = {
+      success: false,
+      error: 'Not available in production',
+      code: 'ENDPOINT_NOT_AVAILABLE',
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(response, { status: 404 });
   }
 
   try {
@@ -112,25 +139,39 @@ export async function GET() {
     );
 
     if (!tokenStored) {
-      return NextResponse.json(
-        { error: 'Failed to store test token' },
-        { status: 500 }
-      );
+      const response: ApiErrorResponse = {
+        success: false,
+        error: 'Failed to store test token',
+        code: 'TOKEN_STORAGE_FAILED',
+        timestamp: new Date().toISOString()
+      };
+      return NextResponse.json(response, { status: 500 });
     }
 
-    return NextResponse.json({
+    const successResponse: ApiSuccessResponse<{
+      token: string;
+      testUrl: string;
+      expiresAt: string;
+    }> = {
       success: true,
+      data: {
+        token: testToken,
+        testUrl: `${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${testToken}`,
+        expiresAt: new Date(expiresAt).toISOString(),
+      },
       message: 'Test verification token created',
-      token: testToken,
-      testUrl: `${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${testToken}`,
-      expiresAt: new Date(expiresAt).toISOString(),
-    });
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(successResponse);
 
   } catch (error) {
-    console.error('Test verification error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create test token' },
-      { status: 500 }
-    );
+    productionLogger.error('Test verification error:', error);
+    const response: ApiErrorResponse = {
+      success: false,
+      error: 'Failed to create test token',
+      code: 'TEST_TOKEN_CREATION_FAILED',
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(response, { status: 500 });
   }
 }

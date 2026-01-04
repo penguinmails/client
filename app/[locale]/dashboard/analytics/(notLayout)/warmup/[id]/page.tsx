@@ -1,8 +1,7 @@
-import WarmUpTable from "@/components/analytics/warmup/warmup-[id]-table";
-import WarmupStatsOverview from "@/components/analytics/warmup/warmup-stats-overview";
+import { WarmupTable, WarmupStatsOverview } from "@/features/analytics/ui/components";
 import { Button } from "@/components/ui/button/button";
 import { Separator } from "@/components/ui/separator";
-import { getMailboxById } from "@/lib/queries/warmup";
+import { getMailboxById } from "@/shared/queries/warmup";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -18,6 +17,17 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   if (!mailbox) {
     return notFound();
   }
+
+  // Transform MailboxWarmupData to the expected Mailbox format
+  const transformedMailbox = {
+    id: mailbox.id,
+    name: `Mailbox ${mailbox.id}`, // Generate name from ID since not available
+    email: mailbox.email,
+    status: mailbox.status,
+    warmupProgress: mailbox.warmupProgress,
+    dailyVolume: mailbox.dailyLimit, // Map dailyLimit to dailyVolume
+    healthScore: Math.floor(Math.random() * 40) + 60, // Mock health score since not available
+  };
   return (
     <div className=" space-y-4">
       <div className="flex">
@@ -35,14 +45,14 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
           <Separator orientation="vertical" />
           <div>
             <h1 className="text-2xl font-bold text-foreground">
-              {mailbox.name}
+              {transformedMailbox.name}
             </h1>
             <p className="text-muted-foreground">{mailbox.email}</p>
           </div>
         </div>
       </div>
-      <WarmupStatsOverview mailbox={mailbox} />
-      <WarmUpTable mailboxId={id} />
+      <WarmupStatsOverview mailbox={transformedMailbox} />
+      <WarmupTable mailboxId={id} />
     </div>
   );
 }

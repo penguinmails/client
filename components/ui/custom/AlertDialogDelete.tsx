@@ -42,14 +42,14 @@ function AlertDialogDelete({
         loading: "Deleting...",
         success: "Deleted successfully",
         error: "Failed to delete",
-      }
+      },
     );
   };
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" size="icon" className="hover:text-destructive">
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="size-4" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

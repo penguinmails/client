@@ -1,13 +1,13 @@
-import Folders from "@/components/templates/Folder-Structure/Folders";
-import { getTemplateFolders } from "@/lib/actions/templates";
+import Folders from "@/features/campaigns/ui/components/templates/Folders";
+import { getTemplateFolders } from "@features/campaigns/actions/templates";
 import { TemplateFolder } from "@/types";
 import { FolderIcon } from "lucide-react";
 
 async function TemplateFolders() {
   const result = await getTemplateFolders();
 
-  if (!result.success) {
-    return <div>Error: {result.error?.message || "Unknown error"}</div>;
+  if (!result || !result.success) {
+    return <div>Error: Failed to load folders</div>;
   }
 
   const folders = result.data

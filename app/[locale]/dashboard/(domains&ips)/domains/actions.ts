@@ -1,7 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { DnsProvider } from "@/components/domains/components/constants";
+import { DnsProvider } from "@features/domains/ui/components/constants";
+import { productionLogger } from "@/lib/logger";
 
 interface CreateDomainData {
   domain: string;
@@ -35,7 +36,7 @@ export async function createDomain(data: CreateDomainData) {
     revalidatePath("/dashboard/domains");
     return domain;
   } catch (error) {
-    console.error("Error creating domain:", error);
+    productionLogger.error("Error creating domain:", error);
     throw error;
   }
 }
@@ -63,7 +64,7 @@ export async function getDomains() {
 
     return response.json();
   } catch (error) {
-    console.error("Error fetching domains:", error);
+    productionLogger.error("Error fetching domains:", error);
     throw error;
   }
 }

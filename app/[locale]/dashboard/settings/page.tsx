@@ -1,5 +1,4 @@
-import ProfileForm from "@/components/settings/profile/profile-form";
-import ProfileErrorBoundary from "@/components/settings/profile/ProfileErrorBoundary";
+import { ProfileForm, ProfileErrorBoundary } from "@/features/settings";
 import {
   Card,
   CardContent,

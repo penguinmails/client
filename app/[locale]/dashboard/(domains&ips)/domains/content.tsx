@@ -1,7 +1,7 @@
-import { DomainsHeader } from "@/components/domains/components/header";
-import OverviewCards from "@/components/domains/components/overview-cards";
-import { DomainsTable } from "@/components/domains/domains-table";
-import { type Domain } from "@/types/domain";
+import { DomainsHeader } from "@features/domains/ui/components/header";
+import OverviewCards from "@features/domains/ui/components/overview-cards";
+import { DomainsTable } from "@features/domains/ui/components/tables/domains-table";
+import { type Domain } from "@features/domains/types";
 
 type DomainsContentProps = {
   domains: Domain[];

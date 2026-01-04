@@ -1,7 +1,7 @@
 "use client";
-import { AddTemplateProvider } from "@/context/AddTemplateContext";
-import NewTemplateStepper from "@/components/templates/new/NewTemplateStepper";
-import AddTemplateForm from "@/components/templates/new/AddTemplateForm";
+import { AddTemplateProvider } from "@features/campaigns/ui/context/add-template-context";
+import NewTemplateStepper from "@/features/campaigns/ui/components/templates/new/NewTemplateStepper";
+import AddTemplateForm from "@/features/campaigns/ui/components/templates/new/AddTemplateForm";
 
 function NewTemplatePage() {
   return (

@@ -3,18 +3,18 @@ import dynamic from "next/dynamic";
 
 // Dynamically import all analytics components to prevent SSR issues
 const AnalyticsHeaderActions = dynamic(
-  () => import("@/components/analytics/actions/AnalyticsHeaderActions"),
+  () => import("@/features/analytics/ui/components/actions/AnalyticsHeaderActions"),
   { ssr: false, loading: () => null }
 );
 
-const AnalyticsProviderClient = dynamic(
-  () => import("@/components/analytics/AnalyticsProviderClient"),
+const ClientAnalyticsProvider = dynamic(
+  () => import("@/features/analytics/ui/components/AnalyticsProviderClient").then(mod => ({ default: mod.ClientAnalyticsProvider })),
   { ssr: false, loading: () => <div>Loading...</div> }
 );
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <AnalyticsProviderClient>
+    <ClientAnalyticsProvider>
       <div className="space-y-8 ">
         <div className="flex items-center justify-between">
           <div>
@@ -31,7 +31,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         </div>
         <div>{children}</div>
       </div>
-    </AnalyticsProviderClient>
+    </ClientAnalyticsProvider>
   );
 }
 export default Layout;
