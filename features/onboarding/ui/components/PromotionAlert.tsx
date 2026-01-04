@@ -2,9 +2,8 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button/button";
 import { Sparkles } from "lucide-react";
-import { useCallback } from "react";
+
 import Link from "next/link";
-import { developmentLogger } from "@/lib/logger";
 
 interface PromotionAlertProps {
   promotion: {
@@ -15,10 +14,6 @@ interface PromotionAlertProps {
 }
 
 export function PromotionAlert({ promotion }: PromotionAlertProps) {
-  const handlePromotionClick = useCallback(() => {
-    developmentLogger.debug("Promotion clicked:", promotion.link);
-  }, [promotion.link]);
-
   return (
     <Alert className="border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50">
       <AlertTitle className="flex gap-2 items-center">
