@@ -30,11 +30,11 @@ interface SignupError extends Error {
 }
 
 export default function SignUpFormView() {
-  const t = useTranslations("Signup");
+  const t = useTranslations("SignUp");
   const [error, setError] = useState<SignupError | null>(null);
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
-  const { error: authError } = useAuth();
+  const { error: authError } from useAuth();
   const [token, setToken] = useState("");
   const router = useRouter();
 
@@ -334,7 +334,7 @@ export default function SignUpFormView() {
             name="password"
             control={control}
             rules={{
-              required: t("errors.password"),
+              required: t("errors.required"),
               minLength: {
                 value: 8,
                 message: t("errors.passwordMinLength"),
@@ -374,7 +374,7 @@ export default function SignUpFormView() {
             name="confirmPassword"
             control={control}
             rules={{
-              required: t("errors.confirmPassword"),
+              required: t("errors.required"),
               validate: {
                 match: (value: string, { password }: FormData) =>
                   value === password || t("errors.passwordMismatch"),

@@ -27,6 +27,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
+    '^@app/(.*)$': '<rootDir>/app/$1',
     '^@features/(.*)$': '<rootDir>/features/$1',
     '^@shared/(.*)$': '<rootDir>/src/shared/$1',
     '^server-only$': '<rootDir>/shared/mocks/framework/server-only.js',

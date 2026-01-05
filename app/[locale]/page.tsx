@@ -132,7 +132,7 @@ export default function LoginPage() {
         error={mode === "form" ? error : undefined}
       >
         {user ? undefined : (
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4" data-testid="login-form">
             <div className="space-y-2">
               <Label htmlFor="email">{t("email.label")}</Label>
               <Input
@@ -143,14 +143,12 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
+                data-testid="email-input"
               />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{t("password.label")}</Label>
-                {/* <Link href="/forgot-password" className="text-sm font-medium text-primary hover:underline underline-offset-4">
-                  {t("forgotPassword")}
-                </Link> */}
               </div>
               <PasswordInput
                 name="password"
@@ -159,6 +157,7 @@ export default function LoginPage() {
                 onValueChange={setPassword}
                 disabled={isLoading}
                 required
+                data-testid="password-input"
               />
             </div>
 
@@ -169,15 +168,19 @@ export default function LoginPage() {
                     ? "bg-red-50 border border-red-200 text-red-800"
                     : "bg-yellow-50 border border-yellow-200 text-yellow-800"
                 }`}
+                data-testid="failed-attempts-message"
               >
-                Failed attempts: {loginAttempts}/{MAX_LOGIN_ATTEMPTS}
+                {t("failedAttempts", {
+                  loginAttempts,
+                  MAX_LOGIN_ATTEMPTS,
+                })}
               </div>
             )}
 
             {showTurnstile && (
-              <div className="space-y-3">
+              <div className="space-y-3" data-testid="turnstile-section">
                 <div className="bg-orange-50 border border-orange-200 text-orange-800 px-3 py-2 rounded-md text-sm">
-                  For security, please complete the verification to continue.
+                  {t("securityVerification")}
                 </div>
                 <div className="flex justify-center py-2">
                   {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
@@ -187,8 +190,8 @@ export default function LoginPage() {
                       onVerify={(token: string) => setTurnstileToken(token)}
                     />
                   ) : (
-                    <p className="text-sm text-destructive">
-                      CAPTCHA is not configured. Please contact support.
+                    <p className="text-sm text-destructive" data-testid="captcha-not-configured-message">
+                      {t("captchaNotConfigured")}
                     </p>
                   )}
                 </div>
@@ -204,13 +207,14 @@ export default function LoginPage() {
                 !email.includes("@") ||
                 (showTurnstile && !turnstileToken)
               }
+              data-testid="login-button"
             >
               {isLoading
                 ? t("loginButton.loading")
                 : loginAttempts >= MAX_LOGIN_ATTEMPTS && !turnstileToken
-                ? "Too many attempts. Complete verification."
+                ? t("loginButton.tooManyAttempts")
                 : showTurnstile && !turnstileToken
-                ? "Complete verification to continue"
+                ? t("loginButton.completeVerification")
                 : t("loginButton.default")}
             </Button>
           </form>
