@@ -1,6 +1,7 @@
 "use client";
 
 import { productionLogger } from "@/lib/logger";
+import { isFeatureEnabled } from "@/lib/features";
 
 /**
  * SessionStorage-based rate limiting for login attempts
@@ -77,9 +78,11 @@ export function getLoginAttemptStatus(email: string): LoginAttemptStatus {
     }
 
     const attempts = data.attempts || 0;
+    const isTurnstileEnabled = isFeatureEnabled("turnstile");
+    
     return {
       attempts,
-      requiresTurnstile: attempts >= MAX_LOGIN_ATTEMPTS,
+      requiresTurnstile: isTurnstileEnabled && attempts >= MAX_LOGIN_ATTEMPTS,
       lockoutExpiresAt: data.lockoutExpiresAt ? new Date(data.lockoutExpiresAt) : null,
       firstAttemptTimestamp: data.firstAttemptTimestamp || null,
     };
