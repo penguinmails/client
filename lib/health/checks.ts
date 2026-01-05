@@ -6,7 +6,7 @@
 
 import { ServiceCheck, ServiceStatus } from './types';
 import { Redis } from '@upstash/redis';
-import { testNileConnection } from '@/lib/niledb/client';
+import { testConnection } from '@/lib/nile/nile';
 
 const startTime = Date.now();
 
@@ -25,9 +25,9 @@ export async function checkDatabaseHealth(): Promise<ServiceCheck> {
   
   // Use the shared NileDB client wrapper which handles connection pooling
   // and configuration automatically
-  const result = await testNileConnection();
+  const result = await testConnection();
 
-  if (result.success) {
+  if (result) {
     return {
       name: 'database',
       status: 'healthy',
@@ -39,7 +39,7 @@ export async function checkDatabaseHealth(): Promise<ServiceCheck> {
       name: 'database',
       status: 'unhealthy',
       responseTime: Date.now() - start,
-      error: result.error || 'Database connection failed',
+      error: 'Database connection failed',
       timestamp: new Date().toISOString(),
     };
   }
@@ -48,11 +48,19 @@ export async function checkDatabaseHealth(): Promise<ServiceCheck> {
 /**
  * Check Upstash Redis connection health
  */
+// Initialize Redis client once (module-singleton)
+const redis = (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
+  ? new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    })
+  : null;
+
 export async function checkRedisHealth(): Promise<ServiceCheck> {
   const start = Date.now();
   
   try {
-    if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    if (!redis) {
       return {
         name: 'redis',
         status: 'degraded',
@@ -60,11 +68,6 @@ export async function checkRedisHealth(): Promise<ServiceCheck> {
         timestamp: new Date().toISOString(),
       };
     }
-
-    const redis = new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    });
 
     await redis.ping();
 
@@ -86,55 +89,13 @@ export async function checkRedisHealth(): Promise<ServiceCheck> {
 }
 
 /**
- * Check Convex service health
- */
-export async function checkConvexHealth(): Promise<ServiceCheck> {
-  const start = Date.now();
-  
-  try {
-    if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-      return {
-        name: 'convex',
-        status: 'degraded',
-        error: 'Convex configuration missing',
-        timestamp: new Date().toISOString(),
-      };
-    }
-
-    // Simple HTTP check to Convex endpoint
-    const response = await fetch(process.env.NEXT_PUBLIC_CONVEX_URL, {
-      method: 'HEAD',
-      signal: AbortSignal.timeout(5000),
-    });
-
-    const status: ServiceStatus = response.ok ? 'healthy' : 'degraded';
-
-    return {
-      name: 'convex',
-      status,
-      responseTime: Date.now() - start,
-      timestamp: new Date().toISOString(),
-    };
-  } catch (error) {
-    return {
-      name: 'convex',
-      status: 'unhealthy',
-      responseTime: Date.now() - start,
-      error: error instanceof Error ? error.message : 'Convex connection failed',
-      timestamp: new Date().toISOString(),
-    };
-  }
-}
-
-/**
  * Determine overall system status based on service checks
  */
 export function determineOverallStatus(services: {
   database: ServiceCheck;
   redis: ServiceCheck;
-  convex: ServiceCheck;
 }): ServiceStatus {
-  const statuses = [services.database.status, services.redis.status, services.convex.status];
+  const statuses = [services.database.status, services.redis.status];
 
   // If any critical service (database) is unhealthy, system is unhealthy
   if (services.database.status === 'unhealthy') {

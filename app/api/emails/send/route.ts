@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLoopService } from '@/lib/services/loop';
-import { getAuthService } from '@/lib/niledb/auth';
+import { getLoopService } from '@/lib/loop/client';
 import { z } from 'zod';
 import {
   generateVerificationToken,
   getVerificationTokenExpiry,
   storeVerificationToken
-} from '@/lib/utils/email-verification';
-import { BackendLogger } from '@/lib/backend-logger';
+} from '@features/auth/lib/email-verification';
+import { productionLogger, developmentLogger } from '@/lib/logger';
+import {
+  ApiSuccessResponse,
+  ApiErrorResponse
+} from '@/types';
 
 // Schema for transactional email requests
 const transactionalEmailSchema = z.object({
@@ -40,9 +43,9 @@ export async function POST(request: NextRequest) {
           verificationToken,
           expiresAt
         );
-
+        
         if (!tokenStored) {
-          console.warn('Failed to store verification token, but continuing with email');
+          developmentLogger.warn('Failed to store verification token, but continuing with email');
         }
 
         result = await loopService.sendVerificationEmail(
@@ -55,10 +58,13 @@ export async function POST(request: NextRequest) {
 
       case 'password-reset':
         if (!validatedData.token) {
-          return NextResponse.json(
-            { error: 'Token is required for password reset emails' },
-            { status: 400 }
-          );
+          const errorResponse: ApiErrorResponse = {
+            success: false,
+            error: 'Token is required for password reset emails',
+            code: 'MISSING_TOKEN',
+            timestamp: new Date().toISOString()
+          };
+          return NextResponse.json(errorResponse, { status: 400 });
         }
         result = await loopService.sendPasswordResetEmail(
           validatedData.email,
@@ -69,10 +75,13 @@ export async function POST(request: NextRequest) {
 
       case 'welcome':
         if (!validatedData.userName) {
-          return NextResponse.json(
-            { error: 'User name is required for welcome emails' },
-            { status: 400 }
-          );
+          const errorResponse: ApiErrorResponse = {
+            success: false,
+            error: 'User name is required for welcome emails',
+            code: 'MISSING_USER_NAME',
+            timestamp: new Date().toISOString()
+          };
+          return NextResponse.json(errorResponse, { status: 400 });
         }
         result = await loopService.sendWelcomeEmail(
           validatedData.email,
@@ -82,48 +91,58 @@ export async function POST(request: NextRequest) {
         break;
 
       default:
-        return NextResponse.json(
-          { error: 'Invalid email type' },
-          { status: 400 }
-        );
+        const errorResponse: ApiErrorResponse = {
+          success: false,
+          error: 'Invalid email type',
+          code: 'INVALID_EMAIL_TYPE',
+          timestamp: new Date().toISOString()
+        };
+        return NextResponse.json(errorResponse, { status: 400 });
     }
 
     if (result.success) {
-      return NextResponse.json({
+      const successResponse: ApiSuccessResponse<{
+        message: string,
+        contactId: string | undefined
+      }> = {
         success: true,
-        message: 'Email sent successfully',
-        contactId: result.contactId,
-      });
-    } else {
-      return NextResponse.json(
-        {
-          success: false,
-          error: result.message || 'Failed to send email',
+        data: {
+          message: 'Email sent successfully',
+          contactId: result.contactId,
         },
-        { status: 500 }
-      );
+        timestamp: new Date().toISOString()
+      };
+      return NextResponse.json(successResponse);
+    } else {
+      const errorResponse: ApiErrorResponse = {
+        success: false,
+        error: result.message || 'Failed to send email',
+        code: 'EMAIL_SEND_FAILED',
+        timestamp: new Date().toISOString()
+      };
+      return NextResponse.json(errorResponse, { status: 500 });
     }
   } catch (error) {
-    console.error('Email send error:', error);
-
-    //  LOG ERROR TO POSTHOG
-    BackendLogger.logError(error as Error, {
-      endpoint: new URL(request.url).pathname,
-      method: 'POST',
-      service: 'loop',
-    });
+    productionLogger.error('Email send error:', error);
 
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid request data', details: error.issues },
-        { status: 400 }
-      );
+      const errorResponse: ApiErrorResponse = {
+        success: false,
+        error: 'Invalid request data',
+        code: 'VALIDATION_ERROR',
+        details: error.issues,
+        timestamp: new Date().toISOString()
+      };
+      return NextResponse.json(errorResponse, { status: 400 });
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    const errorResponse: ApiErrorResponse = {
+      success: false,
+      error: 'Internal server error',
+      code: 'INTERNAL_ERROR',
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }
 
@@ -139,26 +158,26 @@ export async function GET() {
       'Test User'
     );
 
-    return NextResponse.json({
-      success: testResult.success,
-      message: testResult.success ? 'Test email sent successfully' : 'Failed to send test email',
-      contactId: testResult.contactId,
-      error: testResult.message,
-    });
+    const successResponse: ApiSuccessResponse<{
+      message: string,
+      contactId: string | undefined
+    }> = {
+      success: true,
+      data: {
+        message: 'Test email sent successfully',
+        contactId: testResult.contactId,
+      },
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(successResponse);
   } catch (error) {
-    console.error('Test email error:', error);
-    
-    //  LOG ERROR TO POSTHOG
-    BackendLogger.logError(error as Error, {
-      endpoint: '/api/emails/send',
-      method: 'GET',
-      service: 'loop',
-      testMode: true,
-    });
-
-    return NextResponse.json(
-      { error: 'Failed to send test email' },
-      { status: 500 }
-    );
+    productionLogger.error('Test email error:', error);
+    const errorResponse: ApiErrorResponse = {
+      success: false,
+      error: 'Failed to send test email',
+      code: 'TEST_EMAIL_FAILED',
+      timestamp: new Date().toISOString()
+    };
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }

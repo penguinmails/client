@@ -9,18 +9,22 @@ import {
 import { Input } from "@/components/ui/input/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { getTemplateById, updateTemplate } from "@/lib/actions/templates";
+import { getTemplateById, updateTemplate } from "@features/campaigns/actions/templates";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-async function page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const result = await getTemplateById(id);
-  if (!result.success || !result.data) {
+async function handleUpdateTemplate(formData: FormData): Promise<void> {
+  "use server";
+  await updateTemplate(formData);
+}
+
+async function page({ params }: { params: { id: string } }) {
+  const { id } = params;
+  const currentTemplate = await getTemplateById(id);
+  if (!currentTemplate) {
     notFound();
   }
-  const currentTemplate = result.data;
   const { name, category, content, subject } = currentTemplate;
 
   return (
@@ -56,7 +60,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
         </CardHeader>
         <Separator />
         <CardContent className="space-y-6">
-          <form action={updateTemplate} id="edit-form">
+          <form action={handleUpdateTemplate} id="edit-form">
             <input type="hidden" name="id" value={id} />
             <div>
               <h3 className="text-sm font-medium text-gray-700 dark:text-foreground mb-2">

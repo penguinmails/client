@@ -1,14 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 import { Check, LucideIcon } from "lucide-react";
 import { Context, useContext } from "react";
 
 interface Step {
   number: number;
   title: string;
-  icon: LucideIcon;
-  color: string;
+  icon?: LucideIcon;
+  color?: string;
+  completed?: boolean;
 }
 
 interface BaseStepperContextType {
@@ -44,7 +45,7 @@ function Stepper<T>({ context }: StepperProps<T>) {
         {steps.map((step, index) => {
           const StepIcon = step.icon;
           const isActive = currentStep === step.number;
-          const isCompleted = currentStep > step.number;
+          const isCompleted = step.completed || currentStep > step.number;
           const isAccessible = currentStep >= step.number;
 
           return (
@@ -69,7 +70,7 @@ function Stepper<T>({ context }: StepperProps<T>) {
                     className={cn(
                       "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
                       {
-                        [step.color]: isActive,
+                        [step.color || "bg-blue-500"]: isActive,
                         "bg-green-500": isCompleted && !isActive,
                         "bg-muted-foreground/30": !isAccessible,
                       }
@@ -77,11 +78,13 @@ function Stepper<T>({ context }: StepperProps<T>) {
                   >
                     {isCompleted ? (
                       <Check className="w-5 h-5 text-white" />
-                    ) : (
+                    ) : StepIcon ? (
                       <StepIcon className="w-5 h-5 text-white" />
+                    ) : (
+                      <span className="text-white font-semibold">{step.number}</span>
                     )}
                   </div>
-                  <div className="text-center min-w-[80px]">
+                  <div className="text-center min-w-20">
                     <p
                       className={cn("text-xs font-medium", {
                         "text-foreground": isActive,
@@ -92,7 +95,7 @@ function Stepper<T>({ context }: StepperProps<T>) {
                       {step.title}
                     </p>
                     <p
-                      className={cn("text-[10px]", {
+                      className={cn("text-xs", {
                         "text-muted-foreground": isActive,
                         "text-muted-foreground/60": !isActive,
                       })}

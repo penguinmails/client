@@ -4,7 +4,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import ConversationSmallList from "@/components/inbox/components/ConversationSmallList";
+import ConversationSmallList from "@features/inbox/ui/components/ConversationSmallList";
 
 function layout({ children }: { children: React.ReactNode }) {
   return (

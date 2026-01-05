@@ -14,7 +14,6 @@ import { NextResponse } from 'next/server';
 import {
   checkDatabaseHealth,
   checkRedisHealth,
-  checkConvexHealth,
   determineOverallStatus,
   getUptime,
   getSystemInfo,
@@ -22,46 +21,60 @@ import {
 import { logHealthCheck, logServiceAlert } from '@/lib/health/monitoring';
 import { DetailedHealthCheckResponse } from '@/lib/health/types';
 
-const VERSION = process.env.npm_package_version || '0.1.0';
+import { VERSION } from '@/lib/health/constants';
+import { PostHogClient, shutdownPostHog } from '@/lib/health/monitoring';
 
 export async function GET() {
+  const timestamp = new Date().toISOString();
+  const uptime = getUptime();
+  
   try {
     // Run all health checks in parallel
-    const [database, redis, convex] = await Promise.all([
+    const [database, redis] = await Promise.all([
       checkDatabaseHealth(),
       checkRedisHealth(),
-      checkConvexHealth(),
     ]);
 
-    const services = { database, redis, convex };
+    const services = { database, redis };
     const overallStatus = determineOverallStatus(services);
     const systemInfo = getSystemInfo();
 
     const healthData: DetailedHealthCheckResponse = {
       status: overallStatus,
-      timestamp: new Date().toISOString(),
-      uptime: getUptime(),
+      timestamp,
+      uptime,
       version: VERSION,
       services,
       system: systemInfo,
       environment: process.env.NODE_ENV || 'development',
     };
 
-    // Log to PostHog (non-blocking)
-    logHealthCheck(healthData).catch(err => 
-      console.error('Failed to log health check:', err)
-    );
+    // Instantiate PostHog once for this request
+    const posthog = PostHogClient();
 
-    // Log individual service alerts if needed
-    for (const service of Object.values(services)) {
-      if (service.status !== 'healthy') {
-        logServiceAlert(service.name, service.status, service.error).catch(err =>
-          console.error('Failed to log service alert:', err)
-        );
+    try {
+      // Log to PostHog (non-blocking but shared client)
+      await logHealthCheck(healthData, posthog);
+
+      // Log individual service alerts if needed
+      for (const service of Object.values(services)) {
+        if (service.status !== 'healthy') {
+          await logServiceAlert(service.name, service.status, service.error, posthog);
+        }
       }
+    } catch (err) {
+      console.error('Logging failed:', err);
+    } finally {
+      // Ensure we shut down the client
+      await shutdownPostHog(posthog);
     }
 
-    const statusCode = overallStatus === 'healthy' ? 200 : overallStatus === 'degraded' ? 207 : 503;
+    const statusToCode: Record<string, number> = {
+      healthy: 200,
+      degraded: 207,
+      unhealthy: 503,
+    };
+    const statusCode = statusToCode[overallStatus] || 503;
 
     return NextResponse.json(healthData, {
       status: statusCode,
@@ -77,8 +90,8 @@ export async function GET() {
     return NextResponse.json(
       {
         status: 'unhealthy',
-        timestamp: new Date().toISOString(),
-        uptime: getUptime(),
+        timestamp,
+        uptime,
         version: VERSION,
         error: error instanceof Error ? error.message : 'Health check failed',
         environment: process.env.NODE_ENV || 'development',

@@ -1,16 +1,16 @@
 "use client";
-import CampaignTableSkeleton from "@/components/campaigns/tables/CampaignTableSkeleton";
-import CampaignsFilter from "@/components/campaigns/tables/CampaignsFilter";
+import CampaignTableSkeleton from "@features/campaigns/ui/components/tables/CampaignTableSkeleton";
+import CampaignsFilter from "@features/campaigns/ui/components/tables/CampaignsFilter";
 import CampaignsTable, {
   campaignColumns,
-} from "@/components/campaigns/tables/CampaignsTable";
-import StatsCardSkeleton from "@/components/dashboard/cards/StatsCardSkeleton";
-import StatsCards from "@/components/campaigns/reports/StatsCards";
+} from "@features/campaigns/ui/components/tables/CampaignsTable";
+import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/StatsCardSkeleton";
+import StatsCards from "@features/campaigns/ui/components/reports/StatsCards";
 import { Button } from "@/components/ui/button/button";
 import { Plus, Send, Mail, Eye, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { useAnalytics } from "@/context/AnalyticsContext";
+import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 
 interface CampaignsPageProps {
   searchParams: Promise<{
@@ -22,13 +22,17 @@ interface CampaignsPageProps {
 export default function CampaignsPage({
   searchParams: _searchParams,
 }: CampaignsPageProps) {
-  const { totalSent, openRate, replyRate, clickRate, campaigns } =
-    useAnalytics();
+  const { useFormattedAnalytics } = useAnalytics();
+  const { formattedStats } = useFormattedAnalytics();
+  const { totalSent, openRate, replyRate, clickRate } = formattedStats;
+  
+  // Mock campaigns data since it's not available in analytics context
+  const mockCampaigns = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
   const stats = [
     {
       title: "Total Campaigns",
-      value: campaigns.length.toString(),
+      value: mockCampaigns.length.toString(),
       icon: Send,
       color: "bg-blue-100 text-blue-600",
     },

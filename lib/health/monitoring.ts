@@ -4,14 +4,42 @@
  * Integrates health checks with PostHog for monitoring and alerting.
  */
 
-import { PostHogClient, shutdownPostHog } from '@/lib/posthog-server';
+import { PostHog } from 'posthog-node';
 import { ServiceStatus, HealthCheckResponse } from './types';
+
+import { DOWNTIME_THRESHOLD_MS } from './constants';
+
+export function PostHogClient() {
+  const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+  const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com';
+
+  if (!key) {
+    console.warn('PostHog key missing, logging disabled');
+    // Return a dummy object or handle gracefully. 
+    // For now, posthog-node might throw if key is empty, so we check.
+  }
+
+  return new PostHog(
+    key || 'phc_dummy_key', 
+    { host }
+  );
+}
+
+// Allow external shutdown if managed externally
+export async function shutdownPostHog(client: PostHog) {
+  await client.shutdown();
+}
 
 /**
  * Log health check result to PostHog
  */
-export async function logHealthCheck(healthData: HealthCheckResponse): Promise<void> {
-  const posthog = PostHogClient();
+export async function logHealthCheck(
+  healthData: HealthCheckResponse, 
+  existingClient?: PostHog
+): Promise<void> {
+  // Use existing client or create new one (and mark for shutdown)
+  const posthog = existingClient || PostHogClient();
+  const shouldShutdown = !existingClient;
 
   try {
     // Capture health check event
@@ -26,7 +54,6 @@ export async function logHealthCheck(healthData: HealthCheckResponse): Promise<v
         services: healthData.services ? {
           database: healthData.services.database.status,
           redis: healthData.services.redis.status,
-          convex: healthData.services.convex.status,
         } : undefined,
       },
     });
@@ -45,10 +72,16 @@ export async function logHealthCheck(healthData: HealthCheckResponse): Promise<v
       });
     }
 
-    await shutdownPostHog(posthog);
+    if (shouldShutdown) {
+      await shutdownPostHog(posthog);
+    }
   } catch (error) {
     console.error('Failed to log health check to PostHog:', error);
     // Don't throw - health check should succeed even if logging fails
+    // Be safe and try to shutdown even on error if we own the client
+    if (shouldShutdown) {
+      try { await shutdownPostHog(posthog); } catch {}
+    }
   }
 }
 
@@ -58,9 +91,11 @@ export async function logHealthCheck(healthData: HealthCheckResponse): Promise<v
 export async function logServiceAlert(
   serviceName: string,
   status: ServiceStatus,
-  error?: string
+  error?: string,
+  existingClient?: PostHog
 ): Promise<void> {
-  const posthog = PostHogClient();
+  const posthog = existingClient || PostHogClient();
+  const shouldShutdown = !existingClient;
 
   try {
     posthog.capture({
@@ -75,9 +110,14 @@ export async function logServiceAlert(
       },
     });
 
-    await shutdownPostHog(posthog);
+    if (shouldShutdown) {
+      await shutdownPostHog(posthog);
+    }
   } catch (error) {
     console.error('Failed to log service alert to PostHog:', error);
+    if (shouldShutdown) {
+      try { await shutdownPostHog(posthog); } catch {}
+    }
   }
 }
 
@@ -94,5 +134,5 @@ export function shouldTriggerDowntimeAlert(
   const downtime = now - lastHealthy;
   
   // 1 minute = 60000 milliseconds
-  return downtime > 60000;
+  return downtime > DOWNTIME_THRESHOLD_MS;
 }

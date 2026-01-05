@@ -1,11 +1,13 @@
-import { LandingLayout } from "@/components/landing/LandingLayout";
+import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
 import Link from "next/link";
 import Image from "next/image";
 
 const NotFound = () => {
   return (
     <LandingLayout>
-      <div className="min-h-screen flex flex-col items-center justify-center text-primary-800 gradient-bg">
+      <div
+        className="min-h-screen flex flex-col items-center justify-center text-primary-800 gradient-bg"
+      >
         <div className="flex flex-col items-center text-center p-8 bg-background dark:bg-card rounded-lg shadow-lg border border-border">
           <Image
             src="/img/pengo_48X48.png"
@@ -18,7 +20,7 @@ const NotFound = () => {
           <p className="text-2xl text-primary-700 mb-6">
             Oops! The page you&apos;re looking for doesn&apos;t exist.
           </p>
-          <p className="text-lg text-primary-600 mb-8">
+          <div className="text-lg text-primary-600 mb-8">
             You tried to enter an incorrect route. Please check if there is a
             typo, or try one of these common routes:
             <ul className="mt-2 list-none">
@@ -48,7 +50,7 @@ const NotFound = () => {
               </li>
             </ul>
             or
-          </p>
+          </div>
           <Link
             href="https://penguinmails.com/"
             className="px-6 py-3 font-semibold rounded-md transition-colors duration-300 ease-in-out"

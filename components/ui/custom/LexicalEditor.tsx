@@ -32,9 +32,10 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListNode, ListItemNode } from "@lexical/list";
 import { LinkNode, AutoLinkNode } from "@lexical/link";
-import Toolbar from "@/components/toolbar/toolbar";
-import lexicalEditorTheme from "@/components/theme/lexicalEditorTheme";
-import LinkClickHandler from "@/components/toolbar/LinkClickHandler";
+import LexicalToolbar from "./lexical-toolbar";
+import lexicalEditorTheme from "@/shared/theme/lexicalEditorTheme";
+import LexicalLinkClickHandler from "./lexical-link-handler";
+import { productionLogger } from "@/lib/logger";
 
 export const INSERT_IMAGE_COMMAND = createCommand("INSERT_IMAGE_COMMAND");
 export const INDENT_CONTENT_COMMAND = createCommand("INDENT_CONTENT_COMMAND");
@@ -167,7 +168,7 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(
         image: "my-4 max-w-full",
       },
       onError: (error: Error) => {
-        console.error("Lexical Error:", error);
+        productionLogger.error("Lexical Error", error);
       },
       editorState: getInitialEditorState(value),
       nodes: [
@@ -197,7 +198,7 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(
 
     return (
       <LexicalComposer initialConfig={initialConfig}>
-        <LinkClickHandler>
+        <LexicalLinkClickHandler />
           <div
             ref={(el: HTMLDivElement | null) => {
               if (el) {
@@ -220,11 +221,11 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(
           >
             <LexicalSync value={value} />
             <CommandHandler />
-            <Toolbar />
+            <LexicalToolbar />
             <RichTextPlugin
               contentEditable={
                 <ContentEditable
-                  className="min-h-[150px] border rounded p-2"
+                  className="min-h-40 border rounded p-2"
                   data-lexical-editor="true"
                 />
               }
@@ -245,7 +246,6 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(
               }}
             />
           </div>
-        </LinkClickHandler>
       </LexicalComposer>
     );
   }

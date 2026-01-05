@@ -1,14 +1,14 @@
-import AddCampaignForm from "@/components/campaigns/steps/AddCampaignForm";
-import AddCampaignHeader from "@/components/campaigns/steps/AddCampaignHeader";
-import AddCampaignSteps from "@/components/campaigns/steps/AddCampaignSteps";
-import NavigationButtons from "@/components/campaigns/steps/NavigationButtons";
+import AddCampaignForm from "@features/campaigns/ui/components/steps/AddCampaignForm";
+import AddCampaignHeader from "@features/campaigns/ui/components/steps/AddCampaignHeader";
+import AddCampaignSteps from "@features/campaigns/ui/components/steps/AddCampaignSteps";
+import NavigationButtons from "@features/campaigns/ui/components/steps/NavigationButtons";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { AddCampaignProvider } from "@/context/AddCampaignContext";
+import { AddCampaignProvider } from "@features/campaigns/ui/context/add-campaign-context";
 function CampaignCreatePage() {
   return (
     <AddCampaignProvider>

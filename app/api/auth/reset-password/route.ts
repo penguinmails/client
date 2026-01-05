@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { nile } from '@/app/api/[...nile]/nile';
 import { z } from 'zod';
+import { productionLogger } from '@/lib/logger';
 
 const resetPasswordSchema = z.object({
   email: z.string().email(),
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     // Log for debugging
     if (process.env.NODE_ENV === 'development') {
-      console.log('NileDB resetPassword response:', response);
+      productionLogger.debug('NileDB resetPassword response:', response);
     }
 
     // Check if response indicates an error
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
         const status = (response as Response).status;
         if (status >= 400) {
           const errorText = await (response as Response).text().catch(() => '');
-          console.error('NileDB resetPassword error:', status, errorText);
+          productionLogger.error('NileDB resetPassword error:', status, errorText);
           
           if (status === 404) {
             return NextResponse.json(
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
       message: 'Password has been reset successfully',
     });
   } catch (error) {
-    console.error('Reset password error:', error);
+    productionLogger.error('Reset password error:', error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -82,5 +83,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-

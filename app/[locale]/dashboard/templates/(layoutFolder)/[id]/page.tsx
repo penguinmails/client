@@ -1,17 +1,23 @@
-import KpiCards from "@/components/dashboard/cards/KpiCards";
-import QuickActions from "@/components/dashboard/actions/QuickActions";
-import RecentRepliesList from "@/components/inbox/RecentReply/RecentReplyList";
-import RecentReplySkeleton from "@/components/inbox/RecentReply/RecentReplySkeleton";
-import StatsCardSkeleton from "@/components/dashboard/cards/KpiCardSkeleton";
-import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
-import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
+import KpiCards from "@/features/analytics/ui/components/dashboard/cards/KpiCards";
+import QuickActions from "@/features/analytics/ui/components/dashboard/actions/QuickActions";
+import RecentRepliesList from "@features/inbox/ui/components/RecentReply/RecentReplyList";
+import RecentReplySkeleton from "@features/inbox/ui/components/RecentReply/RecentReplySkeleton";
+import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/KpiCardSkeleton";
+import WarmupSummary from "@/features/analytics/ui/components/dashboard/summaries/WarmupSummary";
+import WarmupSummarySkeleton from "@/features/analytics/ui/components/dashboard/summaries/WarmupSummarySkeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Suspense } from "react";
+import { 
+  BarChart3, 
+  Mail, 
+  TrendingUp, 
+  Users 
+} from "lucide-react";
 import {
   getStatsCards,
   getRecentReplies,
   getWarmupSummaryData,
-} from "@/lib/actions/dashboard";
+} from "@features/campaigns/actions/dashboard";
 
 async function page() {
   // Fetch data using server actions
@@ -38,7 +44,11 @@ async function page() {
           </div>
         }
       >
-        <KpiCards cards={statsCards} />
+        <KpiCards cards={(statsCards.data || []).map((card, index) => ({
+          ...card,
+          icon: [BarChart3, Mail, TrendingUp, Users][index] || BarChart3,
+          color: 'blue' // Default color
+        }))} />
       </Suspense>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
@@ -58,7 +68,15 @@ async function page() {
                   </div>
                 }
               >
-                <RecentRepliesList recentReplies={recentReplies} />
+                <RecentRepliesList recentReplies={(recentReplies.data || []).map(reply => ({
+                  ...reply,
+                  name: reply.from.split('@')[0], // Extract name from email
+                  email: reply.from,
+                  company: 'Unknown Company', // Default company
+                  message: `Re: ${reply.subject}`, // Generate message preview
+                  time: reply.date.toLocaleDateString(),
+                  type: 'positive' as const
+                }))} />
               </Suspense>
             </CardContent>
           </Card>
@@ -67,7 +85,13 @@ async function page() {
         <div className="space-y-6">
           {/* Warmup Summary */}
           <Suspense fallback={<WarmupSummarySkeleton />}>
-            <WarmupSummary data={warmupSummaryData} />
+            <WarmupSummary data={{
+              ...warmupSummaryData.data,
+              activeMailboxes: warmupSummaryData.data.totalMailboxes,
+              warmingUp: warmupSummaryData.data.warmingMailboxes,
+              readyToSend: warmupSummaryData.data.warmedMailboxes,
+              needsAttention: warmupSummaryData.data.pausedMailboxes
+            }} />
           </Suspense>
 
           {/* Quick Actions */}

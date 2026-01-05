@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { stripeApi } from '@/lib/stripe/stripe-server';
 import { nile } from '@/app/api/[...nile]/nile';
+import { developmentLogger } from '@/lib/logger';
 
 interface NileUser {
   id: string;
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: session.url }, { status: 201 });
 
   } catch (error) {
-    console.error('Failed to create Checkout Session:', error);
+    developmentLogger.error('Failed to create Checkout Session:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

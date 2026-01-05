@@ -6,13 +6,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getTemplates } from "@/lib/actions/templates";
-import { cn } from "@/lib/utils";
+import { getTemplates } from "@features/campaigns/actions/templates";
+import { cn } from "@/shared/utils";
 import { Template } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { developmentLogger } from "@/lib/logger";
 
 function Default() {
   const { id } = useParams();
@@ -25,14 +26,14 @@ function Default() {
     const loadTemplates = async () => {
       try {
         setIsLoading(true);
-        const result = await getTemplates();
-        if (result.success && result.data) {
-          setTemplates(result.data);
+        const templatesResult = await getTemplates();
+        if (Array.isArray(templatesResult)) {
+          setTemplates(templatesResult);
         } else {
           setError("Failed to load templates");
         }
       } catch (err) {
-        console.error(err);
+        developmentLogger.error("Failed to load templates:", err);
         setError("An error occurred while loading templates");
       } finally {
         setIsLoading(false);

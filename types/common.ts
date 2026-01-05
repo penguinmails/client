@@ -1,4 +1,13 @@
-// Common utility types and generic interfaces used across the application
+/**
+ * Common building block types
+ * Part of the FSD shared layer
+ */
+
+import type { NextRequest } from 'next/server';
+import type { ComponentType } from 'react';
+
+// Custom component type constraint to avoid 'any' in linter
+export type AnyComponentType = ComponentType<Record<string, unknown>>;
 
 export type ID = string | number;
 
@@ -32,13 +41,6 @@ export interface PaginatedResponse<T> {
   hasMore: boolean;
 }
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
-  error?: string;
-}
-
 export interface SelectOption<T = string> {
   label: string;
   value: T;
@@ -51,172 +53,95 @@ export interface MetricData {
   trend?: "up" | "down" | "stable";
 }
 
-export interface ComponentBaseProps {
-  className?: string;
-  children?: React.ReactNode;
-  disabled?: boolean;
+// Billing Address (Shared across Billing and Settings)
+export interface BillingAddress {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string; // ISO country code
 }
 
-// Server action result type for consistent error handling
-export type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: string; code?: string };
-
-// Consolidated Types Utilities and Type Guards
-import { User, Company, Team, Tenant, UserRole, TeamRole } from './index';
-
-// Type Guards for Consolidated Types
-export function isUser(obj: unknown): obj is User {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    typeof (obj as User).id === 'string' &&
-    typeof (obj as User).tenantId === 'string' &&
-    typeof (obj as User).email === 'string' &&
-    typeof (obj as User).displayName === 'string' &&
-    typeof (obj as User).claims === 'object' &&
-    typeof (obj as User).profile === 'object'
-  );
+// Team Member (Shared across Team and Settings)
+export interface TeamMember {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  status: "active" | "invited" | "disabled" | "inactive" | "pending";
+  joinedAt?: string;
+  lastActive?: string;
 }
 
-export function isCompany(obj: unknown): obj is Company {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    typeof (obj as Company).id === 'string' &&
-    typeof (obj as Company).tenantId === 'string' &&
-    typeof (obj as Company).name === 'string'
-  );
+// Company (Shared across multiple features)
+export interface Company {
+  id: string | number;
+  tenantId: string;
+  name: string;
 }
 
-export function isTeam(obj: unknown): obj is Team {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    typeof (obj as Team).id === 'string' &&
-    typeof (obj as Team).tenantId === 'string' &&
-    typeof (obj as Team).name === 'string' &&
-    typeof (obj as Team).ownerId === 'string' &&
-    typeof (obj as Team).memberCount === 'number' &&
-    typeof (obj as Team).settings === 'object'
-  );
+
+// Analytics shared types
+export interface MailboxWarmupData {
+  id: string;
+  name?: string;
+  email: string;
+  status: "active" | "warming" | "paused" | "inactive" | "error";
+  warmupProgress: number;
+  dailyVolume: number;
+  healthScore: number;
+  domain: string;
+  createdAt: string;
 }
 
-export function isTenant(obj: unknown): obj is Tenant {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    typeof (obj as Tenant).id === 'string' &&
-    typeof (obj as Tenant).name === 'string' &&
-    typeof (obj as Tenant).created === 'string'
-  );
+export interface WarmupChartData {
+  date: string;
+  totalWarmups: number;
+  spamFlags: number;
+  replies: number;
 }
 
-// Utility Functions for Consolidated Types
-export function validateUserId(id: string): boolean {
-  // UUID v4 regex
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(id);
+// Export additional types for test compatibility
+export type ComponentProps<T extends AnyComponentType = AnyComponentType> = React.ComponentProps<T>;
+export type FormHandlerParams<T = Record<string, unknown>> = {
+  data: T;
+  req: NextRequest;
+};
+export type FormHandlerResult<T = Record<string, unknown>> = {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
+  errors?: FormValidationError[];
+  validationErrors?: FormValidationError[];
+};
+export interface FormValidationError {
+  code?: string;
+  message: string;
+  field?: string;
 }
-
-export function validateEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+export interface EnhancedApiResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
+  errors?: string[];
+  timestamp?: string;
+  details?: Record<string, unknown>;
+  code?: string;
 }
-
-export function getUserDisplayName(user: User): string {
-  return user.displayName || user.email.split('@')[0];
+export interface ApiSuccessResponse<T> {
+  success: true;
+  data: T;
+  message?: string;
+  timestamp?: string;
+  [key: string]: unknown;
 }
-
-export function getUserInitials(user: User): string {
-  const name = getUserDisplayName(user);
-  return name
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase())
-    .slice(0, 2)
-    .join('');
-}
-
-export function isUserAdmin(user: User): boolean {
-  return user.claims.role === UserRole.ADMIN || user.claims.role === UserRole.SUPER_ADMIN;
-}
-
-export function isUserSuperAdmin(user: User): boolean {
-  return user.claims.role === UserRole.SUPER_ADMIN;
-}
-
-export function canUserAccessTenant(user: User, tenantId: string): boolean {
-  return user.tenantId === tenantId;
-}
-
-export function canUserAccessTeam(user: User, team: Team): boolean {
-  return user.tenantId === team.tenantId && (user.teamId === team.id || user.id === team.ownerId);
-}
-
-export function filterUsersByTenant(users: User[], tenantId: string): User[] {
-  return users.filter(user => user.tenantId === tenantId);
-}
-
-export function filterTeamsByTenant(teams: Team[], tenantId: string): Team[] {
-  return teams.filter(team => team.tenantId === tenantId);
-}
-
-export function filterCompaniesByTenant(companies: Company[], tenantId: string): Company[] {
-  return companies.filter(company => company.tenantId === tenantId);
-}
-
-// Default values for consolidated types
-export function createDefaultUser(partial: Partial<User>): User {
-  return {
-    id: partial.id || '',
-    tenantId: partial.tenantId || '',
-    email: partial.email || '',
-    displayName: partial.displayName || '',
-    claims: partial.claims || {
-      role: UserRole.USER,
-      tenantId: partial.tenantId || '',
-      permissions: [],
-    },
-    profile: partial.profile || {
-      timezone: 'UTC',
-      language: 'en',
-    },
-    ...partial,
-  };
-}
-
-export function createDefaultCompany(partial: Partial<Company>): Company {
-  return {
-    id: partial.id || '',
-    tenantId: partial.tenantId || '',
-    name: partial.name || '',
-    ...partial,
-  };
-}
-
-export function createDefaultTeam(partial: Partial<Team>): Team {
-  return {
-    id: partial.id || '',
-    tenantId: partial.tenantId || '',
-    name: partial.name || '',
-    ownerId: partial.ownerId || '',
-    memberCount: partial.memberCount || 0,
-    settings: partial.settings || {
-      allowMemberInvites: true,
-      requireTwoFactorAuth: false,
-      defaultRole: 'member' as TeamRole,
-      autoApproveMembers: true,
-      notifyOnNewMember: false,
-    },
-    ...partial,
-  };
-}
-
-export function createDefaultTenant(partial: Partial<Tenant>): Tenant {
-  return {
-    id: partial.id || '',
-    name: partial.name || '',
-    created: partial.created || new Date().toISOString(),
-    ...partial,
-  };
+export interface ApiErrorResponse {
+  success: false;
+  error: string;
+  code?: string;
+  timestamp?: string;
+  details?: Record<string, unknown>;
+  [key: string]: unknown;
 }

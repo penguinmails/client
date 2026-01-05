@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { EmailsTable } from "@/components/domains/components/emails-table";
-import { getDomainById, getTopAccountsForDomain } from "@/lib/actions/domains";
+import { EmailsTable } from "@features/domains/ui/components/emails-table";
+import { getDomainById, getTopAccountsForDomain } from "@features/domains/actions";
 import WeeklyMetricsClient from "./weekly-metrics-client";
 import {
   ArrowLeft,
@@ -20,7 +20,7 @@ import {
   Shield,
 } from "lucide-react";
 import Link from "next/link";
-import { Domain } from "@/types";
+
 
 export default async function DomainPage({
   params,
@@ -34,7 +34,7 @@ export default async function DomainPage({
     return <div>Domain not found</div>;
   }
 
-  const topAccounts = await getTopAccountsForDomain(domainIdNum, 10);
+  const topAccounts = await getTopAccountsForDomain(domainIdNum);
 
   return (
     <div className="container mx-auto py-6">
@@ -88,12 +88,10 @@ export default async function DomainPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {(domain as Domain).metrics?.total24h}
+                  {domain.metrics?.total24h}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {((domain as Domain).metrics?.bounceRate ?? 0 * 100).toFixed(
-                    1
-                  )}
+                  {((domain.metrics?.bounceRate ?? 0) * 100).toFixed(1)}
                   % bounce rate
                 </p>
               </CardContent>
@@ -106,13 +104,11 @@ export default async function DomainPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {((domain as Domain).metrics?.openRate ?? 0 * 100).toFixed(1)}
+                  {((domain.metrics?.openRate ?? 0) * 100).toFixed(1)}
                   %
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {((domain as Domain).metrics?.replyRate ?? 0 * 100).toFixed(
-                    1
-                  )}
+                  {((domain.metrics?.replyRate ?? 0) * 100).toFixed(1)}
                   % reply rate
                 </p>
               </CardContent>
@@ -125,7 +121,7 @@ export default async function DomainPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {((domain as Domain).metrics?.spamRate ?? 0 * 100).toFixed(3)}
+                  {((domain.metrics?.spamRate ?? 0) * 100).toFixed(3)}
                   %
                 </div>
                 <p className="text-xs text-muted-foreground">

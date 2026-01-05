@@ -1,97 +1,215 @@
 {
-    "Errors": {
-        "401-LOGIN": "Las credenciales que proporcionaste no son válidas. Por favor, verifica tu correo electrónico y contraseña.",
-        "403-CAMPAIGNS": "No estás autorizado para ver o modificar los datos de la campaña.",
-        "403-USERS": "No tienes los permisos necesarios para gestionar cuentas de usuario.",
-        "500-AUTH": "Ocurrió un error inesperado del servidor durante la autenticación. Por favor, inténtalo de nuevo más tarde.",
-        "500-LEADS": "Ocurrió un error del sistema al obtener los datos de los leads. El problema ha sido registrado."
+  "Errors": {
+    "401-LOGIN": "Las credenciales que proporcionaste no son válidas. Por favor, revisa tu correo electrónico y contraseña.",
+    "403-CAMPAIGNS": "No tienes autorización para ver o modificar los datos de la campaña.",
+    "403-USERS": "No tienes los permisos necesarios para administrar las cuentas de usuario.",
+    "500-AUTH": "Ocurrió un error inesperado en el servidor durante la autenticación. Por favor, inténtalo de nuevo más tarde.",
+    "500-LEADS": "Ocurrió un error del sistema al obtener los datos de los leads. El problema ha sido registrado."
+  },
+  "Metadata": {
+    "title": "Penguin Mails - Envío de correos electrónicos y calentamiento de dominios",
+    "description": "¡Entra en el mundo de Penguin Mails, donde cada mensaje es una agradable sorpresa!"
+  },
+  "Login": {
+    "title": "¡Bienvenido de nuevo!",
+    "description": "Ingrese sus credenciales para acceder a su panel de control.",
+    "email": {
+      "label": "Correo electrónico",
+      "placeholder": "tu@ejemplo.com"
     },
-    "Metadata": {
-        "title": "Penguin Mails - Alcance por correo electrónico y calentamiento de dominio",
-        "description": "¡Bienvenido al mundo de Penguin Mails, donde cada mensaje es una sorpresa encantadora!"
+    "password": {
+      "label": "Contraseña"
     },
-    "Login": {
-        "title": "¡Bienvenido de nuevo!",
-        "description": "Ingrese sus credenciales para acceder a su panel de control.",
-        "email": {
-            "label": "Correo electrónico",
-            "placeholder": "tu@ejemplo.com"
-        },
-        "password": {
-            "label": "Contraseña"
-        },
-        "forgotPassword": "¿Olvidaste tu contraseña?",
-        "loginButton": {
-            "default": "Iniciar sesión",
-            "loading": "Iniciando sesión..."
-        },
-        "errors": {
-            "title": "Error de inicio de sesión",
-            "incorrectPassword": "Contraseña incorrecta",
-            "userNotFound": "Usuario no encontrado",
-            "generic": "Error de inicio de sesión. Por favor, verifica tus credenciales."
-        },
-        "signup": {
-            "text": "¿No tienes una cuenta?",
-            "link": "Regístrate"
-        }
+    "forgotPassword": "¿Olvidaste la contraseña?",
+    "loginButton": {
+      "default": "Iniciar sesión",
+      "loading": "Iniciando sesión...",
+      "tooManyAttempts": "Demasiados intentos. Completa la verificación.",
+      "completeVerification": "Completa la verificación para continuar"
     },
-    "Signup": {
-        "header": {
-            "title": "Crea tu cuenta de Penguin Mails",
-            "description": "Comienza con tu experiencia de correo seguro."
-        },
-        "form": {
-            "name": {
-                "label": "Nombre",
-                "placeholder": "Ingresa tu nombre"
-            },
-            "email": {
-                "label": "Correo electrónico",
-                "placeholder": "tu@ejemplo.com"
-            },
-            "password": {
-                "label": "Contraseña",
-                "placeholder": "Ingresa tu contraseña"
-            },
-            "confirmPassword": {
-                "label": "Confirmar Contraseña",
-                "placeholder": "Confirma tu contraseña"
-            }
-        },
-        "errors": {
-            "emailAlreadyExistsVerified": {
-                "title": "Email Ya Registrado",
-                "message": "Este correo electrónico ya está registrado. Por favor, inicia sesión en tu cuenta existente.",
-                "actionLogin": "Iniciar Sesión",
-                "actionForgotPassword": "¿Olvidaste tu Contraseña?"
-            },
-            "emailAlreadyExistsUnverified": {
-                "title": "Cuenta No Verificada",
-                "message": "Existe una cuenta con este correo pero aún no ha sido verificada. Te hemos enviado un nuevo correo de verificación.",
-                "actionResend": "Reenviar Email de Verificación"
-            },
-            "signupFailed": "Error en el registro. Por favor, inténtalo de nuevo.",
-            "captchaRequired": "Por favor, completa la verificación CAPTCHA.",
-            "passwordTooWeak": "La contraseña es muy débil. Incluye al menos 2 de: mayúsculas, minúsculas, números, caracteres especiales",
-            "passwordMismatch": "Las contraseñas no coinciden",
-            "invalidEmail": "Por favor, ingresa un correo electrónico válido"
-        },
-        "success": {
-            "accountCreated": "¡Cuenta creada exitosamente! Revisa tu correo para el enlace de verificación y activa tu cuenta.",
-            "accountCreatedNoEmail": "¡Cuenta creada exitosamente! Te enviaremos un enlace de verificación pronto.",
-            "verificationEmailResent": "El correo de verificación ha sido reenviado. Por favor, revisa tu bandeja de entrada."
-        },
-        "button": {
-            "createAccount": "Crear Cuenta",
-            "creatingAccount": "Creando Cuenta..."
-        },
-        "footer": {
-            "haveAccount": "¿Ya tienes una cuenta?",
-            "login": "Iniciar Sesión"
-        }
+    "errors": {
+      "title": "Error de inicio de sesión",
+      "incorrectPassword": "Contraseña incorrecta",
+      "userNotFound": "Usuario no encontrado",
+      "generic": "Error de inicio de sesión. Por favor, revisa tus credenciales.",
+      "captchaRequired": "Por favor, completa la verificación CAPTCHA."
+    },
+    "signup": {
+      "text": "¿No tienes una cuenta?",
+      "link": "Regístrate"
+    },
+    "failedAttempts": "Intentos fallidos: {loginAttempts}/{MAX_LOGIN_ATTEMPTS}",
+    "securityVerification": "Por seguridad, completa la verificación para continuar.",
+    "captchaNotConfigured": "El CAPTCHA no está configurado. Por favor, contacta con el soporte."
+  },
+  "button": {
+    "label": "botón"
+  },
+  "SignUp": {
+    "header": {
+      "title": "Crea tu cuenta de Penguin Mails",
+      "description": "Comienza con tu experiencia de correo electrónico seguro.",
+      "alreadySignedIn": "Ya has iniciado sesión."
+    },
+    "form": {
+      "name": {
+        "label": "Nombre",
+        "placeholder": "Ingresa tu nombre"
+      },
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "tu@ejemplo.com"
+      },
+      "password": {
+        "label": "Contraseña",
+        "placeholder": "Ingresa tu contraseña"
+      },
+      "confirmPassword": {
+        "label": "Confirmar contraseña",
+        "placeholder": "Confirma tu contraseña"
+      }
+    },
+    "errors": {
+      "emailAlreadyExistsVerified": {
+        "title": "Correo electrónico ya registrado",
+        "message": "Esta dirección de correo electrónico ya está registrada. Por favor, inicia sesión en tu cuenta existente.",
+        "actionLogin": "Iniciar sesión",
+        "actionForgotPassword": "¿Olvidaste la contraseña?"
+      },
+      "emailAlreadyExistsUnverified": {
+        "title": "Cuenta no verificada",
+        "message": "Existe una cuenta con este correo electrónico pero aún no ha sido verificada. Te hemos enviado un nuevo correo de verificación.",
+        "actionResend": "Reenviar correo de verificación"
+      },
+      "signupFailed": "Error en el registro. Por favor, inténtalo de nuevo.",
+      "captchaRequired": "Por favor, completa la verificación CAPTCHA.",
+      "passwordTooWeak": "La contraseña es demasiado débil. Por favor, incluye al menos 2 de los siguientes: mayúsculas, minúsculas, números, caracteres especiales",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
+      "required": "Este campo es obligatorio",
+      "password": "La contraseña es obligatoria",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "confirmPassword": "La confirmación de contraseña es obligatoria"
+    },
+    "success": {
+      "accountCreated": "¡Cuenta creada con éxito! Revisa tu correo electrónico para ver un enlace de verificación para activar tu cuenta.",
+      "accountCreatedNoEmail": "¡Cuenta creada con éxito! En breve te enviaremos un enlace de verificación.",
+      "verificationEmailResent": "El correo de verificación ha sido reenviado. Por favor, revisa tu bandeja de entrada."
     },
     "button": {
-        "label": "botón"
+      "createAccount": "Crear cuenta",
+      "creatingAccount": "Creando cuenta...",
+      "sending": "Enviando..."
+    },
+    "captcha": {
+      "notConfigured": "CAPTCHA no está configurado. Por favor, contacta con soporte."
+    },
+    "footer": {
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "login": "Iniciar sesión"
     }
+  },
+  "ForgotPassword": {
+    "title": "¿Olvidaste tu contraseña?",
+    "description": {
+      "initial": "Introduce tu dirección de correo electrónico a continuación y te enviaremos un enlace para restablecer tu contraseña.",
+      "success": "Revisa tu bandeja de entrada para ver el enlace de restablecimiento."
+    },
+    "form": {
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "tu@ejemplo.com"
+      },
+      "button": {
+        "sending": "Enviando...",
+        "send": "Enviar enlace de restablecimiento"
+      }
+    },
+    "alerts": {
+      "error": {
+        "title": "Error"
+      },
+      "success": {
+        "title": "¡Correo electrónico enviado!",
+        "description": "Si existe una cuenta para {email}, recibirás un correo electrónico con instrucciones para restablecer la contraseña en breve. Por favor, revisa tu carpeta de spam si no lo ves."
+      }
+    },
+    "footer": {
+      "text": "¿Recordaste tu contraseña?",
+      "linkText": "Iniciar sesión"
+    },
+    "alreadySignedIn": "Ya has iniciado sesión.",
+    "failedToSend": "No se pudo enviar el enlace de restablecimiento. Por favor, inténtalo de nuevo."
+  },
+  "ResetPassword": {
+    "header": {
+      "title": "Restablece tu contraseña",
+      "description": "Introduce tu nueva contraseña a continuación para"
+    },
+    "form": {
+      "newPassword": {
+        "label": "Nueva contraseña",
+        "placeholder": "Introduce la nueva contraseña"
+      },
+      "confirmPassword": {
+        "label": "Confirmar nueva contraseña",
+        "placeholder": "Confirma la nueva contraseña"
+      }
+    },
+    "button": {
+      "default": "Restablecer contraseña",
+      "loading": "Restableciendo contraseña..."
+    },
+    "validating": {
+      "title": "Validando enlace de restablecimiento...",
+      "description": "Por favor, espera mientras validamos tu enlace de restablecimiento de contraseña."
+    },
+    "success": {
+      "title": "¡Contraseña restablecida con éxito!",
+      "description": "Tu contraseña ha sido restablecida con éxito. Ahora puedes iniciar sesión con tu nueva contraseña.",
+      "signIn": "Iniciar sesión"
+    },
+    "error": {
+      "title": "Enlace de restablecimiento no válido",
+      "invalidLink": "Este enlace de restablecimiento de contraseña no es válido o ha caducado.",
+      "noToken": "No se proporcionó ningún token de restablecimiento",
+      "invalidFormat": "Formato de token de restablecimiento no válido",
+      "expired": "Este enlace de restablecimiento de contraseña no es válido o ha caducado.",
+      "validationFailed": "No se pudo validar el token de restablecimiento",
+      "generic": "No se pudo restablecer la contraseña. Por favor, inténtalo de nuevo.",
+      "minLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    },
+    "footer": {
+      "needNewLink": "¿Necesitas un nuevo enlace de restablecimiento?",
+      "requestAnother": "Solicita otro"
+    }
+  },
+  "EmailConfirmation": {
+    "title": "Revisa tu correo electrónico",
+    "description": {
+      "withEmail": "Hemos enviado un enlace de verificación a {email}",
+      "withoutEmail": "Hemos enviado un enlace de verificación a tu dirección de correo electrónico"
+    },
+    "instructions": "Haz clic en el enlace del correo electrónico para activar tu cuenta.",
+    "errors": {
+      "unableToResend": "No se pudo reenviar el correo electrónico. Por favor, intenta registrarte de nuevo.",
+      "resendFailed": "No se pudo reenviar el correo de verificación. Por favor, inténtalo de nuevo."
+    },
+    "success": {
+      "resendMessage": "Se ha enviado un nuevo enlace de verificación a tu correo electrónico."
+    },
+    "button": {
+      "sending": "Enviando...",
+      "resendEmail": "Reenviar correo de confirmación",
+      "resendCountdown": "Reenviar en {countdown}s"
+    },
+    "help": {
+      "text": "¿No recibiste el correo electrónico? Revisa tu carpeta de spam o",
+      "link": {
+        "default": "haz clic aquí para reenviar",
+        "countdown": "haz clic aquí para reenviar en {countdown}s"
+      }
+    }
+  }
 }

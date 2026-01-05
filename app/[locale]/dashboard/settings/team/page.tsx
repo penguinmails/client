@@ -1,4 +1,4 @@
-import TeamMembersTable from "@/components/settings/team/team-members-table";
+import TeamMembersTable from "@features/team/ui/components/team-members-table";
 import { Card, CardContent } from "@/components/ui/card";
 
 // Force dynamic rendering to prevent SSR issues with analytics dependencies

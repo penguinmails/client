@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MailboxesTab from "@/components/domains/mailboxes/mailboxes-tab";
+import MailboxesTab from "@features/domains/ui/components/mailboxes/mailboxes-tab";
 import {
   getMailboxesAction,
   getMultipleMailboxAnalyticsAction,
-} from "@/lib/actions/mailboxes";
+} from "@features/inbox/actions/mailboxes";
 import { MailboxWarmupData } from "@/types";
-import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
+import { mapRawToLegacyMailboxData } from "@features/analytics/lib/mappers";
+import { developmentLogger } from "@/lib/logger";
 // Migration note: Using local alias for mailbox analytics state, all mailbox analytics set via mapper.
 
 // Force dynamic rendering to prevent SSR issues
@@ -36,15 +37,27 @@ function Page() {
       setMailboxesError(null);
       try {
         const mailboxesResult = await getMailboxesAction();
-        if (mailboxesResult.success && mailboxesResult.data) {
-          setMailboxes(mailboxesResult.data);
+        if (mailboxesResult.success) {
+          // Transform MailboxData[] to MailboxWarmupData[]
+          const transformedMailboxes: MailboxWarmupData[] = (mailboxesResult.data || []).map(mailbox => ({
+            id: mailbox.id,
+            name: mailbox.email.split('@')[0], // Extract name from email
+            email: mailbox.email,
+            status: mailbox.status as MailboxWarmupData['status'],
+
+            warmupProgress: mailbox.warmupProgress,
+            dailyVolume: mailbox.dailyLimit,
+            healthScore: Math.round((mailbox.openRate + mailbox.replyRate) / 2), // Simple health score calculation
+            domain: mailbox.domain,
+            createdAt: new Date().toISOString() // Default createdAt
+          }));
+          setMailboxes(transformedMailboxes);
         } else {
-          throw new Error(
-            mailboxesResult.error?.message || "Failed to fetch mailboxes"
-          );
+          const errorMessage = mailboxesResult.error;
+          throw new Error(errorMessage);
         }
       } catch (error) {
-        console.error("Failed to fetch mailboxes:", error);
+        developmentLogger.error("Failed to fetch mailboxes:", error);
         setMailboxesError("Failed to load mailboxes");
       } finally {
         setMailboxesLoading(false);
@@ -80,7 +93,8 @@ function Page() {
             const analytics = analyticsResults[mailbox.id];
             if (analytics) {
               newState[mailbox.id] = {
-                data: analytics,
+                data: mapRawToLegacyMailboxData(analytics),
+
                 loading: false,
                 error: null,
               };
@@ -99,13 +113,13 @@ function Page() {
               data: null,
               loading: false,
               error:
-                analyticsResult.error?.message || "Failed to load analytics",
+                "Failed to load analytics",
             };
           });
         }
         setAnalyticsState(newState);
       } catch (error) {
-        console.error("Failed to fetch mailbox analytics:", error);
+        developmentLogger.error("Failed to fetch mailbox analytics:", error);
         // Set error state for all mailboxes
         const errorState: LocalProgressiveAnalyticsState = {};
         mailboxes.forEach((mailbox) => {

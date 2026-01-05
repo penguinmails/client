@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import NewClientForm from "@/components/clients/forms/client-form";
-import { Header } from "@/components/clients/header";
-import { copyText as t } from "@/components/clients/data/copy";
+import NewClientForm from "@/features/leads/ui/components/forms/NewLeadForm";
+// import { Header } from "@/features/leads/ui/components/forms/LeadHeader";
+import { copyText as t } from "@/features/leads/ui/components/clients/data/copy";
 
 export const metadata: Metadata = {
   title: t.page.title,
@@ -16,7 +16,6 @@ export default async function NewClientPage({
   const { campaignId } = await params;
   return (
     <div className="container mx-auto py-6">
-      <Header />
       <NewClientForm campaignId={campaignId} />
     </div>
   );

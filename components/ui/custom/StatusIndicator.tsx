@@ -1,10 +1,12 @@
 import React from "react";
 import { DisplayStatus } from "@/types/common";
-import { CampaignStatus } from "@/types/campaign";
+import { CampaignStatus } from "@features/campaigns/types";
 
 interface StatusIndicatorProps {
   status: CampaignStatus;
 }
+
+
 
 const StatusIndicator: React.FC<StatusIndicatorProps> = ({ status }) => {
   let colorClass = "";

@@ -1,10 +1,11 @@
 "use client";
 import { use } from "react";
 import { Button } from "@/components/ui/button/button";
-import EmailAccountForm from "@/components/domains/email-account-form";
-import { type EmailAccountFormValues } from "@/types/forms";
+import EmailAccountForm from "@features/domains/ui/components/forms/email-account-form";
+import { type EmailAccountFormValues } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { developmentLogger } from "@/lib/logger";
 
 function NewAccountClient({
   params,
@@ -19,7 +20,7 @@ function NewAccountClient({
 
   const handleSubmit = async (data: EmailAccountFormValues) => {
     // TODO: Implement API call to create account
-    console.log("Creating account:", { ...data, domain: domain.name });
+    developmentLogger.debug("Creating account:", { ...data, domain: domain.name });
   };
 
   return (

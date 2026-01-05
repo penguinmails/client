@@ -1,6 +1,6 @@
 "use client";
 
-import AddStorageTrigger from "@/components/settings/billing/add-storge-dialog";
+import AddStorageTrigger from "@features/billing/ui/components/add-storge-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button/button";
 import {
@@ -15,8 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   getUsageWithCalculations,
   getStorageOptions,
-} from "@/lib/actions/billing";
-import { cn } from "@/lib/utils";
+} from "@features/billing/actions";
+import { cn } from "@/shared/utils";
 import { Globe, HardDrive, Mail, Plus, Server, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -96,13 +96,36 @@ function UsageTab() {
 
       const result = await getUsageWithCalculations();
 
-      if (result.success && result.data) {
-        setUsageData(result.data);
+      if (result && result.success && result.data) {
+        // Transform the raw data to match UsageData interface
+        const usage = result.data;
+        const transformedData: UsageData = {
+          usage: {
+            emailsSent: usage.emailsSent || 0,
+            emailsLimit: usage.emailsLimit || 0,
+            contactsReached: 0, // Not provided by the API
+            contactsLimit: 0,   // Not provided by the API
+            campaignsActive: usage.campaignsUsed || 0,
+            campaignsLimit: usage.campaignsLimit || 0,
+            storageUsed: usage.storageUsed || 0,
+            storageLimit: usage.storageLimit || 0,
+            emailAccountsActive: usage.emailAccountsUsed || 0,
+            emailAccountsLimit: usage.maxEmailAccounts || 0,
+            resetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          percentages: {
+            emailsSentPercentage: usage.emailsLimit > 0 ? (usage.emailsSent / usage.emailsLimit) * 100 : 0,
+            contactsReachedPercentage: 0,
+            campaignsActivePercentage: usage.campaignsLimit > 0 ? (usage.campaignsUsed / usage.campaignsLimit) * 100 : 0,
+            storageUsedPercentage: usage.storageLimit > 0 ? (usage.storageUsed / usage.storageLimit) * 100 : 0,
+            emailAccountsPercentage: usage.maxEmailAccounts > 0 ? (usage.emailAccountsUsed / usage.maxEmailAccounts) * 100 : 0
+          },
+          daysUntilReset: 30
+        };
+        setUsageData(transformedData);
       } else {
-        setError(result.error?.message ?? "Failed to load usage data");
-        toast.error("Failed to load usage data", {
-          description: result.error?.message ?? "An error occurred",
-        });
+        setError("Failed to load usage data");
+        toast.error("Failed to load usage data");
       }
     } catch (err) {
       const errorMessage =
@@ -120,12 +143,10 @@ function UsageTab() {
     try {
       setLoadingStorage(true);
       const result = await getStorageOptions();
-      if (result.success && result.data) {
+      if (result && result.success && result.data) {
         setStorageOptions(result.data);
       } else {
-        toast.error("Failed to load storage options", {
-          description: result.error?.message ?? "An error occurred",
-        });
+        toast.error("Failed to load storage options");
       }
     } catch (err) {
       const errorMessage =

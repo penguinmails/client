@@ -10,7 +10,7 @@ import { render, within } from "@testing-library/react";
 import DomainSetupPage from "../page";
 
 // Mock DomainSetupClient component
-jest.mock("@/components/domains/domain-setup-client", () => ({
+jest.mock("@features/domains/ui/components/setup/domain-setup-client", () => ({
   __esModule: true,
   default: ({ domainId }: { domainId: string }) => (
     <div data-testid="domain-setup-client">

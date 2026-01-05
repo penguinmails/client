@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { productionLogger } from '@/lib/logger';
 
 /**
  * GET /api/auth/reset-callback
@@ -23,11 +24,11 @@ export async function GET(request: NextRequest) {
 
     // Log for debugging
     if (process.env.NODE_ENV === 'development') {
-      console.log('Reset callback received:', { 
-        token: token?.substring(0, 20) + '...', 
-        identifier, 
-        callbackUrl, 
-        redirect 
+      productionLogger.debug('Reset callback received:', {
+        token: token?.substring(0, 20) + '...',
+        identifier,
+        callbackUrl,
+        redirect
       });
     }
 
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.redirect(resetUrl.toString());
   } catch (error) {
-    console.error('Reset callback error:', error);
+    productionLogger.error('Reset callback error:', error);
     
     // Redirect to forgot-password with error
     const errorUrl = new URL('/forgot-password', process.env.NEXT_PUBLIC_APP_URL);

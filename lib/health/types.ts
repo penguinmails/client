@@ -22,7 +22,6 @@ export interface HealthCheckResponse {
   services?: {
     database: ServiceCheck;
     redis: ServiceCheck;
-    convex: ServiceCheck;
   };
 }
 

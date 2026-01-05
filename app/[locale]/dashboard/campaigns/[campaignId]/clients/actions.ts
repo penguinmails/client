@@ -1,13 +1,14 @@
 "use server";
 
-import { campaignLeads } from "@/lib/data/campaigns";
+import { campaignLeads } from "@/shared/mocks/providers";
+import { developmentLogger } from "@/lib/logger";
 
 export async function getClientsPage(
   campaignId: string,
   page: number,
   limit: number = 10,
 ) {
-  console.log({ campaignId, page });
+  developmentLogger.debug("Getting clients page", { campaignId, page });
 
   const clients = campaignLeads;
   const total = clients.length;

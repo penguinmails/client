@@ -1,174 +1,100 @@
-/**
- * Next.js Global Middleware
- * 
- * Handles global request processing including security headers,
- * request logging, and basic validation for the NileDB backend.
- */
-
 import { NextRequest, NextResponse } from 'next/server';
-import { logError } from './lib/niledb/errors';
+import { logError } from '@/lib/nile/errors';
+
 import createMiddleware from 'next-intl/middleware';
-import {routing} from './i18n/routing';
+import {routing} from '@/shared/config/i18n/routing';
 
 // Security headers configuration
 const SECURITY_HEADERS = {
-  'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
+  'X-DNS-Prefetch-Control': 'on',
   'X-XSS-Protection': '1; mode=block',
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-} as const;
-
-// CORS configuration
-const CORS_HEADERS = {
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-  'Access-Control-Max-Age': '86400', // 24 hours
-} as const;
+  'Permissions-Policy': [
+    'geolocation=()',
+    'microphone=()',
+    'camera=()',
+    'interest-cohort=()',
+  ].join(', '),
+};
 
 // Rate limiting configuration
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
-}
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX_REQUESTS = 100; // Max requests per window
 
-class GlobalRateLimiter {
-  private requests = new Map<string, RateLimitEntry>();
-  private readonly windowMs = 60 * 1000; // 1 minute
-  private readonly maxRequests = 100; // per minute per IP
+// Rate limiting storage (in-memory for development)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
-  check(ip: string): { allowed: boolean; resetTime?: number } {
-    const now = Date.now();
-    const windowStart = now - this.windowMs;
-    
-    // Clean up old entries
-    this.cleanup(windowStart);
-    
-    const entry = this.requests.get(ip);
-    
-    if (!entry) {
-      this.requests.set(ip, { count: 1, resetTime: now + this.windowMs });
-      return { allowed: true };
-    }
-    
-    if (entry.resetTime <= now) {
-      this.requests.set(ip, { count: 1, resetTime: now + this.windowMs });
-      return { allowed: true };
-    }
-    
-    if (entry.count >= this.maxRequests) {
-      return { 
-        allowed: false, 
-        resetTime: entry.resetTime 
-      };
-    }
-    
-    entry.count++;
-    return { allowed: true };
-  }
-
-  private cleanup(windowStart: number): void {
-    for (const [key, entry] of this.requests.entries()) {
-      if (entry.resetTime <= windowStart) {
-        this.requests.delete(key);
-      }
-    }
-  }
-}
-
-const globalRateLimiter = new GlobalRateLimiter();
-
-// Request logging
-interface RequestLog {
-  requestId: string;
-  method: string;
-  url: string;
-  userAgent?: string;
-  ip: string;
-  timestamp: string;
-  duration?: number;
-  statusCode?: number;
-}
-
-function generateRequestId(): string {
-  return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}
-
-function getClientIP(request: NextRequest): string {
-  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-         request.headers.get('x-real-ip') ||
-         request.headers.get('cf-connecting-ip') ||
-         'unknown';
-}
-
-function logRequest(log: RequestLog): void {
-  // Only log API requests and errors
-  if (log.url.includes('/api/') || (log.statusCode && log.statusCode >= 400)) {
-    console.info('Request Log:', log);
-  }
-}
-
-// Security validation
-function validateRequest(request: NextRequest): { valid: boolean; error?: string } {
-  // Check for suspicious patterns
-  const url = request.nextUrl.pathname;
-  const userAgent = request.headers.get('user-agent') || '';
-
-  // Block common attack patterns
-  const suspiciousPatterns = [
-    /\.\./,  // Path traversal
-    /<script/i,  // XSS attempts
-    /union.*select/i,  // SQL injection
-    /javascript:/i,  // JavaScript injection
-    /data:/i,  // Data URI attacks
-  ];
-
-  for (const pattern of suspiciousPatterns) {
-    if (pattern.test(url) || pattern.test(userAgent)) {
-      return {
-        valid: false,
-        error: 'Suspicious request pattern detected',
-      };
-    }
-  }
-
-  // Validate content length for POST/PUT requests
-  if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
-    const contentLength = request.headers.get('content-length');
-    if (contentLength && parseInt(contentLength) > 10 * 1024 * 1024) { // 10MB limit
-      return {
-        valid: false,
-        error: 'Request body too large',
-      };
-    }
-  }
-
-  return { valid: true };
-}
-
-// CORS handling
-function handleCORS(request: NextRequest): NextResponse | null {
-  // Handle preflight requests
-  if (request.method === 'OPTIONS') {
-    const origin = request.headers.get('origin');
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'https://localhost:3000',
-      process.env.NEXT_PUBLIC_APP_URL,
-      process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
-    ].filter(Boolean);
-
-    const response = new NextResponse(null, { status: 200 });
-
-    // Set CORS headers
-    if (origin && allowedOrigins.includes(origin)) {
-      response.headers.set('Access-Control-Allow-Origin', origin);
-    }
-
-    Object.entries(CORS_HEADERS).forEach(([key, value]) => {
-      response.headers.set(key, value);
+// Rate limiting function
+function rateLimit(ip: string): { success: boolean; remaining: number; resetTime: number } {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW_MS;
+  
+  const ipData = rateLimitMap.get(ip);
+  
+  if (!ipData || ipData.resetTime < windowStart) {
+    // First request or window expired
+    rateLimitMap.set(ip, {
+      count: 1,
+      resetTime: now + RATE_LIMIT_WINDOW_MS
     });
+    return { success: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1, resetTime: now + RATE_LIMIT_WINDOW_MS };
+  }
+  
+  if (ipData.count >= RATE_LIMIT_MAX_REQUESTS) {
+    // Rate limit exceeded
+    return { success: false, remaining: 0, resetTime: ipData.resetTime };
+  }
+  
+  // Increment count
+  ipData.count++;
+  return { success: true, remaining: RATE_LIMIT_MAX_REQUESTS - ipData.count, resetTime: ipData.resetTime };
+}
 
+// Validate security headers
+function validateSecurityHeaders(request: NextRequest): NextResponse | null {
+  const origin = request.headers.get('origin');
+  const userAgent = request.headers.get('user-agent') || '';
+  const method = request.method.toUpperCase();
+
+  // Block suspicious user agents
+  if (userAgent.includes('bot') && !userAgent.includes('googlebot')) {
+    return NextResponse.json(
+      { error: 'Access denied' },
+      { status: 403, headers: { 'Retry-After': '3600' } }
+    );
+  }
+
+  // Validate CORS for API routes
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    return handleCORS(request);
+  }
+
+  return null;
+}
+
+// Handle CORS for API routes
+function handleCORS(request: NextRequest): NextResponse | null {
+  const origin = request.headers.get('origin');
+  const method = request.method.toUpperCase();
+
+  // For development, allow all origins. In production, specify allowed origins
+  const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? process.env.ALLOWED_ORIGINS?.split(',') || []
+    : ['*'];
+
+  if (method === 'OPTIONS') {
+    const response = new NextResponse(null, { status: 200 });
+    
+    if (allowedOrigins.includes('*') || (origin && allowedOrigins.includes(origin))) {
+      response.headers.set('Access-Control-Allow-Origin', origin || '*');
+    }
+    
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    response.headers.set('Access-Control-Max-Age', '86400');
+    
     return response;
   }
 
@@ -185,80 +111,47 @@ const intlMiddleware = createMiddleware({
 // Main middleware function
 export async function middleware(request: NextRequest) {
   const startTime = Date.now();
-  const requestId = generateRequestId();
-  const ip = getClientIP(request);
-  const url = request.nextUrl.pathname;
 
-  // Create request log
-  const requestLog: RequestLog = {
-    requestId,
-    method: request.method,
-    url: request.url,
-    userAgent: request.headers.get('user-agent') || undefined,
-    ip,
-    timestamp: new Date().toISOString(),
-  };
+  // 1. Rate limiting
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
+             request.headers.get('x-real-ip') || 
+             '127.0.0.1';
+  
+  const rateLimitResult = rateLimit(ip);
+  
+  if (!rateLimitResult.success) {
+    const retryAfter = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
+    return new NextResponse(
+      JSON.stringify({ 
+        error: 'Too Many Requests',
+        retryAfter: retryAfter 
+      }),
+      { 
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          'Retry-After': retryAfter.toString(),
+        }
+      }
+    );
+  }
+
+  // 2. Security validation
+  const securityResponse = validateSecurityHeaders(request);
+  if (securityResponse) {
+    return securityResponse;
+  }
 
   try {
-    // Handle CORS preflight
-    const corsResponse = handleCORS(request);
-    if (corsResponse) {
-      return corsResponse;
-    }
-
-    // Security validation
-    const validation = validateRequest(request);
-    if (!validation.valid) {
-      logError(
-        new Error(`Security validation failed: ${validation.error}`),
-        { requestId, ip, url, operation: 'security_validation' },
-        'warn'
-      );
-
-      return new NextResponse(
-        JSON.stringify({
-          error: 'Request blocked for security reasons',
-          code: 'SECURITY_VIOLATION',
-          requestId,
-        }),
-        {
-          status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-            ...SECURITY_HEADERS,
-          },
-        }
-      );
-    }
-
-    // Rate limiting for API routes
-    if (url.startsWith('/api/')) {
-      const rateCheck = globalRateLimiter.check(ip);
-      if (!rateCheck.allowed) {
-        const resetTime = new Date(rateCheck.resetTime!).toISOString();
-        
-        logError(
-          new Error('Rate limit exceeded'),
-          { requestId, ip, url, operation: 'rate_limiting' },
-          'warn'
-        );
-
-        return new NextResponse(
-          JSON.stringify({
-            error: 'Too many requests',
-            code: 'RATE_LIMIT_EXCEEDED',
-            resetTime,
-            requestId,
-          }),
-          {
-            status: 429,
-            headers: {
-              'Content-Type': 'application/json',
-              'Retry-After': Math.ceil((rateCheck.resetTime! - Date.now()) / 1000).toString(),
-              ...SECURITY_HEADERS,
-            },
-          }
-        );
+    // 3. Handle API CORS
+    if (request.nextUrl.pathname.startsWith('/api/')) {
+      const corsResponse = handleCORS(request);
+      if (corsResponse) {
+        // Add rate limit headers
+        corsResponse.headers.set('X-RateLimit-Limit', RATE_LIMIT_MAX_REQUESTS.toString());
+        corsResponse.headers.set('X-RateLimit-Remaining', rateLimitResult.remaining.toString());
+        corsResponse.headers.set('X-RateLimit-Reset', new Date(rateLimitResult.resetTime).toISOString());
+        return corsResponse;
       }
     }
 
@@ -272,55 +165,53 @@ export async function middleware(request: NextRequest) {
       response.headers.set(key, value);
     });
 
-    // Add request ID header
-    response.headers.set('X-Request-ID', requestId);
+    // Add rate limit headers
+    response.headers.set('X-RateLimit-Limit', RATE_LIMIT_MAX_REQUESTS.toString());
+    response.headers.set('X-RateLimit-Remaining', rateLimitResult.remaining.toString());
+    response.headers.set('X-RateLimit-Reset', new Date(rateLimitResult.resetTime).toISOString());
 
-    // Log successful request
-    requestLog.duration = Date.now() - startTime;
-    requestLog.statusCode = response.status;
-    logRequest(requestLog);
+    // Add custom headers for monitoring
+    response.headers.set('X-Response-Time', `${Date.now() - startTime}ms`);
 
     return response;
-
   } catch (error) {
-    // Log middleware error
-    logError(
-      error,
-      { requestId, ip, url, operation: 'middleware' },
-      'error'
-    );
+    // Log error for monitoring
+    try {
+      await logError('middleware_error', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        url: request.url,
+        method: request.method,
+        ip: ip,
+        userAgent: request.headers.get('user-agent') || '',
+      });
+    } catch (logError) {
+      // Fallback to console if logging fails
+      console.error('Failed to log middleware error:', logError);
+    }
 
-    requestLog.duration = Date.now() - startTime;
-    requestLog.statusCode = 500;
-    logRequest(requestLog);
-
+    // Return generic error response
     return new NextResponse(
-      JSON.stringify({
-        error: 'Internal server error',
-        code: 'MIDDLEWARE_ERROR',
-        requestId,
-      }),
-      {
+      JSON.stringify({ error: 'Internal Server Error' }),
+      { 
         status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          ...SECURITY_HEADERS,
-        },
+        headers: { 'Content-Type': 'application/json' }
       }
     );
   }
 }
 
-// Configure which routes the middleware should run on
+// Configuration for Next.js middleware
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder files
-     */
+     /*
+      * Match all request paths except for the ones starting with:
+      * - api (API routes)
+      * - _next/static (static files)
+      * - _next/image (image optimization files)
+      * - favicon.ico (favicon file)
+      * - public folder files
+      */
     '/',
     '/((?!api|_next|.*\\..*).*)',
   ],

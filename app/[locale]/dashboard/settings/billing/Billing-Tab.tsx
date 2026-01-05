@@ -1,9 +1,9 @@
 "use client";
 
-import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
-import EditAddressTrigger from "@/components/settings/billing/edit-trigger-dialog";
-import InvoicesTable from "@/components/settings/billing/invocies-table";
-import UpdateCardDialogTrigger from "@/components/settings/billing/update-card-dialog";
+import { ChangePlanTrigger } from "@features/billing/ui/components/change-plan-dialog";
+import EditAddressTrigger from "@features/billing/ui/components/edit-trigger-dialog";
+import InvoicesTable from "@features/billing/ui/components/invocies-table";
+import UpdateCardDialogTrigger from "@features/billing/ui/components/update-card-dialog";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 import {
   CreditCard,
   Crown,
@@ -24,23 +24,23 @@ import { useEffect, useMemo } from "react";
 import {
   getBillingDataForSettings,
   updateBillingInfo,
-} from "@/lib/actions/billing";
-import { updateCompanyInfo, getUserSettings } from "@/lib/actions/settings";
+} from "@features/billing/actions";
+import { updateCompanyInfo, getUserSettings } from "@features/settings/actions";
 import {
   useServerAction,
   useServerActionWithParams,
-} from "@/hooks/useServerAction";
-import { BillingLoadingSkeleton } from "@/components/settings/billing/BillingLoadingSkeleton";
+} from "@/shared/hooks/use-server-action";
+import { BillingLoadingSkeleton } from "@features/billing/ui/components/BillingLoadingSkeleton";
 import {
   SettingsErrorBoundary,
   SettingsErrorFallback,
-} from "@/components/settings/SettingsErrorBoundary";
+} from "@/features/settings";
 import { Button } from "@/components/ui/button/button";
 import { toast } from "sonner";
-import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checkout";
 import { useSearchParams } from "next/navigation";
-import { usePathname, useRouter } from "@/i18n/navigation";
-import CheckoutDialog from "@/components/settings/billing/checkout-dialog";
+import { usePathname, useRouter } from "@/shared/config/i18n/navigation";
+import CheckoutDialog from "@features/billing/ui/components/checkout-dialog";
 
 function BillingTab() {
   const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
@@ -144,7 +144,7 @@ function BillingTab() {
       setTimeout(() => {
         router.push(pathname);
       }, 2000);
-  }, [checkout]);
+  }, [checkout, router, pathname]);
 
   // Show loading skeleton while data is loading
   if (billingDataAction.loading && !billingDataAction.data) {
@@ -155,7 +155,7 @@ function BillingTab() {
   if (billingDataAction.error && !billingDataAction.data) {
     return (
       <SettingsErrorFallback
-        error={billingDataAction.error?.message ?? "An error occurred"}
+        error={typeof billingDataAction.error === 'string' ? billingDataAction.error : "An error occurred"}
         retry={loadBilling}
       />
     );
@@ -169,7 +169,7 @@ function BillingTab() {
           <AlertTriangle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
           <p className="text-muted-foreground">No billing data available</p>
           <Button
-            onClick={loadBilling}
+            onClick={() => loadBilling()}
             variant="outline"
             size="sm"
             className="mt-2"

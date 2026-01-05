@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AccountDetails } from "@/types/mailbox";
+import { AccountDetails } from "@/types";
 import {
   ArrowUpRight,
   Mail,
@@ -33,6 +33,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
+import { DOMAIN_COLORS } from "@/shared/config/chart-colors";
 
 interface AccountWarmupDetailsContentProps {
   accountDetails: AccountDetails;
@@ -188,24 +189,24 @@ export default function AccountWarmupDetailsContent({
                 <Area
                   type="monotone"
                   dataKey="volume"
-                  stroke="#8884d8"
-                  fill="#8884d8"
+                  stroke={DOMAIN_COLORS.volume}
+                  fill={DOMAIN_COLORS.volume}
                   fillOpacity={0.1}
                   name="Sent"
                 />
                 <Area
                   type="monotone"
                   dataKey="inbox"
-                  stroke="#82ca9d"
-                  fill="#82ca9d"
+                  stroke={DOMAIN_COLORS.inbox}
+                  fill={DOMAIN_COLORS.inbox}
                   fillOpacity={0.1}
                   name="Inbox"
                 />
                 <Area
                   type="monotone"
                   dataKey="spam"
-                  stroke="#ff8042"
-                  fill="#ff8042"
+                  stroke={DOMAIN_COLORS.spam}
+                  fill={DOMAIN_COLORS.spam}
                   fillOpacity={0.1}
                   name="Spam"
                 />
@@ -232,7 +233,7 @@ export default function AccountWarmupDetailsContent({
                   <Line
                     type="monotone"
                     dataKey="reputation"
-                    stroke="#0ea5e9"
+                    stroke={DOMAIN_COLORS.reputation}
                     strokeWidth={2}
                     name="Reputation"
                   />

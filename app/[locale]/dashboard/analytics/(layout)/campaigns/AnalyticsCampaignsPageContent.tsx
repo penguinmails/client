@@ -1,10 +1,9 @@
 "use client";
-import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
-import AnalyticsStatistics from "@/components/analytics/components/analytics-statistics";
-import CampaignPerformanceTable from "@/components/campaigns/analytics/CampaignPerformanceTable";
+import { AnalyticsNavLinks, AnalyticsStatistics } from "@/features/analytics/ui/components";
+import CampaignPerformanceTable from "@features/campaigns/ui/components/analytics/CampaignPerformanceTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PerformanceMetrics } from "@/types/analytics/core";
-// import { useAnalytics } from "@/context/AnalyticsContext";
+import { PerformanceMetrics } from "@features/analytics/types/core";
+// import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 
 function AnalyticsCampaignsPageContent() {
   // Temporary: use dummy data to test SSR fix

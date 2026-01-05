@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import AccountWarmupDetailsContent from "./content";
-import { AccountDetails } from "@/types/mailbox";
+import { AccountDetails } from "@/types";
+import { productionLogger } from "@/lib/logger";
 
 type AccountPageParams = Promise<{
   domainId: string;
@@ -27,7 +28,7 @@ async function getAccountDetails(
       return null; // Account not found
     }
     // Log the error for server-side inspection
-    console.error(
+    productionLogger.error(
       "Failed to fetch account details:",
       res.status,
       await res.text(),

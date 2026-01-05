@@ -11,14 +11,14 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { createColumns } from "@/components/clients/tables/columns";
+import { createLeadTableColumns } from "@/features/leads/ui/components/tables/LeadTableColumns";
 import { getClientsPage } from "./actions";
-import { ClientsHeader } from "@/components/clients/filters/clients-header";
-import { ClientsTable } from "@/components/clients/tables/clients-table";
-import { ClientsFilters } from "@/components/clients/filters/clients-filters";
-import { ClientsPagination } from "@/components/clients/filters/clients-pagination";
-import { RemoveClientDialog } from "@/components/clients/dialogs/remove-client-dialog";
-import { Client } from "@/types/inbox";
+import { ClientsHeader } from "@/features/leads/ui/components/filters/ClientsHeader";
+import { ClientsTable } from "@/features/leads/ui/components/tables/ClientsTable";
+import { ClientsFilters } from "@/features/leads/ui/components/filters/ClientsFilters";
+import { ClientsPagination } from "@/features/leads/ui/components/filters/ClientsPagination";
+import { RemoveLeadDialog } from "@/features/leads/ui/components/dialogs/RemoveLeadDialog";
+import { Client } from "@features/inbox/types";
 
 type ClientsContentProps = {
   initialClients: Client[];
@@ -47,7 +47,7 @@ export default function ClientsContent({
   const maskPII = (text: string) =>
     showPII ? text : "•".repeat(text?.length || 0);
 
-  const columns = createColumns(
+  const columns = createLeadTableColumns(
     maskPII,
     (client) =>
       router.push(
@@ -124,7 +124,7 @@ export default function ClientsContent({
         onPageChange={handlePageChange}
       />
 
-      <RemoveClientDialog
+      <RemoveLeadDialog
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
         client={selectedClient}

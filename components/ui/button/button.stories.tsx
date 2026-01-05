@@ -1,12 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { withTests } from "@storybook/addon-jest";
-import results from '../../../.jest-test-results.json';
 import { Button } from "./button";
 
 const meta = {
   title: "components/ui/button",
   component: Button,
-  decorators: [withTests({ results })],
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -73,5 +70,52 @@ export const Link: Story = {
     variant: "link",
     size: "sm",
     children: "Link",
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    variant: "default",
+    size: "sm",
+    disabled: true,
+    children: (
+      <>
+        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        <span>Loading...</span>
+      </>
+    ),
+  },
+};
+
+export const LoadingOutline: Story = {
+  args: {
+    variant: "outline",
+    size: "sm",
+    disabled: true,
+    children: (
+      <>
+        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        <span>Processing...</span>
+      </>
+    ),
+  },
+};
+
+export const Error: Story = {
+  args: {
+    variant: "destructive",
+    size: "sm",
+    onClick: () => alert("Error action triggered!"),
+    children: "Error Action",
+  },
+};
+
+export const Success: Story = {
+  args: {
+    variant: "default",
+    size: "sm",
+    onClick: () => alert("Success!"),
+    children: "Success Action",
+    className: "bg-green-600 hover:bg-green-700",
   },
 };

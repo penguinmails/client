@@ -1,10 +1,10 @@
-import ChangePasswordForm from "@/components/settings/security/change-password-form";
-import SecurityRecommendations from "@/components/settings/security/security-recommendations";
+import { ChangePasswordForm } from "@/features/settings";
+import { SecurityRecommendations } from "@/features/settings";
 import {
   AlertSuccessTwoAuth,
   TwoAuthProvider,
   TwoFactorAuthenticationSwitch,
-} from "@/components/settings/security/two-factor-auth-switch";
+} from "@/features/settings";
 import {
   Card,
   CardContent,

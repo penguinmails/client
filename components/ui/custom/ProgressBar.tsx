@@ -1,16 +1,17 @@
 import React from "react";
+import { ComponentProps } from '@/types';
 
-interface ProgressBarProps {
+interface ProgressBarProps extends ComponentProps {
   current: number;
   total: number;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ current, total }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ current, total, className, 'aria-label': ariaLabel, ...props }) => {
   const percentage =
     total > 0 ? Math.min(100, Math.max(0, (current / total) * 100)) : 0;
 
   return (
-    <div className="flex items-center">
+    <div className={`flex items-center ${className || ''}`} aria-label={ariaLabel || `Progress: ${current} of ${total}`} {...props}>
       <div className="w-24 bg-gray-200 rounded-full h-1.5 mr-2 overflow-hidden">
         <div
           className="bg-blue-600 h-1.5 rounded-full transition-all duration-300 ease-in-out"

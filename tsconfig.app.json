@@ -1,0 +1,35 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "noEmit": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "app/**/*",
+    "components/**/*",
+    "context/**/*",
+    "hooks/**/*",
+    "lib/**/*",
+    "types/**/*",
+    "features/**/*",
+    "shared/**/*",
+    "src/**/*",
+    "i18n/**/*",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/__tests__/**/*",
+    "**/*.stories.ts",
+    "**/*.stories.tsx",
+    "node_modules",
+    ".next",
+    "storybook-static",
+    "coverage"
+  ]
+}

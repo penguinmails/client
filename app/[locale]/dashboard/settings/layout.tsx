@@ -1,10 +1,10 @@
 "use client";
 
 import Icon from "@/components/ui/custom/Icon";
-import NavLink from "@/components/settings/general/nav-link";
+import { NavLink } from "@/features/settings";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button/button";
-import { useClientPreferences } from "@/context/ClientPreferencesContext";
+import { useClientPreferences } from "@features/settings/ui/context/client-preferences-context";
 import {
   Bell,
   CreditCard,
@@ -17,7 +17,7 @@ import {
   Moon,
   Monitor,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 import { useEffect, useState } from "react";
 
 const tabs = [
@@ -40,7 +40,10 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   // Ensure component is mounted before accessing theme to prevent hydration mismatch
   useEffect(() => {
-    setMounted(true);
+    // Use requestAnimationFrame to ensure this runs after render
+    requestAnimationFrame(() => {
+      setMounted(true);
+    });
   }, []);
 
   const { preferences, theme, setTheme, updatePreference, isLoading } =
@@ -67,7 +70,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   if (isLoading || !mounted) {
     return (
       <div className="flex h-full gap-5">
-        <div className="min-w-[200px] space-y-4">
+        <div className="min-w-48 space-y-4">
           <div className="h-7 bg-gray-200 rounded animate-pulse" />
           <Separator orientation="horizontal" />
           <div className="space-y-2">
@@ -84,7 +87,7 @@ function Layout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const sidebarWidth = preferences.sidebarCollapsed ? "w-16" : "min-w-[200px]";
+  const sidebarWidth = preferences.sidebarCollapsed ? "w-16" : "min-w-48";
 
   return (
     <div className="flex h-full gap-5">

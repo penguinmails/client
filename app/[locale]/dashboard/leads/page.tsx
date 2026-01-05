@@ -1,19 +1,19 @@
-import ListsTab from "@/components/leads/components/listsTab";
-import StatsCardSkeleton from "@/components/dashboard/cards/StatsCardSkeleton";
+import ListsTab from "@features/leads/ui/components/listsTab";
+import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/StatsCardSkeleton";
 import Icon from "@/components/ui/custom/Icon";
-import StatsCard from "@/components/analytics/cards/StatsCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getLeadsStats, getLeadLists } from "./actions";
-import { LeadStats } from "@/types/clients-leads";
 import { Suspense } from "react";
-import CSVUploadTab from "@/components/leads/components/CSVUploadTab";
-import ContactsTab from "@/components/leads/components/ContactsTab";
-import { FileText, Upload, Mail, Users } from "lucide-react";
+import CSVUploadTab from "@features/leads/ui/components/CSVUploadTab";
+import ContactsTab from "@features/leads/ui/components/ContactsTab";
+import { FileText, Upload, Users } from "lucide-react";
+import LeadsStats from "./LeadsStats";
 
 // Force dynamic rendering since this page uses authentication and headers
 export const dynamic = "force-dynamic";
 
+// Server Component
 async function LeadsPage() {
   const leadsStatsData = await getLeadsStats();
   const leadListsData = await getLeadLists();
@@ -96,25 +96,6 @@ async function LeadsPage() {
       </Card>
     </div>
   );
-}
-function LeadsStats({ stats }: { stats: LeadStats }) {
-  const iconMap = {
-    users: Users,
-    mail: Mail,
-  };
-
-  return stats.map((stat) => {
-    const IconComponent = iconMap[stat.icon as keyof typeof iconMap] || Users;
-    return (
-      <StatsCard
-        key={stat.title}
-        title={stat.title}
-        value={stat.value}
-        icon={IconComponent}
-        color={stat.color}
-      />
-    );
-  });
 }
 
 export default LeadsPage;

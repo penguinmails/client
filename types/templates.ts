@@ -89,21 +89,33 @@ export interface TemplateUsage {
   replyCount?: number;
 }
 
-// Template form validation types
-export type TemplateFormValues = {
-  name: string;
-  description?: string;
-  category: TemplateCategoryType;
-  subject: string;
-  body: string;
-};
-
 // Folder form validation types
 export type FolderFormValues = {
   folderName: string;
 };
 
+import { z } from "zod";
+
+export const templateFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  category: z.nativeEnum(TemplateCategory),
+  subject: z.string().min(1, "Subject is required"),
+  body: z.string().min(1, "Body is required"),
+  description: z.string().optional(),
+  folderId: z.number().nullable().optional(),
+});
+
+export type TemplateFormValues = z.infer<typeof templateFormSchema>;
+
+export const newFolderFormSchema = z.object({
+  folderName: z.string().min(1, "Folder name is required"),
+});
+
+export type NewFolderFormValues = z.infer<typeof newFolderFormSchema>;
+
+
 // Quick reply type (alias for Template with quick-reply type)
 export type QuickReply = Template & {
   type: "quick-reply";
 };
+

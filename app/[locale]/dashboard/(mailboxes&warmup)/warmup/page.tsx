@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-// import { useAnalytics } from "@/context/AnalyticsContext";
-import { DomainWithMailboxesData } from "@/lib/actions/domains";
-import WarmupTab from "@/components/domains/components/warmup-tab";
+// import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
+import { DomainWithMailboxesData } from "@features/domains/actions";
+import WarmupTab from "@features/domains/ui/components/warmup-tab";
 
 // Force dynamic rendering to prevent SSR issues
 export const dynamic = 'force-dynamic';

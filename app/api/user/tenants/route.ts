@@ -1,38 +1,45 @@
 /**
- * User Tenant Management API Routes
- * 
- * GET /api/user/tenants - Get all tenants for the current user
- * 
- * These routes handle user-centric tenant operations.
+ * User Tenants API Route - NileDB Integration
+ *
+ * Fetches user's tenants using NileDB SDK with proper session context
  */
 
-import { NextResponse } from 'next/server';
-import { withAuthentication } from '@/lib/niledb/middleware';
-import { getTenantService } from '@/lib/niledb/tenant';
+import { NextRequest } from "next/server";
+import { getUserTenants, requireAuth } from "@/features/auth/queries";
+import { withQueryErrorCatch } from "@/shared/utils/api";
+import { Tenant } from '@features/auth/types';
 
-/**
- * GET /api/user/tenants
- * Get all tenants for the current user
- */
-export const GET = withAuthentication(async (request, _context) => {
-  try {
-    const tenantService = getTenantService();
+// Nile tenant interface to replace 'any' types
+interface NileTenant {
+  id: string;
+  name: string;
+  [key: string]: unknown;
+}
 
-    const tenants = await tenantService.getUserTenants(request.user.id);
+export async function GET(req: NextRequest) {
+  return withQueryErrorCatch(
+    async () => {
+      // Ensure user is authenticated
+      await requireAuth(req);
 
-    return NextResponse.json({
-      tenants,
-      count: tenants.length,
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error('Failed to get user tenants:', error);
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Failed to retrieve user tenants',
-        code: 'USER_TENANTS_FETCH_ERROR',
-      },
-      { status: 500 }
-    );
-  }
-});
+      // Get user's tenants using NileDB SDK
+      const tenants = await getUserTenants(req);
+
+      // Transform to expected format
+      const formattedTenants: Tenant[] = tenants.map((tenant: NileTenant) => ({
+        id: tenant.id,
+        name: tenant.name,
+        created: 'created' in tenant && typeof tenant.created === 'string' ? tenant.created : new Date().toISOString(),
+        updated: 'updated' in tenant && typeof tenant.updated === 'string' ? tenant.updated : new Date().toISOString(),
+      }));
+
+      return { tenants: formattedTenants };
+    },
+    {
+      controllerName: 'UserTenants',
+      operation: 'get_user_tenants',
+      req,
+      // Auto-generates: "UserTenants retrieved successfully"
+    }
+  );
+}
