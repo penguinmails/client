@@ -98,7 +98,7 @@ export function Stepper() {
         </div>
         <Progress
           value={(currentStep / totalSteps) * 100}
-          className="h-2 [&>div]:bg-gradient-to-r [&>div]:from-blue-500 [&>div]:to-green-500 [&>div]:rounded-full [&>div]:transition-all [&>div]:duration-500"
+          className="h-2 [&>div]:bg-linear-to-r [&>div]:from-blue-500 [&>div]:to-green-500 [&>div]:rounded-full [&>div]:transition-all [&>div]:duration-500"
         />
       </CardContent>
     </Card>

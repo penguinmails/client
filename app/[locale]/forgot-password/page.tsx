@@ -83,7 +83,7 @@ export default function ForgotPasswordPage() {
             <div className="flex flex-col items-center space-y-2">
               <p className="text-xs text-muted-foreground">
                 {t('footer.text')}{" "}
-                <Link href={`/${locale}/login`} className="underline font-medium text-primary">
+                <Link href={`/${locale}/`} className="underline font-medium text-primary">
                   {t('footer.linkText')}
                 </Link>
               </p>
