@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useCampaignStats } from "@features/campaigns/lib/hooks/use-campaign-stats";
 import { AnalyticsCalculator } from "@features/analytics/lib/calculator";
+import { cn } from "@/shared/utils";
 
 // ============================================================
 // Types
@@ -116,7 +117,7 @@ export function MigratedCampaignStats({
   // Loading state
   if (loading) {
     return (
-      <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 ${className ?? ""}`}>
+      <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4", className)}>
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
@@ -128,7 +129,7 @@ export function MigratedCampaignStats({
   }
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 ${className ?? ""}`}>
+    <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4", className)}>
       {/* Total Sent - Gray */}
       <UnifiedStatsCard
         title="Total Sent"
@@ -168,7 +169,7 @@ export function MigratedCampaignStats({
       {/* Bounces - Red */}
       <UnifiedStatsCard
         title="Bounces"
-        value={`${totals.bounced.toLocaleString()} (${bounceRate}%)`}
+        value={`${totals.bounced.toLocaleString()} (${bounceRate})`}
         icon={AlertTriangle}
         layout="compact"
         iconColor="bg-red-100 text-red-600"

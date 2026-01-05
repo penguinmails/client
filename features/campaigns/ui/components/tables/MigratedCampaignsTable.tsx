@@ -16,8 +16,7 @@ import {
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
-import { CampaignDisplay, CampaignStatusEnum } from "@features/campaigns/types";
-import { getMockCampaigns } from "@/shared/mocks/providers";
+import { CampaignDisplay } from "@features/campaigns/types";
 import AlertDialogDelete from "@/components/ui/custom/AlertDialogDelete";
 import { developmentLogger } from "@/lib/logger";
 
@@ -249,25 +248,7 @@ export function MigratedCampaignsTable({
   campaigns,
   loading = false,
 }: MigratedCampaignsTableProps) {
-  // Use mock data if no campaigns provided
-  const data = React.useMemo(() => {
-    if (campaigns) return campaigns;
-
-    const mockCampaigns = getMockCampaigns();
-    return mockCampaigns.map((campaign) => ({
-      id: Number(campaign.id),
-      name: campaign.name,
-      status: (campaign.status as CampaignStatusEnum) ?? CampaignStatusEnum.ACTIVE,
-      mailboxes: 1,
-      leadsSent: campaign.recipients,
-      replies: campaign.clicked,
-      lastSent: campaign.createdAt.toLocaleDateString(),
-      createdDate: campaign.createdAt.toISOString(),
-      assignedMailboxes: ["default@company.com"],
-      openRate: campaign.recipients > 0 ? Math.round((campaign.opened / campaign.recipients) * 100) : 0,
-      replyRate: campaign.recipients > 0 ? Math.round((campaign.clicked / campaign.recipients) * 100) : 0,
-    }));
-  }, [campaigns]);
+  const data = React.useMemo(() => campaigns ?? [], [campaigns]);
 
   if (loading) {
     return (
@@ -313,7 +294,7 @@ export function MigratedCampaignsTable({
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="px-8 py-12 text-center text-muted-foreground">
+                <td colSpan={campaignColumns.length} className="px-8 py-12 text-center text-muted-foreground">
                   No campaigns found. Create a new one to get started.
                 </td>
               </tr>
