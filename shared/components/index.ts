@@ -6,6 +6,7 @@ export { SystemHealthIndicator, useSystemHealthStatus } from './SystemHealthIndi
 export { CoreProviders } from './core-providers';
 export { Providers, AppProviders } from './providers';
 export { LocaleFallbackToast } from './locale-fallback-toast';
+export { ChunkErrorHandler } from './chunk-error-handler';
 
 // Email utilities
 export { default as PersonalizationTags, personalizationTags } from './email/PersonalizationTags';
