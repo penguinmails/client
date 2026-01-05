@@ -93,17 +93,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     // Check for duplicate email based on actual NileDB error format
     // Format: "The user {email} already exists"
-    if (
-      error.name === "Error" &&
-      error.message?.includes("The user ") &&
-      error.message?.includes(" already exists")
-    ) {
+    const emailMatch = error.message.match(/The user (.+?) already exists/);
+    if (error.name === "Error" && emailMatch) {
       productionLogger.info(
         "[AuthContext] Duplicate email detected - NileDB format"
       );
 
-      // Extract email from message if possible
-      const emailMatch = error.message.match(/The user (.+?) already exists/);
+      // Extract email from message
       const email = emailMatch ? emailMatch[1] : "";
 
       const duplicateError = new Error(
@@ -173,10 +169,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const signupData = { email, password, name };
 
-      signUpHook(signupData);
-
-      // Return a simple promise - SignUpFormView will wait for authError state
-      return Promise.resolve();
+      try {
+        await signUpHook(signupData);
+      } catch (err) {
+        // The onError callback is likely called before this throw.
+        // We re-throw so the calling component can react.
+        throw err;
+      }
     },
     [signUpHook]
   );
