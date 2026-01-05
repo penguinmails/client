@@ -34,7 +34,7 @@ export default function SignUpFormView() {
   const [error, setError] = useState<SignupError | null>(null);
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
-  const { error: authError } from useAuth();
+  const { error: authError }: { error: Error | null } = useAuth();
   const [token, setToken] = useState("");
   const router = useRouter();
 
@@ -289,7 +289,7 @@ export default function SignUpFormView() {
           )}
         </div>
       )}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" data-testid="signup-form">
         {/* Name Field */}
         <div className="space-y-2">
           <Label htmlFor="name">{t("form.name.label")}</Label>
@@ -301,9 +301,10 @@ export default function SignUpFormView() {
               required: t("errors.required"),
             })}
             disabled={isSignUpLoading}
+            data-testid="name-input"
           />
           {errors.name && (
-            <p className="text-sm text-red-600">{errors.name.message}</p>
+            <p className="text-sm text-red-600" data-testid="name-error">{errors.name.message}</p>
           )}
         </div>
 
@@ -322,9 +323,10 @@ export default function SignUpFormView() {
               },
             })}
             disabled={isSignUpLoading}
+            data-testid="email-input"
           />
           {errors.email && (
-            <p className="text-sm text-red-600">{errors.email.message}</p>
+            <p className="text-sm text-red-600" data-testid="email-error">{errors.email.message}</p>
           )}
         </div>
 
@@ -360,11 +362,12 @@ export default function SignUpFormView() {
                 name={field.name}
                 onBlur={field.onBlur}
                 ref={field.ref}
+                data-testid="password-input"
               />
             )}
           />
           {errors.password && (
-            <p className="text-sm text-red-600">{errors.password.message}</p>
+            <p className="text-sm text-red-600" data-testid="password-error">{errors.password.message}</p>
           )}
         </div>
 
@@ -390,11 +393,12 @@ export default function SignUpFormView() {
                 name={field.name}
                 onBlur={field.onBlur}
                 ref={field.ref}
+                data-testid="confirm-password-input"
               />
             )}
           />
           {errors.confirmPassword && (
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-red-600" data-testid="confirm-password-error">
               {errors.confirmPassword.message}
             </p>
           )}
@@ -407,13 +411,13 @@ export default function SignUpFormView() {
               onVerify={(token) => setToken(token)}
             />
           ) : (
-            <p className="text-sm text-destructive">
+            <p className="text-sm text-destructive" data-testid="captcha-not-configured-message">
               {t("captcha.notConfigured")}
             </p>
           )}
         </div>
 
-        <Button type="submit" className="w-full" disabled={isSignUpLoading}>
+        <Button type="submit" className="w-full" disabled={isSignUpLoading} data-testid="create-account-button">
           {isSignUpLoading
             ? t("button.creatingAccount")
             : t("button.createAccount")}
