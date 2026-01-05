@@ -12,7 +12,8 @@ import React, {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSignIn, useSignUp } from "@niledatabase/react";
 import { useSystemHealth } from "@/shared/hooks";
-import { productionLogger, developmentLogger } from "@/lib/logger";
+// Note: Loggers removed for production - uncomment for debugging
+// import { productionLogger, developmentLogger } from "@/lib/logger";
 import { toast } from "sonner";
 
 import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
@@ -46,14 +47,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   // Create callbacks for the signUp hook
   const signUpSuccessCallback = useCallback(
-    async (data: any, variables: any) => {
-      productionLogger.debug("[AuthContext] Signup successful:", {
-        data,
-        variables,
-      });
-
+    async (_data: unknown, variables: { email: string; name?: string }) => {
       // Send verification email after successful signup
-      let emailSent = false;
       try {
         const response = await fetch("/api/emails/send", {
           method: "POST",
@@ -67,7 +62,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         });
 
         if (response.ok) {
-          emailSent = true;
           // Store email for resend functionality only when email was actually sent
           localStorage.setItem("pendingVerificationEmail", variables.email);
           toast.success(
@@ -95,8 +89,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const signUpErrorCallback = useCallback((error: Error) => {
-    productionLogger.debug("[AuthContext] Signup error from hook:", error);
-
     // Enhanced error handling for duplicate email detection
     let processedError = error;
 
@@ -109,24 +101,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const errorText = (error as any)?.text?.toLowerCase?.() || "";
     const errorData = (error as any)?.data?.toString?.().toLowerCase?.() || "";
     const errorCode = (error as any)?.code?.toLowerCase?.() || "";
-    const errorStatus = (error as any)?.status || "";
 
     // Combine all error sources for comprehensive detection
     const allErrorText =
       `${errorMessage} ${errorText} ${errorData} ${errorCode}`.trim();
-
-    productionLogger.info("[AuthContext] Error detection details:", {
-      originalMessage: error.message,
-      errorMessage,
-      errorText,
-      errorData,
-      errorCode,
-      errorStatus,
-      combinedText: allErrorText,
-      isError: !!error,
-      errorType: typeof error,
-      errorKeys: error && typeof error === "object" ? Object.keys(error) : [],
-    });
 
     // Enhanced duplicate email detection with more patterns
     const duplicatePatterns = [
@@ -149,9 +127,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     if (isDuplicate) {
-      productionLogger.info(
-        "[AuthContext] Duplicate email detected with enhanced patterns"
-      );
       const duplicateError = new Error(
         "Email address already registered"
       ) as Error & {
@@ -167,10 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       duplicateError.stack = error.stack; // Preserve original stack
       processedError = duplicateError;
     } else {
-      productionLogger.info(
-        "[AuthContext] Non-duplicate error, preserving original:",
-        error.message
-      );
+      // Preserve original error for non-duplicate cases
     }
 
     setError(processedError);
@@ -217,11 +189,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setLoading((prev) => ({ ...prev, session: true }));
       setError(null); // Clear any previous errors
 
-      productionLogger.info("[AuthContext] Starting signup for:", {
-        email,
-        name,
-      });
-
       // Call the hook - it will trigger callbacks for success/error
       signUpHook({ email, password });
 
@@ -241,9 +208,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const performEnrichment = async () => {
         // Check health only if we failed previously
         if (!isHealthy && retryCountRef.current > 0) {
-          developmentLogger.warn(
-            "[AuthContext] DB unhealthy, skipping retry for now"
-          );
           return;
         }
 
@@ -261,17 +225,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setError(null);
           retryCountRef.current = 0;
         } catch (err) {
-          productionLogger.error("[AuthContext] Enrichment failed:", err);
-
           // Check if this is an authentication error that should trigger logout
           if (
             err instanceof Error &&
             (err.message.includes("Failed to fetch enrichment data") ||
               err.message.includes("Authentication required"))
           ) {
-            productionLogger.info(
-              "[AuthContext] Authentication error detected during enrichment, triggering logout"
-            );
             // Use a simple timeout to avoid dependency issues
             setTimeout(() => {
               logout();
@@ -281,9 +240,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
           if (retryCountRef.current < DB_MAX_RETRIES) {
             retryCountRef.current += 1;
-            developmentLogger.info(
-              `[AuthContext] Retrying enrichment (${retryCountRef.current}/${DB_MAX_RETRIES})...`
-            );
 
             setTimeout(() => {
               enrichmentPromiseRef.current = null;
@@ -291,9 +247,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             }, RETRY_DELAY);
           } else {
             // Max retries reached, set error but don't block the UI
-            productionLogger.warn(
-              "[AuthContext] Max enrichment retries reached, continuing with basic user data"
-            );
+
             setError(
               err instanceof Error
                 ? err
@@ -323,9 +277,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         error?.code === "AUTH_REQUIRED" ||
         error?.message?.includes("Authentication required")
       ) {
-        productionLogger.info(
-          "[AuthContext] Authentication error detected, logging out user"
-        );
         logout();
         return true; // Error was handled
       }
@@ -386,7 +337,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setLoading({ session: false, enrichment: false });
         }
       } catch (error) {
-        productionLogger.error("[AuthContext] Session check failed:", error);
         setLoading({ session: false, enrichment: false });
         // Don't redirect here, let the UI components handle it
       }
@@ -410,9 +360,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           response.headers.get("X-Auth-Error") === "true";
 
         if (isAuthError) {
-          productionLogger.info(
-            "[AuthContext] Authentication error detected, triggering logout"
-          );
           handleAuthError({ status: 401, message: "Authentication required" });
         }
 
