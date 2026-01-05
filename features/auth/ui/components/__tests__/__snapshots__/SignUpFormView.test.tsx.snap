@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SignUpFormView renders correctly 1`] = `
+<DocumentFragment>
+  <form
+    class="space-y-4"
+    data-testid="signup-form"
+  >
+    <div
+      class="space-y-2"
+    >
+      <label
+        for="name"
+      >
+        form.name.label
+      </label>
+      <input
+        data-testid="email-input"
+        id="name"
+        placeholder="form.name.placeholder"
+        type="text"
+      />
+    </div>
+    <div
+      class="space-y-2"
+    >
+      <label
+        for="email"
+      >
+        form.email.label
+      </label>
+      <input
+        data-testid="email-input"
+        id="email"
+        placeholder="form.email.placeholder"
+        type="email"
+      />
+    </div>
+    <div
+      class="space-y-2"
+    >
+      <input
+        data-testid="password-input"
+        label="form.password.label"
+        placeholder="form.password.placeholder"
+        type="password"
+        value=""
+      />
+    </div>
+    <div
+      class="space-y-2"
+    >
+      <input
+        data-testid="password-input"
+        label="form.confirmPassword.label"
+        placeholder="form.confirmPassword.placeholder"
+        type="password"
+        value=""
+      />
+    </div>
+    <div
+      class="space-y-2"
+    >
+      <p
+        class="text-sm text-destructive"
+        data-testid="captcha-not-configured-message"
+      >
+        captcha.notConfigured
+      </p>
+    </div>
+    <button
+      class="w-full"
+      data-testid="create-account-button"
+      type="submit"
+    >
+      button.createAccount
+    </button>
+  </form>
+</DocumentFragment>
+`;
