@@ -23,18 +23,24 @@
     "forgotPassword": "Forgot password?",
     "loginButton": {
       "default": "Login",
-      "loading": "Logging In..."
+      "loading": "Logging In...",
+      "tooManyAttempts": "Too many attempts. Complete verification.",
+      "completeVerification": "Complete verification to continue"
     },
     "errors": {
       "title": "Login Failed",
       "incorrectPassword": "Incorrect password",
       "userNotFound": "User not found",
-      "generic": "Login failed. Please check your credentials."
+      "generic": "Login failed. Please check your credentials.",
+      "captchaRequired": "Please complete the CAPTCHA verification."
     },
     "signup": {
       "text": "Don't have an account?",
       "link": "Sign Up"
-    }
+    },
+    "failedAttempts": "Failed attempts: {loginAttempts}/{MAX_LOGIN_ATTEMPTS}",
+    "securityVerification": "For security, please complete the verification to continue.",
+    "captchaNotConfigured": "CAPTCHA is not configured. Please contact support."
   },
   "button": {
     "label": "button"
@@ -78,7 +84,8 @@
       "captchaRequired": "Please complete the CAPTCHA verification.",
       "passwordTooWeak": "Password is too weak. Please include at least 2 of: uppercase, lowercase, number, special character",
       "passwordMismatch": "Passwords do not match",
-      "invalidEmail": "Please enter a valid email address"
+      "invalidEmail": "Please enter a valid email address",
+      "required": "This field is required"
     },
     "success": {
       "accountCreated": "Account created successfully! Check your email for a verification link to activate your account.",
