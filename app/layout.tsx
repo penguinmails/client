@@ -7,6 +7,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { Toaster } from "sonner";
 import { routing } from "@/shared/config/i18n/routing";
 import { LocaleFallbackToast } from "@/shared/components/locale-fallback-toast";
+import { ChunkErrorHandler } from "@/shared/components";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,14 +60,16 @@ export default async function RootLayout({
           `${geistSans.variable} ${geistMono.variable} antialiased`
         )}
       >
-        <CoreProviders>
-          <NextIntlClientProvider locale={locale}>
-            {!isValidLocale && (
-              <LocaleFallbackToast requestedLocale={requestedLocale} />
-            )}
-            {children}
-          </NextIntlClientProvider>
-        </CoreProviders>
+        <ChunkErrorHandler>
+          <CoreProviders>
+            <NextIntlClientProvider locale={locale}>
+              {!isValidLocale && (
+                <LocaleFallbackToast requestedLocale={requestedLocale} />
+              )}
+              {children}
+            </NextIntlClientProvider>
+          </CoreProviders>
+        </ChunkErrorHandler>
         <Toaster />
       </body>
     </html>
