@@ -123,13 +123,15 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    if (user && !isLoading && !error && !authError && !lastLoginError) {
-      // Only redirect if user exists, not loading, and no error from any source
-      // This prevents redirecting on login failures from both form and auth context
+    // Comprehensive error checking to prevent unwanted navigation
+    const hasAnyError = error || authError || lastLoginError;
+    const shouldNavigate = user && !isLoading && !hasAnyError;
+
+    if (shouldNavigate) {
       const timer = setTimeout(() => {
         safePush("/dashboard");
         setError(null);
-      }, 100); // Increased delay to ensure error state is stable
+      }, 100);
 
       return () => clearTimeout(timer);
     }
