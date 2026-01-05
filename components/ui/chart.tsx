@@ -11,6 +11,10 @@ interface ChartTooltipPayloadItem {
   value: number;
   color?: string;
   payload?: Record<string, unknown> | unknown[];
+  graphicalItemId: string;
+  type?: "none";
+  unit?: string | number;
+  fill?: string;
 }
 
 // Type for formatter function to avoid using any
@@ -75,7 +79,7 @@ function ChartContainer({
         data-chart={chartId}
         className={cn(
           "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='hsl(var(--border))']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid_[stroke='hsl(var(--border))']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='hsl(var(--border))']]:stroke-border flex aspect-video justify-center text-xs [&_.recharts-dot[stroke='hsl(var(--background))']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='hsl(var(--background))']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
-          className,
+          className
         )}
         {...props}
       >
@@ -90,7 +94,7 @@ function ChartContainer({
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    ([, config]) => config.theme || config.color,
+    ([, config]) => config.theme || config.color
   );
 
   if (!colorConfig.length) {
@@ -113,7 +117,7 @@ ${colorConfig
   })
   .join("\n")}
 }
-`,
+`
           )
           .join("\n"),
       }}
@@ -166,7 +170,7 @@ function ChartTooltipContent({
     if (labelFormatter) {
       return (
         <div className={cn("font-medium", labelClassName)}>
-          {labelFormatter(value, payload)}
+          {labelFormatter(value, payload as ChartTooltipPayloadItem[])}
         </div>
       );
     }
@@ -196,27 +200,35 @@ function ChartTooltipContent({
     <div
       className={cn(
         "border-border/50 bg-background grid min-w-32 items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl",
-        className,
+        className
       )}
     >
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
         {payload.map((item: ChartTooltipPayloadItem, index) => {
-
           const key = `${nameKey || item.name || item.dataKey || "value"}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
-          const indicatorColor = color || (item.payload as Record<string, unknown>)?.fill || item.color;
+          const indicatorColor =
+            color ||
+            (item.payload as Record<string, unknown>)?.fill ||
+            item.color;
 
           return (
             <div
               key={item.dataKey}
               className={cn(
                 "[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5",
-                indicator === "dot" && "items-center",
+                indicator === "dot" && "items-center"
               )}
             >
               {formatter && item?.value !== undefined && item.name ? (
-                (formatter as FormatterFunction)(item.value, item.name, item, index, item.payload)
+                (formatter as FormatterFunction)(
+                  item.value,
+                  item.name,
+                  item,
+                  index,
+                  item.payload
+                )
               ) : (
                 <>
                   {itemConfig?.icon ? (
@@ -232,7 +244,7 @@ function ChartTooltipContent({
                             "w-0 border-2 border-dashed bg-transparent":
                               indicator === "dashed",
                             "my-0.5": nestLabel && indicator === "dashed",
-                          },
+                          }
                         )}
                         style={
                           {
@@ -246,7 +258,7 @@ function ChartTooltipContent({
                   <div
                     className={cn(
                       "flex flex-1 justify-between leading-none",
-                      nestLabel ? "items-end" : "items-center",
+                      nestLabel ? "items-end" : "items-center"
                     )}
                   >
                     <div className="grid gap-1.5">
@@ -296,11 +308,10 @@ function ChartLegendContent({
       className={cn(
         "flex items-center justify-center gap-4",
         verticalAlign === "top" ? "pb-3" : "pt-3",
-        className,
+        className
       )}
     >
       {payload.map((item: ChartTooltipPayloadItem) => {
-
         const key = `${nameKey || item.dataKey || "value"}`;
         const itemConfig = getPayloadConfigFromPayload(config, item, key);
 
@@ -308,7 +319,7 @@ function ChartLegendContent({
           <div
             key={item.value}
             className={cn(
-              "[&>svg]:text-muted-foreground flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3",
+              "[&>svg]:text-muted-foreground flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3"
             )}
           >
             {itemConfig?.icon && !hideIcon ? (
@@ -333,7 +344,7 @@ function ChartLegendContent({
 function getPayloadConfigFromPayload(
   config: ChartConfig,
   payload: unknown,
-  key: string,
+  key: string
 ) {
   if (typeof payload !== "object" || payload === null) {
     return undefined;
