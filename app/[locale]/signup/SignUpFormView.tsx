@@ -119,7 +119,6 @@ export default function SignUpFormView() {
 
   const onSubmit = async (data: FormData) => {
     setError(null);
-    console.log("[SignUpFormView] Starting signup for email:", data.email);
 
     // This prevents the form from submitting if the CAPTCHA hasn't been completed.
     if (isTurnstileEnabled && !token) {
@@ -131,8 +130,6 @@ export default function SignUpFormView() {
     }
 
     try {
-      console.log("[SignUpFormView] Calling authContext.signup");
-
       // Verify Turnstile token on your backend
       if (isTurnstileEnabled) {
         await verifyTurnstileToken(token);
@@ -142,7 +139,6 @@ export default function SignUpFormView() {
       await signup(data.email, data.password, data.name);
 
       // Wait for auth context to complete processing (either success or error)
-      console.log("[SignUpFormView] Waiting for auth context to complete...");
 
       // Create a promise that waits for auth context to finish
       await new Promise<void>((resolve, reject) => {
@@ -151,32 +147,18 @@ export default function SignUpFormView() {
 
         const checkForResult = () => {
           checkCount++;
-          console.log(
-            "[SignUpFormView] Check",
-            checkCount,
-            "- authError:",
-            authErrorRef.current
-          );
 
           if (authErrorRef.current) {
-            console.log(
-              "[SignUpFormView] Error detected, rejecting:",
-              authErrorRef.current
-            );
             reject(authErrorRef.current);
             return;
           }
 
           if (!authLoadingRef.current.session) {
-            console.log(
-              "[SignUpFormView] Loading finished, no error - resolving"
-            );
             resolve();
             return;
           }
 
           if (checkCount >= maxChecks) {
-            console.log("[SignUpFormView] Timeout after", maxChecks, "checks");
             reject(new Error("Signup timeout"));
             return;
           }
@@ -188,21 +170,14 @@ export default function SignUpFormView() {
         checkForResult();
       });
 
-      console.log("[SignUpFormView] Auth context completed successfully");
       // Auth context handles success notification and verification email
       // Clear Turnstile token after successful use to prevent reuse
       setToken("");
     } catch (err: unknown) {
-      console.log("[SignUpFormView] Signup error caught:", err);
-
       // Check if it's a duplicate email error with i18n key
       if (err && typeof err === "object" && "i18nKey" in err) {
         const errorObj = err as Record<string, unknown>;
         const i18nKey = errorObj.i18nKey as string;
-        console.log(
-          "[SignUpFormView] Duplicate email error detected:",
-          i18nKey
-        );
 
         // Create proper SignupError with metadata
         const duplicateError = new Error(
@@ -228,16 +203,11 @@ export default function SignUpFormView() {
         typeof (err as { message?: unknown }).message === "string"
       ) {
         const errorMessage = (err as { message: string }).message;
-        console.log("[SignUpFormView] Regular error:", errorMessage);
 
         const errorObj = new Error(errorMessage) as SignupError;
         setError(errorObj);
         toast.error(errorMessage);
       } else {
-        console.log(
-          "[SignUpFormView] Generic error:",
-          t("errors.signupFailed")
-        );
         const genericError = new Error(t("errors.signupFailed")) as SignupError;
         setError(genericError);
         toast.error(t("errors.signupFailed"));
@@ -248,13 +218,8 @@ export default function SignUpFormView() {
   };
 
   useEffect(() => {
-    console.log("[SignUpFormView] AuthError changed:", authError);
     if (authError) {
       const authErrorObj = new Error(authError.message) as SignupError;
-      console.log(
-        "[SignUpFormView] Setting form error from authError:",
-        authErrorObj
-      );
       setError(authErrorObj);
     }
   }, [authError]);
