@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/button";
 import { PasswordInput } from "@/features/auth/ui/components";
@@ -41,6 +41,35 @@ export default function LoginPage() {
       client.capture("login_page_loaded");
     });
   }, []);
+
+  // Handle input changes to clear errors
+  const handleInputChange = useCallback(
+    (setter: (value: string) => void) =>
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setter(e.target.value);
+        if (lastLoginError) {
+          setLastLoginError(null);
+        }
+        if (error) {
+          setError(null);
+        }
+      },
+    [lastLoginError, error]
+  );
+
+  // Handle password input changes to clear errors
+  const handlePasswordChange = useCallback(
+    (value: string) => {
+      setPassword(value);
+      if (lastLoginError) {
+        setLastLoginError(null);
+      }
+      if (error) {
+        setError(null);
+      }
+    },
+    [lastLoginError, error]
+  );
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -157,7 +186,7 @@ export default function LoginPage() {
                 placeholder={t("email.placeholder")}
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleInputChange(setEmail)}
                 disabled={isLoading}
                 data-testid="email-input"
               />
@@ -170,7 +199,7 @@ export default function LoginPage() {
                 name="password"
                 placeholder=""
                 value={password}
-                onValueChange={setPassword}
+                onValueChange={handlePasswordChange}
                 disabled={isLoading}
                 required
                 data-testid="password-input"
