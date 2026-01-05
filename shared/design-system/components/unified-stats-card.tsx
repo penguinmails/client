@@ -16,6 +16,7 @@ import {
 
 // Types
 type TrendDirection = "up" | "down" | "stable";
+type LayoutVariant = "stacked" | "compact";
 
 interface UnifiedStatsCardProps {
     /** Title displayed above the value */
@@ -32,6 +33,10 @@ interface UnifiedStatsCardProps {
     size?: StatsCardSizeVariant;
     /** Card variant style */
     variant?: StatsCardVariant;
+    /** Layout variant: 'stacked' (default) or 'compact' (legacy-style) */
+    layout?: LayoutVariant;
+    /** Custom icon color classes (overrides color scheme) */
+    iconColor?: string;
     /** Additional CSS classes */
     className?: string;
 
@@ -64,6 +69,7 @@ interface UnifiedStatsCardProps {
  *
  * @example
  * ```tsx
+ * // Stacked layout (default)
  * <UnifiedStatsCard
  *   title="Total Campaigns"
  *   value={42}
@@ -72,6 +78,15 @@ interface UnifiedStatsCardProps {
  *   trend="up"
  *   change="+12% from last month"
  *   changeType="increase"
+ * />
+ * 
+ * // Compact layout (legacy-style, icon on right)
+ * <UnifiedStatsCard
+ *   title="Total Sent"
+ *   value="15,420"
+ *   icon={Mail}
+ *   layout="compact"
+ *   iconColor="bg-gray-100 text-gray-600"
  * />
  * ```
  */
@@ -83,6 +98,8 @@ export const UnifiedStatsCard: React.FC<UnifiedStatsCardProps> = ({
     className,
     size = "default",
     variant = "default",
+    layout = "stacked",
+    iconColor,
     target,
     rawValue,
     unit,
@@ -131,6 +148,58 @@ export const UnifiedStatsCard: React.FC<UnifiedStatsCardProps> = ({
     const colorToken = statsCardColors[color];
     const sizeToken = statsCardSizes[size];
 
+    // ================================================================
+    // Compact Layout (Legacy-style: icon on right, single flex row)
+    // ================================================================
+    if (layout === "compact") {
+        return (
+            <Card
+                className={cn(
+                    "transition-all duration-200 hover:shadow-md",
+                    statsCardVariants[variant],
+                    className,
+                )}
+                aria-label={ariaLabel || `Statistics for ${title}`}
+            >
+                <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                        {/* Left side: Title and Value */}
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+                            <p className="text-2xl font-bold text-foreground">
+                                {value}
+                                {unit && (
+                                    <span className="text-sm font-normal text-muted-foreground ml-1">
+                                        {unit}
+                                    </span>
+                                )}
+                            </p>
+                            {/* Change indicator */}
+                            {change && (
+                                <p className={cn("text-xs font-medium mt-1", getChangeColor())}>
+                                    {change}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Right side: Icon */}
+                        {Icon && (
+                            <div className={cn(
+                                "p-3 rounded-lg",
+                                iconColor || `${colorToken.iconBg} ${colorToken.iconColor}`
+                            )}>
+                                <Icon className="h-6 w-6" />
+                            </div>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    // ================================================================
+    // Stacked Layout (Default: CardHeader with title, CardContent with value)
+    // ================================================================
     return (
         <Card
             className={cn(
