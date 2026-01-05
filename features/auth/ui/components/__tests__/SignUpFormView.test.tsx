@@ -1,14 +1,92 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import SignUpFormView from '@app/[locale]/signup/SignUpFormView';
+import React from "react";
+import { render } from "@testing-library/react";
+import SignUpFormView from "@/app/[locale]/signup/SignUpFormView";
 
 // Mock the next-intl module
-jest.mock('next-intl', () => ({
+jest.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
-describe('SignUpFormView', () => {
-  it('renders correctly', () => {
+// Mock the auth context
+jest.mock("@features/auth/ui/context/auth-context", () => ({
+  useAuth: jest.fn(() => ({ error: null })),
+}));
+
+// Mock other dependencies
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
+jest.mock("sonner", () => ({
+  toast: {
+    success: jest.fn(),
+    error: jest.fn(),
+  },
+}));
+
+jest.mock("react-hook-form", () => ({
+  useForm: () => ({
+    control: {},
+    register: jest.fn(() => ({})),
+    handleSubmit: (fn: any) => fn,
+    watch: jest.fn(),
+    formState: { errors: {} },
+  }),
+  Controller: ({ render }: any) =>
+    render({
+      field: {
+        value: "",
+        onChange: jest.fn(),
+        onBlur: jest.fn(),
+        ref: jest.fn(),
+      },
+    }),
+}));
+
+jest.mock("@/components/ui/button", () => ({
+  Button: ({ children, ...props }: any) => (
+    <button {...props}>{children}</button>
+  ),
+}));
+
+jest.mock("@/features/auth/ui/components", () => ({
+  PasswordInput: ({ onValueChange, ...props }: any) => (
+    <input
+      {...props}
+      type="password"
+      onChange={(e) => onValueChange?.(e.target.value)}
+      data-testid="password-input"
+    />
+  ),
+}));
+
+jest.mock("@/components/ui/input/input", () => ({
+  Input: (props: any) => <input {...props} data-testid="email-input" />,
+}));
+
+jest.mock("@/components/ui/label", () => ({
+  Label: ({ children, ...props }: any) => <label {...props}>{children}</label>,
+}));
+
+jest.mock("next-turnstile", () => ({
+  Turnstile: ({ onVerify }: { onVerify: (token: string) => void }) => {
+    return (
+      <div
+        data-testid="turnstile-widget"
+        onClick={() => onVerify("test-token")}
+      />
+    );
+  },
+}));
+
+jest.mock("@/app/[locale]/signup/verifyToken", () => ({
+  verifyTurnstileToken: jest.fn().mockResolvedValue(true),
+}));
+
+describe("SignUpFormView", () => {
+  it("renders correctly", () => {
     const { asFragment } = render(<SignUpFormView />);
     expect(asFragment()).toMatchSnapshot();
   });
