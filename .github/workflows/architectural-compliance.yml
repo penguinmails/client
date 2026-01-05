@@ -2,9 +2,10 @@ name: Architectural Compliance
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, dev ]
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
