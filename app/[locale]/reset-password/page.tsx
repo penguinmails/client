@@ -125,7 +125,7 @@ export default function ResetPasswordPage() {
           footer={
             <div className="flex flex-col items-center space-y-2">
               <Link href={`/${locale}/login`}>
-                <Button>{t('success.signIn')}</Button>
+                <Button data-testid="sign-in-button">{t('success.signIn')}</Button>
               </Link>
             </div>
           }
@@ -143,7 +143,7 @@ export default function ResetPasswordPage() {
         description={`${t('header.description')} ${email}`}
         error={error}
       >
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" data-testid="reset-password-form">
           <div className="space-y-2">
             <Label htmlFor="newPassword">
               {t('form.newPassword.label')}
@@ -157,6 +157,7 @@ export default function ResetPasswordPage() {
               onChange={handleInputChange('newPassword')}
               disabled={isLoading}
               minLength={8}
+              data-testid="new-password-input"
             />
           </div>
 
@@ -173,10 +174,11 @@ export default function ResetPasswordPage() {
               onChange={handleInputChange('confirmPassword')}
               disabled={isLoading}
               minLength={8}
+              data-testid="confirm-password-input"
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full" disabled={isLoading} data-testid="submit-button">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
