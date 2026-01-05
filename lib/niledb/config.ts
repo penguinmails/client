@@ -66,8 +66,8 @@ const getEnvironmentConfig = (): Partial<NileConfig> => {
         secureCookies: false,
         connectionPool: {
           max: 5,
-          idleTimeoutMillis: 5000,
-          connectionTimeoutMillis: 3000,
+          idleTimeoutMillis: 10000,
+          connectionTimeoutMillis: 10000,
         },
       };
       
