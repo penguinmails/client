@@ -31,6 +31,7 @@ export default function LoginPage() {
   const [showTurnstile, setShowTurnstile] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [loginAttempts, setLoginAttempts] = useState(0);
+  const [lastLoginError, setLastLoginError] = useState<string | null>(null);
   const { login, user, error: authError } = useAuth();
   const { safePush } = useSafeNavigation();
   const t = useTranslations("Login");
@@ -76,6 +77,10 @@ export default function LoginPage() {
       productionLogger.error("Login failed", err);
       const errorMessage = (err as Error)?.message || t("errors.generic");
       setError(errorMessage);
+      setLastLoginError(errorMessage); // Track login error to prevent navigation
+
+      // Clear error tracking after a delay to allow retry
+      setTimeout(() => setLastLoginError(null), 3000);
 
       // Log failed login attempt
       ph().capture("login_attempt", {
@@ -89,16 +94,17 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    if (user && !isLoading) {
-      // Use safe navigation to prevent chunk loading errors
+    if (user && !isLoading && !error && !authError && !lastLoginError) {
+      // Only redirect if user exists, not loading, and no error from any source
+      // This prevents redirecting on login failures from both form and auth context
       const timer = setTimeout(() => {
         safePush("/dashboard");
         setError(null);
-      }, 50);
+      }, 100); // Increased delay to ensure error state is stable
 
       return () => clearTimeout(timer);
     }
-  }, [user, isLoading, safePush]);
+  }, [user, isLoading, error, authError, lastLoginError, safePush]);
 
   useEffect(() => {
     if (authError) {

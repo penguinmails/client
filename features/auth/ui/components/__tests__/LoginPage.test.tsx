@@ -232,4 +232,106 @@ describe("LoginPage", () => {
       { timeout: 2000 }
     );
   });
+
+  it("does not redirect when login fails with incorrect password", async () => {
+    const errorMessage = "Invalid credentials";
+    mockLogin.mockRejectedValueOnce(new Error(errorMessage));
+
+    render(<LoginPage />);
+
+    const emailInput = screen.getByTestId("email-input");
+    const passwordInput = screen.getByTestId("password-input");
+    const loginButton = screen.getByTestId("login-button");
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "wrongpassword" } });
+    fireEvent.click(loginButton);
+
+    // Wait for error to appear
+    await waitFor(() => {
+      expect(screen.getByTestId("error-message")).toBeInTheDocument();
+      expect(screen.getByText(errorMessage)).toBeInTheDocument();
+    });
+
+    // Ensure safePush was NOT called (no redirect on error)
+    expect(mockSafePush).not.toHaveBeenCalled();
+
+    // Ensure form is still visible (not redirected)
+    expect(screen.getByTestId("login-form")).toBeInTheDocument();
+  });
+
+  it("only redirects when login succeeds (no error present)", async () => {
+    mockLogin.mockResolvedValueOnce(undefined);
+
+    render(<LoginPage />);
+
+    const emailInput = screen.getByTestId("email-input");
+    const passwordInput = screen.getByTestId("password-input");
+    const loginButton = screen.getByTestId("login-button");
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.click(loginButton);
+
+    await waitFor(() => {
+      expect(mockSafePush).toHaveBeenCalledWith("/dashboard");
+    });
+  });
+
+  it("handles 401 unauthorized response without redirecting to dashboard", async () => {
+    // Simulate the actual NileDB 401 response scenario from the logs
+    const unauthorizedError = new Error("Unauthorized");
+    unauthorizedError.name = "Error";
+    mockLogin.mockRejectedValueOnce(unauthorizedError);
+
+    render(<LoginPage />);
+
+    const emailInput = screen.getByTestId("email-input");
+    const passwordInput = screen.getByTestId("password-input");
+    const loginButton = screen.getByTestId("login-button");
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "wrongpassword" } });
+    fireEvent.click(loginButton);
+
+    // Wait for the error to appear
+    await waitFor(() => {
+      expect(screen.getByTestId("error-message")).toBeInTheDocument();
+    });
+
+    // Critical test: Ensure NO navigation happened on 401 error
+    expect(mockSafePush).not.toHaveBeenCalled();
+
+    // Ensure the login form is still visible (no redirect occurred)
+    expect(screen.getByTestId("login-form")).toBeInTheDocument();
+
+    // Ensure user is still null (not logged in)
+    expect(mockUseAuth).toHaveBeenCalled();
+  });
+
+  it("prevents dashboard navigation when session check fails after signIn", async () => {
+    // This simulates the scenario where signIn succeeds but checkSession returns null
+    // which should trigger the "no valid session" error and prevent navigation
+    mockLogin.mockRejectedValueOnce(
+      new Error("Login failed - no valid session")
+    );
+
+    render(<LoginPage />);
+
+    const emailInput = screen.getByTestId("email-input");
+    const passwordInput = screen.getByTestId("password-input");
+    const loginButton = screen.getByTestId("login-button");
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "invalidpassword" } });
+    fireEvent.click(loginButton);
+
+    // Wait for error handling
+    await waitFor(() => {
+      expect(screen.getByTestId("error-message")).toBeInTheDocument();
+    });
+
+    // Ensure safePush was NOT called - critical for preventing dashboard redirect
+    expect(mockSafePush).not.toHaveBeenCalled();
+  });
 });

@@ -156,9 +156,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const retryCountRef = useRef(0);
   const enrichmentPromiseRef = useRef<Promise<void> | null>(null);
 
-  /**
-   * Auth Actions - Basic functions first
-   */
   const logout = useCallback(async () => {
     setUser(null);
     setSelectedTenantId(null);
@@ -274,6 +271,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = useCallback(
     async (email: string, password: string) => {
       setLoading((prev) => ({ ...prev, session: true }));
+      setError(null); // Clear any previous errors first
+
       try {
         await signInHook({ provider: "credentials", email, password });
 
@@ -292,10 +291,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           // Add another small delay before navigation
           await new Promise((resolve) => setTimeout(resolve, 50));
           router.push(next);
+        } else {
+          // No session means login failed
+          throw new Error("Login failed - no valid session");
         }
       } catch (err) {
-        setError(err instanceof Error ? err : new Error("Login failed"));
-        throw err;
+        const loginError =
+          err instanceof Error ? err : new Error("Login failed");
+        setError(loginError);
+        setUser(null); // Ensure no user state is set on error
+        throw loginError;
       } finally {
         setLoading((prev) => ({ ...prev, session: false }));
       }
@@ -311,7 +316,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const session = await checkSession();
 
-        if (session) {
+        if (session && !error) {
+          // Only set user if no existing error
           setUser({
             id: session.id,
             email: session.email,
@@ -329,7 +335,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
     init();
-  }, [enrichUser, logout]);
+  }, [enrichUser, logout, error]);
 
   /**
    * Global fetch interceptor for handling 401 errors
@@ -337,9 +343,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const originalFetch = window.fetch;
 
-    window.fetch = async (...args) => {
+    window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       try {
-        const response = await originalFetch(...args);
+        const response = await originalFetch(input, init);
+
+        // Skip auth callback errors - they are handled by the login form
+        const url = typeof input === "string" ? input : input.toString();
+        const isAuthCallback =
+          url.includes("/api/auth/callback/") || url.includes("/api/auth/csrf");
+
+        if (isAuthCallback) {
+          return response;
+        }
 
         // Check for authentication errors via headers or status
         const isAuthError =
