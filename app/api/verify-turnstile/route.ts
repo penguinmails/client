@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateTurnstileToken } from "next-turnstile";
 import { productionLogger, developmentLogger } from "@/lib/logger";
 import { ApiErrorResponse, ApiSuccessResponse } from '@/types';
+import { isFeatureEnabled } from "@/lib/features";
 
 // Cloudflare test key that always passes (for dev/test environments)
 const TEST_SECRET_KEY = "1x0000000000000000000000000000000AA";
@@ -11,6 +12,17 @@ const TEST_SECRET_KEY = "1x0000000000000000000000000000000AA";
 export async function POST(req: NextRequest) {
   try {
     const { token } = await req.json();
+
+    // If Turnstile feature is disabled, return success immediately
+    if (!isFeatureEnabled("turnstile")) {
+      const successResponse: ApiSuccessResponse<object> = {
+        success: true,
+        data: {},
+        message: "CAPTCHA verification disabled",
+        timestamp: new Date().toISOString()
+      };
+      return NextResponse.json(successResponse);
+    }
 
     const isDevOrTest =
       process.env.NODE_ENV === "development" ||

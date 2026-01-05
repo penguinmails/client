@@ -44,11 +44,143 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       password: string;
     }): Promise<void>;
   };
+  // Create callbacks for the signUp hook
+  const signUpSuccessCallback = useCallback(
+    async (data: any, variables: any) => {
+      productionLogger.debug("[AuthContext] Signup successful:", {
+        data,
+        variables,
+      });
+
+      // Send verification email after successful signup
+      let emailSent = false;
+      try {
+        const response = await fetch("/api/emails/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "verification",
+            email: variables.email,
+            userName: variables.name,
+            token: "temp-token", // Backend will generate actual token
+          }),
+        });
+
+        if (response.ok) {
+          emailSent = true;
+          // Store email for resend functionality only when email was actually sent
+          localStorage.setItem("pendingVerificationEmail", variables.email);
+          toast.success(
+            "Account created successfully! Please check your email to verify your account.",
+            {
+              duration: 5000,
+            }
+          );
+        } else {
+          // Still show success even if email sending fails
+          toast.success("Account created successfully!", {
+            duration: 4000,
+          });
+        }
+      } catch {
+        // Don't fail signup if email sending fails
+        toast.success("Account created successfully!", {
+          duration: 4000,
+        });
+      }
+
+      setLoading((prev) => ({ ...prev, session: false }));
+    },
+    []
+  );
+
+  const signUpErrorCallback = useCallback((error: Error) => {
+    productionLogger.debug("[AuthContext] Signup error from hook:", error);
+
+    // Enhanced error handling for duplicate email detection
+    let processedError = error;
+
+    // Check all possible error locations and extract error content
+    const errorMessage = (
+      error.message ||
+      error.toString() ||
+      ""
+    ).toLowerCase();
+    const errorText = (error as any)?.text?.toLowerCase?.() || "";
+    const errorData = (error as any)?.data?.toString?.().toLowerCase?.() || "";
+    const errorCode = (error as any)?.code?.toLowerCase?.() || "";
+    const errorStatus = (error as any)?.status || "";
+
+    // Combine all error sources for comprehensive detection
+    const allErrorText =
+      `${errorMessage} ${errorText} ${errorData} ${errorCode}`.trim();
+
+    productionLogger.info("[AuthContext] Error detection details:", {
+      originalMessage: error.message,
+      errorMessage,
+      errorText,
+      errorData,
+      errorCode,
+      errorStatus,
+      combinedText: allErrorText,
+      isError: !!error,
+      errorType: typeof error,
+      errorKeys: error && typeof error === "object" ? Object.keys(error) : [],
+    });
+
+    // Enhanced duplicate email detection with more patterns
+    const duplicatePatterns = [
+      "already exists",
+      "user already exists",
+      "email already exists",
+      "email exists",
+      "user exists",
+      "duplicate",
+      "conflict",
+      "taken",
+      "registered",
+      "signup failed",
+      "create user failed",
+      "email taken",
+    ];
+
+    const isDuplicate = duplicatePatterns.some((pattern) =>
+      allErrorText.includes(pattern)
+    );
+
+    if (isDuplicate) {
+      productionLogger.info(
+        "[AuthContext] Duplicate email detected with enhanced patterns"
+      );
+      const duplicateError = new Error(
+        "Email address already registered"
+      ) as Error & {
+        code?: string;
+        i18nKey?: string;
+        actionType?: string;
+        isDuplicate?: boolean;
+      };
+      duplicateError.code = "DUPLICATE_EMAIL";
+      duplicateError.i18nKey = "emailAlreadyExistsVerified";
+      duplicateError.actionType = "LOGIN";
+      duplicateError.isDuplicate = true;
+      duplicateError.stack = error.stack; // Preserve original stack
+      processedError = duplicateError;
+    } else {
+      productionLogger.info(
+        "[AuthContext] Non-duplicate error, preserving original:",
+        error.message
+      );
+    }
+
+    setError(processedError);
+    setLoading((prev) => ({ ...prev, session: false }));
+  }, []);
+
   const signUpHook = useSignUp({
-    callbackUrl: "/email-confirmation",
-  }) as unknown as {
-    (info: { email: string; password: string; name: string }): Promise<void>;
-  };
+    onSuccess: signUpSuccessCallback,
+    onError: signUpErrorCallback,
+  });
 
   // Core State
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -83,20 +215,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const signup = useCallback(
     async (email: string, password: string, name: string) => {
       setLoading((prev) => ({ ...prev, session: true }));
-      try {
-        await signUpHook({ email, password, name });
-        toast.success("Account created successfully!");
-        // Add delay before navigation
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        router.push("/auth/verify-email");
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error("Signup failed"));
-        throw err;
-      } finally {
-        setLoading((prev) => ({ ...prev, session: false }));
-      }
+      setError(null); // Clear any previous errors
+
+      productionLogger.info("[AuthContext] Starting signup for:", {
+        email,
+        name,
+      });
+
+      // Call the hook - it will trigger callbacks for success/error
+      signUpHook({ email, password });
+
+      // Return a simple promise - SignUpFormView will wait for authError state
+      return Promise.resolve();
     },
-    [signUpHook, router]
+    [signUpHook]
   );
 
   /**

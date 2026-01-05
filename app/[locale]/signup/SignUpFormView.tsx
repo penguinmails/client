@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,8 @@ import { useTranslations } from "next-intl";
 
 import { Turnstile } from "next-turnstile";
 import { verifyTurnstileToken } from "./verifyToken";
+
+import { useFeature } from "@/lib/features";
 
 interface FormData {
   name: string;
@@ -31,12 +33,26 @@ interface SignupError extends Error {
 
 export default function SignUpFormView() {
   const t = useTranslations("SignUp");
+  const isTurnstileEnabled = useFeature("turnstile");
   const [error, setError] = useState<SignupError | null>(null);
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
-  const { error: authError }: { error: Error | null } = useAuth();
+  const { error: authError, signup, authLoading } = useAuth();
   const [token, setToken] = useState("");
   const router = useRouter();
+
+  // Use refs to track current auth state for the checking function
+  const authErrorRef = useRef(authError);
+  const authLoadingRef = useRef(authLoading);
+
+  // Update refs when auth state changes
+  useEffect(() => {
+    authErrorRef.current = authError;
+  }, [authError]);
+
+  useEffect(() => {
+    authLoadingRef.current = authLoading;
+  }, [authLoading]);
 
   // Loading state for resend verification
   const [isResendingVerification, setIsResendingVerification] = useState(false);
@@ -56,9 +72,6 @@ export default function SignUpFormView() {
       confirmPassword: "",
     },
   });
-
-  // Add loading state for form
-  const [isSignUpLoading, setIsSignUpLoading] = useState(false);
 
   // Handle password strength changes
   const handlePasswordStrengthChange = (strength: PasswordStrength | null) => {
@@ -106,10 +119,10 @@ export default function SignUpFormView() {
 
   const onSubmit = async (data: FormData) => {
     setError(null);
-    setIsSignUpLoading(true);
+    console.log("[SignUpFormView] Starting signup for email:", data.email);
 
     // This prevents the form from submitting if the CAPTCHA hasn't been completed.
-    if (!token) {
+    if (isTurnstileEnabled && !token) {
       const captchaError = new Error(
         t("errors.captchaRequired")
       ) as SignupError;
@@ -118,81 +131,79 @@ export default function SignUpFormView() {
     }
 
     try {
+      console.log("[SignUpFormView] Calling authContext.signup");
+
       // Verify Turnstile token on your backend
-      await verifyTurnstileToken(token);
-
-      // Use custom API endpoint that properly handles duplicate email errors
-      const signupResponse = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          name: data.name,
-        }),
-      });
-
-      const signupData = await signupResponse.json();
-
-      // Check if signup failed
-      if (!signupResponse.ok) {
-        // Create error object with metadata
-        const error = new Error(
-          signupData.error || "Signup failed"
-        ) as SignupError;
-        if (signupData.code) error.code = signupData.code;
-        if (signupData.i18nKey) error.i18nKey = signupData.i18nKey;
-        if (signupData.actionType) error.actionType = signupData.actionType;
-        throw error;
+      if (isTurnstileEnabled) {
+        await verifyTurnstileToken(token);
       }
 
-      // If we reach here, signup was successful
+      // Use auth context signup which properly handles duplicate email errors
+      await signup(data.email, data.password, data.name);
+
+      // Wait for auth context to complete processing (either success or error)
+      console.log("[SignUpFormView] Waiting for auth context to complete...");
+
+      // Create a promise that waits for auth context to finish
+      await new Promise<void>((resolve, reject) => {
+        let checkCount = 0;
+        const maxChecks = 20; // 6 seconds total (20 * 300ms)
+
+        const checkForResult = () => {
+          checkCount++;
+          console.log(
+            "[SignUpFormView] Check",
+            checkCount,
+            "- authError:",
+            authErrorRef.current
+          );
+
+          if (authErrorRef.current) {
+            console.log(
+              "[SignUpFormView] Error detected, rejecting:",
+              authErrorRef.current
+            );
+            reject(authErrorRef.current);
+            return;
+          }
+
+          if (!authLoadingRef.current.session) {
+            console.log(
+              "[SignUpFormView] Loading finished, no error - resolving"
+            );
+            resolve();
+            return;
+          }
+
+          if (checkCount >= maxChecks) {
+            console.log("[SignUpFormView] Timeout after", maxChecks, "checks");
+            reject(new Error("Signup timeout"));
+            return;
+          }
+
+          // Keep checking
+          setTimeout(checkForResult, 300);
+        };
+
+        checkForResult();
+      });
+
+      console.log("[SignUpFormView] Auth context completed successfully");
+      // Auth context handles success notification and verification email
       // Clear Turnstile token after successful use to prevent reuse
       setToken("");
-
-      // Store email for resend functionality
-      localStorage.setItem("pendingVerificationEmail", data.email);
-
-      // Send verification email only after successful signup
-      let emailSent = false;
-      try {
-        const response = await fetch("/api/emails/send", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "verification",
-            email: data.email,
-            userName: data.name,
-            token: "temp-token", // Backend will generate actual token
-          }),
-        });
-
-        if (response.ok) {
-          emailSent = true;
-        } else {
-          // Failed to send verification email, but continuing with signup
-        }
-      } catch {
-        // Don't fail signup if email sending fails
-      }
-
-      // Show success message with appropriate feedback
-      const successMessage = emailSent
-        ? t("success.accountCreated")
-        : t("success.accountCreatedNoEmail");
-
-      // Show success toast notification
-      toast.success(successMessage, {
-        duration: 4000,
-      });
-
-      // Redirect to email confirmation
-      router.push("/email-confirmation");
     } catch (err: unknown) {
+      console.log("[SignUpFormView] Signup error caught:", err);
+
       // Check if it's a duplicate email error with i18n key
       if (err && typeof err === "object" && "i18nKey" in err) {
         const errorObj = err as Record<string, unknown>;
         const i18nKey = errorObj.i18nKey as string;
+        console.log(
+          "[SignUpFormView] Duplicate email error detected:",
+          i18nKey
+        );
+
         // Create proper SignupError with metadata
         const duplicateError = new Error(
           t(`errors.${i18nKey}.title`)
@@ -216,24 +227,34 @@ export default function SignUpFormView() {
         "message" in err &&
         typeof (err as { message?: unknown }).message === "string"
       ) {
-        const errorObj = new Error(
-          (err as { message: string }).message
-        ) as SignupError;
+        const errorMessage = (err as { message: string }).message;
+        console.log("[SignUpFormView] Regular error:", errorMessage);
+
+        const errorObj = new Error(errorMessage) as SignupError;
         setError(errorObj);
-        toast.error((err as { message: string }).message);
+        toast.error(errorMessage);
       } else {
+        console.log(
+          "[SignUpFormView] Generic error:",
+          t("errors.signupFailed")
+        );
         const genericError = new Error(t("errors.signupFailed")) as SignupError;
         setError(genericError);
         toast.error(t("errors.signupFailed"));
       }
     } finally {
-      setIsSignUpLoading(false);
+      // Auth context manages its own loading state
     }
   };
 
   useEffect(() => {
+    console.log("[SignUpFormView] AuthError changed:", authError);
     if (authError) {
       const authErrorObj = new Error(authError.message) as SignupError;
+      console.log(
+        "[SignUpFormView] Setting form error from authError:",
+        authErrorObj
+      );
       setError(authErrorObj);
     }
   }, [authError]);
@@ -262,7 +283,7 @@ export default function SignUpFormView() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push("/login")}
+                onClick={() => router.push("/")}
                 className="text-red-600 border-red-300 hover:bg-red-100"
               >
                 {t("errors.emailAlreadyExistsVerified.actionLogin")}
@@ -296,7 +317,11 @@ export default function SignUpFormView() {
           )}
         </div>
       )}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" data-testid="signup-form">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-4"
+        data-testid="signup-form"
+      >
         {/* Name Field */}
         <div className="space-y-2">
           <Label htmlFor="name">{t("form.name.label")}</Label>
@@ -307,11 +332,13 @@ export default function SignUpFormView() {
             {...register("name", {
               required: t("errors.required"),
             })}
-            disabled={isSignUpLoading}
+            disabled={authLoading.session}
             data-testid="name-input"
           />
           {errors.name && (
-            <p className="text-sm text-red-600" data-testid="name-error">{errors.name.message}</p>
+            <p className="text-sm text-red-600" data-testid="name-error">
+              {errors.name.message}
+            </p>
           )}
         </div>
 
@@ -329,11 +356,13 @@ export default function SignUpFormView() {
                 message: t("errors.invalidEmail"),
               },
             })}
-            disabled={isSignUpLoading}
+            disabled={authLoading.session}
             data-testid="email-input"
           />
           {errors.email && (
-            <p className="text-sm text-red-600" data-testid="email-error">{errors.email.message}</p>
+            <p className="text-sm text-red-600" data-testid="email-error">
+              {errors.email.message}
+            </p>
           )}
         </div>
 
@@ -365,7 +394,7 @@ export default function SignUpFormView() {
                 onStrengthChange={handlePasswordStrengthChange}
                 value={field.value}
                 onValueChange={field.onChange}
-                disabled={isSignUpLoading}
+                disabled={authLoading.session}
                 name={field.name}
                 onBlur={field.onBlur}
                 ref={field.ref}
@@ -374,7 +403,9 @@ export default function SignUpFormView() {
             )}
           />
           {errors.password && (
-            <p className="text-sm text-red-600" data-testid="password-error">{errors.password.message}</p>
+            <p className="text-sm text-red-600" data-testid="password-error">
+              {errors.password.message}
+            </p>
           )}
         </div>
 
@@ -396,7 +427,7 @@ export default function SignUpFormView() {
                 placeholder={t("form.confirmPassword.placeholder")}
                 value={field.value}
                 onValueChange={field.onChange}
-                disabled={isSignUpLoading}
+                disabled={authLoading.session}
                 name={field.name}
                 onBlur={field.onBlur}
                 ref={field.ref}
@@ -405,27 +436,39 @@ export default function SignUpFormView() {
             )}
           />
           {errors.confirmPassword && (
-            <p className="text-sm text-red-600" data-testid="confirm-password-error">
+            <p
+              className="text-sm text-red-600"
+              data-testid="confirm-password-error"
+            >
               {errors.confirmPassword.message}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
-            <Turnstile
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-              onVerify={(token) => setToken(token)}
-            />
-          ) : (
-            <p className="text-sm text-destructive" data-testid="captcha-not-configured-message">
-              {t("captcha.notConfigured")}
-            </p>
-          )}
+          {isTurnstileEnabled &&
+            (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+              <Turnstile
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                onVerify={(token) => setToken(token)}
+              />
+            ) : (
+              <p
+                className="text-sm text-destructive"
+                data-testid="captcha-not-configured-message"
+              >
+                {t("captcha.notConfigured")}
+              </p>
+            ))}
         </div>
 
-        <Button type="submit" className="w-full" disabled={isSignUpLoading} data-testid="create-account-button">
-          {isSignUpLoading
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={authLoading.session}
+          data-testid="create-account-button"
+        >
+          {authLoading.session
             ? t("button.creatingAccount")
             : t("button.createAccount")}
         </Button>
