@@ -131,12 +131,13 @@
       "text": "¿Recordaste tu contraseña?",
       "linkText": "Iniciar sesión"
     },
-    "alreadySignedIn": "Ya has iniciado sesión."
+    "alreadySignedIn": "Ya has iniciado sesión.",
+    "failedToSend": "No se pudo enviar el enlace de restablecimiento. Por favor, inténtalo de nuevo."
   },
   "ResetPassword": {
     "header": {
       "title": "Restablece tu contraseña",
-      "description": "Introduce tu nueva contraseña a continuación."
+      "description": "Introduce tu nueva contraseña a continuación para"
     },
     "form": {
       "newPassword": {

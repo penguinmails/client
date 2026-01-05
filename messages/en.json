@@ -131,12 +131,13 @@
       "text": "Remembered your password?",
       "linkText": "Login"
     },
-    "alreadySignedIn": "You are already signed in."
+    "alreadySignedIn": "You are already signed in.",
+    "failedToSend": "Failed to send reset link. Please try again."
   },
   "ResetPassword": {
     "header": {
       "title": "Reset Your Password",
-      "description": "Enter your new password below."
+      "description": "Enter your new password below for"
     },
     "form": {
       "newPassword": {

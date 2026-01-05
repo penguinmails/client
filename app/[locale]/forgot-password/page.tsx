@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to send reset link');
+        throw new Error(data.error || t('failedToSend'));
       }
 
       setIsSubmitted(true);
@@ -52,7 +52,7 @@ export default function ForgotPasswordPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to send reset link. Please try again."
+          : t('failedToSend')
       );
     } finally {
       setIsLoading(false);
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
         error={!user && !isSubmitted ? error : undefined}
       >
         {user ? undefined : isSubmitted ? (
-          <Alert>
+          <Alert data-testid="success-alert">
             <MailCheck className="h-4 w-4" />
             <AlertTitle>
               {t('alerts.success.title')}
@@ -103,7 +103,7 @@ export default function ForgotPasswordPage() {
             </AlertDescription>
           </Alert>
         ) : (
-          <form onSubmit={handlePasswordResetRequest} className="space-y-4">
+          <form onSubmit={handlePasswordResetRequest} className="space-y-4" data-testid="forgot-password-form">
             <div className="space-y-2">
               <Label htmlFor="email">
                 {t('form.email.label')}
@@ -116,10 +116,11 @@ export default function ForgotPasswordPage() {
                 value={email}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 disabled={isLoading}
+                data-testid="email-input"
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading} data-testid="submit-button">
               {isLoading
                 ? t('form.button.sending')
                 : t('form.button.send')}
