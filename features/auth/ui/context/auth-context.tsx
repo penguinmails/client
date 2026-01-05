@@ -12,8 +12,7 @@ import React, {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSignIn, useSignUp } from "@niledatabase/react";
 import { useSystemHealth } from "@/shared/hooks";
-// Note: Loggers removed for production - uncomment for debugging
-// import { productionLogger, developmentLogger } from "@/lib/logger";
+import { productionLogger } from "@/lib/logger";
 import { toast } from "sonner";
 
 import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
@@ -89,63 +88,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const signUpErrorCallback = useCallback((error: Error) => {
-    // Enhanced error handling for duplicate email detection
-    let processedError = error;
+    // Log the complete error structure for analysis
+    productionLogger.error("[AuthContext] NileDB Signup Error Analysis:", {
+      errorType: typeof error,
+      errorName: error.name,
+      errorMessage: error.message,
+      errorStack: error.stack,
+      errorKeys: error && typeof error === "object" ? Object.keys(error) : [],
+      errorProperties:
+        error && typeof error === "object"
+          ? Object.getOwnPropertyNames(error).reduce(
+              (props, key) => {
+                try {
+                  props[key] = (error as any)[key];
+                  return props;
+                } catch {
+                  return props;
+                }
+              },
+              {} as Record<string, unknown>
+            )
+          : {},
+      fullError: error,
+      errorString: String(error),
+      errorJSON: (() => {
+        try {
+          return JSON.stringify(error, null, 2);
+        } catch {
+          return "Cannot stringify error";
+        }
+      })(),
+    });
 
-    // Check all possible error locations and extract error content
-    const errorMessage = (
-      error.message ||
-      error.toString() ||
-      ""
-    ).toLowerCase();
-    const errorText = (error as any)?.text?.toLowerCase?.() || "";
-    const errorData = (error as any)?.data?.toString?.().toLowerCase?.() || "";
-    const errorCode = (error as any)?.code?.toLowerCase?.() || "";
-
-    // Combine all error sources for comprehensive detection
-    const allErrorText =
-      `${errorMessage} ${errorText} ${errorData} ${errorCode}`.trim();
-
-    // Enhanced duplicate email detection with more patterns
-    const duplicatePatterns = [
-      "already exists",
-      "user already exists",
-      "email already exists",
-      "email exists",
-      "user exists",
-      "duplicate",
-      "conflict",
-      "taken",
-      "registered",
-      "signup failed",
-      "create user failed",
-      "email taken",
-    ];
-
-    const isDuplicate = duplicatePatterns.some((pattern) =>
-      allErrorText.includes(pattern)
-    );
-
-    if (isDuplicate) {
-      const duplicateError = new Error(
-        "Email address already registered"
-      ) as Error & {
-        code?: string;
-        i18nKey?: string;
-        actionType?: string;
-        isDuplicate?: boolean;
-      };
-      duplicateError.code = "DUPLICATE_EMAIL";
-      duplicateError.i18nKey = "emailAlreadyExistsVerified";
-      duplicateError.actionType = "LOGIN";
-      duplicateError.isDuplicate = true;
-      duplicateError.stack = error.stack; // Preserve original stack
-      processedError = duplicateError;
-    } else {
-      // Preserve original error for non-duplicate cases
-    }
-
-    setError(processedError);
+    // For now, preserve the original error
+    // We'll implement precise error handling once we see the actual error formats
+    setError(error);
     setLoading((prev) => ({ ...prev, session: false }));
   }, []);
 
