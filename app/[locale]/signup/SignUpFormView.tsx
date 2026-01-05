@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -40,19 +40,6 @@ export default function SignUpFormView() {
   const { error: authError, signup, authLoading } = useAuth();
   const [token, setToken] = useState("");
   const router = useRouter();
-
-  // Use refs to track current auth state for the checking function
-  const authErrorRef = useRef(authError);
-  const authLoadingRef = useRef(authLoading);
-
-  // Update refs when auth state changes
-  useEffect(() => {
-    authErrorRef.current = authError;
-  }, [authError]);
-
-  useEffect(() => {
-    authLoadingRef.current = authLoading;
-  }, [authLoading]);
 
   // Loading state for resend verification
   const [isResendingVerification, setIsResendingVerification] = useState(false);
@@ -138,80 +125,19 @@ export default function SignUpFormView() {
       // Use auth context signup which properly handles duplicate email errors
       await signup(data.email, data.password, data.name);
 
-      // Wait for auth context to complete processing (either success or error)
-
-      // Create a promise that waits for auth context to finish
-      await new Promise<void>((resolve, reject) => {
-        let checkCount = 0;
-        const maxChecks = 20; // 6 seconds total (20 * 300ms)
-
-        const checkForResult = () => {
-          checkCount++;
-
-          if (authErrorRef.current) {
-            reject(authErrorRef.current);
-            return;
-          }
-
-          if (!authLoadingRef.current.session) {
-            resolve();
-            return;
-          }
-
-          if (checkCount >= maxChecks) {
-            reject(new Error("Signup timeout"));
-            return;
-          }
-
-          // Keep checking
-          setTimeout(checkForResult, 300);
-        };
-
-        checkForResult();
-      });
-
       // Auth context handles success notification and verification email
       // Clear Turnstile token after successful use to prevent reuse
       setToken("");
     } catch (err: unknown) {
-      // Check if it's a duplicate email error with i18n key
-      if (err && typeof err === "object" && "i18nKey" in err) {
-        const errorObj = err as Record<string, unknown>;
-        const i18nKey = errorObj.i18nKey as string;
-
-        // Create proper SignupError with metadata
-        const duplicateError = new Error(
-          t(`errors.${i18nKey}.title`)
-        ) as SignupError;
-        duplicateError.i18nKey = i18nKey;
-        if (errorObj.actionType) {
-          duplicateError.actionType = errorObj.actionType as string;
-        }
-        setError(duplicateError);
-
-        // Show toast notification
-        toast.error(t(`errors.${i18nKey}.title`));
-        // Don't send verification email for duplicate emails
-        return;
-      }
-
-      // Handle other errors
-      if (
-        err &&
-        typeof err === "object" &&
-        "message" in err &&
-        typeof (err as { message?: unknown }).message === "string"
-      ) {
+      // Show error toast for user feedback
+      if (err && typeof err === "object" && "message" in err) {
         const errorMessage = (err as { message: string }).message;
-
-        const errorObj = new Error(errorMessage) as SignupError;
-        setError(errorObj);
         toast.error(errorMessage);
       } else {
-        const genericError = new Error(t("errors.signupFailed")) as SignupError;
-        setError(genericError);
         toast.error(t("errors.signupFailed"));
       }
+      // Re-throw to trigger error display via auth context
+      throw err;
     } finally {
       // Auth context manages its own loading state
     }

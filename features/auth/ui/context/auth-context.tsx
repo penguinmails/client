@@ -12,7 +12,7 @@ import React, {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSignIn, useSignUp } from "@niledatabase/react";
 import { useSystemHealth } from "@/shared/hooks";
-import { productionLogger } from "@/lib/logger";
+import { developmentLogger, productionLogger } from "@/lib/logger";
 import { toast } from "sonner";
 
 import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
@@ -88,41 +88,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const signUpErrorCallback = useCallback((error: Error) => {
-    // Log the complete error structure for analysis
-    productionLogger.error("[AuthContext] NileDB Signup Error Analysis:", {
-      errorType: typeof error,
-      errorName: error.name,
-      errorMessage: error.message,
-      errorStack: error.stack,
-      errorKeys: error && typeof error === "object" ? Object.keys(error) : [],
-      errorProperties:
-        error && typeof error === "object"
-          ? Object.getOwnPropertyNames(error).reduce(
-              (props, key) => {
-                try {
-                  props[key] = (error as any)[key];
-                  return props;
-                } catch {
-                  return props;
-                }
-              },
-              {} as Record<string, unknown>
-            )
-          : {},
-      fullError: error,
-      errorString: String(error),
-      errorJSON: (() => {
-        try {
-          return JSON.stringify(error, null, 2);
-        } catch {
-          return "Cannot stringify error";
-        }
-      })(),
-    });
+    // Implement precise error handling based on actual NileDB error format
+    let processedError = error;
 
-    // For now, preserve the original error
-    // We'll implement precise error handling once we see the actual error formats
-    setError(error);
+    // Check for duplicate email based on actual NileDB error format
+    // Format: "The user {email} already exists"
+    if (
+      error.name === "Error" &&
+      error.message?.includes("The user ") &&
+      error.message?.includes(" already exists")
+    ) {
+      productionLogger.info(
+        "[AuthContext] Duplicate email detected - NileDB format"
+      );
+
+      // Extract email from message if possible
+      const emailMatch = error.message.match(/The user (.+?) already exists/);
+      const email = emailMatch ? emailMatch[1] : "";
+
+      const duplicateError = new Error(
+        "Email address already registered"
+      ) as Error & {
+        code?: string;
+        i18nKey?: string;
+        actionType?: string;
+        isDuplicate?: boolean;
+        email?: string;
+      };
+      duplicateError.code = "DUPLICATE_EMAIL";
+      duplicateError.i18nKey = "emailAlreadyExistsVerified";
+      duplicateError.actionType = "LOGIN";
+      duplicateError.isDuplicate = true;
+      duplicateError.email = email;
+      duplicateError.stack = error.stack; // Preserve original stack
+      processedError = duplicateError;
+    } else {
+      productionLogger.warn("[AuthContext] Unknown signup error format:", {
+        errorName: error.name,
+        errorMessage: error.message,
+        errorKeys: error && typeof error === "object" ? Object.keys(error) : [],
+      });
+    }
+
+    setError(processedError);
     setLoading((prev) => ({ ...prev, session: false }));
   }, []);
 
@@ -166,8 +174,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setLoading((prev) => ({ ...prev, session: true }));
       setError(null); // Clear any previous errors
 
-      // Call the hook - it will trigger callbacks for success/error
-      signUpHook({ email, password });
+      const signupData = { email, password, name };
+
+      signUpHook(signupData);
 
       // Return a simple promise - SignUpFormView will wait for authError state
       return Promise.resolve();
@@ -314,8 +323,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setLoading({ session: false, enrichment: false });
         }
       } catch (error) {
-        setLoading({ session: false, enrichment: false });
         // Don't redirect here, let the UI components handle it
+        setLoading({ session: false, enrichment: false });
+        developmentLogger.error("Failed to initialize session", error);
       }
     };
     init();
