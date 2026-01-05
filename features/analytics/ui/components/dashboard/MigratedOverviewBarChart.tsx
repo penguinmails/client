@@ -158,9 +158,14 @@ function MigratedOverviewBarChart({
           />
           <YAxis className="text-xs text-muted-foreground" />
           <Tooltip
-            formatter={(value: number, name: string) => [
-              value.toLocaleString(),
-              standardizedMetrics.find((m) => m.key === name)?.label || name,
+            formatter={(
+              value: number | undefined,
+              name: string | undefined
+            ) => [
+              value?.toLocaleString() || "",
+              standardizedMetrics.find((m) => m.key === name)?.label ||
+                name ||
+                "",
             ]}
             labelFormatter={(label) => `Campaign: ${label}`}
           />
