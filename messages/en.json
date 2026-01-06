@@ -211,5 +211,41 @@
         "countdown": "click here to resend in {countdown}s"
       }
     }
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back{displayName}! Here is what is happening with your campaigns.",
+    "recentReplies": "Recent Replies",
+    "kpi": {
+      "totalCampaigns": "Total Campaigns",
+      "activeLeads": "Active Leads",
+      "completed": "Completed",
+      "totalLeads": "Total Leads"
+    }
+  },
+  "AppearanceSettings": {
+    "title": "Appearance",
+    "description": "Customize the look and feel of the application.",
+    "theme": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "contrast": "Contrast"
+    },
+    "layoutDensity": {
+      "label": "Layout Density",
+      "compact": "Compact",
+      "normal": "Normal",
+      "wide": "Wide"
+    },
+    "saveButton": {
+      "default": "Save Appearance",
+      "saving": "Saving..."
+    },
+    "notifications": {
+      "success": "Appearance settings saved",
+      "error": "Failed to save settings",
+      "genericError": "An error occurred"
+    }
   }
 }

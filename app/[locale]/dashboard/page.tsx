@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CampaignAnalytics } from "@features/analytics/types/domain-specific";
 import QuickActions from "@/features/analytics/ui/components/dashboard/actions/QuickActions";
@@ -32,6 +33,7 @@ import { useAuth } from "@features/auth/ui/context/auth-context";
  * Uses standardized field names and Convex subscriptions for real-time updates.
  */
 export default function DashboardPage() {
+  const t = useTranslations("Dashboard");
   const { user, loading: authLoading } = useAuth();
 
   // Temporarily disable analytics to fix SSR issue
@@ -65,10 +67,12 @@ export default function DashboardPage() {
     <div className="mx-auto space-y-8">
       <div className="space-y-2">
         <h1 className={cn("text-2xl font-bold", "text-foreground")}>
-          Dashboard
+          {t("title")}
         </h1>
         <p className="text-muted-foreground">
-          Welcome back{user?.displayName ? `, ${user.displayName}` : ""}! Here is what is happening with your campaigns.
+          {t("welcome", {
+            displayName: user?.displayName ? `, ${user.displayName}` : "",
+          })}
         </p>
       </div>
 
@@ -93,7 +97,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Replies</CardTitle>
+              <CardTitle>{t("recentReplies")}</CardTitle>
             </CardHeader>
             <CardContent>
               <Suspense
@@ -139,29 +143,37 @@ function DashboardKpiCards({
   _loading: boolean;
   _error: string | null;
 }) {
+  const t = useTranslations("Dashboard.kpi");
+
   // Transform campaign analytics into KPI cards format
   const kpiData = [
     {
-      title: "Total Campaigns",
+      title: t("totalCampaigns"),
       value: campaignAnalytics.length.toString(),
       icon: Send,
       color: "bg-blue-500 text-blue-600",
     },
     {
-      title: "Active Leads",
-      value: campaignAnalytics.reduce((sum, campaign) => sum + campaign.activeLeads, 0).toString(),
+      title: t("activeLeads"),
+      value: campaignAnalytics
+        .reduce((sum, campaign) => sum + campaign.activeLeads, 0)
+        .toString(),
       icon: Users,
       color: "bg-green-500 text-green-600",
     },
     {
-      title: "Completed",
-      value: campaignAnalytics.reduce((sum, campaign) => sum + campaign.completedLeads, 0).toString(),
+      title: t("completed"),
+      value: campaignAnalytics
+        .reduce((sum, campaign) => sum + campaign.completedLeads, 0)
+        .toString(),
       icon: Mail,
       color: "bg-purple-500 text-purple-600",
     },
     {
-      title: "Total Leads",
-      value: campaignAnalytics.reduce((sum, campaign) => sum + campaign.leadCount, 0).toString(),
+      title: t("totalLeads"),
+      value: campaignAnalytics
+        .reduce((sum, campaign) => sum + campaign.leadCount, 0)
+        .toString(),
       icon: TrendingUp,
       color: "bg-orange-500 text-orange-600",
     },
