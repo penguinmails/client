@@ -13,6 +13,7 @@ The architectural boundary testing system ensures that the codebase maintains pr
 **Purpose**: Validates proper FSD layer hierarchy and prevents architectural violations.
 
 **Key Validations**:
+
 - Layer hierarchy enforcement (no upward dependencies)
 - Feature isolation (no cross-feature imports)
 - Component placement validation
@@ -20,15 +21,16 @@ The architectural boundary testing system ensures that the codebase maintains pr
 - Import path compliance
 
 **Critical Tests**:
+
 ```typescript
 // Prevents upward dependencies (critical)
-it('should prevent upward dependencies')
+it("should prevent upward dependencies");
 
 // Ensures feature isolation (error)
-it('should prevent cross-feature imports')
+it("should prevent cross-feature imports");
 
 // Validates component placement (warning)
-it('should validate component placement in correct layers')
+it("should validate component placement in correct layers");
 ```
 
 ### 2. Design Token Compliance Tests (`__tests__/design-token-compliance.test.ts`)
@@ -36,6 +38,7 @@ it('should validate component placement in correct layers')
 **Purpose**: Ensures consistent design token usage and prevents hardcoded styling values.
 
 **Key Validations**:
+
 - Hardcoded hex color detection
 - Arbitrary spacing value prevention
 - Typography scale compliance
@@ -43,27 +46,29 @@ it('should validate component placement in correct layers')
 - Variant-based styling patterns
 
 **Critical Tests**:
+
 ```typescript
 // Prevents hardcoded colors
-it('should prevent hardcoded hex colors')
+it("should prevent hardcoded hex colors");
 
 // Enforces spacing tokens
-it('should prevent arbitrary spacing values')
+it("should prevent arbitrary spacing values");
 
 // Validates semantic color usage
-it('should validate semantic color usage')
+it("should validate semantic color usage");
 ```
 
-### 3. CI/CD Integration Tests (`__tests__/ci-cd-integration.test.ts`)
+### 3. GitHub Actions CI/CD Integration
 
-**Purpose**: Provides CI/CD pipeline integration and deployment readiness validation.
+**Purpose**: Provides CI/CD pipeline integration through GitHub Actions workflow for deployment readiness validation.
 
 **Key Validations**:
-- Pre-commit validation
-- Build-time compliance checking
+
+- ESLint FSD compliance checking
+- TypeScript compilation validation
+- Jest test execution
+- Build verification
 - Deployment readiness
-- Performance impact assessment
-- Regression prevention
 
 ## Test Runner
 
@@ -72,6 +77,7 @@ it('should validate semantic color usage')
 The test runner orchestrates all architectural boundary tests and generates comprehensive reports.
 
 **Usage**:
+
 ```bash
 # Run all architectural tests
 npm run test:architecture
@@ -90,6 +96,7 @@ npm run test:architecture -- --dry-run
 ```
 
 **Available Options**:
+
 - `--env <environment>`: Set environment (development, staging, production)
 - `--suites <suite1,suite2>`: Run specific test suites only
 - `--skip-optional`: Skip optional test suites
@@ -107,7 +114,6 @@ npm run test:architecture -- --dry-run
   "test:architecture:ci": "tsx scripts/run-architectural-tests.ts --env ci --skip-optional",
   "test:boundaries": "jest __tests__/architectural-boundary-tests.test.ts --verbose",
   "test:design-tokens": "jest __tests__/design-token-compliance.test.ts --verbose",
-  "test:ci-integration": "jest __tests__/ci-cd-integration.test.ts --verbose",
   "validate:architecture": "npm run test:architecture -- --dry-run",
   "architecture:report": "npm run test:architecture -- --output architectural-compliance-report.json"
 }
@@ -138,6 +144,7 @@ The workflow runs comprehensive architectural compliance checks on every push an
 5. **quality-gates**: Ensures all checks pass before merge
 
 **Triggers**:
+
 - Push to `main` or `develop` branches
 - Pull requests to `main` or `develop` branches
 - Manual workflow dispatch
@@ -242,16 +249,16 @@ The architectural tests integrate with ESLint FSD compliance rules:
 export default [
   {
     plugins: {
-      'fsd-compliance': fsdCompliancePlugin
+      "fsd-compliance": fsdCompliancePlugin,
     },
     rules: {
-      'fsd-compliance/no-upward-dependencies': 'error',
-      'fsd-compliance/no-cross-feature-imports': 'error',
-      'fsd-compliance/no-hex-colors': 'error',
-      'fsd-compliance/no-arbitrary-spacing': 'error',
-      'fsd-compliance/require-semantic-tokens': 'warn'
-    }
-  }
+      "fsd-compliance/no-upward-dependencies": "error",
+      "fsd-compliance/no-cross-feature-imports": "error",
+      "fsd-compliance/no-hex-colors": "error",
+      "fsd-compliance/no-arbitrary-spacing": "error",
+      "fsd-compliance/require-semantic-tokens": "warn",
+    },
+  },
 ];
 ```
 
@@ -264,6 +271,7 @@ export default [
 **Error**: `Upward dependency: components layer imports from features layer`
 
 **Solution**:
+
 ```bash
 # Identify the violation
 npm run fsd:validate
@@ -278,6 +286,7 @@ npm run fsd:validate
 **Error**: `Feature 'auth' imports from feature 'campaigns'`
 
 **Solution**:
+
 ```bash
 # Move shared logic to shared/ layer
 # Create proper feature API boundaries
@@ -289,6 +298,7 @@ npm run fsd:validate
 **Error**: `Hardcoded hex color: #3B82F6`
 
 **Solution**:
+
 ```bash
 # Replace with semantic token
 # Before: className="text-[#3B82F6]"
