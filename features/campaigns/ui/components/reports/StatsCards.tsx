@@ -1,31 +1,55 @@
-import { StatsCard } from "@/shared/ui/components/stats-card";
+"use client";
+
+import React from "react";
+import { UnifiedStatsCard } from "@/shared/design-system/components";
 import { LucideIcon } from "lucide-react";
 
-interface StatsItem {
+// ============================================================
+// Types
+// ============================================================
+
+export interface StatsItem {
   title: string;
   value: string;
   icon: LucideIcon;
-  color: string;
+  /** CSS classes for icon color (e.g., "bg-blue-100 text-blue-600") */
+  iconColor: string;
 }
 
-interface StatsCardsProps {
+export interface StatsCardsProps {
+  /** Array of stats to display */
   stats: StatsItem[];
+  /** Additional CSS classes */
+  className?: string;
 }
 
-function StatsCards({ stats }: StatsCardsProps) {
+// ============================================================
+// Main Component
+// ============================================================
+
+/**
+ * StatsCards - Wrapper for multiple stats cards using DS UnifiedStatsCard
+ * 
+ * Uses UnifiedStatsCard with layout="compact" for legacy-style appearance.
+ */
+export function StatsCards({
+  stats,
+  className,
+}: StatsCardsProps) {
   return (
-    <>
+    <div className={className}>
       {stats.map((item) => (
-        <StatsCard
-          className="flex-row-reverse justify-end gap-2 "
+        <UnifiedStatsCard
           key={item.title}
           title={item.title}
           value={item.value}
           icon={item.icon}
-          color={item.color}
+          layout="compact"
+          iconColor={item.iconColor}
         />
       ))}
-    </>
+    </div>
   );
 }
+
 export default StatsCards;

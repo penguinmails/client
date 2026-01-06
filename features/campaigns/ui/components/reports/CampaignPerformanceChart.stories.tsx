@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import CampaignPerformanceChart from "./CampaignPerformanceChart";
-import MigratedCampaignPerformanceChart from "./MigratedCampaignPerformanceChart";
 
 // ============================================================
 // Mock Data
@@ -23,9 +22,9 @@ const mockChartData = [
 // Meta
 // ============================================================
 
-const meta: Meta<typeof MigratedCampaignPerformanceChart> = {
+const meta: Meta<typeof CampaignPerformanceChart> = {
   title: "Features/Campaigns/Reports/CampaignPerformanceChart Comparison",
-  component: MigratedCampaignPerformanceChart,
+  component: CampaignPerformanceChart,
   tags: ["autodocs"],
   parameters: {
     layout: "padded",
@@ -46,7 +45,7 @@ const meta: Meta<typeof MigratedCampaignPerformanceChart> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof MigratedCampaignPerformanceChart>;
+type Story = StoryObj<typeof CampaignPerformanceChart>;
 
 // ============================================================
 // Stories
@@ -69,7 +68,7 @@ export const SideBySideComparison: Story = {
           ✅ Migrated Chart (Using CAMPAIGN_COLORS + DS Card)
         </h2>
         <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <MigratedCampaignPerformanceChart data={mockChartData} />
+          <CampaignPerformanceChart data={mockChartData} />
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
 "use client";
+
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input/input";
 import {
   Select,
@@ -14,20 +16,24 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Calendar, CheckIcon, Search, Server, X } from "lucide-react";
-import { useState } from "react";
 import DatePicker from "@/components/ui/custom/DatePicker";
 import { availableMailboxes } from "@/shared/mocks/providers";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/shared/utils";
 
-enum CampaignStatus {
+// ============================================================
+// Types (Matching Legacy)
+// ============================================================
+
+export enum CampaignStatus {
   All = "all",
   Active = "active",
   Paused = "paused",
   Completed = "completed",
 }
-enum DateRange {
+
+export enum DateRange {
   AllTime = "all",
   Today = "today",
   ThisWeek = "week",
@@ -35,7 +41,41 @@ enum DateRange {
   ThisQuarter = "quarter",
   Custom = "custom",
 }
-function CampaignsFilter() {
+
+// ============================================================
+// Props Interface
+// ============================================================
+
+export interface CampaignsFilterProps {
+  /** Callback when search term changes */
+  onSearch?: (term: string) => void;
+  /** Callback when status filter changes */
+  onStatusChange?: (status: CampaignStatus) => void;
+  /** Callback when date range changes */
+  onDateRangeChange?: (range: DateRange, startDate?: Date, endDate?: Date) => void;
+  /** Callback when mailbox selection changes */
+  onMailboxChange?: (mailboxes: string[]) => void;
+  /** Additional CSS classes */
+  className?: string;
+}
+
+// ============================================================
+// Main Component (Matching Legacy Exactly)
+// ============================================================
+
+/**
+ * CampaignsFilter - Filter bar matching legacy visual appearance
+ * 
+ * Uses DS components while maintaining the exact same layout and styling
+ * as the legacy CampaignsFilter for visual parity.
+ */
+export function CampaignsFilter({
+  onSearch,
+  onStatusChange,
+  onDateRangeChange,
+  onMailboxChange,
+  className,
+}: CampaignsFilterProps) {
   const [status, setStatus] = useState<CampaignStatus | undefined>(undefined);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
@@ -44,53 +84,76 @@ function CampaignsFilter() {
   const [isMailboxOpen, setIsMailboxOpen] = useState(false);
 
   const handleMailboxChange = (mailboxId: string, checked: boolean): void => {
+    let newSelection: string[];
     if (checked) {
-      setSelectedMailboxes((prev: string[]) => [...prev, mailboxId]);
+      newSelection = [...selectedMailboxes, mailboxId];
     } else {
-      setSelectedMailboxes((prev: string[]) => prev.filter((m: string) => m !== mailboxId));
+      newSelection = selectedMailboxes.filter((m: string) => m !== mailboxId);
     }
+    setSelectedMailboxes(newSelection);
+    onMailboxChange?.(newSelection);
   };
 
   const removeMailbox = (mailbox: string) => {
-    setSelectedMailboxes((prev) => prev.filter((m) => m !== mailbox));
+    const newSelection = selectedMailboxes.filter((m) => m !== mailbox);
+    setSelectedMailboxes(newSelection);
+    onMailboxChange?.(newSelection);
   };
 
   const clearAllMailboxes = () => {
     setSelectedMailboxes([]);
+    onMailboxChange?.([]);
   };
 
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center bg-card dark:bg-card p-4 rounded-lg shadow border border-border gap-4">
+    <div className={cn(
+      "flex flex-col lg:flex-row lg:justify-between lg:items-center bg-card dark:bg-card p-4 rounded-lg shadow border border-border gap-4",
+      className
+    )}>
+      {/* Search Input - Matching Legacy */}
       <div className="flex items-center space-x-2 border border-border shadow-sm rounded-lg px-2 bg-muted/50 dark:bg-muted/30 peer-focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 w-full lg:w-auto">
         <Search className="text-muted-foreground w-5 h-5" />
         <Input
           type="text"
           placeholder="Search campaigns..."
           className="w-full lg:max-w-md border-none shadow-none focus-visible:border-none focus-visible:ring-0 peer"
-          onChange={(_e) => {
-            /* Handle search input */
-          }}
+          onChange={(e) => onSearch?.(e.target.value)}
         />
       </div>
+
+      {/* Filters Container */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-2">
+        {/* Status Filter */}
         <Select
           value={status}
-          onValueChange={(e) => setStatus(e as CampaignStatus)}
+          onValueChange={(e) => {
+            const newStatus = e as CampaignStatus;
+            setStatus(newStatus);
+            onStatusChange?.(newStatus);
+          }}
         >
           <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="Select a Status" />
           </SelectTrigger>
           <SelectContent>
-            {Object.values(CampaignStatus).map((status) => (
-              <SelectItem key={status} value={status}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}
+            {Object.values(CampaignStatus).map((statusValue) => (
+              <SelectItem key={statusValue} value={statusValue}>
+                {statusValue.charAt(0).toUpperCase() + statusValue.slice(1)}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
+
+        {/* Date Range Filter */}
         <Select
           value={dateRange}
-          onValueChange={(e) => setDateRange(e as DateRange)}
+          onValueChange={(e) => {
+            const newRange = e as DateRange;
+            setDateRange(newRange);
+            if (newRange !== DateRange.Custom) {
+              onDateRangeChange?.(newRange);
+            }
+          }}
         >
           <SelectTrigger className="w-full sm:w-auto">
             <Calendar />
@@ -125,7 +188,10 @@ function CampaignsFilter() {
                   calendarProps={{
                     defaultMonth: startDate,
                     selected: startDate,
-                    onSelect: setStartDate,
+                    onSelect: (date: Date | undefined) => {
+                      setStartDate(date);
+                      onDateRangeChange?.(DateRange.Custom, date, endDate);
+                    },
                     captionLayout: "dropdown",
                     navLayout: "after",
                     mode: "single",
@@ -137,7 +203,10 @@ function CampaignsFilter() {
                   calendarProps={{
                     defaultMonth: endDate,
                     selected: endDate,
-                    onSelect: setEndDate,
+                    onSelect: (date: Date | undefined) => {
+                      setEndDate(date);
+                      onDateRangeChange?.(DateRange.Custom, startDate, date);
+                    },
                     captionLayout: "dropdown",
                     navLayout: "after",
                     mode: "single",
@@ -147,6 +216,8 @@ function CampaignsFilter() {
             )}
           </SelectContent>
         </Select>
+
+        {/* Mailbox Filter */}
         <Popover open={isMailboxOpen} onOpenChange={setIsMailboxOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -194,7 +265,7 @@ function CampaignsFilter() {
                 </div>
               )}
 
-              <div className="space-y-2 max-h-50 overflow-y-auto ">
+              <div className="space-y-2 max-h-50 overflow-y-auto">
                 {availableMailboxes.map((mailbox: { id: string; email: string; name: string }) => (
                   <div
                     key={mailbox.id}

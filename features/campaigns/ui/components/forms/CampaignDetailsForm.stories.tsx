@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { CampaignDetailsForm } from "./CampaignDetailsForm";
-import { MigratedCampaignDetailsForm } from "./MigratedCampaignDetailsForm";
 import { CampaignFormValues } from "@features/campaigns/types";
 
 // ============================================================
@@ -51,9 +50,9 @@ function FormWrapper({
 // Meta
 // ============================================================
 
-const meta: Meta<typeof MigratedCampaignDetailsForm> = {
+const meta: Meta<typeof CampaignDetailsForm> = {
   title: "Features/Campaigns/Forms/CampaignDetailsForm Comparison",
-  component: MigratedCampaignDetailsForm,
+  component: CampaignDetailsForm,
   tags: ["autodocs"],
   parameters: {
     layout: "padded",
@@ -74,7 +73,7 @@ const meta: Meta<typeof MigratedCampaignDetailsForm> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof MigratedCampaignDetailsForm>;
+type Story = StoryObj<typeof CampaignDetailsForm>;
 
 // ============================================================
 // Stories
@@ -106,7 +105,7 @@ export const SideBySideComparison: Story = {
         <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
           <FormWrapper>
             {(form) => (
-              <MigratedCampaignDetailsForm
+              <CampaignDetailsForm
                 form={form}
                 sendingAccounts={mockSendingAccounts}
               />
@@ -129,7 +128,7 @@ export const MigratedFormDefault: Story = {
   render: () => (
     <FormWrapper>
       {(form) => (
-        <MigratedCampaignDetailsForm
+        <CampaignDetailsForm
           form={form}
           sendingAccounts={mockSendingAccounts}
         />
@@ -149,7 +148,7 @@ export const MigratedFormEmpty: Story = {
   render: () => (
     <FormWrapper defaultValues={{}}>
       {(form) => (
-        <MigratedCampaignDetailsForm
+        <CampaignDetailsForm
           form={form}
           sendingAccounts={mockSendingAccounts}
         />
@@ -169,7 +168,7 @@ export const MigratedFormReadOnly: Story = {
   render: () => (
     <FormWrapper>
       {(form) => (
-        <MigratedCampaignDetailsForm
+        <CampaignDetailsForm
           form={form}
           sendingAccounts={mockSendingAccounts}
           readOnly
@@ -190,7 +189,7 @@ export const DarkMode: Story = {
   render: () => (
     <FormWrapper>
       {(form) => (
-        <MigratedCampaignDetailsForm
+        <CampaignDetailsForm
           form={form}
           sendingAccounts={mockSendingAccounts}
         />

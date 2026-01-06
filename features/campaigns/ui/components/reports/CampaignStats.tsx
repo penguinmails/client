@@ -41,7 +41,7 @@ interface DayMetrics {
   spamComplaints?: number;
 }
 
-export interface MigratedCampaignStatsProps {
+export interface CampaignStatsProps {
   /** Time range in days (7, 14, or 30) */
   timeRange?: 7 | 14 | 30;
   /** Show loading state */
@@ -57,19 +57,19 @@ export interface MigratedCampaignStatsProps {
 // ============================================================
 
 /**
- * MigratedCampaignStats - Campaign KPI cards using Design System UnifiedStatsCard
+ * CampaignStats - Campaign KPI cards using Design System UnifiedStatsCard
  * 
  * Uses UnifiedStatsCard with layout="compact" for legacy-style appearance:
  * - Icon on the right side
  * - Same padding and spacing as legacy
  * - Same color styling
  */
-export function MigratedCampaignStats({
+export function CampaignStats({
   timeRange = 14,
   loading: externalLoading,
   customTotals,
   className,
-}: MigratedCampaignStatsProps) {
+}: CampaignStatsProps) {
   const { data, loading: hookLoading } = useCampaignStats(timeRange);
   const loading = externalLoading ?? hookLoading;
 
@@ -178,4 +178,4 @@ export function MigratedCampaignStats({
   );
 }
 
-export default MigratedCampaignStats;
+export default CampaignStats;

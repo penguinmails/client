@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { MigratedCampaignStats } from "./MigratedCampaignStats";
-import { MigratedStatsCards } from "./MigratedStatsCards";
-import StatsCards from "./StatsCards";
+import { CampaignStats } from "./CampaignStats";
+import { StatsCards } from "./StatsCards";
 import { StatsCard } from "@/shared/ui/components/stats-card";
 import { UnifiedStatsCard } from "@/shared/design-system/components";
 import {
@@ -32,19 +31,19 @@ const legacyStatsItems = [
     title: "Total Sent",
     value: "15,420",
     icon: Mail,
-    color: "bg-gray-100 dark:bg-muted text-gray-600 dark:text-muted-foreground",
+    iconColor: "bg-gray-100 dark:bg-muted text-gray-600 dark:text-muted-foreground",
   },
   {
     title: "Opens (Tracked)",
     value: "5,850 (39.3%)",
     icon: Eye,
-    color: "bg-blue-100 text-blue-600",
+    iconColor: "bg-blue-100 text-blue-600",
   },
   {
     title: "Replies",
     value: "892 (6.0%)",
     icon: TrendingUp,
-    color: "bg-green-100 text-green-600",
+    iconColor: "bg-green-100 text-green-600",
   },
 ];
 
@@ -52,9 +51,9 @@ const legacyStatsItems = [
 // Meta
 // ============================================================
 
-const meta: Meta<typeof MigratedCampaignStats> = {
+const meta: Meta<typeof CampaignStats> = {
   title: "Features/Campaigns/Reports/CampaignStats Comparison",
-  component: MigratedCampaignStats,
+  component: CampaignStats,
   tags: ["autodocs"],
   parameters: {
     layout: "padded",
@@ -75,7 +74,7 @@ const meta: Meta<typeof MigratedCampaignStats> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof MigratedCampaignStats>;
+type Story = StoryObj<typeof CampaignStats>;
 
 // ============================================================
 // Stories
@@ -97,7 +96,7 @@ export const StatsCardComparison: Story = {
                 title={item.title}
                 value={item.value}
                 icon={item.icon}
-                color={item.color}
+                color={item.iconColor}
               />
             ))}
           </div>
@@ -117,7 +116,7 @@ export const StatsCardComparison: Story = {
                 value={item.value}
                 icon={item.icon}
                 layout="compact"
-                iconColor={item.color}
+                iconColor={item.iconColor}
               />
             ))}
           </div>
@@ -183,7 +182,7 @@ export const FullCampaignStatsComparison: Story = {
           ✅ Migrated KPI Cards (Using UnifiedStatsCard)
         </h2>
         <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <MigratedCampaignStats customTotals={mockTotals} loading={false} />
+          <CampaignStats customTotals={mockTotals} loading={false} />
         </div>
       </div>
     </div>
@@ -280,9 +279,9 @@ export const StatsCardsWrapperComparison: Story = {
           ✅ Migrated StatsCards Wrapper (Using UnifiedStatsCard)
         </h2>
         <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <MigratedStatsCards
+          <StatsCards
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-            stats={legacyStatsItems.map(item => ({ ...item, iconColor: item.color }))}
+            stats={legacyStatsItems}
           />
         </div>
       </div>
