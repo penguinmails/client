@@ -12,6 +12,18 @@ export default function AppearanceSettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
 
+  const themeOptions = [
+    { value: "LIGHT", i18nKey: "theme.light" },
+    { value: "DARK", i18nKey: "theme.dark" },
+    { value: "CONTRAST", i18nKey: "theme.contrast" },
+  ];
+
+  const densityOptions = [
+    { value: "COMPACT", i18nKey: "layoutDensity.compact" },
+    { value: "NORMAL", i18nKey: "layoutDensity.normal" },
+    { value: "WIDE", i18nKey: "layoutDensity.wide" },
+  ];
+
   const handleSave = async () => {
     setIsSaving(true);
     setSaveMessage("");
@@ -66,24 +78,22 @@ export default function AppearanceSettingsPage() {
             <fieldset className="mt-2">
               <legend className="sr-only">{t("theme.label")}</legend>
               <div className="space-y-2 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                {["LIGHT", "DARK", "CONTRAST"].map((themeOption) => (
-                  <div key={themeOption} className="flex items-center">
+                {themeOptions.map((option) => (
+                  <div key={option.value} className="flex items-center">
                     <input
-                      id={`theme-${themeOption.toLowerCase()}`}
+                      id={`theme-${option.value.toLowerCase()}`}
                       name="theme"
                       type="radio"
-                      value={themeOption}
-                      checked={theme === themeOption}
+                      value={option.value}
+                      checked={theme === option.value}
                       onChange={(e) => setTheme(e.target.value)}
                       className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-border"
                     />
                     <label
-                      htmlFor={`theme-${themeOption.toLowerCase()}`}
+                      htmlFor={`theme-${option.value.toLowerCase()}`}
                       className="ml-3 block text-sm font-medium text-gray-700 dark:text-foreground"
                     >
-                      {t(
-                        `theme.${themeOption.toLowerCase() as "light" | "dark" | "contrast"}`
-                      )}
+                      {t(option.i18nKey as any)}
                     </label>
                   </div>
                 ))}
@@ -99,24 +109,22 @@ export default function AppearanceSettingsPage() {
             <fieldset className="mt-2">
               <legend className="sr-only">{t("layoutDensity.label")}</legend>
               <div className="space-y-2 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                {["COMPACT", "NORMAL", "WIDE"].map((densityOption) => (
-                  <div key={densityOption} className="flex items-center">
+                {densityOptions.map((option) => (
+                  <div key={option.value} className="flex items-center">
                     <input
-                      id={`density-${densityOption.toLowerCase()}`}
+                      id={`density-${option.value.toLowerCase()}`}
                       name="layoutDensity"
                       type="radio"
-                      value={densityOption}
-                      checked={layoutDensity === densityOption}
+                      value={option.value}
+                      checked={layoutDensity === option.value}
                       onChange={(e) => setLayoutDensity(e.target.value)}
                       className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-border"
                     />
                     <label
-                      htmlFor={`density-${densityOption.toLowerCase()}`}
+                      htmlFor={`density-${option.value.toLowerCase()}`}
                       className="ml-3 block text-sm font-medium text-gray-700 dark:text-foreground"
                     >
-                      {t(
-                        `layoutDensity.${densityOption.toLowerCase() as "compact" | "normal" | "wide"}`
-                      )}
+                      {t(option.i18nKey as any)}
                     </label>
                   </div>
                 ))}

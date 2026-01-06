@@ -214,7 +214,10 @@
   },
   "Dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome back{displayName}! Here is what is happening with your campaigns.",
+    "welcome": {
+      "withName": "Welcome back, {displayName}! Here is what is happening with your campaigns.",
+      "anonymous": "Welcome back! Here is what is happening with your campaigns."
+    },
     "recentReplies": "Recent Replies",
     "kpi": {
       "totalCampaigns": "Total Campaigns",
