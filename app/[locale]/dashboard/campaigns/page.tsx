@@ -1,11 +1,9 @@
 "use client";
 import CampaignTableSkeleton from "@features/campaigns/ui/components/tables/CampaignTableSkeleton";
-import CampaignsFilter from "@features/campaigns/ui/components/tables/CampaignsFilter";
-import CampaignsTable, {
-  campaignColumns,
-} from "@features/campaigns/ui/components/tables/CampaignsTable";
+import { CampaignsFilter } from "@features/campaigns/ui/components/tables/CampaignsFilter";
+import { CampaignsTable } from "@features/campaigns/ui/components/tables/CampaignsTable";
 import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/StatsCardSkeleton";
-import StatsCards from "@features/campaigns/ui/components/reports/StatsCards";
+import { StatsCards } from "@features/campaigns/ui/components/reports/StatsCards";
 import { Button } from "@/components/ui/button/button";
 import { Plus, Send, Mail, Eye, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
@@ -34,31 +32,31 @@ export default function CampaignsPage({
       title: "Total Campaigns",
       value: mockCampaigns.length.toString(),
       icon: Send,
-      color: "bg-blue-100 text-blue-600",
+      iconColor: "bg-blue-100 text-blue-600",
     },
     {
       title: "Total Sent",
       value: Number(totalSent).toLocaleString(),
       icon: Mail,
-      color: "text-purple-600 bg-purple-100",
+      iconColor: "text-purple-600 bg-purple-100",
     },
     {
       title: "Open Rate",
       value: openRate + "%",
       icon: Eye,
-      color: "text-orange-500  bg-orange-100",
+      iconColor: "text-orange-500  bg-orange-100",
     },
     {
       title: "Click Rate",
       value: clickRate + "%",
       icon: TrendingUp,
-      color: "bg-green-100 text-green-600",
+      iconColor: "bg-green-100 text-green-600",
     },
     {
       title: "Reply Rate",
       value: replyRate + "%",
       icon: Users,
-      color: "text-pink-600 bg-pink-100",
+      iconColor: "text-pink-600 bg-pink-100",
     },
   ];
 
@@ -96,7 +94,7 @@ export default function CampaignsPage({
         fallback={
           <CampaignTableSkeleton
             title="Campaigns Table"
-            columns={campaignColumns}
+            columns={[]}
           />
         }
       >

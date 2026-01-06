@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { MigratedCampaignsTable } from "./MigratedCampaignsTable";
-import { MigratedCampaignsFilter } from "./MigratedCampaignsFilter";
-import CampaignsTable from "./CampaignsTable";
-import CampaignsFilter from "./CampaignsFilter";
+import { CampaignsTable } from "./CampaignsTable";
+import { CampaignsFilter } from "./CampaignsFilter";
 import { CampaignDisplay, CampaignStatusEnum } from "@features/campaigns/types";
 
 // ============================================================
@@ -68,9 +66,9 @@ const mockCampaigns: CampaignDisplay[] = [
 // Table Stories
 // ============================================================
 
-const tableMeta: Meta<typeof MigratedCampaignsTable> = {
+const tableMeta: Meta<typeof CampaignsTable> = {
   title: "Features/Campaigns/Tables/CampaignsTable Comparison",
-  component: MigratedCampaignsTable,
+  component: CampaignsTable,
   tags: ["autodocs"],
   parameters: {
     layout: "padded",
@@ -100,7 +98,7 @@ const tableMeta: Meta<typeof MigratedCampaignsTable> = {
 };
 
 export default tableMeta;
-type Story = StoryObj<typeof MigratedCampaignsTable>;
+type Story = StoryObj<typeof CampaignsTable>;
 
 // Side-by-side comparison
 export const SideBySideComparison: Story = {
@@ -120,7 +118,7 @@ export const SideBySideComparison: Story = {
           ✅ Migrated Table (Design System)
         </h2>
         <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <MigratedCampaignsTable campaigns={mockCampaigns} />
+          <CampaignsTable campaigns={mockCampaigns} />
         </div>
       </div>
     </div>
@@ -226,7 +224,7 @@ export const FilterComparison: Story = {
           ✅ Migrated Filter (Design System)
         </h2>
         <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <MigratedCampaignsFilter
+          <CampaignsFilter
             onSearch={(term) => console.log("Search:", term)}
             onStatusChange={(status) => console.log("Status:", status)}
           />
@@ -252,12 +250,12 @@ export const FullPageComparison: Story = {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Campaign List - Migrated to Design System</h1>
       
-      <MigratedCampaignsFilter
+      <CampaignsFilter
         onSearch={(term) => console.log("Search:", term)}
         onStatusChange={(status) => console.log("Status:", status)}
       />
       
-      <MigratedCampaignsTable campaigns={mockCampaigns} title="" />
+      <CampaignsTable campaigns={mockCampaigns} title="" />
     </div>
   ),
   parameters: {
