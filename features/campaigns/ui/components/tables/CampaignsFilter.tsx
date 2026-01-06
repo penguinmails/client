@@ -107,7 +107,7 @@ export function CampaignsFilter({
 
   return (
     <div className={cn(
-      "flex flex-col lg:flex-row lg:justify-between lg:items-center bg-card dark:bg-card p-4 rounded-lg shadow border border-border gap-4",
+      "flex flex-col lg:flex-row lg:items-center bg-card dark:bg-card p-4 rounded-lg shadow border border-border gap-4",
       className
     )}>
       {/* Search Input - Matching Legacy */}
