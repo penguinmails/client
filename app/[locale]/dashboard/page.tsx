@@ -70,9 +70,9 @@ export default function DashboardPage() {
           {t("title")}
         </h1>
         <p className="text-muted-foreground">
-          {t("welcome", {
-            displayName: user?.displayName ? `, ${user.displayName}` : "",
-          })}
+          {user?.displayName
+            ? t("welcome.withName", { displayName: user.displayName })
+            : t("welcome.anonymous")}
         </p>
       </div>
 

@@ -214,7 +214,10 @@
   },
   "Dashboard": {
     "title": "Tablero",
-    "welcome": "¡Bienvenido de nuevo{displayName}! Esto es lo que está sucediendo con tus campañas.",
+    "welcome": {
+      "withName": "¡Bienvenido de nuevo, {displayName}! Esto es lo que está sucediendo con tus campañas.",
+      "anonymous": "¡Bienvenido de nuevo! Esto es lo que está sucediendo con tus campañas."
+    },
     "recentReplies": "Respuestas Recientes",
     "kpi": {
       "totalCampaigns": "Campañas Totales",
