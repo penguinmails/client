@@ -16,7 +16,6 @@ import { useTranslations } from "next-intl";
 import { initPostHog, ph } from "@/lib/posthog";
 import { getLoginAttemptStatus } from "@/features/auth/lib/rate-limit";
 import { productionLogger } from "@/lib/logger";
-import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
 
 const MAX_LOGIN_ATTEMPTS = parseInt(
   process.env.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS || "3",
@@ -33,7 +32,6 @@ export default function LoginPage() {
   const [loginAttempts, setLoginAttempts] = useState(0);
   const [lastLoginError, setLastLoginError] = useState<string | null>(null);
   const { login, user, error: authError } = useAuth();
-  const { safePush } = useSafeNavigation();
   const t = useTranslations("Login");
 
   useEffect(() => {

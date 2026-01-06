@@ -282,10 +282,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setUser({ id: session.id, email: session.email });
           enrichUser(session.id);
 
-          // Add a small delay to allow session to stabilize before navigation
-          // This helps prevent chunk loading errors during rapid state transitions
-          await new Promise((resolve) => setTimeout(resolve, 50));
-
           const next = searchParams.get("next") || "/dashboard";
           // Use safe navigation to prevent chunk loading errors
           await safePush(next);
@@ -303,7 +299,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setLoading((prev) => ({ ...prev, session: false }));
       }
     },
-    [signInHook, router, searchParams, enrichUser]
+    [signInHook, searchParams, enrichUser, safePush]
   );
 
   /**
@@ -323,6 +319,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           });
           setLoading({ session: false, enrichment: true });
           enrichUser(session.id);
+
+          // If user has valid session, navigate to dashboard
+          const next = searchParams.get("next") || "/dashboard";
+          await safePush(next);
         } else {
           setLoading({ session: false, enrichment: false });
         }
@@ -333,7 +333,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
     init();
-  }, [enrichUser, logout, error]);
+  }, [enrichUser, logout, error, searchParams, safePush]);
 
   /**
    * Global fetch interceptor for handling 401 errors

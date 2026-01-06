@@ -2,26 +2,24 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import LoginPage from "@/app/[locale]/page";
 import { useAuth } from "@/features/auth/ui/context/auth-context";
-import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
 import * as rateLimitModule from "@/features/auth/lib/rate-limit";
-
-// Create a shared mockSafePush for testing
-(global as any).testMockSafePush = jest.fn();
 
 // Mock all external dependencies
 jest.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
+// Create a file-scoped mock for safe navigation to avoid global pollution
+const mockSafePush = jest.fn();
+
 jest.mock("@/shared/hooks/use-safe-navigation", () => ({
   useSafeNavigation: () => ({
-    safePush: (global as any).testMockSafePush,
+    safePush: mockSafePush,
   }),
 }));
 
 jest.mock("@/features/auth/ui/context/auth-context", () => ({
   useAuth: jest.fn(),
-  mockSafePush: (global as any).testMockSafePush,
 }));
 
 jest.mock("@/app/[locale]/signup/verifyToken", () => ({
@@ -55,9 +53,11 @@ jest.mock("@/lib/logger", () => ({
 }));
 
 // Mock Next.js router
+const mockRouterPush = jest.fn();
+
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
-    push: (global as any).mockRouterPush,
+    push: mockRouterPush,
     prefetch: jest.fn(),
   }),
   useSearchParams: () => new URLSearchParams(),
@@ -126,8 +126,6 @@ describe("LoginPage", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Reset the global mock
-    (global as any).testMockSafePush = jest.fn();
 
     mockUseAuth.mockReturnValue({
       login: mockLogin,
@@ -267,7 +265,7 @@ describe("LoginPage", () => {
     });
 
     // Ensure safePush was NOT called (no redirect on error)
-    expect((global as any).testMockSafePush).not.toHaveBeenCalled();
+    expect(mockSafePush).not.toHaveBeenCalled();
 
     // Ensure form is still visible (not redirected)
     expect(screen.getByTestId("login-form")).toBeInTheDocument();
@@ -313,7 +311,7 @@ describe("LoginPage", () => {
     });
 
     // Critical test: Ensure NO navigation happened on 401 error
-    expect((global as any).testMockSafePush).not.toHaveBeenCalled();
+    expect(mockSafePush).not.toHaveBeenCalled();
 
     // Ensure the login form is still visible (no redirect occurred)
     expect(screen.getByTestId("login-form")).toBeInTheDocument();
@@ -345,6 +343,6 @@ describe("LoginPage", () => {
     });
 
     // Ensure safePush was NOT called - critical for preventing dashboard redirect
-    expect((global as any).testMockSafePush).not.toHaveBeenCalled();
+    expect(mockSafePush).not.toHaveBeenCalled();
   });
 });
