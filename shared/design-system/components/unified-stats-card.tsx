@@ -161,25 +161,25 @@ export const UnifiedStatsCard: React.FC<UnifiedStatsCardProps> = ({
                 )}
                 aria-label={ariaLabel || `Statistics for ${title}`}
             >
-                <CardContent className="p-3">
-                    <div className="flex items-center gap-2">
+                <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
                         {/* Left side: Icon */}
                         {Icon && (
                             <div className={cn(
-                                "p-2 rounded-lg shrink-0",
+                                "p-2.5 rounded-lg shrink-0",
                                 iconColor || `${colorToken.iconBg} ${colorToken.iconColor}`
                             )}>
-                                <Icon className="h-4 w-4" />
+                                <Icon className="h-5 w-5" />
                             </div>
                         )}
 
                         {/* Right side: Title and Value */}
                         <div className="flex-1 min-w-0">
                             <p className="text-xs font-medium text-muted-foreground truncate">{title}</p>
-                            <p className="text-lg font-bold text-foreground">
+                            <p className="text-2xl font-bold text-foreground">
                                 {value}
                                 {unit && (
-                                    <span className="text-xs font-normal text-muted-foreground ml-1">
+                                    <span className="text-sm font-normal text-muted-foreground ml-1">
                                         {unit}
                                     </span>
                                 )}
