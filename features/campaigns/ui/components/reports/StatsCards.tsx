@@ -37,7 +37,7 @@ export function StatsCards({
   className,
 }: StatsCardsProps) {
   return (
-    <div className={className}>
+    <>
       {stats.map((item) => (
         <UnifiedStatsCard
           key={item.title}
@@ -46,9 +46,10 @@ export function StatsCards({
           icon={item.icon}
           layout="compact"
           iconColor={item.iconColor}
+          className={className}
         />
       ))}
-    </div>
+    </>
   );
 }
 

@@ -279,10 +279,9 @@ export const StatsCardsWrapperComparison: Story = {
           ✅ Migrated StatsCards Wrapper (Using UnifiedStatsCard)
         </h2>
         <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <StatsCards
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-            stats={legacyStatsItems}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <StatsCards stats={legacyStatsItems} />
+          </div>
         </div>
       </div>
     </div>
