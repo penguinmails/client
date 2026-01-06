@@ -320,9 +320,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setLoading({ session: false, enrichment: true });
           enrichUser(session.id);
 
-          // If user has valid session, navigate to dashboard
-          const next = searchParams.get("next") || "/dashboard";
-          await safePush(next);
+          // Only redirect if user is on a public page (not already in dashboard)
+          const currentPath = window.location.pathname;
+          // Check if current path is a public page (handles locale prefixes)
+          const isPublicPage =
+            /^\/[a-z]{2}\/?$/.test(currentPath) || // /en or /en/
+            /^\/[a-z]{2}\/login\/?$/.test(currentPath) || // /en/login
+            /^\/[a-z]{2}\/signup\/?$/.test(currentPath) || // /en/signup
+            currentPath === "/" || // root
+            currentPath === "/login" || // /login
+            currentPath === "/signup"; // /signup
+
+          if (isPublicPage) {
+            // User is on a public page with valid session - redirect to dashboard
+            const next = searchParams.get("next") || "/dashboard";
+            await safePush(next);
+          }
         } else {
           setLoading({ session: false, enrichment: false });
         }
