@@ -42,19 +42,19 @@ export default function CampaignsPage({
     },
     {
       title: "Open Rate",
-      value: openRate + "%",
+      value: openRate,
       icon: Eye,
       iconColor: "text-orange-500  bg-orange-100",
     },
     {
       title: "Click Rate",
-      value: clickRate + "%",
+      value: clickRate,
       icon: TrendingUp,
       iconColor: "bg-green-100 text-green-600",
     },
     {
       title: "Reply Rate",
-      value: replyRate + "%",
+      value: replyRate,
       icon: Users,
       iconColor: "text-pink-600 bg-pink-100",
     },
