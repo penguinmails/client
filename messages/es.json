@@ -211,5 +211,41 @@
         "countdown": "haz clic aquí para reenviar en {countdown}s"
       }
     }
+  },
+  "Dashboard": {
+    "title": "Tablero",
+    "welcome": "¡Bienvenido de nuevo{displayName}! Esto es lo que está sucediendo con tus campañas.",
+    "recentReplies": "Respuestas Recientes",
+    "kpi": {
+      "totalCampaigns": "Campañas Totales",
+      "activeLeads": "Leads Activos",
+      "completed": "Completado",
+      "totalLeads": "Leads Totales"
+    }
+  },
+  "AppearanceSettings": {
+    "title": "Apariencia",
+    "description": "Personaliza la apariencia de la aplicación.",
+    "theme": {
+      "label": "Tema",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "contrast": "Contraste"
+    },
+    "layoutDensity": {
+      "label": "Densidad de Diseño",
+      "compact": "Compacto",
+      "normal": "Normal",
+      "wide": "Ancho"
+    },
+    "saveButton": {
+      "default": "Guardar Apariencia",
+      "saving": "Guardando..."
+    },
+    "notifications": {
+      "success": "Configuración de apariencia guardada",
+      "error": "Error al guardar la configuración",
+      "genericError": "Ocurrió un error"
+    }
   }
 }
