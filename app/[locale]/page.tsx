@@ -100,8 +100,7 @@ export default function LoginPage() {
       await login(email, password);
       ph().capture("login_attempt", { email, success: true });
 
-      // Use safe navigation to prevent chunk loading errors
-      await safePush("/dashboard");
+      // Navigation is handled by the auth context when session is ready
     } catch (err) {
       productionLogger.error("Login failed", err);
       const errorMessage = (err as Error)?.message || t("errors.generic");
@@ -122,20 +121,8 @@ export default function LoginPage() {
     }
   };
 
-  useEffect(() => {
-    // Comprehensive error checking to prevent unwanted navigation
-    const hasAnyError = error || authError || lastLoginError;
-    const shouldNavigate = user && !isLoading && !hasAnyError;
-
-    if (shouldNavigate) {
-      const timer = setTimeout(() => {
-        safePush("/dashboard");
-        setError(null);
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [user, isLoading, error, authError, lastLoginError, safePush]);
+  // Removed duplicate navigation logic - auth context handles navigation
+  // This prevents race conditions and duplicate navigation attempts
 
   useEffect(() => {
     if (authError) {

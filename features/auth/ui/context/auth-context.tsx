@@ -14,6 +14,7 @@ import { useSignIn, useSignUp } from "@niledatabase/react";
 import { useSystemHealth } from "@/shared/hooks";
 import { developmentLogger, productionLogger } from "@/lib/logger";
 import { toast } from "sonner";
+import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
 
 import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
 import {
@@ -34,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const { systemHealth } = useSystemHealth();
+  const { safePush } = useSafeNavigation();
   const isHealthy = systemHealth.status === "healthy";
 
   // NileDB React Hooks
@@ -285,11 +287,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           await new Promise((resolve) => setTimeout(resolve, 50));
 
           const next = searchParams.get("next") || "/dashboard";
-          // Prefetch the target route to load chunks early
-          router.prefetch(next);
-          // Add another small delay before navigation
-          await new Promise((resolve) => setTimeout(resolve, 50));
-          router.push(next);
+          // Use safe navigation to prevent chunk loading errors
+          await safePush(next);
         } else {
           // No session means login failed
           throw new Error("Login failed - no valid session");
