@@ -70,6 +70,14 @@
   --shadow-opacity: var(--shadow-opacity);
   --color-shadow-color: var(--shadow-color);
   --color-destructive-foreground: var(--destructive-foreground);
+
+  /* Semantic state colors */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
 }
 
 :root {
@@ -126,6 +134,14 @@
   --tracking-normal: 0em;
   --destructive-foreground: oklch(1.0000 0 0);
   --letter-spacing: 0em;
+
+  /* Semantic state colors */
+  --success: oklch(0.7200 0.1900 142);
+  --success-foreground: oklch(1.0000 0 0);
+  --warning: oklch(0.8000 0.1500 85);
+  --warning-foreground: oklch(0.2500 0 0);
+  --info: oklch(0.7000 0.1500 230);
+  --info-foreground: oklch(1.0000 0 0);
 }
 
 .dark {
@@ -181,6 +197,14 @@
   --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   --destructive-foreground: oklch(1.0000 0 0);
+
+  /* Semantic state colors - dark mode */
+  --success: oklch(0.6500 0.1700 142);
+  --success-foreground: oklch(1.0000 0 0);
+  --warning: oklch(0.7500 0.1300 85);
+  --warning-foreground: oklch(0.2000 0 0);
+  --info: oklch(0.6500 0.1300 230);
+  --info-foreground: oklch(1.0000 0 0);
 }
 
 @layer base {
@@ -433,18 +457,35 @@ body {
 }
 
 .grid-cols-responsive {
-  @apply grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
 @keyframes gradientAnimation {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 .gradient-bg {
