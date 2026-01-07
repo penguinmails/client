@@ -74,10 +74,22 @@
   /* Semantic state colors */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
+  --color-success-text: var(--success-text);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-warning-text: var(--warning-text);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
+  --color-info-text: var(--info-text);
+  --color-destructive-text: var(--destructive-text);
+
+  /* Additional semantic colors */
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-highlight-text: var(--highlight-text);
+  --color-attention: var(--attention);
+  --color-attention-foreground: var(--attention-foreground);
+  --color-attention-text: var(--attention-text);
 }
 
 :root {
@@ -138,10 +150,22 @@
   /* Semantic state colors */
   --success: oklch(0.7200 0.1900 142);
   --success-foreground: oklch(1.0000 0 0);
+  --success-text: oklch(0.4000 0.1000 145);
   --warning: oklch(0.8000 0.1500 85);
   --warning-foreground: oklch(0.2500 0 0);
+  --warning-text: oklch(0.4500 0.1200 75);
   --info: oklch(0.7000 0.1500 230);
   --info-foreground: oklch(1.0000 0 0);
+  --info-text: oklch(0.4000 0.1200 240);
+  --destructive-text: oklch(0.4500 0.1800 25);
+
+  /* Additional semantic colors */
+  --highlight: oklch(0.6500 0.1500 300);
+  --highlight-foreground: oklch(1.0000 0 0);
+  --highlight-text: oklch(0.4000 0.1200 300);
+  --attention: oklch(0.7500 0.1500 50);
+  --attention-foreground: oklch(1.0000 0 0);
+  --attention-text: oklch(0.4500 0.1300 45);
 }
 
 .dark {
@@ -201,10 +225,22 @@
   /* Semantic state colors - dark mode */
   --success: oklch(0.6500 0.1700 142);
   --success-foreground: oklch(1.0000 0 0);
+  --success-text: oklch(0.7500 0.1600 142);
   --warning: oklch(0.7500 0.1300 85);
   --warning-foreground: oklch(0.2000 0 0);
+  --warning-text: oklch(0.8200 0.1400 80);
   --info: oklch(0.6500 0.1300 230);
   --info-foreground: oklch(1.0000 0 0);
+  --info-text: oklch(0.7500 0.1300 230);
+  --destructive-text: oklch(0.7000 0.1800 25);
+
+  /* Additional semantic colors - dark mode */
+  --highlight: oklch(0.6000 0.1300 300);
+  --highlight-foreground: oklch(1.0000 0 0);
+  --highlight-text: oklch(0.7500 0.1300 300);
+  --attention: oklch(0.7000 0.1300 50);
+  --attention-foreground: oklch(1.0000 0 0);
+  --attention-text: oklch(0.8000 0.1400 50);
 }
 
 @layer base {

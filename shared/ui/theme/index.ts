@@ -8,10 +8,10 @@ import { NotificationType } from "@/types/notification";
 
 export const notificationStyles = {
   container: 'p-4 rounded-lg border',
-  success: 'bg-success/10 border-success/20 text-success dark:bg-success/20 dark:border-success/30',
-  error: 'bg-destructive/10 border-destructive/20 text-destructive dark:bg-destructive/20 dark:border-destructive/30',
-  warning: 'bg-warning/10 border-warning/20 text-warning dark:bg-warning/20 dark:border-warning/30',
-  info: 'bg-info/10 border-info/20 text-info dark:bg-info/20 dark:border-info/30',
+  success: 'bg-success/10 border-success/20 text-success-text',
+  error: 'bg-destructive/10 border-destructive/20 text-destructive-text',
+  warning: 'bg-warning/10 border-warning/20 text-warning-text',
+  info: 'bg-info/10 border-info/20 text-info-text',
   title: 'font-semibold text-sm',
   message: 'text-sm mt-1',
   icon: 'w-5 h-5 mr-2'
@@ -39,18 +39,18 @@ export const getNotificationStyles = (type: NotificationType) => {
 export const getTagColor = (tag: string) => {
   switch (tag) {
     case "interested":
-      return "bg-success/10 text-success border-success/20 hover:bg-success/20 dark:bg-success/20 dark:border-success/30 dark:hover:bg-success/30";
+      return "bg-success/10 text-success-text border-success/20 hover:bg-success/20";
     case "not-interested":
-      return "bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20 dark:bg-destructive/20 dark:border-destructive/30 dark:hover:bg-destructive/30";
+      return "bg-destructive/10 text-destructive-text border-destructive/20 hover:bg-destructive/20";
     case "maybe-later":
-      return "bg-warning/10 text-warning border-warning/20 hover:bg-warning/20 dark:bg-warning/20 dark:border-warning/30 dark:hover:bg-warning/30";
+      return "bg-warning/10 text-warning-text border-warning/20 hover:bg-warning/20";
     case "replied":
-      return "bg-info/10 text-info border-info/20 hover:bg-info/20 dark:bg-info/20 dark:border-info/30 dark:hover:bg-info/30";
+      return "bg-info/10 text-info-text border-info/20 hover:bg-info/20";
     case "follow-up":
-      return "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100 dark:bg-purple-500/20 dark:text-purple-400 dark:border-purple-500/30 dark:hover:bg-purple-500/30";
+      return "bg-highlight/10 text-highlight-text border-highlight/20 hover:bg-highlight/20";
     case "hot-lead":
-      return "bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500/30 dark:hover:bg-orange-500/30";
+      return "bg-attention/10 text-attention-text border-attention/20 hover:bg-attention/20";
     default:
-      return "bg-muted/50 text-muted-foreground border-border hover:bg-muted dark:bg-muted/30 dark:hover:bg-muted/50";
+      return "bg-muted/50 text-muted-foreground border-border hover:bg-muted";
   }
 };
