@@ -6,14 +6,14 @@ import { useTranslations } from "next-intl";
 export const dynamic = "force-dynamic";
 
 function TeamSettingsPage() {
-  const t = useTranslations("Settings.team");
+  const t = useTranslations();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-bold">{t("Settings.team.title")}</h1>
         <p className="text-gray-600 dark:text-muted-foreground">
-          {t("description")}
+          {t("Settings.team.description")}
         </p>
       </div>
       <Card>

@@ -45,6 +45,26 @@
   "button": {
     "label": "button"
   },
+  "Common": {
+    "tryAgain": "Try Again",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "ok": "OK",
+    "update": "Update",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "remove": "Remove",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "confirm": "Confirm",
+    "error": "Error",
+    "success": "Success",
+    "updating": "Updating..."
+  },
   "SignUp": {
     "header": {
       "title": "Create your Penguin Mails Account",
@@ -301,13 +321,15 @@
     "billingAddress": "Billing Address",
     "editAddress": "Edit Address",
     "recentInvoices": "Recent Invoices",
-    "updating": "Updating...",
-    "loading": "Loading...",
     "company": "Company",
     "street": "123 Business Street",
     "city": "San Francisco, CA 94105",
     "country": "United States",
     "vatId": "VAT ID: US123456789",
+    "endingIn": "ending in",
+    "expires": "expires {expiry}",
+    "technologyServices": "Technology Services",
+    "companySizeDefault": "1-10 employees",
     "errors": {
       "loadBilling": "Failed to load billing data",
       "updateBilling": "Failed to update billing information",
@@ -319,8 +341,7 @@
     "success": {
       "billingUpdated": "Billing information updated successfully",
       "companyUpdated": "Company name updated successfully"
-    },
-    "loadingOverlay": "Updating billing information..."
+    }
   },
   "UsageTab": {
     "usageStatistics": "Usage Statistics",
@@ -337,16 +358,13 @@
     "addStorage": "Add Storage",
     "purchaseStorage": "Purchase additional storage at $3 per GB",
     "failedToLoad": "Failed to load usage data",
-    "tryAgain": "Try Again",
-    "failedToLoadStorage": "Failed to load storage options"
+    "failedToLoadStorage": "Failed to load storage options",
+    "unexpectedError": "An unexpected error occurred"
   },
   "SettingsErrorFallback": {
-    "errorOccurred": "An error occurred",
-    "tryAgain": "Try Again"
+    "errorOccurred": "An error occurred"
   },
-  "BillingLoadingSkeleton": {
-    "loading": "Loading..."
-  },
+  "BillingLoadingSkeleton": {},
   "BillingPage": {
     "title": "Billing & Plan",
     "description": "Manage your subscription and view billing history.",

@@ -19,19 +19,19 @@ import { useTranslations } from "next-intl";
 export const dynamic = "force-dynamic";
 
 function SecuritySettingsPage() {
-  const t = useTranslations("Settings.security");
+  const t = useTranslations();
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">{t("title")}</h2>
+        <h2 className="text-2xl font-bold">{t("Settings.security.title")}</h2>
         <p className="text-gray-600 dark:text-muted-foreground">
-          {t("description")}
+          {t("Settings.security.description")}
         </p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>{t("changePassword")}</CardTitle>
+          <CardTitle>{t("Settings.security.changePassword")}</CardTitle>
         </CardHeader>
         <CardContent>
           <ChangePasswordForm />
@@ -40,8 +40,10 @@ function SecuritySettingsPage() {
       <TwoAuthProvider>
         <Card className="grid grid-cols-2 grid-rows-[auto_auto] justify-items-stretch ">
           <CardHeader>
-            <CardTitle>{t("twoFactorAuth")}</CardTitle>
-            <CardDescription>{t("twoFactorDescription")}</CardDescription>
+            <CardTitle>{t("Settings.security.twoFactorAuth")}</CardTitle>
+            <CardDescription>
+              {t("Settings.security.twoFactorDescription")}
+            </CardDescription>
           </CardHeader>
           <CardContent className="justify-self-end">
             <TwoFactorAuthenticationSwitch />
@@ -52,7 +54,9 @@ function SecuritySettingsPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>{t("securityRecommendations")}</CardTitle>
+            <CardTitle>
+              {t("Settings.security.securityRecommendations")}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <SecurityRecommendations />

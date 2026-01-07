@@ -3,17 +3,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 
 function NotificationSettingsPage() {
-  const t = useTranslations("Settings.notifications");
+  const t = useTranslations();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("description")}</p>
+        <h1 className="text-2xl font-bold">
+          {t("Settings.notifications.title")}
+        </h1>
+        <p className="text-muted-foreground">
+          {t("Settings.notifications.description")}
+        </p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>{t("emailNotifications")}</CardTitle>
+          <CardTitle>
+            {t("Settings.notifications.emailNotifications")}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <NotificationSettings />
