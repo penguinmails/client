@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export default function AppearanceSettingsPage() {
-  const t = useTranslations("AppearanceSettings");
+  const t = useTranslations();
 
   // Placeholder state, would ideally load from UserPreference
   const [theme, setTheme] = useState("LIGHT");
@@ -13,15 +13,15 @@ export default function AppearanceSettingsPage() {
   const [saveMessage, setSaveMessage] = useState("");
 
   const themeOptions = [
-    { value: "LIGHT", i18nKey: "theme.light" },
-    { value: "DARK", i18nKey: "theme.dark" },
-    { value: "CONTRAST", i18nKey: "theme.contrast" },
+    { value: "LIGHT", i18nKey: "AppearanceSettings.theme.light" },
+    { value: "DARK", i18nKey: "AppearanceSettings.theme.dark" },
+    { value: "CONTRAST", i18nKey: "AppearanceSettings.theme.contrast" },
   ];
 
   const densityOptions = [
-    { value: "COMPACT", i18nKey: "layoutDensity.compact" },
-    { value: "NORMAL", i18nKey: "layoutDensity.normal" },
-    { value: "WIDE", i18nKey: "layoutDensity.wide" },
+    { value: "COMPACT", i18nKey: "AppearanceSettings.layoutDensity.compact" },
+    { value: "NORMAL", i18nKey: "AppearanceSettings.layoutDensity.normal" },
+    { value: "WIDE", i18nKey: "AppearanceSettings.layoutDensity.wide" },
   ];
 
   const handleSave = async () => {
@@ -31,7 +31,7 @@ export default function AppearanceSettingsPage() {
     // Simulate API call
     setTimeout(() => {
       setIsSaving(false);
-      setSaveMessage(t("notifications.success"));
+      setSaveMessage(t("AppearanceSettings.notifications.success"));
     }, 1000);
 
     // In a real implementation, you would call your API:
@@ -57,10 +57,10 @@ export default function AppearanceSettingsPage() {
     <div className="bg-white dark:bg-card shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-foreground">
-          {t("title")}
+          {t("AppearanceSettings.title")}
         </h3>
         <div className="mt-2 max-w-xl text-sm text-gray-500">
-          <p>{t("description")}</p>
+          <p>{t("AppearanceSettings.description")}</p>
         </div>
 
         {saveMessage && (
@@ -73,10 +73,12 @@ export default function AppearanceSettingsPage() {
           {/* Theme Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-foreground">
-              {t("theme.label")}
+              {t("AppearanceSettings.theme.label")}
             </label>
             <fieldset className="mt-2">
-              <legend className="sr-only">{t("theme.label")}</legend>
+              <legend className="sr-only">
+                {t("AppearanceSettings.theme.label")}
+              </legend>
               <div className="space-y-2 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
                 {themeOptions.map((option) => (
                   <div key={option.value} className="flex items-center">
@@ -104,10 +106,12 @@ export default function AppearanceSettingsPage() {
           {/* Layout Density Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-foreground">
-              {t("layoutDensity.label")}
+              {t("AppearanceSettings.layoutDensity.label")}
             </label>
             <fieldset className="mt-2">
-              <legend className="sr-only">{t("layoutDensity.label")}</legend>
+              <legend className="sr-only">
+                {t("AppearanceSettings.layoutDensity.label")}
+              </legend>
               <div className="space-y-2 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
                 {densityOptions.map((option) => (
                   <div key={option.value} className="flex items-center">
@@ -139,7 +143,9 @@ export default function AppearanceSettingsPage() {
               disabled={isSaving}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300"
             >
-              {isSaving ? t("saveButton.saving") : t("saveButton.default")}
+              {isSaving
+                ? t("AppearanceSettings.saveButton.saving")
+                : t("AppearanceSettings.saveButton.default")}
             </button>
           </div>
         </div>

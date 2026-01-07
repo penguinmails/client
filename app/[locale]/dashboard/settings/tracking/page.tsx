@@ -3,19 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 
 function TrackingSettingsPage() {
-  const t = useTranslations("Settings.tracking");
+  const t = useTranslations();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-bold">{t("Settings.tracking.title")}</h1>
         <p className="text-gray-600 dark:text-muted-foreground">
-          {t("description")}
+          {t("Settings.tracking.description")}
         </p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>{t("trackingInformation")}</CardTitle>
+          <CardTitle>{t("Settings.tracking.trackingInformation")}</CardTitle>
         </CardHeader>
         <CardContent>
           <TrackingPreferences />

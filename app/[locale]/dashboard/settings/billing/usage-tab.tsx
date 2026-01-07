@@ -82,7 +82,7 @@ const getColorClasses = (color: string, warning?: boolean) => {
 };
 
 function UsageTab() {
-  const t = useTranslations("UsageTab");
+  const t = useTranslations();
   const [usageData, setUsageData] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -140,14 +140,14 @@ function UsageTab() {
         };
         setUsageData(transformedData);
       } else {
-        setError(t("failedToLoad"));
-        toast.error(t("failedToLoad"));
+        setError(t("UsageTab.failedToLoad"));
+        toast.error(t("UsageTab.failedToLoad"));
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : t("unexpectedError");
+        err instanceof Error ? err.message : t("UsageTab.unexpectedError");
       setError(errorMessage);
-      toast.error(t("failedToLoad"), {
+      toast.error(t("UsageTab.failedToLoad"), {
         description: errorMessage,
       });
     } finally {
@@ -162,12 +162,12 @@ function UsageTab() {
       if (result && result.success && result.data) {
         setStorageOptions(result.data);
       } else {
-        toast.error(t("failedToLoadStorage"));
+        toast.error(t("UsageTab.failedToLoadStorage"));
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : t("unexpectedError");
-      toast.error(t("failedToLoadStorage"), {
+        err instanceof Error ? err.message : t("UsageTab.unexpectedError");
+      toast.error(t("UsageTab.failedToLoadStorage"), {
         description: errorMessage,
       });
     } finally {
@@ -193,10 +193,10 @@ function UsageTab() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center p-8 text-center">
             <div className="text-muted-foreground mb-4">
-              {t("failedToLoad")}
+              {t("UsageTab.failedToLoad")}
             </div>
             <Button onClick={fetchUsageData} variant="outline">
-              {t("tryAgain")}
+              {t("Common.tryAgain")}
             </Button>
           </CardContent>
         </Card>
@@ -216,11 +216,11 @@ function UsageTab() {
   // Create usage cards from server data
   const usageCards = [
     {
-      title: t("emailsSent"),
+      title: t("UsageTab.emailsSent"),
       value: usage.emailsSent.toLocaleString(),
       limit:
         usage.emailsLimit === 0
-          ? t("unlimited")
+          ? t("UsageTab.unlimited")
           : usage.emailsLimit.toLocaleString(),
       icon: Mail,
       color: "blue",
@@ -228,11 +228,11 @@ function UsageTab() {
       percentage: percentages.emailsSentPercentage,
     },
     {
-      title: t("contactsReached"),
+      title: t("UsageTab.contactsReached"),
       value: usage.contactsReached.toLocaleString(),
       limit:
         usage.contactsLimit === 0
-          ? t("unlimited")
+          ? t("UsageTab.unlimited")
           : usage.contactsLimit.toLocaleString(),
       icon: Users,
       color: "green",
@@ -240,11 +240,11 @@ function UsageTab() {
       percentage: percentages.contactsReachedPercentage,
     },
     {
-      title: t("activeCampaigns"),
+      title: t("UsageTab.activeCampaigns"),
       value: usage.campaignsActive.toString(),
       limit:
         usage.campaignsLimit === 0
-          ? t("unlimited")
+          ? t("UsageTab.unlimited")
           : usage.campaignsLimit.toString(),
       icon: Server,
       color: "purple",
@@ -252,11 +252,11 @@ function UsageTab() {
       percentage: percentages.campaignsActivePercentage,
     },
     {
-      title: t("emailAccounts"),
+      title: t("UsageTab.emailAccounts"),
       value: usage.emailAccountsActive.toString(),
       limit:
         usage.emailAccountsLimit === 0
-          ? t("unlimited")
+          ? t("UsageTab.unlimited")
           : usage.emailAccountsLimit.toString(),
       icon: Globe,
       color: "orange",
@@ -264,7 +264,7 @@ function UsageTab() {
       percentage: percentages.emailAccountsPercentage,
     },
     {
-      title: t("storageUsed"),
+      title: t("UsageTab.storageUsed"),
       value: `${usage.storageUsed} GB`,
       limit: `${usage.storageLimit} GB`,
       icon: HardDrive,
@@ -281,14 +281,14 @@ function UsageTab() {
         <CardContent className="flex justify-between items-center p-6">
           <div className="space-y-1">
             <CardTitle className="text-lg font-semibold">
-              {t("usageStatistics")}
+              {t("UsageTab.usageStatistics")}
             </CardTitle>
             <p className="text-muted-foreground">
-              {t("resetMessage")} <strong> {resetDate}</strong>
+              {t("UsageTab.resetMessage")} <strong> {resetDate}</strong>
             </p>
           </div>
           <Badge variant="secondary" className="bg-primary/20 text-primary">
-            {t("daysRemaining", { days: daysUntilReset })}
+            {t("UsageTab.daysRemaining", { days: daysUntilReset })}
           </Badge>
         </CardContent>
       </Card>
@@ -313,7 +313,7 @@ function UsageTab() {
                   </div>
                   {card.warning && (
                     <Badge variant="destructive" className="text-xs">
-                      {t("lowStorage")}
+                      {t("UsageTab.lowStorage")}
                     </Badge>
                   )}
                 </div>
@@ -345,16 +345,18 @@ function UsageTab() {
                       )}
                     />
                     <p className="text-xs text-muted-foreground">
-                      {t("used", { percentage: Math.round(card.percentage) })}
+                      {t("UsageTab.used", {
+                        percentage: Math.round(card.percentage),
+                      })}
                     </p>
                   </div>
                 )}
 
-                {card.title === t("storageUsed") && card.warning && (
+                {card.title === t("UsageTab.storageUsed") && card.warning && (
                   <AddStorageTrigger onStorageAdded={fetchUsageData}>
                     <Button variant="destructive" className="w-full">
                       <Plus className="h-4 w-4 mr-2" />
-                      {t("addStorage")}
+                      {t("UsageTab.addStorage")}
                     </Button>
                   </AddStorageTrigger>
                 )}
@@ -368,17 +370,17 @@ function UsageTab() {
         <CardHeader className="flex-center-between">
           <div>
             <CardTitle className="text-xl font-semibold">
-              {t("addStorage")}
+              {t("UsageTab.addStorage")}
             </CardTitle>
             <CardDescription className="text-gray-600 dark:text-muted-foreground">
-              {t("purchaseStorage")}
+              {t("UsageTab.purchaseStorage")}
             </CardDescription>
           </div>
 
           <AddStorageTrigger onStorageAdded={fetchUsageData}>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              {t("addStorage")}
+              {t("UsageTab.addStorage")}
             </Button>
           </AddStorageTrigger>
         </CardHeader>

@@ -45,6 +45,26 @@
   "button": {
     "label": "botón"
   },
+  "Common": {
+    "tryAgain": "Intentar de Nuevo",
+    "loading": "Cargando...",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "ok": "OK",
+    "update": "Actualizar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "add": "Añadir",
+    "remove": "Eliminar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "confirm": "Confirmar",
+    "error": "Error",
+    "success": "Éxito",
+    "updating": "Actualizando..."
+  },
   "SignUp": {
     "header": {
       "title": "Crea tu cuenta de Penguin Mails",
@@ -301,13 +321,15 @@
     "billingAddress": "Dirección de Facturación",
     "editAddress": "Editar Dirección",
     "recentInvoices": "Facturas Recientes",
-    "updating": "Actualizando...",
-    "loading": "Cargando...",
     "company": "Empresa",
     "street": "123 Business Street",
     "city": "San Francisco, CA 94105",
     "country": "Estados Unidos",
     "vatId": "NIF: US123456789",
+    "endingIn": "terminando en",
+    "expires": "expira {expiry}",
+    "technologyServices": "Servicios Tecnológicos",
+    "companySizeDefault": "1-10 empleados",
     "errors": {
       "loadBilling": "Error al cargar los datos de facturación",
       "updateBilling": "Error al actualizar la información de facturación",
@@ -319,8 +341,7 @@
     "success": {
       "billingUpdated": "Información de facturación actualizada correctamente",
       "companyUpdated": "Nombre de la empresa actualizado correctamente"
-    },
-    "loadingOverlay": "Actualizando información de facturación..."
+    }
   },
   "UsageTab": {
     "usageStatistics": "Estadísticas de Uso",
@@ -337,16 +358,13 @@
     "addStorage": "Añadir Almacenamiento",
     "purchaseStorage": "Compra almacenamiento adicional a $3 por GB",
     "failedToLoad": "Error al cargar los datos de uso",
-    "tryAgain": "Intentar de Nuevo",
-    "failedToLoadStorage": "Error al cargar las opciones de almacenamiento"
+    "failedToLoadStorage": "Error al cargar las opciones de almacenamiento",
+    "unexpectedError": "Ocurrió un error inesperado"
   },
   "SettingsErrorFallback": {
-    "errorOccurred": "Ocurrió un error",
-    "tryAgain": "Intentar de Nuevo"
+    "errorOccurred": "Ocurrió un error"
   },
-  "BillingLoadingSkeleton": {
-    "loading": "Cargando..."
-  },
+  "BillingLoadingSkeleton": {},
   "BillingPage": {
     "title": "Facturación y Plan",
     "description": "Gestiona tu suscripción y visualiza el historial de facturación.",

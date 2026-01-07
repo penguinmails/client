@@ -6,18 +6,18 @@ import UsageTab from "./usage-tab";
 import { useTranslations } from "next-intl";
 
 function BillingUsagePage() {
-  const t = useTranslations("Settings.billing");
+  const t = useTranslations();
 
   const tabs = [
     {
       id: "billing",
-      label: t("billingTab"),
+      label: t("Settings.billing.billingTab"),
       icon: CreditCard,
       Children: BillingTab,
     },
     {
       id: "usage",
-      label: t("usageTab"),
+      label: t("Settings.billing.usageTab"),
       icon: BarChart3,
       Children: UsageTab,
     },
@@ -26,8 +26,10 @@ function BillingUsagePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("description")}</p>
+        <h1 className="text-2xl font-bold">{t("Settings.billing.title")}</h1>
+        <p className="text-muted-foreground">
+          {t("Settings.billing.description")}
+        </p>
       </div>
       <Tabs defaultValue={tabs[0].id}>
         <TabsList className="tabs-list">
