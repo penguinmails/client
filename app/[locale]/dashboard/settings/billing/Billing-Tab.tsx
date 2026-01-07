@@ -41,8 +41,10 @@ import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checko
 import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "@/shared/config/i18n/navigation";
 import CheckoutDialog from "@features/billing/ui/components/checkout-dialog";
+import { useTranslations } from "next-intl";
 
 function BillingTab() {
+  const t = useTranslations();
   const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -53,10 +55,10 @@ function BillingTab() {
   const billingOptions = useMemo(
     () => ({
       onError: (error: string) => {
-        toast.error("Failed to load billing data", { description: error });
+        toast.error(t("BillingTab.errors.loadBilling"), { description: error });
       },
     }),
-    []
+    [t]
   );
 
   // Server action hooks
@@ -69,17 +71,17 @@ function BillingTab() {
   const updateOptions = useMemo(
     () => ({
       onSuccess: () => {
-        toast.success("Billing information updated successfully");
+        toast.success(t("BillingTab.success.billingUpdated"));
         // Refresh billing data after update
         loadBilling();
       },
       onError: (error: string) => {
-        toast.error("Failed to update billing information", {
+        toast.error(t("BillingTab.errors.updateBilling"), {
           description: error,
         });
       },
     }),
-    [loadBilling]
+    [loadBilling, t]
   );
 
   const updateBillingAction = useServerActionWithParams(
@@ -90,17 +92,17 @@ function BillingTab() {
   const updateCompanyOptions = useMemo(
     () => ({
       onSuccess: () => {
-        toast.success("Company name updated successfully");
+        toast.success(t("BillingTab.success.companyUpdated"));
         // Refresh billing data in case it includes company info
         loadBilling();
       },
       onError: (error: string) => {
-        toast.error("Failed to update company name", {
+        toast.error(t("BillingTab.errors.updateCompany"), {
           description: error,
         });
       },
     }),
-    [loadBilling]
+    [loadBilling, t]
   );
 
   const updateCompanyAction = useServerActionWithParams(
@@ -111,12 +113,12 @@ function BillingTab() {
   const companyOptions = useMemo(
     () => ({
       onError: (error: string) => {
-        toast.error("Failed to load company information", {
+        toast.error(t("BillingTab.errors.loadCompany"), {
           description: error,
         });
       },
     }),
-    []
+    [t]
   );
 
   const companyDataAction = useServerAction(getUserSettings, companyOptions);
@@ -140,7 +142,7 @@ function BillingTab() {
   };
 
   useEffect(() => {
-    if (typeof checkout === 'string')
+    if (typeof checkout === "string")
       setTimeout(() => {
         router.push(pathname);
       }, 2000);
@@ -155,7 +157,11 @@ function BillingTab() {
   if (billingDataAction.error && !billingDataAction.data) {
     return (
       <SettingsErrorFallback
-        error={typeof billingDataAction.error === 'string' ? billingDataAction.error : "An error occurred"}
+        error={
+          typeof billingDataAction.error === "string"
+            ? billingDataAction.error
+            : t("BillingTab.errors.errorOccurred")
+        }
         retry={loadBilling}
       />
     );
@@ -167,7 +173,9 @@ function BillingTab() {
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
           <AlertTriangle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-muted-foreground">No billing data available</p>
+          <p className="text-muted-foreground">
+            {t("BillingTab.errors.noData")}
+          </p>
           <Button
             onClick={() => loadBilling()}
             variant="outline"
@@ -175,7 +183,7 @@ function BillingTab() {
             className="mt-2"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
-            Retry
+            {t("Common.tryAgain")}
           </Button>
         </div>
       </div>
@@ -190,26 +198,32 @@ function BillingTab() {
         {/* Current Plan Card */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle>Current Plan</CardTitle>
+            <CardTitle>{t("BillingTab.currentPlan")}</CardTitle>
             <Badge>
               <Crown className="w-4 h-4 mr-1" />
-              <span>Active</span>
+              <span>{t("BillingTab.active")}</span>
             </Badge>
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 md:grid-cols-3">
               <Card
                 className={cn(
-                  "border-primary/70 bg-gradient-to-br from-primary/20 to-indigo-50"
+                  "border-primary/70 bg-linear-to-br from-primary/20 to-indigo-50"
                 )}
               >
                 <CardContent>
                   <h3 className="mb-1 text-lg font-semibold text-foreground">
-                    {billingData.planDetails.name} Plan
+                    {t("BillingTab.planDetails", {
+                      planName: billingData.planDetails.name,
+                    })}
                   </h3>
                   <p className="text-2xl font-bold text-primary">
-                    ${billingData.planDetails.price}/
-                    {billingData.planDetails.isMonthly ? "month" : "year"}
+                    {t("BillingTab.price", {
+                      price: billingData.planDetails.price,
+                      period: billingData.planDetails.isMonthly
+                        ? t("BillingTab.period.month")
+                        : t("BillingTab.period.year"),
+                    })}
                   </p>
                 </CardContent>
               </Card>
@@ -217,7 +231,7 @@ function BillingTab() {
               <Card className="bg-muted/50">
                 <CardContent>
                   <h4 className="mb-1 text-sm font-medium text-muted-foreground">
-                    Email Accounts
+                    {t("BillingTab.emailAccounts")}
                   </h4>
                   <p className="text-xl font-semibold text-foreground">
                     {billingData.emailAccountsUsed} /{" "}
@@ -231,7 +245,7 @@ function BillingTab() {
               <Card className="bg-muted/50">
                 <CardContent>
                   <h4 className="mb-1 text-sm font-medium text-muted-foreground">
-                    Campaigns
+                    {t("BillingTab.campaigns")}
                   </h4>
                   <p className="text-xl font-semibold text-foreground">
                     {billingData.campaignsUsed} /{" "}
@@ -244,12 +258,16 @@ function BillingTab() {
             </div>
           </CardContent>
           <CardFooter className="ml-auto">
-            <ChangePlanTrigger title="Change Plan" onSelectPlan={handleCheckoutForPlan} isLoading={isCheckoutLoading} />
+            <ChangePlanTrigger
+              title={t("BillingTab.changePlan")}
+              onSelectPlan={handleCheckoutForPlan}
+              isLoading={isCheckoutLoading}
+            />
           </CardFooter>
         </Card>
 
         <CheckoutDialog
-          isModalOpen={typeof checkout === 'string'}
+          isModalOpen={typeof checkout === "string"}
           checkout={checkout}
           setIsModalOpen={() => router.push(pathname)}
         />
@@ -257,7 +275,7 @@ function BillingTab() {
         {/* Payment Method Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Payment Method</CardTitle>
+            <CardTitle>{t("BillingTab.paymentMethod")}</CardTitle>
           </CardHeader>
           <CardContent>
             {billingData.paymentMethod ? (
@@ -268,15 +286,18 @@ function BillingTab() {
                   </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-foreground">
-                      {billingData.paymentMethod.brand} ending in{" "}
+                      {billingData.paymentMethod.brand}{" "}
+                      {t("BillingTab.endingIn")}{" "}
                       {billingData.paymentMethod.lastFour}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-muted-foreground">
-                      Expires {billingData.paymentMethod.expiry}
+                      {t("BillingTab.expires", {
+                        expiry: billingData.paymentMethod.expiry,
+                      })}
                     </p>
                   </div>
                 </div>
-                <UpdateCardDialogTrigger title="Update Card" />
+                <UpdateCardDialogTrigger title={t("BillingTab.updateCard")} />
               </div>
             ) : (
               <div className="flex items-center justify-between bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
@@ -286,14 +307,14 @@ function BillingTab() {
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">
-                      No payment method
+                      {t("BillingTab.noPaymentMethod")}
                     </p>
                     <p className="text-sm text-gray-600">
-                      Add a payment method to continue
+                      {t("BillingTab.addPaymentMethod")}
                     </p>
                   </div>
                 </div>
-                <UpdateCardDialogTrigger title="Add Card" />
+                <UpdateCardDialogTrigger title={t("BillingTab.addCard")} />
               </div>
             )}
           </CardContent>
@@ -304,16 +325,17 @@ function BillingTab() {
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle>
               <Building className="w-5 h-5 inline mr-2" />
-              Company Information
+              {t("BillingTab.companyInformation")}
             </CardTitle>
             <button
               className="text-sm text-blue-600 hover:text-blue-800 underline disabled:opacity-50"
               disabled={updateBillingAction.loading}
               onClick={() => {
                 const currentName =
-                  companyDataAction.data?.companyInfo.name || "Company";
+                  companyDataAction.data?.companyInfo.name ||
+                  t("BillingTab.company");
                 const newCompanyName = prompt(
-                  "Enter company name:",
+                  t("BillingTab.companyName") + ":",
                   currentName
                 );
                 if (
@@ -325,7 +347,9 @@ function BillingTab() {
                 }
               }}
             >
-              {updateBillingAction.loading ? "Updating..." : "Edit Company"}
+              {updateBillingAction.loading
+                ? t("Common.updating")
+                : t("BillingTab.editCompany")}
             </button>
           </CardHeader>
           <CardContent>
@@ -334,29 +358,30 @@ function BillingTab() {
                 <div className="flex items-center justify-between">
                   <div>
                     <label className="text-sm font-medium text-gray-700 dark:text-foreground">
-                      Company Name
+                      {t("BillingTab.companyName")}
                     </label>
                     <p className="font-medium text-gray-900 dark:text-foreground">
-                      {companyDataAction.data?.companyInfo.name || "Loading..."}
+                      {companyDataAction.data?.companyInfo.name ||
+                        t("Common.loading")}
                     </p>
                   </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-foreground">
-                    Industry
+                    {t("BillingTab.industry")}
                   </label>
                   <p className="text-gray-600">
                     {companyDataAction.data?.companyInfo.industry ||
-                      "Technology Services"}
+                      t("BillingTab.technologyServices")}
                   </p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-foreground">
-                    Company Size
+                    {t("BillingTab.companySize")}
                   </label>
                   <p className="text-gray-600">
                     {companyDataAction.data?.companyInfo.size ||
-                      "51-200 employees"}
+                      t("BillingTab.companySizeDefault")}
                   </p>
                 </div>
               </div>
@@ -367,26 +392,27 @@ function BillingTab() {
         {/* Billing Address Card */}
         <Card>
           <CardHeader className="flex-center-between">
-            <CardTitle>Billing Address</CardTitle>
-            <EditAddressTrigger title="Edit Address" />
+            <CardTitle>{t("BillingTab.billingAddress")}</CardTitle>
+            <EditAddressTrigger title={t("BillingTab.editAddress")} />
           </CardHeader>
           <CardContent>
             <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
               <div className="space-y-1">
                 <p className="font-medium text-gray-900 dark:text-foreground">
-                  {companyDataAction.data?.companyInfo.name || "Company"}
+                  {companyDataAction.data?.companyInfo.name ||
+                    t("BillingTab.company")}
                 </p>
                 <p className="text-gray-600 dark:text-muted-foreground">
-                  123 Business Street
+                  {t("BillingTab.street")}
                 </p>
                 <p className="text-gray-600 dark:text-muted-foreground">
-                  San Francisco, CA 94105
+                  {t("BillingTab.city")}
                 </p>
                 <p className="text-gray-600 dark:text-muted-foreground">
-                  United States
+                  {t("BillingTab.country")}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-muted-foreground mt-2">
-                  VAT ID: US123456789
+                  {t("BillingTab.vatId")}
                 </p>
               </div>
             </div>
@@ -396,7 +422,7 @@ function BillingTab() {
         {/* Recent Invoices Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Invoices</CardTitle>
+            <CardTitle>{t("BillingTab.recentInvoices")}</CardTitle>
           </CardHeader>
           <CardContent>
             <InvoicesTable />
@@ -408,7 +434,7 @@ function BillingTab() {
           <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
             <div className="bg-white dark:bg-card p-4 rounded-lg shadow-lg flex items-center space-x-2">
               <RefreshCw className="h-4 w-4 animate-spin" />
-              <span>Updating billing information...</span>
+              <span>{t("Common.loading")}</span>
             </div>
           </div>
         )}

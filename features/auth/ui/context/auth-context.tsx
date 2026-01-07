@@ -12,8 +12,9 @@ import React, {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSignIn, useSignUp } from "@niledatabase/react";
 import { useSystemHealth } from "@/shared/hooks";
-import { productionLogger, developmentLogger } from "@/lib/logger";
+import { developmentLogger, productionLogger } from "@/lib/logger";
 import { toast } from "sonner";
+import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
 
 import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
 import {
@@ -34,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const { systemHealth } = useSystemHealth();
+  const { safePush } = useSafeNavigation();
   const isHealthy = systemHealth.status === "healthy";
 
   // NileDB React Hooks
@@ -44,11 +46,96 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       password: string;
     }): Promise<void>;
   };
+  // Create callbacks for the signUp hook
+  const signUpSuccessCallback = useCallback(
+    async (_data: unknown, variables: { email: string; name?: string }) => {
+      // Send verification email after successful signup
+      try {
+        const response = await fetch("/api/emails/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "verification",
+            email: variables.email,
+            userName: variables.name,
+            token: "temp-token", // Backend will generate actual token
+          }),
+        });
+
+        if (response.ok) {
+          // Store email for resend functionality only when email was actually sent
+          localStorage.setItem("pendingVerificationEmail", variables.email);
+          toast.success(
+            "Account created successfully! Please check your email to verify your account.",
+            {
+              duration: 5000,
+            }
+          );
+        } else {
+          // Still show success even if email sending fails
+          toast.success("Account created successfully!", {
+            duration: 4000,
+          });
+        }
+      } catch {
+        // Don't fail signup if email sending fails
+        toast.success("Account created successfully!", {
+          duration: 4000,
+        });
+      }
+
+      setLoading((prev) => ({ ...prev, session: false }));
+    },
+    []
+  );
+
+  const signUpErrorCallback = useCallback((error: Error) => {
+    // Implement precise error handling based on actual NileDB error format
+    let processedError = error;
+
+    // Check for duplicate email based on actual NileDB error format
+    // Format: "The user {email} already exists"
+    const emailMatch = error.message.match(/The user (.+?) already exists/);
+    if (error.name === "Error" && emailMatch) {
+      productionLogger.info(
+        "[AuthContext] Duplicate email detected - NileDB format"
+      );
+
+      // Extract email from message
+      const email = emailMatch ? emailMatch[1] : "";
+
+      const duplicateError = new Error(
+        "Email address already registered"
+      ) as Error & {
+        code?: string;
+        i18nKey?: string;
+        actionType?: string;
+        isDuplicate?: boolean;
+        email?: string;
+      };
+      duplicateError.code = "DUPLICATE_EMAIL";
+      duplicateError.i18nKey = "emailAlreadyExistsVerified";
+      duplicateError.actionType = "LOGIN";
+      duplicateError.isDuplicate = true;
+      duplicateError.email = email;
+      duplicateError.stack = error.stack; // Preserve original stack
+      processedError = duplicateError;
+    } else {
+      productionLogger.warn("[AuthContext] Unknown signup error format:", {
+        errorName: error.name,
+        errorMessage: error.message,
+        errorKeys: error && typeof error === "object" ? Object.keys(error) : [],
+      });
+    }
+
+    setError(processedError);
+    setLoading((prev) => ({ ...prev, session: false }));
+  }, []);
+
   const signUpHook = useSignUp({
-    callbackUrl: "/email-confirmation",
-  }) as unknown as {
-    (info: { email: string; password: string; name: string }): Promise<void>;
-  };
+    onSuccess: signUpSuccessCallback,
+    onError: signUpErrorCallback,
+  });
 
   // Core State
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -67,9 +154,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const retryCountRef = useRef(0);
   const enrichmentPromiseRef = useRef<Promise<void> | null>(null);
 
-  /**
-   * Auth Actions - Basic functions first
-   */
   const logout = useCallback(async () => {
     setUser(null);
     setSelectedTenantId(null);
@@ -83,20 +167,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const signup = useCallback(
     async (email: string, password: string, name: string) => {
       setLoading((prev) => ({ ...prev, session: true }));
+      setError(null); // Clear any previous errors
+
+      const signupData = { email, password, name };
+
       try {
-        await signUpHook({ email, password, name });
-        toast.success("Account created successfully!");
-        // Add delay before navigation
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        router.push("/auth/verify-email");
+        await signUpHook(signupData);
       } catch (err) {
-        setError(err instanceof Error ? err : new Error("Signup failed"));
+        // The onError callback is likely called before this throw.
+        // We re-throw so the calling component can react.
         throw err;
-      } finally {
-        setLoading((prev) => ({ ...prev, session: false }));
       }
     },
-    [signUpHook, router]
+    [signUpHook]
   );
 
   /**
@@ -109,9 +192,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const performEnrichment = async () => {
         // Check health only if we failed previously
         if (!isHealthy && retryCountRef.current > 0) {
-          developmentLogger.warn(
-            "[AuthContext] DB unhealthy, skipping retry for now"
-          );
           return;
         }
 
@@ -129,17 +209,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setError(null);
           retryCountRef.current = 0;
         } catch (err) {
-          productionLogger.error("[AuthContext] Enrichment failed:", err);
-
           // Check if this is an authentication error that should trigger logout
           if (
             err instanceof Error &&
             (err.message.includes("Failed to fetch enrichment data") ||
               err.message.includes("Authentication required"))
           ) {
-            productionLogger.info(
-              "[AuthContext] Authentication error detected during enrichment, triggering logout"
-            );
             // Use a simple timeout to avoid dependency issues
             setTimeout(() => {
               logout();
@@ -149,9 +224,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
           if (retryCountRef.current < DB_MAX_RETRIES) {
             retryCountRef.current += 1;
-            developmentLogger.info(
-              `[AuthContext] Retrying enrichment (${retryCountRef.current}/${DB_MAX_RETRIES})...`
-            );
 
             setTimeout(() => {
               enrichmentPromiseRef.current = null;
@@ -159,9 +231,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             }, RETRY_DELAY);
           } else {
             // Max retries reached, set error but don't block the UI
-            productionLogger.warn(
-              "[AuthContext] Max enrichment retries reached, continuing with basic user data"
-            );
+
             setError(
               err instanceof Error
                 ? err
@@ -191,9 +261,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         error?.code === "AUTH_REQUIRED" ||
         error?.message?.includes("Authentication required")
       ) {
-        productionLogger.info(
-          "[AuthContext] Authentication error detected, logging out user"
-        );
         logout();
         return true; // Error was handled
       }
@@ -205,6 +272,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = useCallback(
     async (email: string, password: string) => {
       setLoading((prev) => ({ ...prev, session: true }));
+      setError(null); // Clear any previous errors first
+
       try {
         await signInHook({ provider: "credentials", email, password });
 
@@ -213,25 +282,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setUser({ id: session.id, email: session.email });
           enrichUser(session.id);
 
-          // Add a small delay to allow session to stabilize before navigation
-          // This helps prevent chunk loading errors during rapid state transitions
-          await new Promise((resolve) => setTimeout(resolve, 50));
-
           const next = searchParams.get("next") || "/dashboard";
-          // Prefetch the target route to load chunks early
-          router.prefetch(next);
-          // Add another small delay before navigation
-          await new Promise((resolve) => setTimeout(resolve, 50));
-          router.push(next);
+          // Use safe navigation to prevent chunk loading errors
+          await safePush(next);
+        } else {
+          // No session means login failed
+          throw new Error("Login failed - no valid session");
         }
       } catch (err) {
-        setError(err instanceof Error ? err : new Error("Login failed"));
-        throw err;
+        const loginError =
+          err instanceof Error ? err : new Error("Login failed");
+        setError(loginError);
+        setUser(null); // Ensure no user state is set on error
+        throw loginError;
       } finally {
         setLoading((prev) => ({ ...prev, session: false }));
       }
     },
-    [signInHook, router, searchParams, enrichUser]
+    [signInHook, searchParams, enrichUser, safePush]
   );
 
   /**
@@ -242,7 +310,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const session = await checkSession();
 
-        if (session) {
+        if (session && !error) {
+          // Only set user if no existing error
           setUser({
             id: session.id,
             email: session.email,
@@ -250,17 +319,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           });
           setLoading({ session: false, enrichment: true });
           enrichUser(session.id);
+
+          // Only redirect if user is on a public page (not already in dashboard)
+          const currentPath = window.location.pathname;
+          // Check if current path is a public page (handles locale prefixes)
+          const isPublicPage =
+            /^\/[a-z]{2}\/?$/.test(currentPath) || // /en or /en/
+            /^\/[a-z]{2}\/login\/?$/.test(currentPath) || // /en/login
+            /^\/[a-z]{2}\/signup\/?$/.test(currentPath) || // /en/signup
+            currentPath === "/" || // root
+            currentPath === "/login" || // /login
+            currentPath === "/signup"; // /signup
+
+          if (isPublicPage) {
+            // User is on a public page with valid session - redirect to dashboard
+            const next = searchParams.get("next") || "/dashboard";
+            await safePush(next);
+          }
         } else {
           setLoading({ session: false, enrichment: false });
         }
       } catch (error) {
-        productionLogger.error("[AuthContext] Session check failed:", error);
-        setLoading({ session: false, enrichment: false });
         // Don't redirect here, let the UI components handle it
+        setLoading({ session: false, enrichment: false });
+        developmentLogger.error("Failed to initialize session", error);
       }
     };
     init();
-  }, [enrichUser, logout]);
+  }, [enrichUser, logout, error, searchParams, safePush]);
 
   /**
    * Global fetch interceptor for handling 401 errors
@@ -268,9 +354,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const originalFetch = window.fetch;
 
-    window.fetch = async (...args) => {
+    window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       try {
-        const response = await originalFetch(...args);
+        const response = await originalFetch(input, init);
+
+        // Skip auth callback errors - they are handled by the login form
+        const url = typeof input === "string" ? input : input.toString();
+        const isAuthCallback =
+          url.includes("/api/auth/callback/") || url.includes("/api/auth/csrf");
+
+        if (isAuthCallback) {
+          return response;
+        }
 
         // Check for authentication errors via headers or status
         const isAuthError =
@@ -278,9 +373,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           response.headers.get("X-Auth-Error") === "true";
 
         if (isAuthError) {
-          productionLogger.info(
-            "[AuthContext] Authentication error detected, triggering logout"
-          );
           handleAuthError({ status: 401, message: "Authentication required" });
         }
 

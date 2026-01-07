@@ -6,21 +6,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
-function page() {
+function GeneralSettingsPage() {
+  const t = useTranslations();
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold ">General Settings</h1>
+        <h1 className="text-2xl font-bold">{t("Settings.general.title")}</h1>
         <p className="text-muted-foreground">
-          Manage your account preferences and profile information
+          {t("Settings.general.description")}
         </p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Profile Information</CardTitle>
+          <CardTitle>
+            {t("Settings.general.profileInformation.title")}
+          </CardTitle>
           <CardDescription>
-            Update your personal details and avatar.
+            {t("Settings.general.profileInformation.description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -32,4 +37,4 @@ function page() {
     </div>
   );
 }
-export default page;
+export default GeneralSettingsPage;

@@ -1,18 +1,21 @@
 import { TrackingPreferences } from "@/features/settings";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
-function page() {
+function TrackingSettingsPage() {
+  const t = useTranslations();
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold ">Tracking Settings</h1>
+        <h1 className="text-2xl font-bold">{t("Settings.tracking.title")}</h1>
         <p className="text-gray-600 dark:text-muted-foreground">
-          Manage your tracking preferences and settings.
+          {t("Settings.tracking.description")}
         </p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Tracking Information</CardTitle>
+          <CardTitle>{t("Settings.tracking.trackingInformation")}</CardTitle>
         </CardHeader>
         <CardContent>
           <TrackingPreferences />
@@ -21,4 +24,4 @@ function page() {
     </div>
   );
 }
-export default page;
+export default TrackingSettingsPage;

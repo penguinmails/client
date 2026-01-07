@@ -10,6 +10,7 @@ import { AlertTriangle, RefreshCw } from "lucide-react";
 import { ChangePlanTrigger } from "@features/billing/ui/components/change-plan-dialog";
 import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checkout";
 import { productionLogger } from "@/lib/logger";
+import { useTranslations } from "next-intl";
 
 // Simple loading skeleton component
 function BillingLoadingSkeleton() {
@@ -28,6 +29,7 @@ function BillingLoadingSkeleton() {
 }
 
 export default function BillingSettingsPage() {
+  const t = useTranslations();
   const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
 
   // Server action hooks for billing data
@@ -59,7 +61,9 @@ export default function BillingSettingsPage() {
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
           <AlertTriangle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-muted-foreground">Failed to load billing data</p>
+          <p className="text-muted-foreground">
+            {t("BillingPage.failedToLoad")}
+          </p>
           <Button
             onClick={() => loadBilling()}
             variant="outline"
@@ -67,7 +71,7 @@ export default function BillingSettingsPage() {
             className="mt-2"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
-            Retry
+            {t("BillingPage.retry")}
           </Button>
         </div>
       </div>
@@ -80,7 +84,7 @@ export default function BillingSettingsPage() {
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
           <AlertTriangle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-muted-foreground">No billing data available</p>
+          <p className="text-muted-foreground">{t("BillingPage.noData")}</p>
         </div>
       </div>
     );
@@ -100,10 +104,10 @@ export default function BillingSettingsPage() {
     <div className="bg-white dark:bg-card shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-foreground">
-          Billing & Plan
+          {t("BillingPage.title")}
         </h3>
         <div className="mt-2 max-w-xl text-sm text-gray-500 dark:text-muted-foreground">
-          <p>Manage your subscription and view billing history.</p>
+          <p>{t("BillingPage.description")}</p>
         </div>
 
         <div className="mt-5">
@@ -111,21 +115,23 @@ export default function BillingSettingsPage() {
             <div className="sm:flex sm:items-start">
               <div className="mt-3 sm:mt-0 sm:ml-4">
                 <div className="text-sm font-medium text-gray-900 dark:text-foreground">
-                  Current Plan
+                  {t("BillingPage.currentPlan")}
                 </div>
                 <div className="mt-1 text-sm text-gray-600 dark:text-muted-foreground">
-                  You are currently on the{" "}
-                  <span className="font-semibold">
-                    {planType.charAt(0) + planType.slice(1).toLowerCase()}
-                  </span>{" "}
-                  plan.
+                  {t("BillingPage.currentlyOn", {
+                    plan: planType.charAt(0) + planType.slice(1).toLowerCase(),
+                  })}
                 </div>
               </div>
             </div>
-            <div className="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
+            <div className="mt-4 sm:mt-0 sm:ml-6 sm:shrink-0">
               {planType === "FREE" ? (
                 <div className="w-48">
-                  <ChangePlanTrigger title={"Upgrade Plan"} onSelectPlan={handleCheckoutForPlan} isLoading={isCheckoutLoading} />
+                  <ChangePlanTrigger
+                    title={t("BillingPage.upgradePlan")}
+                    onSelectPlan={handleCheckoutForPlan}
+                    isLoading={isCheckoutLoading}
+                  />
                 </div>
               ) : (
                 <Link
@@ -133,7 +139,7 @@ export default function BillingSettingsPage() {
                   target="_blank" // Open Stripe in new tab
                   className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-border shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-foreground bg-white dark:bg-card hover:bg-gray-50 dark:hover:bg-muted/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  Manage Subscription
+                  {t("BillingPage.manageSubscription")}
                 </Link>
               )}
             </div>
@@ -142,8 +148,7 @@ export default function BillingSettingsPage() {
 
         <div className="mt-6 border-t border-gray-200 dark:border-border pt-6">
           <p className="text-sm text-gray-500 dark:text-muted-foreground">
-            Billing management is handled by Stripe. Clicking the button above
-            will redirect you to Stripe&apos;s secure portal.
+            {t("BillingPage.stripeNote")}
           </p>
           {/* Add billing history section later if needed */}
         </div>

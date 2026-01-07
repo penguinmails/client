@@ -218,6 +218,7 @@ export const classifyDatabaseError = (error: unknown): DatabaseError => {
 
     default:
       // Generic database error for other cases
+      developmentLogger.error('Unknown error occurred', error);
       return new DatabaseError(
         'Database operation failed',
         'DATABASE_OPERATION_FAILED',

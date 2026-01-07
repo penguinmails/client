@@ -1,18 +1,25 @@
 import { NotificationSettings } from "@features/settings/ui/components";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
-function page() {
+function NotificationSettingsPage() {
+  const t = useTranslations();
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Notification Preferences</h1>
+        <h1 className="text-2xl font-bold">
+          {t("Settings.notifications.title")}
+        </h1>
         <p className="text-muted-foreground">
-          Choose how you want to be notified
+          {t("Settings.notifications.description")}
         </p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Email Notifications</CardTitle>
+          <CardTitle>
+            {t("Settings.notifications.emailNotifications")}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <NotificationSettings />
@@ -21,7 +28,7 @@ function page() {
     </div>
   );
 }
-export default page;
+export default NotificationSettingsPage;
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";

@@ -18,8 +18,9 @@ import {
 } from "@features/billing/actions";
 import { cn } from "@/shared/utils";
 import { Globe, HardDrive, Mail, Plus, Server, Users } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface UsageData {
   usage: {
@@ -81,6 +82,7 @@ const getColorClasses = (color: string, warning?: boolean) => {
 };
 
 function UsageTab() {
+  const t = useTranslations();
   const [usageData, setUsageData] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +91,7 @@ function UsageTab() {
   >(null);
   const [loadingStorage, setLoadingStorage] = useState(true);
 
-  const fetchUsageData = async () => {
+  const fetchUsageData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -104,68 +106,82 @@ function UsageTab() {
             emailsSent: usage.emailsSent || 0,
             emailsLimit: usage.emailsLimit || 0,
             contactsReached: 0, // Not provided by the API
-            contactsLimit: 0,   // Not provided by the API
+            contactsLimit: 0, // Not provided by the API
             campaignsActive: usage.campaignsUsed || 0,
             campaignsLimit: usage.campaignsLimit || 0,
             storageUsed: usage.storageUsed || 0,
             storageLimit: usage.storageLimit || 0,
             emailAccountsActive: usage.emailAccountsUsed || 0,
             emailAccountsLimit: usage.maxEmailAccounts || 0,
-            resetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+            resetDate: new Date(
+              Date.now() + 30 * 24 * 60 * 60 * 1000
+            ).toISOString(),
           },
           percentages: {
-            emailsSentPercentage: usage.emailsLimit > 0 ? (usage.emailsSent / usage.emailsLimit) * 100 : 0,
+            emailsSentPercentage:
+              usage.emailsLimit > 0
+                ? (usage.emailsSent / usage.emailsLimit) * 100
+                : 0,
             contactsReachedPercentage: 0,
-            campaignsActivePercentage: usage.campaignsLimit > 0 ? (usage.campaignsUsed / usage.campaignsLimit) * 100 : 0,
-            storageUsedPercentage: usage.storageLimit > 0 ? (usage.storageUsed / usage.storageLimit) * 100 : 0,
-            emailAccountsPercentage: usage.maxEmailAccounts > 0 ? (usage.emailAccountsUsed / usage.maxEmailAccounts) * 100 : 0
+            campaignsActivePercentage:
+              usage.campaignsLimit > 0
+                ? (usage.campaignsUsed / usage.campaignsLimit) * 100
+                : 0,
+            storageUsedPercentage:
+              usage.storageLimit > 0
+                ? (usage.storageUsed / usage.storageLimit) * 100
+                : 0,
+            emailAccountsPercentage:
+              usage.maxEmailAccounts > 0
+                ? (usage.emailAccountsUsed / usage.maxEmailAccounts) * 100
+                : 0,
           },
-          daysUntilReset: 30
+          daysUntilReset: 30,
         };
         setUsageData(transformedData);
       } else {
-        setError("Failed to load usage data");
-        toast.error("Failed to load usage data");
+        setError(t("UsageTab.failedToLoad"));
+        toast.error(t("UsageTab.failedToLoad"));
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "An unexpected error occurred";
+        err instanceof Error ? err.message : t("UsageTab.unexpectedError");
       setError(errorMessage);
-      toast.error("Failed to load usage data", {
+      toast.error(t("UsageTab.failedToLoad"), {
         description: errorMessage,
       });
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
 
-  const fetchStorageOptions = async () => {
+  const fetchStorageOptions = useCallback(async () => {
     try {
       setLoadingStorage(true);
       const result = await getStorageOptions();
       if (result && result.success && result.data) {
         setStorageOptions(result.data);
       } else {
-        toast.error("Failed to load storage options");
+        toast.error(t("UsageTab.failedToLoadStorage"));
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "An unexpected error occurred";
-      toast.error("Failed to load storage options", {
+        err instanceof Error ? err.message : t("UsageTab.unexpectedError");
+      toast.error(t("UsageTab.failedToLoadStorage"), {
         description: errorMessage,
       });
     } finally {
       setLoadingStorage(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     fetchUsageData();
-  }, []);
+  }, [fetchUsageData]);
 
   useEffect(() => {
     fetchStorageOptions();
-  }, []);
+  }, [fetchStorageOptions]);
 
   if (loading) {
     return <UsageTabSkeleton />;
@@ -177,10 +193,10 @@ function UsageTab() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center p-8 text-center">
             <div className="text-muted-foreground mb-4">
-              Failed to load usage data
+              {t("UsageTab.failedToLoad")}
             </div>
             <Button onClick={fetchUsageData} variant="outline">
-              Try Again
+              {t("Common.tryAgain")}
             </Button>
           </CardContent>
         </Card>
@@ -200,11 +216,11 @@ function UsageTab() {
   // Create usage cards from server data
   const usageCards = [
     {
-      title: "Emails Sent",
+      title: t("UsageTab.emailsSent"),
       value: usage.emailsSent.toLocaleString(),
       limit:
         usage.emailsLimit === 0
-          ? "Unlimited"
+          ? t("UsageTab.unlimited")
           : usage.emailsLimit.toLocaleString(),
       icon: Mail,
       color: "blue",
@@ -212,11 +228,11 @@ function UsageTab() {
       percentage: percentages.emailsSentPercentage,
     },
     {
-      title: "Contacts Reached",
+      title: t("UsageTab.contactsReached"),
       value: usage.contactsReached.toLocaleString(),
       limit:
         usage.contactsLimit === 0
-          ? "Unlimited"
+          ? t("UsageTab.unlimited")
           : usage.contactsLimit.toLocaleString(),
       icon: Users,
       color: "green",
@@ -224,11 +240,11 @@ function UsageTab() {
       percentage: percentages.contactsReachedPercentage,
     },
     {
-      title: "Active Campaigns",
+      title: t("UsageTab.activeCampaigns"),
       value: usage.campaignsActive.toString(),
       limit:
         usage.campaignsLimit === 0
-          ? "Unlimited"
+          ? t("UsageTab.unlimited")
           : usage.campaignsLimit.toString(),
       icon: Server,
       color: "purple",
@@ -236,11 +252,11 @@ function UsageTab() {
       percentage: percentages.campaignsActivePercentage,
     },
     {
-      title: "Email Accounts",
+      title: t("UsageTab.emailAccounts"),
       value: usage.emailAccountsActive.toString(),
       limit:
         usage.emailAccountsLimit === 0
-          ? "Unlimited"
+          ? t("UsageTab.unlimited")
           : usage.emailAccountsLimit.toString(),
       icon: Globe,
       color: "orange",
@@ -248,7 +264,7 @@ function UsageTab() {
       percentage: percentages.emailAccountsPercentage,
     },
     {
-      title: "Storage Used",
+      title: t("UsageTab.storageUsed"),
       value: `${usage.storageUsed} GB`,
       limit: `${usage.storageLimit} GB`,
       icon: HardDrive,
@@ -265,15 +281,14 @@ function UsageTab() {
         <CardContent className="flex justify-between items-center p-6">
           <div className="space-y-1">
             <CardTitle className="text-lg font-semibold">
-              Usage Statistics
+              {t("UsageTab.usageStatistics")}
             </CardTitle>
             <p className="text-muted-foreground">
-              Your usage limits will reset on
-              <strong> {resetDate}</strong>
+              {t("UsageTab.resetMessage")} <strong> {resetDate}</strong>
             </p>
           </div>
           <Badge variant="secondary" className="bg-primary/20 text-primary">
-            {daysUntilReset} days remaining
+            {t("UsageTab.daysRemaining", { days: daysUntilReset })}
           </Badge>
         </CardContent>
       </Card>
@@ -298,7 +313,7 @@ function UsageTab() {
                   </div>
                   {card.warning && (
                     <Badge variant="destructive" className="text-xs">
-                      Low Storage
+                      {t("UsageTab.lowStorage")}
                     </Badge>
                   )}
                 </div>
@@ -330,16 +345,18 @@ function UsageTab() {
                       )}
                     />
                     <p className="text-xs text-muted-foreground">
-                      {Math.round(card.percentage)}% used
+                      {t("UsageTab.used", {
+                        percentage: Math.round(card.percentage),
+                      })}
                     </p>
                   </div>
                 )}
 
-                {card.title === "Storage Used" && card.warning && (
+                {card.title === t("UsageTab.storageUsed") && card.warning && (
                   <AddStorageTrigger onStorageAdded={fetchUsageData}>
                     <Button variant="destructive" className="w-full">
                       <Plus className="h-4 w-4 mr-2" />
-                      Add Storage
+                      {t("UsageTab.addStorage")}
                     </Button>
                   </AddStorageTrigger>
                 )}
@@ -352,16 +369,18 @@ function UsageTab() {
       <Card>
         <CardHeader className="flex-center-between">
           <div>
-            <CardTitle className="text-xl font-semibold">Add Storage</CardTitle>
+            <CardTitle className="text-xl font-semibold">
+              {t("UsageTab.addStorage")}
+            </CardTitle>
             <CardDescription className="text-gray-600 dark:text-muted-foreground">
-              Purchase additional storage at $3 per GB
+              {t("UsageTab.purchaseStorage")}
             </CardDescription>
           </div>
 
           <AddStorageTrigger onStorageAdded={fetchUsageData}>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Add Storage
+              {t("UsageTab.addStorage")}
             </Button>
           </AddStorageTrigger>
         </CardHeader>

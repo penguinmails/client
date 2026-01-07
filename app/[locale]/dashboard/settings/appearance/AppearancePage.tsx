@@ -1,13 +1,28 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export default function AppearanceSettingsPage() {
+  const t = useTranslations();
+
   // Placeholder state, would ideally load from UserPreference
   const [theme, setTheme] = useState("LIGHT");
   const [layoutDensity, setLayoutDensity] = useState("NORMAL");
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+
+  const themeOptions = [
+    { value: "LIGHT", i18nKey: "AppearanceSettings.theme.light" },
+    { value: "DARK", i18nKey: "AppearanceSettings.theme.dark" },
+    { value: "CONTRAST", i18nKey: "AppearanceSettings.theme.contrast" },
+  ];
+
+  const densityOptions = [
+    { value: "COMPACT", i18nKey: "AppearanceSettings.layoutDensity.compact" },
+    { value: "NORMAL", i18nKey: "AppearanceSettings.layoutDensity.normal" },
+    { value: "WIDE", i18nKey: "AppearanceSettings.layoutDensity.wide" },
+  ];
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -16,7 +31,7 @@ export default function AppearanceSettingsPage() {
     // Simulate API call
     setTimeout(() => {
       setIsSaving(false);
-      setSaveMessage("Appearance settings saved");
+      setSaveMessage(t("AppearanceSettings.notifications.success"));
     }, 1000);
 
     // In a real implementation, you would call your API:
@@ -27,12 +42,12 @@ export default function AppearanceSettingsPage() {
     //     body: JSON.stringify({ theme, layoutDensity }),
     //   });
     //   if (response.ok) {
-    //     setSaveMessage('Appearance settings saved');
+    //     setSaveMessage(t('notifications.success'));
     //   } else {
-    //     setSaveMessage('Failed to save settings');
+    //     setSaveMessage(t('notifications.error'));
     //   }
     // } catch (error) {
-    //   setSaveMessage('An error occurred');
+    //   setSaveMessage(t('notifications.genericError'));
     // } finally {
     //   setIsSaving(false);
     // }
@@ -42,10 +57,10 @@ export default function AppearanceSettingsPage() {
     <div className="bg-white dark:bg-card shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-foreground">
-          Appearance
+          {t("AppearanceSettings.title")}
         </h3>
         <div className="mt-2 max-w-xl text-sm text-gray-500">
-          <p>Customize the look and feel of the application.</p>
+          <p>{t("AppearanceSettings.description")}</p>
         </div>
 
         {saveMessage && (
@@ -58,28 +73,29 @@ export default function AppearanceSettingsPage() {
           {/* Theme Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-foreground">
-              Theme
+              {t("AppearanceSettings.theme.label")}
             </label>
             <fieldset className="mt-2">
-              <legend className="sr-only">Theme selection</legend>
+              <legend className="sr-only">
+                {t("AppearanceSettings.theme.label")}
+              </legend>
               <div className="space-y-2 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                {["LIGHT", "DARK", "CONTRAST"].map((themeOption) => (
-                  <div key={themeOption} className="flex items-center">
+                {themeOptions.map((option) => (
+                  <div key={option.value} className="flex items-center">
                     <input
-                      id={`theme-${themeOption.toLowerCase()}`}
+                      id={`theme-${option.value.toLowerCase()}`}
                       name="theme"
                       type="radio"
-                      value={themeOption}
-                      checked={theme === themeOption}
+                      value={option.value}
+                      checked={theme === option.value}
                       onChange={(e) => setTheme(e.target.value)}
                       className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-border"
                     />
                     <label
-                      htmlFor={`theme-${themeOption.toLowerCase()}`}
+                      htmlFor={`theme-${option.value.toLowerCase()}`}
                       className="ml-3 block text-sm font-medium text-gray-700 dark:text-foreground"
                     >
-                      {themeOption.charAt(0) +
-                        themeOption.slice(1).toLowerCase()}
+                      {t(option.i18nKey)}
                     </label>
                   </div>
                 ))}
@@ -90,28 +106,29 @@ export default function AppearanceSettingsPage() {
           {/* Layout Density Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-foreground">
-              Layout Density
+              {t("AppearanceSettings.layoutDensity.label")}
             </label>
             <fieldset className="mt-2">
-              <legend className="sr-only">Layout density selection</legend>
+              <legend className="sr-only">
+                {t("AppearanceSettings.layoutDensity.label")}
+              </legend>
               <div className="space-y-2 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                {["COMPACT", "NORMAL", "WIDE"].map((densityOption) => (
-                  <div key={densityOption} className="flex items-center">
+                {densityOptions.map((option) => (
+                  <div key={option.value} className="flex items-center">
                     <input
-                      id={`density-${densityOption.toLowerCase()}`}
+                      id={`density-${option.value.toLowerCase()}`}
                       name="layoutDensity"
                       type="radio"
-                      value={densityOption}
-                      checked={layoutDensity === densityOption}
+                      value={option.value}
+                      checked={layoutDensity === option.value}
                       onChange={(e) => setLayoutDensity(e.target.value)}
                       className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-border"
                     />
                     <label
-                      htmlFor={`density-${densityOption.toLowerCase()}`}
+                      htmlFor={`density-${option.value.toLowerCase()}`}
                       className="ml-3 block text-sm font-medium text-gray-700 dark:text-foreground"
                     >
-                      {densityOption.charAt(0) +
-                        densityOption.slice(1).toLowerCase()}
+                      {t(option.i18nKey)}
                     </label>
                   </div>
                 ))}
@@ -126,7 +143,9 @@ export default function AppearanceSettingsPage() {
               disabled={isSaving}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300"
             >
-              {isSaving ? "Saving..." : "Save Appearance"}
+              {isSaving
+                ? t("AppearanceSettings.saveButton.saving")
+                : t("AppearanceSettings.saveButton.default")}
             </button>
           </div>
         </div>

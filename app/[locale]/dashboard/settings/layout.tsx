@@ -19,23 +19,10 @@ import {
 } from "lucide-react";
 import { cn } from "@/shared/utils";
 import { useEffect, useState } from "react";
-
-const tabs = [
-  { id: "", label: "General", icon: User },
-  { id: "security", label: "Security", icon: Shield },
-  { id: "notifications", label: "Notifications", icon: Bell },
-  // { id: "team", label: "Team", icon: Users },
-  { id: "tracking", label: "Tracking", icon: Target },
-  { id: "billing", label: "Billing", icon: CreditCard },
-];
-
-const themeOptions = [
-  { value: "light" as const, label: "Light", icon: Sun },
-  { value: "dark" as const, label: "Dark", icon: Moon },
-  { value: "system" as const, label: "System", icon: Monitor },
-];
+import { useTranslations } from "next-intl";
 
 function Layout({ children }: { children: React.ReactNode }) {
+  const t = useTranslations();
   const [mounted, setMounted] = useState(false);
 
   // Ensure component is mounted before accessing theme to prevent hydration mismatch
@@ -51,7 +38,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   // Early return if preferences are not loaded
   if (!preferences) {
-    return <div>Loading preferences...</div>;
+    return <div>{t("Common.loading")}</div>;
   }
 
   const handleSidebarToggle = () => {
@@ -89,6 +76,41 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   const sidebarWidth = preferences.sidebarCollapsed ? "w-16" : "min-w-48";
 
+  const tabs = [
+    { id: "", label: t("Settings.layout.tabs.general"), icon: User },
+    { id: "security", label: t("Settings.layout.tabs.security"), icon: Shield },
+    {
+      id: "notifications",
+      label: t("Settings.layout.tabs.notifications"),
+      icon: Bell,
+    },
+    // { id: "team", label: t("Settings.layout.tabs.team"), icon: Users },
+    { id: "tracking", label: t("Settings.layout.tabs.tracking"), icon: Target },
+    {
+      id: "billing",
+      label: t("Settings.layout.tabs.billing"),
+      icon: CreditCard,
+    },
+  ];
+
+  const themeOptions = [
+    {
+      value: "light" as const,
+      label: t("Settings.layout.theme.light"),
+      icon: Sun,
+    },
+    {
+      value: "dark" as const,
+      label: t("Settings.layout.theme.dark"),
+      icon: Moon,
+    },
+    {
+      value: "system" as const,
+      label: t("Settings.layout.theme.system"),
+      icon: Monitor,
+    },
+  ];
+
   return (
     <div className="flex h-full gap-5">
       <div
@@ -97,7 +119,9 @@ function Layout({ children }: { children: React.ReactNode }) {
         {/* Header with theme switcher and sidebar toggle */}
         <div className="flex items-center justify-between">
           {!preferences.sidebarCollapsed && (
-            <h1 className="text-xl font-semibold">Settings</h1>
+            <h1 className="text-xl font-semibold">
+              {t("Settings.layout.title")}
+            </h1>
           )}
           <div className="flex items-center gap-2">
             {/* Theme switcher - only show when sidebar is expanded */}
@@ -110,7 +134,9 @@ function Layout({ children }: { children: React.ReactNode }) {
                     size="sm"
                     onClick={() => handleThemeChange(option.value)}
                     className="h-7 w-7 p-0"
-                    title={`Switch to ${option.label} theme`}
+                    title={t("Settings.layout.theme.tooltip", {
+                      theme: option.label,
+                    })}
                   >
                     <Icon icon={option.icon} className="h-3 w-3" />
                   </Button>
@@ -126,8 +152,8 @@ function Layout({ children }: { children: React.ReactNode }) {
               className="h-7 w-7 p-0"
               title={
                 preferences.sidebarCollapsed
-                  ? "Expand sidebar"
-                  : "Collapse sidebar"
+                  ? t("Settings.layout.sidebar.expand")
+                  : t("Settings.layout.sidebar.collapse")
               }
             >
               <Icon
@@ -154,7 +180,7 @@ function Layout({ children }: { children: React.ReactNode }) {
               )}
               activeClassName="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
             >
-              <Icon icon={tab.icon} className="h-4 w-4 flex-shrink-0" />
+              <Icon icon={tab.icon} className="h-4 w-4 shrink-0" />
               {!preferences.sidebarCollapsed && (
                 <span className="truncate">{tab.label}</span>
               )}
@@ -174,7 +200,9 @@ function Layout({ children }: { children: React.ReactNode }) {
                   size="sm"
                   onClick={() => handleThemeChange(option.value)}
                   className="h-8 w-8 p-0"
-                  title={`Switch to ${option.label} theme`}
+                  title={t("Settings.layout.theme.tooltip", {
+                    theme: option.label,
+                  })}
                 >
                   <Icon icon={option.icon} className="h-3 w-3" />
                 </Button>

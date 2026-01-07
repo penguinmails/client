@@ -45,6 +45,26 @@
   "button": {
     "label": "button"
   },
+  "Common": {
+    "tryAgain": "Try Again",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "ok": "OK",
+    "update": "Update",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "remove": "Remove",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "confirm": "Confirm",
+    "error": "Error",
+    "success": "Success",
+    "updating": "Updating..."
+  },
   "SignUp": {
     "header": {
       "title": "Create your Penguin Mails Account",
@@ -210,6 +230,190 @@
         "default": "click here to resend",
         "countdown": "click here to resend in {countdown}s"
       }
+    }
+  },
+  "Settings": {
+    "general": {
+      "title": "General Settings",
+      "description": "Manage your account preferences and profile information",
+      "profileInformation": {
+        "title": "Profile Information",
+        "description": "Update your personal details and avatar."
+      }
+    },
+    "layout": {
+      "title": "Settings",
+      "loading": "Loading preferences...",
+      "theme": {
+        "label": "Theme",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
+        "tooltip": "Switch to {theme} theme"
+      },
+      "sidebar": {
+        "expand": "Expand sidebar",
+        "collapse": "Collapse sidebar"
+      },
+      "tabs": {
+        "general": "General",
+        "security": "Security",
+        "notifications": "Notifications",
+        "tracking": "Tracking",
+        "billing": "Billing"
+      }
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "description": "Choose how you want to be notified",
+      "emailNotifications": "Email Notifications"
+    },
+    "security": {
+      "title": "Security Settings",
+      "description": "Manage your account security and authentication",
+      "changePassword": "Change Password",
+      "twoFactorAuth": "Two-Factor Authentication",
+      "twoFactorDescription": "Add an extra layer of security to your account",
+      "securityRecommendations": "Security Recommendations"
+    },
+    "tracking": {
+      "title": "Tracking Settings",
+      "description": "Manage your tracking preferences and settings.",
+      "trackingInformation": "Tracking Information"
+    },
+    "billing": {
+      "title": "Billing & Usage",
+      "description": "Manage your subscription and view usage",
+      "billingTab": "Billing",
+      "usageTab": "Usage & Limits"
+    },
+    "appearance": {
+      "title": "Appearance Settings",
+      "description": "Customize the look and feel of the application"
+    },
+    "team": {
+      "title": "Team Management",
+      "description": "Manage your team members and their roles"
+    }
+  },
+  "BillingTab": {
+    "currentPlan": "Current Plan",
+    "active": "Active",
+    "planDetails": "{planName} Plan",
+    "price": "${price}/{period}",
+    "period": {
+      "month": "month",
+      "year": "year"
+    },
+    "emailAccounts": "Email Accounts",
+    "campaigns": "Campaigns",
+    "changePlan": "Change Plan",
+    "paymentMethod": "Payment Method",
+    "updateCard": "Update Card",
+    "addCard": "Add Card",
+    "noPaymentMethod": "No payment method",
+    "addPaymentMethod": "Add a payment method to continue",
+    "companyInformation": "Company Information",
+    "companyName": "Company Name",
+    "industry": "Industry",
+    "companySize": "Company Size",
+    "editCompany": "Edit Company",
+    "billingAddress": "Billing Address",
+    "editAddress": "Edit Address",
+    "recentInvoices": "Recent Invoices",
+    "company": "Company",
+    "street": "123 Business Street",
+    "city": "San Francisco, CA 94105",
+    "country": "United States",
+    "vatId": "VAT ID: US123456789",
+    "endingIn": "ending in",
+    "expires": "expires {expiry}",
+    "technologyServices": "Technology Services",
+    "companySizeDefault": "1-10 employees",
+    "errors": {
+      "loadBilling": "Failed to load billing data",
+      "updateBilling": "Failed to update billing information",
+      "loadCompany": "Failed to load company information",
+      "updateCompany": "Failed to update company name",
+      "noData": "No billing data available",
+      "errorOccurred": "An error occurred"
+    },
+    "success": {
+      "billingUpdated": "Billing information updated successfully",
+      "companyUpdated": "Company name updated successfully"
+    }
+  },
+  "UsageTab": {
+    "usageStatistics": "Usage Statistics",
+    "resetMessage": "Your usage limits will reset on",
+    "daysRemaining": "days remaining",
+    "unlimited": "Unlimited",
+    "emailsSent": "Emails Sent",
+    "contactsReached": "Contacts Reached",
+    "activeCampaigns": "Active Campaigns",
+    "emailAccounts": "Email Accounts",
+    "storageUsed": "Storage Used",
+    "lowStorage": "Low Storage",
+    "used": "used",
+    "addStorage": "Add Storage",
+    "purchaseStorage": "Purchase additional storage at $3 per GB",
+    "failedToLoad": "Failed to load usage data",
+    "failedToLoadStorage": "Failed to load storage options",
+    "unexpectedError": "An unexpected error occurred"
+  },
+  "SettingsErrorFallback": {
+    "errorOccurred": "An error occurred"
+  },
+  "BillingLoadingSkeleton": {},
+  "BillingPage": {
+    "title": "Billing & Plan",
+    "description": "Manage your subscription and view billing history.",
+    "currentPlan": "Current Plan",
+    "currentlyOn": "You are currently on the {plan} plan",
+    "upgradePlan": "Upgrade Plan",
+    "manageSubscription": "Manage Subscription",
+    "stripeNote": "Billing management is handled by Stripe. Clicking the button above will redirect you to Stripe's secure portal.",
+    "failedToLoad": "Failed to load billing data",
+    "retry": "Retry",
+    "noData": "No billing data available"
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "welcome": {
+      "withName": "Welcome back, {displayName}! Here is what is happening with your campaigns.",
+      "anonymous": "Welcome back! Here is what is happening with your campaigns."
+    },
+    "recentReplies": "Recent Replies",
+    "kpi": {
+      "totalCampaigns": "Total Campaigns",
+      "activeLeads": "Active Leads",
+      "completed": "Completed",
+      "totalLeads": "Total Leads"
+    }
+  },
+  "AppearanceSettings": {
+    "title": "Appearance",
+    "description": "Customize the look and feel of the application.",
+    "theme": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "contrast": "Contrast"
+    },
+    "layoutDensity": {
+      "label": "Layout Density",
+      "compact": "Compact",
+      "normal": "Normal",
+      "wide": "Wide"
+    },
+    "saveButton": {
+      "default": "Save Appearance",
+      "saving": "Saving..."
+    },
+    "notifications": {
+      "success": "Appearance settings saved",
+      "error": "Failed to save settings",
+      "genericError": "An error occurred"
     }
   }
 }

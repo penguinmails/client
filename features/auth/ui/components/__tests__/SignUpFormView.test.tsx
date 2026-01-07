@@ -1,6 +1,7 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import SignUpFormView from "@/app/[locale]/signup/SignUpFormView";
+import { useFeature } from "@/lib/features";
 
 // Mock the next-intl module
 jest.mock("next-intl", () => ({
@@ -9,7 +10,10 @@ jest.mock("next-intl", () => ({
 
 // Mock the auth context
 jest.mock("@features/auth/ui/context/auth-context", () => ({
-  useAuth: jest.fn(() => ({ error: null })),
+  useAuth: jest.fn(() => ({
+    error: null,
+    authLoading: { session: false, enrichment: false },
+  })),
 }));
 
 // Mock other dependencies
@@ -17,6 +21,10 @@ jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: jest.fn(),
   }),
+}));
+
+jest.mock("@/lib/features", () => ({
+  useFeature: jest.fn().mockReturnValue(true),
 }));
 
 jest.mock("sonner", () => ({
@@ -89,5 +97,19 @@ describe("SignUpFormView", () => {
   it("renders correctly", () => {
     const { asFragment } = render(<SignUpFormView />);
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it("does not render Turnstile when feature is disabled", () => {
+    // Override the mock to return false
+    // We need to require it inside the test if we want to change the mock implementation dynamically
+    // or we can just access the mock if it was imported.
+    // Since we mocked it with jest.mock factory, we can access it via jest.mocked
+    jest.mocked(useFeature).mockReturnValueOnce(false);
+
+    render(<SignUpFormView />);
+    expect(screen.queryByTestId("turnstile-widget")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("captcha-not-configured-message")
+    ).not.toBeInTheDocument();
   });
 });

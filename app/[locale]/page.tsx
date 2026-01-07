@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/button";
 import { PasswordInput } from "@/features/auth/ui/components";
@@ -16,7 +16,6 @@ import { useTranslations } from "next-intl";
 import { initPostHog, ph } from "@/lib/posthog";
 import { getLoginAttemptStatus } from "@/features/auth/lib/rate-limit";
 import { productionLogger } from "@/lib/logger";
-import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
 
 const MAX_LOGIN_ATTEMPTS = parseInt(
   process.env.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS || "3",
@@ -31,8 +30,8 @@ export default function LoginPage() {
   const [showTurnstile, setShowTurnstile] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [loginAttempts, setLoginAttempts] = useState(0);
+  const [lastLoginError, setLastLoginError] = useState<string | null>(null);
   const { login, user, error: authError } = useAuth();
-  const { safePush } = useSafeNavigation();
   const t = useTranslations("Login");
 
   useEffect(() => {
@@ -40,6 +39,35 @@ export default function LoginPage() {
       client.capture("login_page_loaded");
     });
   }, []);
+
+  // Handle input changes to clear errors
+  const handleInputChange = useCallback(
+    (setter: (value: string) => void) =>
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setter(e.target.value);
+        if (lastLoginError) {
+          setLastLoginError(null);
+        }
+        if (error) {
+          setError(null);
+        }
+      },
+    [lastLoginError, error]
+  );
+
+  // Handle password input changes to clear errors
+  const handlePasswordChange = useCallback(
+    (value: string) => {
+      setPassword(value);
+      if (lastLoginError) {
+        setLastLoginError(null);
+      }
+      if (error) {
+        setError(null);
+      }
+    },
+    [lastLoginError, error]
+  );
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,12 +98,15 @@ export default function LoginPage() {
       await login(email, password);
       ph().capture("login_attempt", { email, success: true });
 
-      // Use safe navigation to prevent chunk loading errors
-      await safePush("/dashboard");
+      // Navigation is handled by the auth context when session is ready
     } catch (err) {
       productionLogger.error("Login failed", err);
       const errorMessage = (err as Error)?.message || t("errors.generic");
       setError(errorMessage);
+      setLastLoginError(errorMessage); // Track login error to prevent navigation
+
+      // Clear error tracking after a delay to allow retry
+      setTimeout(() => setLastLoginError(null), 3000);
 
       // Log failed login attempt
       ph().capture("login_attempt", {
@@ -88,17 +119,8 @@ export default function LoginPage() {
     }
   };
 
-  useEffect(() => {
-    if (user && !isLoading) {
-      // Use safe navigation to prevent chunk loading errors
-      const timer = setTimeout(() => {
-        safePush("/dashboard");
-        setError(null);
-      }, 50);
-
-      return () => clearTimeout(timer);
-    }
-  }, [user, isLoading, safePush]);
+  // Removed duplicate navigation logic - auth context handles navigation
+  // This prevents race conditions and duplicate navigation attempts
 
   useEffect(() => {
     if (authError) {
@@ -151,7 +173,7 @@ export default function LoginPage() {
                 placeholder={t("email.placeholder")}
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleInputChange(setEmail)}
                 disabled={isLoading}
                 data-testid="email-input"
               />
@@ -164,7 +186,7 @@ export default function LoginPage() {
                 name="password"
                 placeholder=""
                 value={password}
-                onValueChange={setPassword}
+                onValueChange={handlePasswordChange}
                 disabled={isLoading}
                 required
                 data-testid="password-input"

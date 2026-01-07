@@ -3,28 +3,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, CreditCard } from "lucide-react";
 import BillingTab from "./Billing-Tab";
 import UsageTab from "./usage-tab";
+import { useTranslations } from "next-intl";
 
-const tabs = [
-  {
-    id: "billing",
-    label: "Billing",
-    icon: CreditCard,
-    Children: BillingTab,
-  },
-  {
-    id: "usage",
-    label: "Usage & Limits",
-    icon: BarChart3,
-    Children: UsageTab,
-  },
-];
-function page() {
+function BillingUsagePage() {
+  const t = useTranslations();
+
+  const tabs = [
+    {
+      id: "billing",
+      label: t("Settings.billing.billingTab"),
+      icon: CreditCard,
+      Children: BillingTab,
+    },
+    {
+      id: "usage",
+      label: t("Settings.billing.usageTab"),
+      icon: BarChart3,
+      Children: UsageTab,
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Billing & Usage</h1>
+        <h1 className="text-2xl font-bold">{t("Settings.billing.title")}</h1>
         <p className="text-muted-foreground">
-          Manage your subscription and view usage
+          {t("Settings.billing.description")}
         </p>
       </div>
       <Tabs defaultValue={tabs[0].id}>
@@ -45,4 +49,4 @@ function page() {
     </div>
   );
 }
-export default page;
+export default BillingUsagePage;

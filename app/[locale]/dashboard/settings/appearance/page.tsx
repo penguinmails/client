@@ -1,12 +1,15 @@
 import { AppearanceSettings } from "@features/settings/ui/components";
+import { useTranslations } from "next-intl";
 
-function page() {
+function AppearanceSettingsPage() {
+  const t = useTranslations();
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Appearance Settings</h1>
+        <h1 className="text-2xl font-bold">{t("Settings.appearance.title")}</h1>
         <p className="text-muted-foreground">
-          Customize the look and feel of the application
+          {t("Settings.appearance.description")}
         </p>
       </div>
       <AppearanceSettings />
@@ -14,7 +17,7 @@ function page() {
   );
 }
 
-export default page;
+export default AppearanceSettingsPage;
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
