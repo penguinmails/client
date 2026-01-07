@@ -21,9 +21,10 @@ import {
   RadioGroupItem,
 } from "@/components/ui/radio-group";
 import { ProfileFormValues } from "@/types";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sun, Moon, Monitor } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useTheme } from "next-themes";
 
 interface PreferencesFormProps {
   control: Control<ProfileFormValues>;
@@ -62,11 +63,23 @@ const sidebarViews = [
   { value: "hidden", label: "Hidden" },
 ];
 
+const themeOptions = [
+  { value: "light", label: "Light", icon: Sun },
+  { value: "dark", label: "Dark", icon: Moon },
+  { value: "system", label: "System", icon: Monitor },
+];
+
 export default function PreferencesForm({
   control,
   profileLoading,
   submitLoading,
 }: PreferencesFormProps) {
+  const { theme, setTheme } = useTheme();
+
+  const handleThemeChange = (value: string) => {
+    setTheme(value);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -164,6 +177,27 @@ export default function PreferencesForm({
             </FormItem>
           )}
         />
+
+        {/* Theme */}
+        <div className="space-y-3">
+          <Label className="text-sm font-medium">Theme</Label>
+          <RadioGroup 
+            value={theme || "system"}
+            onValueChange={handleThemeChange}
+            disabled={profileLoading || submitLoading}
+            className="flex flex-col space-y-1"
+          >
+            {themeOptions.map((option) => (
+              <div key={option.value} className="flex items-center space-x-2">
+                <RadioGroupItem value={option.value} id={`theme-${option.value}`} />
+                <Label htmlFor={`theme-${option.value}`} className="flex items-center gap-2 cursor-pointer">
+                  <option.icon className="h-4 w-4" />
+                  {option.label}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+        </div>
 
         {/* Notification Preferences */}
         <div className="space-y-4">

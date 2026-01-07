@@ -73,7 +73,8 @@ export const profileFormSchema = z.object({
   role: z.string().optional(),
   timezone: z.string().optional(),
   language: z.string().optional(),
-  sidebarView: z.enum(["collapsed", "expanded"]).optional(),
+  sidebarView: z.enum(["collapsed", "expanded", "hidden"]).optional(),
+  theme: z.enum(["light", "dark", "system"]).optional(),
 });
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;
