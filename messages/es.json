@@ -212,6 +212,153 @@
       }
     }
   },
+  "Settings": {
+    "general": {
+      "title": "Configuración General",
+      "description": "Gestiona las preferencias de tu cuenta y la información del perfil",
+      "profileInformation": {
+        "title": "Información del Perfil",
+        "description": "Actualiza tus detalles personales y avatar."
+      }
+    },
+    "layout": {
+      "title": "Configuración",
+      "loading": "Cargando preferencias...",
+      "theme": {
+        "label": "Tema",
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema",
+        "tooltip": "Cambiar a tema {theme}"
+      },
+      "sidebar": {
+        "expand": "Expandir barra lateral",
+        "collapse": "Contraer barra lateral"
+      },
+      "tabs": {
+        "general": "General",
+        "security": "Seguridad",
+        "notifications": "Notificaciones",
+        "tracking": "Seguimiento",
+        "billing": "Facturación"
+      }
+    },
+    "notifications": {
+      "title": "Preferencias de Notificación",
+      "description": "Elige cómo quieres ser notificado",
+      "emailNotifications": "Notificaciones por Email"
+    },
+    "security": {
+      "title": "Configuración de Seguridad",
+      "description": "Gestiona la seguridad de tu cuenta y la autenticación",
+      "changePassword": "Cambiar Contraseña",
+      "twoFactorAuth": "Autenticación de Dos Factores",
+      "twoFactorDescription": "Añade una capa extra de seguridad a tu cuenta",
+      "securityRecommendations": "Recomendaciones de Seguridad"
+    },
+    "tracking": {
+      "title": "Configuración de Seguimiento",
+      "description": "Gestiona tus preferencias y configuraciones de seguimiento.",
+      "trackingInformation": "Información de Seguimiento"
+    },
+    "billing": {
+      "title": "Facturación y Uso",
+      "description": "Gestiona tu suscripción y visualiza el uso",
+      "billingTab": "Facturación",
+      "usageTab": "Uso y Límites"
+    },
+    "appearance": {
+      "title": "Configuración de Apariencia",
+      "description": "Personaliza la apariencia de la aplicación"
+    },
+    "team": {
+      "title": "Gestión de Equipo",
+      "description": "Gestiona los miembros de tu equipo y sus roles"
+    }
+  },
+  "BillingTab": {
+    "currentPlan": "Plan Actual",
+    "active": "Activo",
+    "planDetails": "Plan {planName}",
+    "price": "${price}/{period}",
+    "period": {
+      "month": "mes",
+      "year": "año"
+    },
+    "emailAccounts": "Cuentas de Email",
+    "campaigns": "Campañas",
+    "changePlan": "Cambiar Plan",
+    "paymentMethod": "Método de Pago",
+    "updateCard": "Actualizar Tarjeta",
+    "addCard": "Añadir Tarjeta",
+    "noPaymentMethod": "No hay método de pago",
+    "addPaymentMethod": "Añade un método de pago para continuar",
+    "companyInformation": "Información de la Empresa",
+    "companyName": "Nombre de la Empresa",
+    "industry": "Industria",
+    "companySize": "Tamaño de la Empresa",
+    "editCompany": "Editar Empresa",
+    "billingAddress": "Dirección de Facturación",
+    "editAddress": "Editar Dirección",
+    "recentInvoices": "Facturas Recientes",
+    "updating": "Actualizando...",
+    "loading": "Cargando...",
+    "company": "Empresa",
+    "street": "123 Business Street",
+    "city": "San Francisco, CA 94105",
+    "country": "Estados Unidos",
+    "vatId": "NIF: US123456789",
+    "errors": {
+      "loadBilling": "Error al cargar los datos de facturación",
+      "updateBilling": "Error al actualizar la información de facturación",
+      "loadCompany": "Error al cargar la información de la empresa",
+      "updateCompany": "Error al actualizar el nombre de la empresa",
+      "noData": "No hay datos de facturación disponibles",
+      "errorOccurred": "Ocurrió un error"
+    },
+    "success": {
+      "billingUpdated": "Información de facturación actualizada correctamente",
+      "companyUpdated": "Nombre de la empresa actualizado correctamente"
+    },
+    "loadingOverlay": "Actualizando información de facturación..."
+  },
+  "UsageTab": {
+    "usageStatistics": "Estadísticas de Uso",
+    "resetMessage": "Tus límites de uso se restablecerán el",
+    "daysRemaining": "días restantes",
+    "unlimited": "Ilimitado",
+    "emailsSent": "Emails Enviados",
+    "contactsReached": "Contactos Alcanzados",
+    "activeCampaigns": "Campañas Activas",
+    "emailAccounts": "Cuentas de Email",
+    "storageUsed": "Almacenamiento Usado",
+    "lowStorage": "Almacenamiento Bajo",
+    "used": "usado",
+    "addStorage": "Añadir Almacenamiento",
+    "purchaseStorage": "Compra almacenamiento adicional a $3 por GB",
+    "failedToLoad": "Error al cargar los datos de uso",
+    "tryAgain": "Intentar de Nuevo",
+    "failedToLoadStorage": "Error al cargar las opciones de almacenamiento"
+  },
+  "SettingsErrorFallback": {
+    "errorOccurred": "Ocurrió un error",
+    "tryAgain": "Intentar de Nuevo"
+  },
+  "BillingLoadingSkeleton": {
+    "loading": "Cargando..."
+  },
+  "BillingPage": {
+    "title": "Facturación y Plan",
+    "description": "Gestiona tu suscripción y visualiza el historial de facturación.",
+    "currentPlan": "Plan Actual",
+    "currentlyOn": "Actualmente estás en el plan {plan}",
+    "upgradePlan": "Actualizar Plan",
+    "manageSubscription": "Gestionar Suscripción",
+    "stripeNote": "La gestión de facturación es manejada por Stripe. Haciendo clic en el botón anterior serás redirigido al portal seguro de Stripe.",
+    "failedToLoad": "Error al cargar los datos de facturación",
+    "retry": "Reintentar",
+    "noData": "No hay datos de facturación disponibles"
+  },
   "Dashboard": {
     "title": "Tablero",
     "welcome": {
