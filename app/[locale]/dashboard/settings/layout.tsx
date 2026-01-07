@@ -13,9 +13,6 @@ import {
   User,
   ChevronLeft,
   ChevronRight,
-  Sun,
-  Moon,
-  Monitor,
 } from "lucide-react";
 import { cn } from "@/shared/utils";
 import { useEffect, useState } from "react";
@@ -33,7 +30,7 @@ function Layout({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  const { preferences, theme, setTheme, updatePreference, isLoading } =
+  const { preferences, updatePreference, isLoading } =
     useClientPreferences();
 
   // Early return if preferences are not loaded
@@ -44,12 +41,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   const handleSidebarToggle = () => {
     if (updatePreference) {
       updatePreference("sidebarCollapsed", !preferences.sidebarCollapsed);
-    }
-  };
-
-  const handleThemeChange = (newTheme: "light" | "dark" | "system") => {
-    if (setTheme) {
-      setTheme(newTheme === "system" ? "auto" : newTheme);
     }
   };
 
@@ -93,75 +84,35 @@ function Layout({ children }: { children: React.ReactNode }) {
     },
   ];
 
-  const themeOptions = [
-    {
-      value: "light" as const,
-      label: t("Settings.layout.theme.light"),
-      icon: Sun,
-    },
-    {
-      value: "dark" as const,
-      label: t("Settings.layout.theme.dark"),
-      icon: Moon,
-    },
-    {
-      value: "system" as const,
-      label: t("Settings.layout.theme.system"),
-      icon: Monitor,
-    },
-  ];
-
   return (
     <div className="flex h-full gap-5">
       <div
         className={cn("space-y-4 transition-all duration-200", sidebarWidth)}
       >
-        {/* Header with theme switcher and sidebar toggle */}
+        {/* Header with sidebar toggle */}
         <div className="flex items-center justify-between">
           {!preferences.sidebarCollapsed && (
             <h1 className="text-xl font-semibold">
               {t("Settings.layout.title")}
             </h1>
           )}
-          <div className="flex items-center gap-2">
-            {/* Theme switcher - only show when sidebar is expanded */}
-            {!preferences.sidebarCollapsed && (
-              <div className="flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                {themeOptions.map((option) => (
-                  <Button
-                    key={option.value}
-                    variant={theme === option.value ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => handleThemeChange(option.value)}
-                    className="h-7 w-7 p-0"
-                    title={t("Settings.layout.theme.tooltip", {
-                      theme: option.label,
-                    })}
-                  >
-                    <Icon icon={option.icon} className="h-3 w-3" />
-                  </Button>
-                ))}
-              </div>
-            )}
-
-            {/* Sidebar toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSidebarToggle}
-              className="h-7 w-7 p-0"
-              title={
-                preferences.sidebarCollapsed
-                  ? t("Settings.layout.sidebar.expand")
-                  : t("Settings.layout.sidebar.collapse")
-              }
-            >
-              <Icon
-                icon={preferences.sidebarCollapsed ? ChevronRight : ChevronLeft}
-                className="h-3 w-3"
-              />
-            </Button>
-          </div>
+          {/* Sidebar toggle */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleSidebarToggle}
+            className="h-7 w-7 p-0"
+            title={
+              preferences.sidebarCollapsed
+                ? t("Settings.layout.sidebar.expand")
+                : t("Settings.layout.sidebar.collapse")
+            }
+          >
+            <Icon
+              icon={preferences.sidebarCollapsed ? ChevronRight : ChevronLeft}
+              className="h-3 w-3"
+            />
+          </Button>
         </div>
 
         <Separator orientation="horizontal" />
@@ -187,29 +138,6 @@ function Layout({ children }: { children: React.ReactNode }) {
             </NavLink>
           ))}
         </div>
-
-        {/* Collapsed theme switcher */}
-        {preferences.sidebarCollapsed && (
-          <>
-            <Separator orientation="horizontal" />
-            <div className="flex flex-col gap-1">
-              {themeOptions.map((option) => (
-                <Button
-                  key={option.value}
-                  variant={theme === option.value ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => handleThemeChange(option.value)}
-                  className="h-8 w-8 p-0"
-                  title={t("Settings.layout.theme.tooltip", {
-                    theme: option.label,
-                  })}
-                >
-                  <Icon icon={option.icon} className="h-3 w-3" />
-                </Button>
-              ))}
-            </div>
-          </>
-        )}
       </div>
 
       <Separator orientation="vertical" />
