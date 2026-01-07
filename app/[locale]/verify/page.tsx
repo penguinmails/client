@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { CheckCircle, XCircle, RefreshCw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
@@ -22,21 +23,9 @@ export default function VerifyEmailPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
+  const t = useTranslations('VerifyEmail');
 
-  useEffect(() => {
-    if (!token) {
-      setVerificationResult({
-        success: false,
-        message: "No verification token provided. Please check your email for the verification link."
-      });
-      setIsVerifying(false);
-      return;
-    }
-
-    verifyToken(token);
-  }, [token]);
-
-  const verifyToken = async (token: string) => {
+  const verifyToken = useCallback(async (token: string) => {
     setIsVerifying(true);
     try {
       const response = await fetch('/api/verify-email', {
@@ -52,17 +41,16 @@ export default function VerifyEmailPage() {
       if (response.ok && data.success) {
         setVerificationResult({
           success: true,
-          message: "Your email has been successfully verified! You can now log in to your account.",
+          message: t('success'),
           email: data.email,
         });
       } else {
-        // Handle different types of verification errors
-        let errorMessage = data.error || "Verification failed. The link may be invalid or expired.";
+        let errorMessage = data.error || t('fail');
         
         if (data.expired) {
-          errorMessage = "This verification link has expired. Please request a new one.";
+          errorMessage = t('expired');
         } else if (data.used) {
-          errorMessage = "This verification link has already been used. Please request a new one.";
+          errorMessage = t('used');
         }
 
         setVerificationResult({
@@ -75,12 +63,25 @@ export default function VerifyEmailPage() {
       productionLogger.error('Verification error:', error);
       setVerificationResult({
         success: false,
-        message: "An error occurred during verification. Please try again later.",
+        message: t('error'),
       });
     } finally {
       setIsVerifying(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    if (!token) {
+      setVerificationResult({
+        success: false,
+        message: t('noToken'),
+      });
+      setIsVerifying(false);
+      return;
+    }
+
+    verifyToken(token);
+  }, [token, verifyToken, t]);
 
   const handleResendEmail = async () => {
     if (!verificationResult?.email) return;
@@ -102,19 +103,18 @@ export default function VerifyEmailPage() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Show success message and redirect to email confirmation
-        toast.success("A new verification link has been sent to your email.", {
+        toast.success(t('resendSuccess'), {
           duration: 4000,
         });
         router.push('/email-confirmation');
       } else {
-        toast.error(data.error || "Failed to resend verification email. Please try again.", {
+        toast.error(data.error || t('resendFail'), {
           duration: 4000,
         });
       }
     } catch (error) {
       productionLogger.error('Error resending verification email:', error);
-      toast.error("Failed to resend verification email. Please try again.", {
+      toast.error(t('resendFail'), {
         duration: 4000,
       });
     } finally {
@@ -127,12 +127,12 @@ export default function VerifyEmailPage() {
   };
 
   const icon = isVerifying ? Loader2 : verificationResult?.success ? CheckCircle : XCircle;
-  const title = isVerifying ? "Verifying your email..." : 
-                verificationResult?.success ? "Email Verified!" : "Verification Failed";
-  const description = isVerifying ? "Please wait while we verify your email address." :
+  const title = isVerifying ? t('title') :
+                verificationResult?.success ? t('titleSuccess') : t('titleFail');
+  const description = isVerifying ? t('description') :
                      verificationResult?.success ? 
-                     "Your account has been successfully activated." :
-                     "There was an issue with your email verification.";
+                     t('descriptionSuccess') :
+                     t('descriptionFail');
 
   return (
     <LandingLayout>
@@ -162,7 +162,7 @@ export default function VerifyEmailPage() {
               <div className="space-y-3">
                 {verificationResult?.success ? (
                   <Button onClick={handleGoToLogin} className="w-full">
-                    Go to Login
+                    {t('goToLogin')}
                   </Button>
                 ) : (
                   <>
@@ -175,12 +175,12 @@ export default function VerifyEmailPage() {
                       {isResending ? (
                         <>
                           <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                          Sending...
+                          {t('sending')}
                         </>
                       ) : (
                         <>
                           <RefreshCw className="mr-2 h-4 w-4" />
-                          Resend verification email
+                          {t('resend')}
                         </>
                       )}
                     </Button>
@@ -190,7 +190,7 @@ export default function VerifyEmailPage() {
                       variant="ghost"
                       className="w-full"
                     >
-                      Go to Login
+                      {t('goToLogin')}
                     </Button>
                   </>
                 )}
@@ -199,7 +199,7 @@ export default function VerifyEmailPage() {
               {/* Additional Help Text */}
               {!verificationResult?.success && (
                 <p className="text-xs text-muted-foreground">
-                  If you&#39;re still having trouble, please contact our support team.
+                  {t('support')}
                 </p>
               )}
             </>
