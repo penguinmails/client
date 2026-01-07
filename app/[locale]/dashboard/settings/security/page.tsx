@@ -13,22 +13,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 // Force dynamic rendering to prevent SSR issues
 export const dynamic = "force-dynamic";
 
-function page() {
+function SecuritySettingsPage() {
+  const t = useTranslations("Settings.security");
+
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold ">Security Settings</h2>
+        <h2 className="text-2xl font-bold">{t("title")}</h2>
         <p className="text-gray-600 dark:text-muted-foreground">
-          Manage your account security and authentication
+          {t("description")}
         </p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Change Password</CardTitle>
+          <CardTitle>{t("changePassword")}</CardTitle>
         </CardHeader>
         <CardContent>
           <ChangePasswordForm />
@@ -37,10 +40,8 @@ function page() {
       <TwoAuthProvider>
         <Card className="grid grid-cols-2 grid-rows-[auto_auto] justify-items-stretch ">
           <CardHeader>
-            <CardTitle>Two-Factor Authentication</CardTitle>
-            <CardDescription>
-              Add an extra layer of security to your account
-            </CardDescription>
+            <CardTitle>{t("twoFactorAuth")}</CardTitle>
+            <CardDescription>{t("twoFactorDescription")}</CardDescription>
           </CardHeader>
           <CardContent className="justify-self-end">
             <TwoFactorAuthenticationSwitch />
@@ -51,7 +52,7 @@ function page() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Security Recommendations</CardTitle>
+            <CardTitle>{t("securityRecommendations")}</CardTitle>
           </CardHeader>
           <CardContent>
             <SecurityRecommendations />
@@ -62,4 +63,4 @@ function page() {
   );
 }
 
-export default page;
+export default SecuritySettingsPage;

@@ -93,7 +93,7 @@ export default function AppearanceSettingsPage() {
                       htmlFor={`theme-${option.value.toLowerCase()}`}
                       className="ml-3 block text-sm font-medium text-gray-700 dark:text-foreground"
                     >
-                      {t(option.i18nKey as any)}
+                      {t(option.i18nKey)}
                     </label>
                   </div>
                 ))}
@@ -124,7 +124,7 @@ export default function AppearanceSettingsPage() {
                       htmlFor={`density-${option.value.toLowerCase()}`}
                       className="ml-3 block text-sm font-medium text-gray-700 dark:text-foreground"
                     >
-                      {t(option.i18nKey as any)}
+                      {t(option.i18nKey)}
                     </label>
                   </div>
                 ))}
