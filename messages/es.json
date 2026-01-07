@@ -122,7 +122,9 @@
       "sending": "Enviando..."
     },
     "captcha": {
-      "notConfigured": "CAPTCHA no está configurado. Por favor, contacta con soporte."
+      "notConfigured": "CAPTCHA no está configurado. Por favor, contacta con soporte.",
+      "noToken": "No se proporcionó ningún token de Turnstile",
+      "verificationFailed": "La verificación de Turnstile falló"
     },
     "footer": {
       "haveAccount": "¿Ya tienes una cuenta?",
@@ -415,5 +417,25 @@
       "error": "Error al guardar la configuración",
       "genericError": "Ocurrió un error"
     }
+  },
+  "VerifyEmail": {
+    "title": "Verificando tu correo electrónico...",
+    "titleSuccess": "¡Correo electrónico verificado!",
+    "titleFail": "Verificación fallida",
+    "description": "Por favor espera mientras verificamos tu dirección de correo electrónico.",
+    "descriptionSuccess": "Tu cuenta ha sido activada exitosamente.",
+    "descriptionFail": "Hubo un problema con la verificación de tu correo electrónico.",
+    "noToken": "No se proporcionó ningún token de verificación. Por favor revisa tu correo electrónico para el enlace de verificación.",
+    "success": "¡Tu correo electrónico ha sido verificado exitosamente! Ahora puedes iniciar sesión en tu cuenta.",
+    "fail": "Verificación fallida. El enlace puede ser inválido o haber expirado.",
+    "expired": "Este enlace de verificación ha expirado. Por favor solicita uno nuevo.",
+    "used": "Este enlace de verificación ya ha sido utilizado. Por favor solicita uno nuevo.",
+    "error": "Ocurrió un error durante la verificación. Por favor inténtalo de nuevo más tarde.",
+    "resendSuccess": "Se ha enviado un nuevo enlace de verificación a tu correo electrónico.",
+    "resendFail": "No se pudo reenviar el correo de verificación. Por favor inténtalo de nuevo.",
+    "goToLogin": "Ir a Iniciar Sesión",
+    "sending": "Enviando...",
+    "resend": "Reenviar correo de verificación",
+    "support": "Si sigues teniendo problemas, por favor contacta a nuestro equipo de soporte."
   }
 }

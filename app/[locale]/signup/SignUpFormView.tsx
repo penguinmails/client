@@ -119,7 +119,11 @@ export default function SignUpFormView() {
     try {
       // Verify Turnstile token on your backend
       if (isTurnstileEnabled) {
-        await verifyTurnstileToken(token);
+        await verifyTurnstileToken(
+          token,
+          t("captcha.noToken"),
+          t("captcha.verificationFailed")
+        );
       }
 
       // Use auth context signup which properly handles duplicate email errors

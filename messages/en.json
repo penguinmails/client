@@ -122,7 +122,9 @@
       "sending": "Sending..."
     },
     "captcha": {
-      "notConfigured": "CAPTCHA is not configured. Please contact support."
+      "notConfigured": "CAPTCHA is not configured. Please contact support.",
+      "noToken": "No Turnstile token provided",
+      "verificationFailed": "Turnstile verification failed"
     },
     "footer": {
       "haveAccount": "Already have an account?",
@@ -415,5 +417,25 @@
       "error": "Failed to save settings",
       "genericError": "An error occurred"
     }
+  },
+  "VerifyEmail": {
+    "title": "Verifying your email...",
+    "titleSuccess": "Email Verified!",
+    "titleFail": "Verification Failed",
+    "description": "Please wait while we verify your email address.",
+    "descriptionSuccess": "Your account has been successfully activated.",
+    "descriptionFail": "There was an issue with your email verification.",
+    "noToken": "No verification token provided. Please check your email for the verification link.",
+    "success": "Your email has been successfully verified! You can now log in to your account.",
+    "fail": "Verification failed. The link may be invalid or expired.",
+    "expired": "This verification link has expired. Please request a new one.",
+    "used": "This verification link has already been used. Please request a new one.",
+    "error": "An error occurred during verification. Please try again later.",
+    "resendSuccess": "A new verification link has been sent to your email.",
+    "resendFail": "Failed to resend verification email. Please try again.",
+    "goToLogin": "Go to Login",
+    "sending": "Sending...",
+    "resend": "Resend verification email",
+    "support": "If you're still having trouble, please contact our support team."
   }
 }
