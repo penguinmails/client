@@ -647,7 +647,7 @@ All actions include automatic performance monitoring:
 - **Execution time tracking**
 - **Success/failure rate monitoring**
 - **Error categorization and logging**
-- **ConvexQueryHelper integration**
+- **Database query tracking**
 - **Cache hit rate monitoring**
 
 ### Performance Metrics
@@ -661,7 +661,7 @@ interface PerformanceMetrics {
   userId?: string;
   companyId?: string;
   cacheHit?: boolean;
-  convexQueryTime?: number;
+  dbQueryTime?: number;
 }
 ```
 
@@ -687,7 +687,6 @@ interface HealthStatus {
   timestamp: number;
   checks: {
     database: "pass" | "fail";
-    convex: "pass" | "fail";
     cache: "pass" | "fail";
     external: "pass" | "fail";
   };

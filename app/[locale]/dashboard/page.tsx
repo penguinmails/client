@@ -30,7 +30,7 @@ import { useAuth } from "@features/auth/ui/context/auth-context";
 /**
  * Migrated Dashboard Content with real-time analytics KPIs.
  * Replaces conflicting dashboard KPIs with AnalyticsCalculator calculations.
- * Uses standardized field names and Convex subscriptions for real-time updates.
+ * Uses standardized field names for real-time updates.
  */
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");

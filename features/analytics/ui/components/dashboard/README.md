@@ -41,7 +41,7 @@ export default function AnalyticsPage() {
 
 ## Migration Summary
 
-All analytics functionality has been migrated from Convex to NileDB:
+All analytics functionality has been migrated to NileDB (OLAP layer):
 - ✅ Hooks migrated: `useDomainAnalytics`, `useDomainHealthMonitoring`, `useCrossDomainAnalytics`
 - ✅ API routes created: `/api/analytics/domains`, `/api/analytics/cross-domain`
 - ✅ Database schema created with seed data

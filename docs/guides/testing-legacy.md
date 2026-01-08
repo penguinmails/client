@@ -194,34 +194,6 @@ describe('Analytics Service Integration', () => {
 });
 ```
 
-### Convex Integration Testing
-
-```typescript
-// Example: convexQueries.integration.test.ts
-import { ConvexReactClient } from 'convex/react';
-import { convexQuery } from '@convex-dev/test';
-
-describe('Convex Queries', () => {
-  let client: ConvexReactClient;
-
-  beforeEach(() => {
-    client = new ConvexReactClient('http://localhost:3210');
-  });
-
-  it('should fetch user campaigns', async () => {
-    const result = await convexQuery(
-      client,
-      api.campaigns.getUserCampaigns,
-      { userId: 'user-1' }
-    );
-
-    expect(Array.isArray(result)).toBe(true);
-    expect(result[0]).toHaveProperty('id');
-    expect(result[0]).toHaveProperty('name');
-  });
-});
-```
-
 ## End-to-End Testing
 
 ### E2E Test Example

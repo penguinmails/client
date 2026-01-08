@@ -1,9 +1,7 @@
 /**
- * Email verification utilities for handling token management
- * without requiring Convex client in API routes
+ * Email verification utilities for handling token management in API routes.
  * 
- * This module interacts with the email_verification_tokens table
- * which is managed by Convex through the schema definition.
+ * This module interacts with the email_verification_tokens table.
  */
 
 import { nile } from '@/lib/nile/nile';
@@ -47,8 +45,7 @@ export function getVerificationTokenExpiry(): number {
 /**
  * Store verification token in database
  * 
- * This function assumes the email_verification_tokens table exists
- * and is managed through Convex schema migrations.
+ * This function assumes the email_verification_tokens table exists.
  */
 export async function storeVerificationToken(
   email: string, 

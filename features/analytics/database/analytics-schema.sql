@@ -1,8 +1,8 @@
 -- ============================================================================
 -- ANALYTICS SCHEMA FOR NILEDB OLAP DATABASE (Port 5444)
 -- ============================================================================
--- This schema creates the analytics tables needed for the migrated
--- Convex to NileDB analytics system.
+-- This schema creates the analytics tables needed for the
+-- NileDB analytics system.
 --
 -- USAGE:
 -- psql -h localhost -p 5444 -U nile -d nile < analytics-schema.sql

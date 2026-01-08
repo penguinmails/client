@@ -10,20 +10,15 @@ This guide covers common issues encountered during development and their solutio
 
 #### "Type instantiation is excessively deep and possibly infinite"
 
-**Symptoms**: TypeScript compiler errors with complex Convex types
-**Cause**: Convex type system complexity interacting with TypeScript's type inference
-**Solution**: Use type assertions with explanatory comments
+**Symptoms**: TypeScript compiler errors with complex nested types
+**Cause**: Deep type system complexity interacting with TypeScript's type inference
+**Solution**: Use type assertions or simplify types
 
 ```typescript
-// @ts-expect-error - Convex type instantiation is excessively deep (platform limitation)
-const result = await convex.query(api.analytics.getCampaignStats, args);
-
-// Alternative: Simplify types
+// Simplify complex types to avoid instantiation depth issues
 type SimplifiedStats = Pick<CampaignStats, "openRate" | "clickRate">;
-const stats: SimplifiedStats = result;
+const stats: SimplifiedStats = result as any;
 ```
-
-**Related**: [Convex Limitations](./convex-limitations.md#type-system-limitations)
 
 #### "Cannot find module" errors
 
@@ -56,24 +51,20 @@ const { data, error } = useQuery();
 const { data, error: _error } = useQuery();
 ```
 
-### Convex Integration Issues
+### Database Integration Issues
 
-#### Query/Mutation not found
+#### Query or Service not found
 
-**Symptoms**: Runtime errors about missing Convex functions
-**Cause**: Function not exported or incorrect import path
-**Solution**: Check function exports and regenerate Convex types
+**Symptoms**: Runtime errors about missing database operations or services
+**Cause**: Service not properly initialized or incorrect import path
+**Solution**: Check service exports and initialization logic
 
-```bash
-# Regenerate Convex types
-npx convex dev
-
-# Check function exports
-# In convex/analytics.ts
-export { getCampaignStats } from './analytics/queries';
+```typescript
+// Check service initialization in @/lib/services/analytics
+export const analyticsService = new AnalyticsService();
 ```
 
-#### Authentication errors in Convex functions
+#### Authentication errors in database operations
 
 **Symptoms**: "User not authenticated" errors
 **Cause**: Missing authentication context or expired session
@@ -93,14 +84,14 @@ const result = await someAuthenticatedOperation(authenticatedCtx);
 
 ```typescript
 // ❌ Inefficient query
-const campaigns = await ctx.db.query("campaigns").collect();
+const campaigns = await db.query("SELECT * FROM campaigns");
 const userCampaigns = campaigns.filter((c) => c.userId === userId);
 
-// ✅ Efficient query with index
-const userCampaigns = await ctx.db
-  .query("campaigns")
-  .withIndex("by_user", (q) => q.eq("userId", userId))
-  .collect();
+// ✅ Efficient query with where clause
+const userCampaigns = await db.query(
+  "SELECT * FROM campaigns WHERE user_id = $1",
+  [userId]
+);
 ```
 
 ### React/Next.js Issues
@@ -302,12 +293,12 @@ const debug = {
 debug.log("Campaign data loaded", campaignData);
 ```
 
-#### Convex Dashboard
+#### Database Dashboard
 
-- Monitor query performance
-- Check function logs
-- Verify database state
-- Test functions directly
+- Monitor query performance via NileDB dashboard
+- Check database logs
+- Verify table states and migrations
+- Test SQL queries directly
 
 ### Performance Debugging
 
@@ -351,7 +342,7 @@ function measurePerformance<T>(name: string, fn: () => Promise<T>): Promise<T> {
 
 // Usage
 const campaigns = await measurePerformance("Load campaigns", () =>
-  convex.query(api.campaigns.list)
+  campaignService.listCampaigns()
 );
 ```
 
@@ -405,7 +396,10 @@ class ServiceError extends Error {
 class CampaignService {
   async getCampaign(id: string): Promise<Campaign> {
     try {
-      const campaign = await convex.query(api.campaigns.get, { id });
+      const campaign = await db.query(
+        "SELECT * FROM campaigns WHERE id = $1",
+        [id]
+      );
 
       if (!campaign) {
         throw new ServiceError(
@@ -488,16 +482,9 @@ function trackPerformance(
 ### Internal Resources
 
 - [Analytics Troubleshooting](../../lib/services/analytics/troubleshooting.md)
-- [Convex Limitations](./convex-limitations.md)
+- [NileDB Optimization](../database-architecture.md)
 - [Authentication Guide](./authentication.md)
 - [Billing Troubleshooting](../../lib/actions/billing/troubleshooting.md)
-
-### External Resources
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [React Documentation](https://react.dev)
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [Convex Documentation](https://docs.convex.dev)
 
 ### Team Communication
 

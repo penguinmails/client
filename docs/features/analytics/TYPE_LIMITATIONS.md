@@ -2,109 +2,70 @@
 
 ## Overview
 
-This document outlines the specific type limitations, constraints, and workarounds encountered in the analytics system, particularly related to Convex integration, TypeScript compiler limitations, and platform-specific constraints.
+This document outlines the specific type limitations, constraints, and workarounds encountered in the analytics system, particularly related to complex service integration, TypeScript compiler limitations, and deep type instantiation constraints.
 
-## Convex Type Limitations
+## Complex Type System Constraints
 
 ### Deep Type Instantiation Issues
 
-**Problem**: Convex's generated types can cause "type instantiation is excessively deep" errors when used with complex generic types.
+**Problem**: Generating complex types for large analytics schemas can cause "type instantiation is excessively deep" errors when used with multiple generic parameters.
 
 **Affected Areas**:
 
-- Analytics service methods with multiple generic parameters
-- Complex query functions with nested data structures
-- Mutation functions with extensive validation schemas
+- Analytics service methods with multiple generic levels
+- Complex query builders with nested data structures
+- Data transformers with extensive recursive definitions
 
-**Example of Problematic Code**:
-
-```typescript
-// This can cause deep instantiation errors
-export const getComplexAnalytics = query({
-  args: {
-    fiv.object({
-      dateRange: v.union(v.literal('last7d'), v.literal('last30d')),
-      campaigns: v.optional(v.array(v.string())),
-      mailboxes: v.optional(v.array(v.string())),
-      domains: v.optional(v.array(v.string())),
-      // ... many more nested properties
-    }),
-    options: v.object({
-      includeTimeSeries: v.boolean(),
-      includeComparison: v.boolean(),
-      granularity: v.union(v.literal('day'), v.literal('week'), v.literal('month')),
-      // ... more nested options
-    })
-  },
-  handler: async (ctx, args) => {
-    // Complex query logic
-  }
-});
-```
-
-**Workaround Pattern**:
+**Example of Problematic Pattern**:
 
 ```typescript
-// Simplify argument validation
-export const getComplexAnalytics = query({
-  args: {
-    // Use simpler validation schemas
-    companyId: v.string(),
-    filtersJson: v.string(), // Pass complex objects as JSON strings
-    optionsJson: v.string(),
-  },
-  handler: async (ctx, args) => {
-    // Parse and validate JSON on the server side
-    const filters = JSON.parse(args.filtersJson) as AnalyticsFilters;
-    const options = JSON.parse(args.optionsJson) as AnalyticsOptions;
-
-    // Validate parsed objects
-    validateAnalyticsFilters(filters);
-    validateAnalyticsOptions(options);
-
-    // Proceed with query logic
-  },
-});
-
-// Client-side helper
-export async function getComplexAnalyticsHelper(
-  filters: AnalyticsFilters,
-  options: AnalyticsOptions
-): Promise<AnalyticsResult> {
-  return await convex.query(api.analytics.getComplexAnalytics, {
-    companyId: filters.companyId,
-    filtersJson: JSON.stringify(filters),
-    optionsJson: JSON.stringify(options),
-  });
+// Deeply nested generic types can exceed instantiation limits
+export interface AnalyticsQueryBuilder<T, U, V> {
+  withFilters<F extends DeepFilter<T>>(filters: F): AnalyticsQueryBuilder<T, U, V>;
+  withOptions<O extends DeepOptions<U>>(options: O): AnalyticsQueryBuilder<T, U, V>;
+  // ... nested definitions that build up depth
 }
 ```
 
-### ConvexQueryHelper Type Assertions
-
-**Problem**: The ConvexQueryHelper requires type assertions to work around Convex's type system limitations.
-
-**Implementation**:
+**Workaround Pattern: Type Simplification**:
 
 ```typescript
-export class ConvexQueryHelper {
-  async query<T>(
-    queryFn: FunctionReference<"query">,
-    args: Record<string, any>
-  ): Promise<T> {
-    // @ts-expect-error - Convex type instantiation is excessively deep (platform limitation)
-    // This is a known limitation of the Convex TypeScript integration
-    const result = await this.convex.query(queryFn, args);
-    return result as T;
-  }
+// Define explicit, simplified interfaces for complex data
+export interface SimplifiedFilters {
+  companyId: string;
+  startDate: string;
+  endDate: string;
+  entityIds: string[];
+}
 
-  async mutation<T>(
-    mutationFn: FunctionReference<"mutation">,
-    args: Record<string, any>
-  ): Promise<T> {
-    // @ts-expect-error - Convex type instantiation is excessively deep (platform limitation)
-    // This is a known limitation of the Convex TypeScript integration
-    const result = await this.convex.mutation(mutationFn, args);
-    return result as T;
+// Pass complex configurations as simplified objects
+export async function getComplexAnalytics(
+  filters: SimplifiedFilters,
+  options: AnalyticsOptions
+): Promise<AnalyticsResult> {
+  const result = await analyticsService.executeRawQuery({
+    filters,
+    options
+  });
+  return result;
+}
+```
+
+### Database Service Type Assertions
+
+**Problem**: Low-level database drivers often return `any` or generic types that require careful assertion to maintain type safety in the application layer.
+
+**Implementation Pattern**:
+
+```typescript
+export class AnalyticsDatabaseService {
+  async executeQuery<T>(
+    sql: string,
+    params: any[]
+  ): Promise<T[]> {
+    // @ts-expect-error - Complex result mapping can hit instantiation depth limits
+    const rows = await this.db.query(sql, params);
+    return rows as T[];
   }
 }
 ```
@@ -112,24 +73,21 @@ export class ConvexQueryHelper {
 **Type Safety Preservation**:
 
 ```typescript
-// Maintain type safety at the application level
-export class CampaignAnalyticsService {
-  async getPerformanceMetrics(
-    campaignIds?: string[],
-    filters?: AnalyticsFilters
-  ): Promise<CampaignAnalytics[]> {
-    // Type is preserved through generic parameter
-    return await this.convexHelper.query<CampaignAnalytics[]>(
-      api.campaigns.getPerformanceMetrics,
-      { campaignIds, filters }
+// Maintain type safety at the service level
+export class CampaignService {
+  async getMetrics(campaignId: string): Promise<CampaignMetrics> {
+    const [metrics] = await this.db.executeQuery<CampaignMetrics>(
+      "SELECT * FROM campaign_analytics WHERE id = $1",
+      [campaignId]
     );
+    return metrics;
   }
 }
 ```
 
 ### Schema Complexity Limitations
 
-**Problem**: Overly complex Convex schemas can cause compilation issues and poor IDE performance.
+**Problem**: Overly complex database schemas can lead to complicated result types that are difficult to manage in TypeScript.
 
 **Constraint**: Keep schema definitions simple and avoid deeply nested objects.
 
@@ -552,7 +510,7 @@ interface AnalyticsData {
 
 ## Best Practices for Working with Limitations
 
-1. **Keep schemas simple** - Avoid deeply nested Convex schemas
+1. **Keep schemas simple** - Avoid deeply nested schemas
 2. **Use type assertions judiciously** - Document why they're necessary
 3. **Split large types** - Break complex types into smaller, focused interfaces
 4. **Limit generic complexity** - Use fewer, more focused generic parameters
@@ -565,9 +523,9 @@ interface AnalyticsData {
 
 ## Future Considerations
 
-### Convex Type System Improvements
+### Type System Improvements
 
-Monitor Convex updates for improvements to the TypeScript integration that might allow removal of current workarounds.
+Monitor TypeScript and library updates for improvements to the type system that might allow removal of current workarounds.
 
 ### TypeScript Version Updates
 

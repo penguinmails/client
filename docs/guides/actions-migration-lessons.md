@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document captures key lessons learned from migrating and refactoring the actions directory, including type consistency improvements, modular architecture patterns, and Convex integration strategies.
+This document captures key lessons learned from migrating and refactoring the actions directory, including type consistency improvements, modular architecture patterns, and database integration strategies.
 
 ## Architectural Transformation Lessons
 
@@ -97,35 +97,32 @@ export interface ActionError {
 3. **Generic type support** - Flexible type system for different data types
 4. **Backward compatibility** - Migration path for existing code
 
-## Convex Integration Patterns
+## Database Integration Patterns
 
-### ConvexQueryHelper Standardization
+### Database Service Standardization
 
-**Challenge**: Inconsistent Convex integration patterns across actions.
+**Challenge**: Inconsistent database integration patterns across actions.
 
 **Problem**: Mixed integration approaches
 
 ```typescript
-// Pattern 1: Direct Convex calls with type assertions
-// @ts-expect-error - Convex type issues
-const result = await convex.query(api.billing.getBillingInfo, args);
+// Pattern 1: Direct database calls with type assertions
+const result = await db.query(queryStr, args);
 
 // Pattern 2: Custom wrapper functions
-const result = await queryWithErrorHandling(api.billing.getBillingInfo, args);
+const result = await queryWithErrorHandling(queryStr, args);
 
 // Pattern 3: Mixed approaches with inconsistent error handling
 ```
 
-**Solution**: Standardized ConvexQueryHelper pattern
+**Solution**: Standardized Database Service pattern
 
 ```typescript
 // All actions use consistent pattern
 export async function getBillingInfo(): Promise<ActionResult<BillingInfo>> {
   try {
-    const convexHelper = createConvexHelper(convex);
-    const billingInfo = await convexHelper.query<BillingInfo>(
-      api.billing.getBillingInfo,
-      { userId: await getCurrentUserId() }
+    const billingInfo = await billingService.getBillingInfo(
+      await getCurrentUserId()
     );
 
     return { success: true, data: billingInfo };
@@ -144,9 +141,9 @@ export async function getBillingInfo(): Promise<ActionResult<BillingInfo>> {
 
 **Benefits**:
 
-- **Consistent error handling** across all Convex operations
+- **Consistent error handling** across all database operations
 - **Type safety** maintained at application level
-- **Centralized workarounds** for Convex type limitations
+- **Centralized logic** for service-to-database mapping
 - **Easier debugging** with structured error information
 
 ### Performance Optimization Patterns
@@ -418,7 +415,7 @@ lib/actions/__tests__/
 │   ├── invitations.test.ts    # Invitation handling
 │   └── permissions.test.ts    # Permission management
 └── integration/
-    ├── convex-integration.test.ts # Convex integration tests
+    ├── database-integration.test.ts # Database integration tests
     └── error-handling.test.ts     # Cross-domain error handling
 ```
 
@@ -429,7 +426,7 @@ lib/actions/__tests__/
 ```typescript
 // Standardized mock factory pattern
 export class ActionTestUtils {
-  static createMockConvexHelper() {
+  static createMockDatabaseService() {
     return {
       query: jest.fn(),
       mutation: jest.fn(),
@@ -462,15 +459,15 @@ export class ActionTestUtils {
 
 // Usage in tests
 describe("Billing Actions", () => {
-  let mockConvexHelper: jest.Mocked<ConvexQueryHelper>;
+  let mockBillingService: jest.Mocked<BillingService>;
 
   beforeEach(() => {
-    mockConvexHelper = ActionTestUtils.createMockConvexHelper();
+    mockBillingService = ActionTestUtils.createMockDatabaseService();
   });
 
   it("should get billing info successfully", async () => {
     const mockBillingInfo = ActionTestUtils.createMockBillingInfo();
-    mockConvexHelper.query.mockResolvedValue(mockBillingInfo);
+    mockBillingService.getBillingInfo.mockResolvedValue(mockBillingInfo);
 
     const result = await getBillingInfo("test-user-id");
 
@@ -565,7 +562,7 @@ export async function getBillingInfo(
 
 2. **Type Consistency**: Centralized type definitions eliminate compilation errors and improve developer experience
 
-3. **Standardized Patterns**: Consistent patterns for Convex integration, error handling, and authentication reduce cognitive load
+3. **Standardized Patterns**: Consistent consistent patterns for database integration, error handling, and authentication reduce cognitive load
 
 4. **Comprehensive Testing**: Domain-organized test suites with consistent mocking patterns improve test reliability
 

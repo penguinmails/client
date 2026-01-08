@@ -23,7 +23,7 @@ graph TB
     end
 
     subgraph "Data Layer"
-        Convex[Convex Backend]
+        Nile[NileDB Backend]
         Cache[Redis Cache]
         DB[(Database)]
     end
@@ -36,13 +36,13 @@ graph TB
     AS --> MAS
     AS --> TAS
 
-    CAS --> Convex
-    DAS --> Convex
-    MAS --> Convex
-    TAS --> Convex
+    CAS --> Nile
+    DAS --> Nile
+    MAS --> Nile
+    TAS --> Nile
 
     AS --> Cache
-    Convex --> DB
+    Nile --> DB
 ```
 
 ## Core Architectural Principles
@@ -78,7 +78,7 @@ Clear boundaries between data processing and presentation:
 Optimized for high-volume analytics processing:
 
 - Intelligent caching with Redis
-- Index-optimized Convex queries
+- Index-optimized database queries
 - Batch processing for aggregations
 - Progressive loading for large datasets
 
@@ -132,9 +132,8 @@ class CampaignAnalyticsService extends BaseAnalyticsService {
     campaignIds: string[]
   ): Promise<CampaignMetrics[]> {
     return this.executeWithCache("performance", campaignIds, {}, async () => {
-      return await convex.query(api.analytics.getCampaignPerformance, {
-        campaignIds,
-      });
+      // Fetch metrics from NileDB
+      return await analyticsProvider.getCampaignMetrics(campaignIds);
     });
   }
 }
@@ -142,27 +141,26 @@ class CampaignAnalyticsService extends BaseAnalyticsService {
 
 ## Data Architecture
 
-### Convex Schema Design
+### Database Schema Design
 
 Optimized for analytics queries with proper indexing:
 
-```typescript
-// Campaign analytics table
-const campaignAnalytics = defineTable({
-  campaignId: v.string(),
-  companyId: v.string(),
-  metrics: v.object({
-    sent: v.number(),
-    delivered: v.number(),
-    opened_tracked: v.number(),
-    clicked_tracked: v.number(),
-    // ... other metrics
-  }),
-  timestamp: v.number(),
-})
-  .index("by_campaign", ["campaignId"])
-  .index("by_company", ["companyId"])
-  .index("by_timestamp", ["timestamp"]);
+```sql
+-- Campaign analytics table schema
+CREATE TABLE campaign_analytics (
+  id UUID PRIMARY KEY,
+  campaign_id TEXT NOT NULL,
+  company_id TEXT NOT NULL,
+  sent INTEGER DEFAULT 0,
+  delivered INTEGER DEFAULT 0,
+  opened_tracked INTEGER DEFAULT 0,
+  clicked_tracked INTEGER DEFAULT 0,
+  timestamp TIMESTAMP DEFAULT NOW()
+);
+
+-- Indexes for performance
+CREATE INDEX idx_campaign_id ON campaign_analytics(campaign_id);
+CREATE INDEX idx_company_id ON campaign_analytics(company_id);
 ```
 
 ### Caching Strategy
@@ -185,25 +183,18 @@ CACHE_TTL = {
 
 ## Integration Patterns
 
-### Convex Integration
+### Database Integration
 
 Standardized patterns for backend integration:
 
 ```typescript
-// Query pattern
-export const getCampaignAnalytics = query({
-  args: { campaignIds: v.array(v.string()) },
-  handler: async (ctx, args) => {
-    // Company-scoped query with proper indexing
-    return await ctx.db
-      .query("campaignAnalytics")
-      .withIndex("by_campaign")
-      .filter((q) =>
-        q.or(...args.campaignIds.map((id) => q.eq(q.field("campaignId"), id)))
-      )
-      .collect();
-  },
-});
+// Data retrieval pattern
+async function getCampaignAnalytics(campaignIds: string[]) {
+  // Database-scoped query with proper indexing using NileDB client
+  return await nile.db("campaign_analytics")
+    .whereIn("campaign_id", campaignIds)
+    .orderBy("timestamp", "desc");
+}
 ```
 
 ### React Integration
@@ -256,7 +247,7 @@ const retryConfig = {
 Automatic fallback to cached data when services are unavailable:
 
 ```typescript
-// Service automatically uses cached data when Convex is down
+// Service automatically uses cached data when database is down
 const metrics = await service.getMetrics(ids);
 // Returns cached data if service unavailable
 ```
@@ -298,8 +289,8 @@ const metrics = await service.getMetrics(ids);
 ```typescript
 // All analytics operations require authentication
 const analytics = await analyticsService.getMetrics(campaignIds, {
-  userId: ctx.auth.userId,
-  companyId: ctx.auth.companyId,
+  userId: auth.userId,
+  companyId: auth.companyId,
 });
 ```
 
@@ -358,11 +349,9 @@ const health = await analyticsService.getDetailedHealthCheck();
 
 ```typescript
 // Schema evolution pattern
-export const migrateAnalyticsSchema = mutation({
-  handler: async (ctx) => {
-    // Safe schema migration with backward compatibility
-  },
-});
+async function migrateAnalyticsSchema() {
+  // Safe schema migration with backward compatibility using SQL
+}
 ```
 
 ### Deployment Strategy
@@ -383,6 +372,6 @@ export const migrateAnalyticsSchema = mutation({
 - [Service Implementation](../../lib/services/analytics/README.md)
 - [Component Architecture](../../components/analytics/README.md)
 - [Type System](../../types/analytics/README.md)
-- [Convex Setup](../../lib/services/analytics/convex-setup.md)
-- [Performance Optimization](../development/convex-limitations.md#analytics-performance)
+- [NileDB Setup](../../database-architecture.md)
+- [Performance Optimization](../../database-architecture.md)
 - [Troubleshooting Guide](../../lib/services/analytics/troubleshooting.md)
