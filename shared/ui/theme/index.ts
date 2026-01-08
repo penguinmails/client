@@ -10,7 +10,7 @@ export const notificationStyles = {
   container: 'p-4 rounded-lg border',
   success: 'bg-success/10 border-success/20 text-success-text',
   error: 'bg-destructive/10 border-destructive/20 text-destructive-text',
-  warning: 'bg-warning/10 border-warning/20 text-warning-text',
+  warning: 'bg-warning/20 border-warning/30 text-warning-text',
   info: 'bg-info/10 border-info/20 text-info-text',
   title: 'font-semibold text-sm',
   message: 'text-sm mt-1',
