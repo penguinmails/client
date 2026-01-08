@@ -22,7 +22,7 @@ This is your new starting point for all documentation. It provides:
 | Analytics troubleshooting    | Scattered across multiple files | [`lib/services/analytics/troubleshooting.md`](../lib/services/analytics/troubleshooting.md)     |
 | Database setup and optimization | Multiple database docs | [`docs/development/niledb-optimization.md`](./guides/niledb-optimization.md) |
 | TypeScript patterns          | Various type-related files      | [`docs/types/README.md`](./types/README.md)                                                     |
-| Development workflow         | Mixed with feature docs         | [`docs/development/README.md`](./guides/README.md)                                         |
+| Development workflow         | Mixed with feature docs         | [`docs/guides/README.md`](./README.md)                                         |
 | Testing strategies           | Scattered across features       | [`docs/development/testing.md`](./development/testing.md)                                       |
 | Authentication patterns      | AUTH\_\*.md files               | [`docs/development/authentication.md`](./development/authentication.md)                         |
 | Billing implementation       | BILLING\_\*.md files            | [`lib/actions/billing/implementation-guide.md`](../lib/actions/billing/implementation-guide.md) |

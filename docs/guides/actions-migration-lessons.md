@@ -562,7 +562,7 @@ export async function getBillingInfo(
 
 2. **Type Consistency**: Centralized type definitions eliminate compilation errors and improve developer experience
 
-3. **Standardized Patterns**: Consistent consistent patterns for database integration, error handling, and authentication reduce cognitive load
+3. **Standardized Patterns**: Consistent patterns for database integration, error handling, and authentication reduce cognitive load
 
 4. **Comprehensive Testing**: Domain-organized test suites with consistent mocking patterns improve test reliability
 
