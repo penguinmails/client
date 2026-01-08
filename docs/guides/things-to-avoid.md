@@ -136,7 +136,6 @@ const metrics = await campaignService.getBatchMetrics(campaignIds);
 
 ```typescript
 // ❌ DON'T: Unscoped queries
-// ❌ DON'T: Unscoped queries
 export async function getCampaigns(context: ActionContext) {
   // Returns all companies' data if companyId is missing!
   return await db.query("SELECT * FROM campaigns");
