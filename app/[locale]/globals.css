@@ -70,26 +70,6 @@
   --shadow-opacity: var(--shadow-opacity);
   --color-shadow-color: var(--shadow-color);
   --color-destructive-foreground: var(--destructive-foreground);
-
-  /* Semantic state colors */
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-success-text: var(--success-text);
-  --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
-  --color-warning-text: var(--warning-text);
-  --color-info: var(--info);
-  --color-info-foreground: var(--info-foreground);
-  --color-info-text: var(--info-text);
-  --color-destructive-text: var(--destructive-text);
-
-  /* Additional semantic colors */
-  --color-highlight: var(--highlight);
-  --color-highlight-foreground: var(--highlight-foreground);
-  --color-highlight-text: var(--highlight-text);
-  --color-attention: var(--attention);
-  --color-attention-foreground: var(--attention-foreground);
-  --color-attention-text: var(--attention-text);
 }
 
 :root {
@@ -146,26 +126,6 @@
   --tracking-normal: 0em;
   --destructive-foreground: oklch(1.0000 0 0);
   --letter-spacing: 0em;
-
-  /* Semantic state colors */
-  --success: oklch(0.7200 0.1900 142);
-  --success-foreground: oklch(1.0000 0 0);
-  --success-text: oklch(0.4000 0.1000 145);
-  --warning: oklch(0.8200 0.2000 55);
-  --warning-foreground: oklch(0.2500 0 0);
-  --warning-text: oklch(0.7050 0.1910 41);
-  --info: oklch(0.7000 0.1500 230);
-  --info-foreground: oklch(1.0000 0 0);
-  --info-text: oklch(0.4000 0.1200 240);
-  --destructive-text: oklch(0.4500 0.1800 25);
-
-  /* Additional semantic colors */
-  --highlight: oklch(0.6500 0.1500 300);
-  --highlight-foreground: oklch(1.0000 0 0);
-  --highlight-text: oklch(0.4000 0.1200 300);
-  --attention: oklch(0.7500 0.1500 50);
-  --attention-foreground: oklch(1.0000 0 0);
-  --attention-text: oklch(0.4500 0.1300 45);
 }
 
 .dark {
@@ -221,26 +181,6 @@
   --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   --destructive-foreground: oklch(1.0000 0 0);
-
-  /* Semantic state colors - dark mode */
-  --success: oklch(0.6500 0.1700 142);
-  --success-foreground: oklch(1.0000 0 0);
-  --success-text: oklch(0.7500 0.1600 142);
-  --warning: oklch(0.7800 0.1800 55);
-  --warning-foreground: oklch(0.2000 0 0);
-  --warning-text: oklch(0.7050 0.1910 41);
-  --info: oklch(0.6500 0.1300 230);
-  --info-foreground: oklch(1.0000 0 0);
-  --info-text: oklch(0.7500 0.1300 230);
-  --destructive-text: oklch(0.7000 0.1800 25);
-
-  /* Additional semantic colors - dark mode */
-  --highlight: oklch(0.6000 0.1300 300);
-  --highlight-foreground: oklch(1.0000 0 0);
-  --highlight-text: oklch(0.7500 0.1300 300);
-  --attention: oklch(0.7000 0.1300 50);
-  --attention-foreground: oklch(1.0000 0 0);
-  --attention-text: oklch(0.8000 0.1400 50);
 }
 
 @layer base {
@@ -493,35 +433,18 @@ body {
 }
 
 .grid-cols-responsive {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  @apply grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4;
 }
 
 @keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes bounce {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-20px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
 }
 
 .gradient-bg {

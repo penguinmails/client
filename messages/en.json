@@ -32,8 +32,7 @@
       "incorrectPassword": "Incorrect password",
       "userNotFound": "User not found",
       "generic": "Login failed. Please check your credentials.",
-      "captchaRequired": "Please complete the CAPTCHA verification.",
-      "verificationFailed": "CAPTCHA verification failed. Please try again."
+      "captchaRequired": "Please complete the CAPTCHA verification."
     },
     "signup": {
       "text": "Don't have an account?",

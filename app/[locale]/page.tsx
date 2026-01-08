@@ -90,11 +90,7 @@ export default function LoginPage() {
 
     try {
       if (showTurnstile && turnstileToken) {
-        await verifyTurnstileToken(
-          turnstileToken,
-          t("errors.captchaRequired"),
-          t("errors.verificationFailed")
-        );
+        await verifyTurnstileToken(turnstileToken);
         ph().capture("captcha_completed", { email });
       }
 
