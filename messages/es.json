@@ -32,7 +32,8 @@
       "incorrectPassword": "Contraseña incorrecta",
       "userNotFound": "Usuario no encontrado",
       "generic": "Error de inicio de sesión. Por favor, revisa tus credenciales.",
-      "captchaRequired": "Por favor, completa la verificación CAPTCHA."
+      "captchaRequired": "Por favor, completa la verificación CAPTCHA.",
+      "verificationFailed": "La verificación CAPTCHA falló. Por favor, inténtalo de nuevo."
     },
     "signup": {
       "text": "¿No tienes una cuenta?",
