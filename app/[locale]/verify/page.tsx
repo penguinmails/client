@@ -17,21 +17,22 @@ interface VerificationResult {
 }
 
 export default function VerifyEmailPage() {
-  const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
+  const [verificationResult, setVerificationResult] =
+    useState<VerificationResult | null>(null);
   const [isVerifying, setIsVerifying] = useState(true);
   const [isResending, setIsResending] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get('token');
-  const t = useTranslations('VerifyEmail');
+  const token = searchParams.get("token");
+  const t = useTranslations("VerifyEmail");
 
   const verifyToken = useCallback(async (token: string) => {
     setIsVerifying(true);
     try {
-      const response = await fetch('/api/verify-email', {
-        method: 'POST',
+      const response = await fetch("/api/verify-email", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ token }),
       });
@@ -41,16 +42,16 @@ export default function VerifyEmailPage() {
       if (response.ok && data.success) {
         setVerificationResult({
           success: true,
-          message: t('success'),
+          message: t("success"),
           email: data.email,
         });
       } else {
-        let errorMessage = data.error || t('fail');
-        
+        let errorMessage = data.error || t("fail");
+
         if (data.expired) {
-          errorMessage = t('expired');
+          errorMessage = t("expired");
         } else if (data.used) {
-          errorMessage = t('used');
+          errorMessage = t("used");
         }
 
         setVerificationResult({
@@ -60,61 +61,61 @@ export default function VerifyEmailPage() {
         });
       }
     } catch (error) {
-      productionLogger.error('Verification error:', error);
+      productionLogger.error("Verification error:", error);
       setVerificationResult({
         success: false,
-        message: t('error'),
+        message: t("error"),
       });
     } finally {
       setIsVerifying(false);
     }
-  }, [t]);
+  }, []);
 
   useEffect(() => {
     if (!token) {
       setVerificationResult({
         success: false,
-        message: t('noToken'),
+        message: t("noToken"),
       });
       setIsVerifying(false);
       return;
     }
 
     verifyToken(token);
-  }, [token, verifyToken, t]);
+  }, [token, verifyToken]);
 
   const handleResendEmail = async () => {
     if (!verificationResult?.email) return;
 
     setIsResending(true);
     try {
-      const response = await fetch('/api/emails/send', {
-        method: 'POST',
+      const response = await fetch("/api/emails/send", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          type: 'verification',
+          type: "verification",
           email: verificationResult.email,
-          userName: verificationResult.email.split('@')[0],
+          userName: verificationResult.email.split("@")[0],
         }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        toast.success(t('resendSuccess'), {
+        toast.success(t("resendSuccess"), {
           duration: 4000,
         });
-        router.push('/email-confirmation');
+        router.push("/email-confirmation");
       } else {
-        toast.error(data.error || t('resendFail'), {
+        toast.error(data.error || t("resendFail"), {
           duration: 4000,
         });
       }
     } catch (error) {
-      productionLogger.error('Error resending verification email:', error);
-      toast.error(t('resendFail'), {
+      productionLogger.error("Error resending verification email:", error);
+      toast.error(t("resendFail"), {
         duration: 4000,
       });
     } finally {
@@ -123,16 +124,24 @@ export default function VerifyEmailPage() {
   };
 
   const handleGoToLogin = () => {
-    router.push('/login');
+    router.push("/login");
   };
 
-  const icon = isVerifying ? Loader2 : verificationResult?.success ? CheckCircle : XCircle;
-  const title = isVerifying ? t('title') :
-                verificationResult?.success ? t('titleSuccess') : t('titleFail');
-  const description = isVerifying ? t('description') :
-                     verificationResult?.success ? 
-                     t('descriptionSuccess') :
-                     t('descriptionFail');
+  const icon = isVerifying
+    ? Loader2
+    : verificationResult?.success
+      ? CheckCircle
+      : XCircle;
+  const title = isVerifying
+    ? t("title")
+    : verificationResult?.success
+      ? t("titleSuccess")
+      : t("titleFail");
+  const description = isVerifying
+    ? t("description")
+    : verificationResult?.success
+      ? t("descriptionSuccess")
+      : t("descriptionFail");
 
   return (
     <LandingLayout>
@@ -150,11 +159,13 @@ export default function VerifyEmailPage() {
           ) : (
             <>
               {/* Status Message */}
-              <div className={`p-4 rounded-lg ${
-                verificationResult?.success 
-                  ? 'bg-green-50 text-green-800 border border-green-200' 
-                  : 'bg-red-50 text-red-800 border border-red-200'
-              }`}>
+              <div
+                className={`p-4 rounded-lg ${
+                  verificationResult?.success
+                    ? "bg-green-50 text-green-800 border border-green-200"
+                    : "bg-red-50 text-red-800 border border-red-200"
+                }`}
+              >
                 <p className="text-sm">{verificationResult?.message}</p>
               </div>
 
@@ -162,12 +173,12 @@ export default function VerifyEmailPage() {
               <div className="space-y-3">
                 {verificationResult?.success ? (
                   <Button onClick={handleGoToLogin} className="w-full">
-                    {t('goToLogin')}
+                    {t("goToLogin")}
                   </Button>
                 ) : (
                   <>
-                    <Button 
-                      onClick={handleResendEmail} 
+                    <Button
+                      onClick={handleResendEmail}
                       disabled={isResending}
                       variant="outline"
                       className="w-full"
@@ -175,22 +186,22 @@ export default function VerifyEmailPage() {
                       {isResending ? (
                         <>
                           <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                          {t('sending')}
+                          {t("sending")}
                         </>
                       ) : (
                         <>
                           <RefreshCw className="mr-2 h-4 w-4" />
-                          {t('resend')}
+                          {t("resend")}
                         </>
                       )}
                     </Button>
-                    
-                    <Button 
+
+                    <Button
                       onClick={handleGoToLogin}
                       variant="ghost"
                       className="w-full"
                     >
-                      {t('goToLogin')}
+                      {t("goToLogin")}
                     </Button>
                   </>
                 )}
@@ -198,9 +209,7 @@ export default function VerifyEmailPage() {
 
               {/* Additional Help Text */}
               {!verificationResult?.success && (
-                <p className="text-xs text-muted-foreground">
-                  {t('support')}
-                </p>
+                <p className="text-xs text-muted-foreground">{t("support")}</p>
               )}
             </>
           )}
@@ -211,4 +220,4 @@ export default function VerifyEmailPage() {
 }
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
