@@ -5,7 +5,6 @@ import { HelpCircle, Settings } from "lucide-react";
 import LinkIcon from "./IconLink";
 import { NotificationsPopover } from "@/shared/ui/components/notifications-popover";
 import { UserMenu } from "@/shared/ui/components/user-menu";
-import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher";
 
 function Header() {
   return (
@@ -37,7 +36,6 @@ function Header() {
           <LinkIcon href="/dashboard/settings">
             <Settings className="w-5 h-5 font-bold group-hover:scale-110 transition-transform" />
           </LinkIcon>
-          <ThemeSwitcher />
         </div>
         <Separator orientation="vertical" className="mx-2 -ml-1.5" />
         <UserMenu />
