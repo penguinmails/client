@@ -19,7 +19,7 @@ The billing infrastructure follows the established OLTP-first architectural patt
    ↓
 4. Success Response to Client
    ↓
-5. Background Convex Analytics Update (non-blocking)
+5. Background Database Analytics Update (non-blocking)
 ```
 
 ### Security Architecture
@@ -29,7 +29,7 @@ The billing infrastructure follows the established OLTP-first architectural patt
 │                    Frontend (React)                         │
 │  ├── Billing Forms (payment methods, plans)                │
 │  ├── Invoice Display (OLTP data)                           │
-│  └── Usage Dashboard (mixed OLTP + Convex)                 │
+│  └── Usage Dashboard (mixed OLTP + Analytics)                 │
 ├─────────────────────────────────────────────────────────────┤
 │                    OLTP Layer (NileDB)                     │
 │  ├── Company Billing (sensitive financial data)           │
@@ -38,7 +38,7 @@ The billing infrastructure follows the established OLTP-first architectural patt
 │  ├── Subscription Plans (pricing and limits)              │
 │  └── Financial Security Boundaries                         │
 ├─────────────────────────────────────────────────────────────┤
-│                    OLAP Layer (Convex)                     │
+│                    OLAP Layer (NileDB OLAP)                │
 │  ├── Usage Analytics (aggregated only)                     │
 │  ├── Cost Projections (no sensitive data)                  │
 │  └── Billing Dashboard Metrics                             │
@@ -199,7 +199,7 @@ CREATE TABLE invoices (
 ### 2. Financial Data Protection
 
 - **OLTP Isolation**: All sensitive financial data stays in NileDB
-- **No Analytics Exposure**: Zero financial details in Convex
+- **No Analytics Exposure**: Zero financial details in analytics database
 - **Audit Trail**: Complete financial transaction history
 - **Tenant Isolation**: Row-level security with tenant boundaries
 
@@ -281,17 +281,17 @@ The implementation supports mixed data calculations combining OLTP and OLAP data
 ```typescript
 // Usage vs Limits Calculation
 const usageAnalysis = {
-  emailsUsed: convexMetrics.emailsSent, // From Convex
+  emailsUsed: analyticsMetrics.emailsSent, // From NileDB OLAP
   emailsLimit: oltpPlan.emailsLimit, // From NileDB
   utilizationPercentage:
-    (convexMetrics.emailsSent / oltpPlan.emailsLimit) * 100,
+    (analyticsMetrics.emailsSent / oltpPlan.emailsLimit) * 100,
 };
 
 // Cost Analytics Calculation
 const costAnalysis = {
-  currentUsage: convexMetrics.emailsSent, // From Convex
+  currentUsage: analyticsMetrics.emailsSent, // From NileDB OLAP
   planPrice: oltpSubscription.monthlyPrice, // From NileDB
-  overage: calculateOverage(convexMetrics, oltpPlan), // Mixed calculation
+  overage: calculateOverage(analyticsMetrics, oltpPlan), // Mixed calculation
 };
 ```
 

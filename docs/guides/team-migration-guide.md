@@ -20,9 +20,9 @@ This is your new starting point for all documentation. It provides:
 | ---------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------- |
 | Analytics system overview    | Multiple ANALYTICS\_\*.md files | [`docs/analytics/README.md`](./analytics/README.md)                                             |
 | Analytics troubleshooting    | Scattered across multiple files | [`lib/services/analytics/troubleshooting.md`](../lib/services/analytics/troubleshooting.md)     |
-| Convex setup and limitations | Multiple CONVEX\_\*.md files    | [`lib/services/analytics/convex-setup.md`](../lib/services/analytics/convex-setup.md)           |
+| Database setup and optimization | Multiple database docs | [`docs/development/niledb-optimization.md`](./guides/niledb-optimization.md) |
 | TypeScript patterns          | Various type-related files      | [`docs/types/README.md`](./types/README.md)                                                     |
-| Development workflow         | Mixed with feature docs         | [`docs/development/README.md`](./development/README.md)                                         |
+| Development workflow         | Mixed with feature docs         | [`docs/development/README.md`](./guides/README.md)                                         |
 | Testing strategies           | Scattered across features       | [`docs/development/testing.md`](./development/testing.md)                                       |
 | Authentication patterns      | AUTH\_\*.md files               | [`docs/development/authentication.md`](./development/authentication.md)                         |
 | Billing implementation       | BILLING\_\*.md files            | [`lib/actions/billing/implementation-guide.md`](../lib/actions/billing/implementation-guide.md) |
@@ -33,8 +33,7 @@ This is your new starting point for all documentation. It provides:
 
 **Replace these old bookmarks:**
 
-- ❌ Individual ANALYTICS\_\*.md files
-- ❌ CONVEX\_\*.md files
+- ❌ Legacy database setup docs
 - ❌ MIGRATION\_\*.md files
 - ❌ Various troubleshooting files
 
@@ -43,7 +42,7 @@ This is your new starting point for all documentation. It provides:
 - ✅ [`docs/README.md`](./README.md) - Start here for everything
 - ✅ [`docs/analytics/README.md`](./analytics/README.md) - Analytics system
 - ✅ [`lib/services/analytics/troubleshooting.md`](../lib/services/analytics/troubleshooting.md) - Analytics issues
-- ✅ [`docs/development/troubleshooting.md`](./development/troubleshooting.md) - General issues
+- ✅ [`docs/development/troubleshooting.md`](./guides/troubleshooting.md) - General issues
 
 ### Step 2: Update Your Development Workflow
 
@@ -83,7 +82,7 @@ This is your new starting point for all documentation. It provides:
 
 **New workflow:**
 
-1. Start with general troubleshooting: [`docs/development/troubleshooting.md`](./development/troubleshooting.md)
+1. Start with general troubleshooting: [`docs/development/troubleshooting.md`](./guides/troubleshooting.md)
 2. Navigate to feature-specific guides via links
 3. Check component-specific issues: [`components/analytics/troubleshooting.md`](../components/analytics/troubleshooting.md)
 
@@ -97,8 +96,8 @@ This is your new starting point for all documentation. It provides:
 // Old: See ANALYTICS_MIGRATION_PLAN.md for details
 // New: See lib/services/analytics/README.md for architecture details
 
-// Old: Check CONVEX_SETUP.md for configuration
-// New: See lib/services/analytics/convex-setup.md for configuration
+// Old: Check DATABASE_SETUP.md for configuration
+// New: See docs/database-architecture.md for configuration
 
 // Old: Refer to BILLING_MODULE_FIX_IMPLEMENTATION_GUIDE.md
 // New: See lib/actions/billing/implementation-guide.md
@@ -130,7 +129,7 @@ This is your new starting point for all documentation. It provides:
 **Documentation checked:**
 
 - [ ] ANALYTICS_TROUBLESHOOTING.md
-- [ ] CONVEX_LIMITATIONS.md
+- [ ] Legacy setup files
 - [ ] Various migration files
 
 <!-- New -->

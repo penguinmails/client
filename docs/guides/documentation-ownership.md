@@ -33,8 +33,6 @@ This document defines clear ownership assignments for each documentation categor
 - `lib/services/analytics/README.md` - Service architecture
 - `lib/services/analytics/troubleshooting.md` - Analytics-specific issues
 - `lib/services/analytics/testing.md` - Analytics testing strategies
-- `lib/services/analytics/convex-setup.md` - Convex configuration
-- `lib/services/analytics/convex-limitations.md` - Platform constraints
 - `lib/services/analytics/migration-lessons.md` - Historical context
 - `components/analytics/README.md` - Component organization
 - `components/analytics/troubleshooting.md` - Component issues
@@ -83,7 +81,6 @@ This document defines clear ownership assignments for each documentation categor
 **Secondary Owner**: Senior Developer
 
 - `docs/infrastructure/cloudflare.md`
-- `docs/infrastructure/convex.md`
 - `docs/development/migration-patterns.md`
 
 **Responsibilities**:

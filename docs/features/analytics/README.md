@@ -14,7 +14,7 @@ All analytics data flows through standardized services that ensure consistency a
 
 The analytics system maintains clear boundaries:
 
-- **Data Layer**: Convex-based services handle data collection, storage, and calculations
+- **Data Layer**: NileDB-based services handle data collection, storage, and calculations
 - **Service Layer**: TypeScript services provide business logic and data transformation
 - **UI Layer**: React components consume processed data through standardized hooks
 
@@ -44,9 +44,9 @@ Analytics are organized by business domain:
 │  ├── Mailbox Analytics Service                             │
 │  └── Template Analytics Service                            │
 ├─────────────────────────────────────────────────────────────┤
-│  Data Layer (Convex)                                       │
-│  ├── Analytics Queries                                     │
-│  ├── Analytics Mutations                                   │
+│  Data Layer (NileDB)                                       │
+│  ├── Analytics Schemas                                     │
+│  ├── Analytics Procedures                                  │
 │  └── Analytics Calculations                                │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -79,7 +79,7 @@ Analytics are organized by business domain:
 All metrics follow consistent calculation patterns:
 
 1. **Deterministic Operations**: Same inputs always produce same outputs
-2. **Index-Optimized**: Calculations leverage Convex indexes for performance
+2. **Index-Optimized**: Calculations leverage database indexes for performance
 3. **Cache-Friendly**: Results are structured for efficient caching
 4. **Type-Safe**: All calculations use strongly-typed interfaces
 
@@ -89,8 +89,8 @@ All metrics follow consistent calculation patterns:
 
 - [Analytics Services Architecture](../../lib/services/analytics/README.md)
 - [Service Troubleshooting](../../lib/services/analytics/troubleshooting.md)
-- [Convex Setup Guide](../../lib/services/analytics/convex-setup.md)
-- [Convex Limitations](../../lib/services/analytics/convex-limitations.md)
+- [NileDB Setup Guide](../../database-architecture.md)
+- [NileDB Optimization](../../database-architecture.md)
 
 ### Component Documentation
 
@@ -106,7 +106,7 @@ All metrics follow consistent calculation patterns:
 
 - [Testing Strategies](../../lib/services/analytics/testing.md)
 - [Migration Lessons](../../lib/services/analytics/migration-lessons.md)
-- [Performance Patterns](../development/convex-limitations.md#analytics-performance)
+- [Performance Patterns](../../database-architecture.md)
 
 ## Database Strategy
 
@@ -126,9 +126,9 @@ The analytics system uses a hybrid approach:
 
 ## Integration Patterns
 
-### Convex Integration
+### Database Integration
 
-The analytics system integrates with Convex through:
+The analytics system integrates with NileDB through:
 
 - **Queries**: Read-optimized data retrieval
 - **Mutations**: Transactional data updates
@@ -172,7 +172,7 @@ For business rationale and strategic context behind the analytics system:
 ## Getting Started
 
 1. **Understanding the Architecture**: Start with [Service Architecture](../../lib/services/analytics/README.md)
-2. **Setting Up Analytics**: Follow the [Convex Setup Guide](../../lib/services/analytics/convex-setup.md)
+2. **Setting Up Analytics**: Follow the [NileDB Setup Guide](../../database-architecture.md)
 3. **Common Issues**: Check [Troubleshooting Guide](../../lib/services/analytics/troubleshooting.md)
 4. **Type System**: Review [Analytics Types](../../types/analytics/README.md)
 

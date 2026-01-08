@@ -85,20 +85,20 @@ function processCampaigns(campaigns: Campaign[]): CampaignWithMetrics[] {
 }
 ```
 
-## Convex Integration Anti-Patterns
+## Type System Anti-Patterns
 
 ### ❌ Ignoring Type System Limitations
 
-**Problem**: Fighting TypeScript instead of working with Convex type constraints.
+**Problem**: Fighting TypeScript instead of working with type system constraints.
 
 ```typescript
-// ❌ DON'T: Complex nested generics that break Convex
+// ❌ DON'T: Complex nested generics that cause instantiation depth issues
 type DeepAnalytics<T extends Record<string, ComplexType<U>>> = {
   [K in keyof T]: T[K] extends ComplexType<infer U> ? ProcessedType<U> : never;
 };
 ```
 
-**Solution**: Use type simplification and @ts-expect-error for known Convex limitations.
+**Solution**: Use type simplification and explicit interfaces for complex data structures.
 
 ```typescript
 // ✅ DO: Simplify types and use pragmatic workarounds
@@ -107,8 +107,7 @@ type SimplifiedAnalytics = Pick<
   "id" | "metrics" | "timestamp"
 >;
 
-// @ts-expect-error - Convex type instantiation is excessively deep
-const result = await convex.query(api.analytics.getMetrics, args);
+const result = await analyticsService.getMetrics(args);
 ```
 
 ### ❌ Inefficient Query Patterns
@@ -119,9 +118,7 @@ const result = await convex.query(api.analytics.getMetrics, args);
 // ❌ DON'T: Multiple individual queries
 const results = [];
 for (const campaignId of campaignIds) {
-  const metrics = await convex.query(api.analytics.getCampaignMetrics, {
-    campaignId,
-  });
+  const metrics = await analyticsService.getCampaignMetrics(campaignId);
   results.push(metrics);
 }
 ```
@@ -129,10 +126,8 @@ for (const campaignId of campaignIds) {
 **Solution**: Use batch queries and proper indexing.
 
 ```typescript
-// ✅ DO: Single batch query with proper indexing
-const metrics = await convex.query(api.analytics.getBatchCampaignMetrics, {
-  campaignIds,
-});
+// ✅ DO: Single batch operation with proper indexing
+const metrics = await campaignService.getBatchMetrics(campaignIds);
 ```
 
 ### ❌ Missing Company Scoping
@@ -141,28 +136,25 @@ const metrics = await convex.query(api.analytics.getBatchCampaignMetrics, {
 
 ```typescript
 // ❌ DON'T: Unscoped queries
-export const getCampaigns = query({
-  handler: async (ctx) => {
-    return await ctx.db.query("campaigns").collect(); // Returns all companies' data!
-  },
-});
+// ❌ DON'T: Unscoped queries
+export async function getCampaigns(context: ActionContext) {
+  // Returns all companies' data if companyId is missing!
+  return await db.query("SELECT * FROM campaigns");
+}
 ```
 
 **Solution**: Always include company scoping in queries.
 
 ```typescript
 // ✅ DO: Company-scoped queries
-export const getCampaigns = query({
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthorized");
+export async function getCampaigns(context: ActionContext) {
+  if (!context.companyId) throw new Error("Unauthorized");
 
-    return await ctx.db
-      .query("campaigns")
-      .withIndex("by_company", (q) => q.eq("companyId", identity.companyId))
-      .collect();
-  },
-});
+  return await db.query(
+    "SELECT * FROM campaigns WHERE company_id = $1",
+    [context.companyId]
+  );
+}
 ```
 
 ## React Component Anti-Patterns
@@ -418,17 +410,14 @@ function getCompanyAnalytics(allAnalytics: Analytics[], companyId: string) {
 
 ```typescript
 // ✅ DO: Server-side filtering
-export const getCompanyAnalytics = query({
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthorized");
+export async function getCompanyAnalytics(context: ActionContext) {
+  if (!context.companyId) throw new Error("Unauthorized");
 
-    return await ctx.db
-      .query("analytics")
-      .withIndex("by_company", (q) => q.eq("companyId", identity.companyId))
-      .collect();
-  },
-});
+  return await db.query(
+    "SELECT * FROM analytics WHERE company_id = $1",
+    [context.companyId]
+  );
+}
 ```
 
 ### ❌ Exposing Sensitive Data in Logs

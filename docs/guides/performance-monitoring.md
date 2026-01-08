@@ -1,14 +1,14 @@
-# Performance Monitoring for ConvexQueryHelper
+# Performance Monitoring for Analytics Service
 
-This document describes the performance monitoring and validation system implemented for the ConvexQueryHelper utility as part of task 8 in the analytics-convex-type-fixes specification.
+This document describes the performance monitoring and validation system implemented for the Analytics Service utility.
 
 ## Overview
 
-The performance monitoring system ensures that the ConvexQueryHelper implementation meets the performance requirements specified in the design document:
+The performance monitoring system ensures that the Analytics Service implementation meets the performance requirements specified in the design document:
 
 - **Build time remains under 15 seconds** (Requirement 1.2)
 - **Compilation time doesn't increase by more than 10%** (Requirement 4.3)
-- **Zero TypeScript warnings related to Convex types** (Requirement 1.1)
+- **Zero TypeScript warnings related to metrics types** (Requirement 1.1)
 - **Runtime performance impact is minimal**
 
 ## Components
@@ -40,7 +40,7 @@ const metrics = monitor.completeBuild(true, "abc123");
 
 ### 2. RuntimePerformanceMonitor (`lib/utils/runtime-performance-monitor.ts`)
 
-Monitors the runtime performance impact of ConvexQueryHelper operations.
+Monitors the runtime performance impact of Analytics Service operations.
 
 **Key Features:**
 
@@ -92,7 +92,7 @@ Enhanced validation script using the new CompilationMonitor utility for comprehe
 
 - Validates current build performance
 - Compares against historical data
-- Detects Convex type warnings specifically
+- Detects deep type instantiation warnings specifically
 - Provides actionable recommendations
 - Suitable for automated testing
 
@@ -177,7 +177,7 @@ export class MixedCampaignCalculator {
     const cached = await this.redis.get(cacheKey);
     if (cached) return JSON.parse(cached);
 
-    // Calculate mixed metrics from OLTP and Convex data
+    // Calculate mixed metrics from OLTP and OLAP data
     const metrics = await this.calculateMixedMetrics(campaignId, filters);
 
     // Cache with appropriate TTL
@@ -199,12 +199,12 @@ export class MixedCampaignCalculator {
 }
 ```
 
-## Integration with ConvexQueryHelper
+## Integration with Analytics Service
 
-The ConvexQueryHelper automatically integrates with the runtime performance monitor:
+The Analytics Service automatically integrates with the runtime performance monitor:
 
 ```typescript
-// In ConvexQueryHelper.query() and ConvexQueryHelper.mutation()
+// In Analytics Service.query() and Analytics Service.mutation()
 if (this.config.enableMonitoring) {
   const metrics = {
     executionTime: Date.now() - startTime,
@@ -343,7 +343,7 @@ ESLint Warnings Valid: ✅ (0 warnings)
 2. **Performance Regression Detected**
    - Compare with historical metrics
    - Identify recent changes that might impact performance
-   - Review ConvexQueryHelper usage patterns
+   - Review Analytics Service usage patterns
 
 3. **Runtime Performance Issues**
    - Analyze slow queries using the runtime monitor
@@ -398,4 +398,4 @@ This implementation addresses all requirements from task 8:
 - ✅ **Monitor runtime performance impact of helper utility**
   - Implemented through RuntimePerformanceMonitor with comprehensive metrics
 
-The system provides comprehensive monitoring, validation, and reporting capabilities to ensure the ConvexQueryHelper implementation meets all performance requirements while maintaining code quality and developer experience.
+The system provides comprehensive monitoring, validation, and reporting capabilities to ensure the Analytics Service implementation meets all performance requirements while maintaining code quality and developer experience.
