@@ -739,5 +739,4 @@ This authentication development guide provides comprehensive information for imp
 ## Related Documentation
 
 - **[Authentication Implementation Guide](./authentication-implementation.md)** - Detailed implementation patterns and migration strategies
-- **[Convex Limitations](./convex-limitations.md)** - Platform constraints and workarounds
 - **[Troubleshooting](./troubleshooting.md)** - Common issues and solutions

@@ -103,8 +103,6 @@ jobs:
         NILEDB_USER: ${{ secrets.NILEDB_USER }}
         NILEDB_PASSWORD: ${{ secrets.NILEDB_PASSWORD }}
         NILEDB_POSTGRES_URL: ${{ secrets.NILEDB_POSTGRES_URL }}
-        CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
-        NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
         REDIS_URL: ${{ secrets.REDIS_URL }}
         # Add other required environment variables
         NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS: ${{ secrets.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS }}

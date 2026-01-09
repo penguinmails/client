@@ -23,7 +23,6 @@ This section covers general development workflow, testing strategies, troublesho
 │   ├── services/         # Business services (with co-located docs)
 │   └── utils/           # Utility functions
 ├── types/                # TypeScript type definitions
-├── convex/               # Convex backend functions
 └── docs/                 # Central documentation hub
 ```
 
@@ -121,7 +120,7 @@ describe("Analytics Integration", () => {
 - **Progressive Filtering**: Load OLTP data first (fast), then apply basic filters, load analytics separately
 - **Redis Caching Strategy**: 5-15 minute TTL based on data freshness requirements
 - **Composite Cache Keys**: Include filter combinations and date ranges in cache keys
-- **Parallel Processing**: Process OLTP and Convex data simultaneously for mixed calculations
+- **Parallel Processing**: Process OLTP and OLAP data simultaneously for mixed calculations
 
 #### Caching TTL Strategy
 ```typescript
@@ -168,7 +167,7 @@ type Result<T, E = Error> =
 // Service method with error handling
 async function getCampaignStats(id: string): Promise<Result<CampaignStats>> {
   try {
-    const stats = await convex.query(api.analytics.getCampaignStats, { id });
+    const stats = await analyticsService.getCampaignStats(id);
     return { success: true, data: stats };
   } catch (error) {
     return { success: false, error: error as Error };
@@ -197,11 +196,11 @@ function useAnalyticsData<T>(
 
 ## Platform-Specific Patterns
 
-### Convex Integration
+### Database Integration
 
-- [Convex Limitations and Workarounds](./convex-limitations.md)
-- [Convex Query Patterns](./convex-limitations.md#query-performance-limitations)
-- [Type Safety with Convex](./convex-limitations.md#type-system-limitations)
+- [Database Optimization](../database-architecture.md)
+- [Database Query Patterns](../database-architecture.md#query-performance)
+- [Type Safety with Analytics Services](../database-architecture.md#type-system)
 
 ### Next.js Patterns
 
@@ -234,7 +233,7 @@ function useAnalyticsData<T>(
 ### Performance Considerations
 
 - **Bundle Size**: Monitor and optimize bundle size
-- **Database Queries**: Optimize Convex queries and indexes
+- **Database Queries**: Optimize database queries and indexes
 - **Caching**: Implement appropriate caching strategies
 - **Lazy Loading**: Use dynamic imports for large components
 
@@ -243,7 +242,7 @@ function useAnalyticsData<T>(
 ### Common Issues
 
 - [General Troubleshooting](./troubleshooting.md)
-- [Convex-Specific Issues](./convex-limitations.md)
+- [Database-Specific Issues](../database-architecture.md)
 - [Type System Issues](../types/README.md#type-system-limitations)
 
 ### Debugging Strategies
@@ -252,12 +251,12 @@ function useAnalyticsData<T>(
 2. **Console Logging**: Strategic logging for debugging
 3. **React DevTools**: Use React DevTools for component debugging
 4. **Network Tab**: Monitor API calls and performance
-5. **Convex Dashboard**: Use Convex dashboard for backend debugging
+5. **Database Dashboard**: Use database dashboard for backend debugging
 
 ### Performance Debugging
 
 - **React Profiler**: Identify performance bottlenecks
-- **Convex Metrics**: Monitor query performance
+- **Database Metrics**: Monitor query performance
 - **Bundle Analyzer**: Analyze bundle size and dependencies
 
 ## Migration Patterns
@@ -285,7 +284,7 @@ Strategies for maintaining compatibility during migrations:
 - **ESLint**: Code quality checking
 - **Prettier**: Code formatting
 - **React DevTools**: React debugging
-- **Convex DevTools**: Convex backend debugging
+- **Database DevTools**: Database debugging tools
 
 ### Useful Scripts
 
@@ -328,7 +327,7 @@ npm run build
 
 ### Common Questions
 
-- **Type Errors**: Check [Convex Limitations](./convex-limitations.md)
+- **Type Errors**: Check [Type System Guide](../types/README.md)
 - **Performance Issues**: Review [troubleshooting guide](./troubleshooting.md)
 - **Testing Questions**: See feature-specific testing guides
 - **Architecture Questions**: Review [analytics architecture](../analytics/README.md)

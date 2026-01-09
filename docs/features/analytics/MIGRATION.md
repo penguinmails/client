@@ -30,7 +30,7 @@ types/analytics/
 - ✅ **mutations.ts & queries.ts**: Cleaned up TypeScript compilation warnings
 - ✅ **All Services**: ESLint compliance achieved across all modular analytics services
 - ✅ **CampaignAnalyticsService.ts**: Successfully refactored from 556 lines → modular structure (COMPLETED TODAY) ✅
-- ✅ **LeadAnalyticsService.ts**: Modular refactoring from 794 lines to ~750 lines across 6 modules; ESLint fixes including @ts-expect-error for Convex types, removed unused variables/imports
+- ✅ **LeadAnalyticsService.ts**: Modular refactoring from 794 lines to ~750 lines across 6 modules; ESLint fixes, removed unused variables/imports
 
 ## Migration Patterns
 
@@ -183,51 +183,27 @@ function transformAnalyticsDataToUI(
 
 ## Common Migration Scenarios
 
-### Convex Schema Updates
+### Database Schema Updates
 
-When updating Convex schemas, maintain backward compatibility:
+When updating database schemas, maintain backward compatibility:
 
-```typescript
-// Before: Simple schema
-const campaignAnalytics = defineTable({
-  campaignId: v.string(),
-  stats: v.object({
-    sent: v.number(),
-    opened: v.number(),
-  }),
-});
+```sql
+-- Before: Simple schema
+CREATE TABLE campaign_analytics (
+  campaign_id TEXT PRIMARY KEY,
+  sent INTEGER,
+  opened INTEGER
+);
 
-// After: Extended schema with optional fields
-const campaignAnalytics = defineTable({
-  campaignId: v.string(),
-  stats: v.object({
-    sent: v.number(),
-    opened: v.number(),
-    clicked: v.optional(v.number()), // Optional for backward compatibility
-    bounced: v.optional(v.number()), // Optional for backward compatibility
-  }),
-  metadata: v.optional(v.any()), // Optional extensibility
-});
+-- After: Extended schema with new fields
+ALTER TABLE campaign_analytics ADD COLUMN clicked INTEGER DEFAULT 0;
+ALTER TABLE campaign_analytics ADD COLUMN bounced INTEGER DEFAULT 0;
+ALTER TABLE campaign_analytics ADD COLUMN metadata JSONB;
 
-// Migration query to update existing records
-export const migrateCampaignAnalytics = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const campaigns = await ctx.db.query("campaignAnalytics").collect();
-
-    for (const campaign of campaigns) {
-      if (!campaign.stats.clicked) {
-        await ctx.db.patch(campaign._id, {
-          stats: {
-            ...campaign.stats,
-            clicked: 0,
-            bounced: 0,
-          },
-        });
-      }
-    }
-  },
-});
+-- Migration to initialize new fields
+UPDATE campaign_analytics 
+SET clicked = 0, bounced = 0 
+WHERE clicked IS NULL;
 ```
 
 ### Component Prop Migration

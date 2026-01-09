@@ -205,25 +205,6 @@ type FilterByType<T, U> = {
 
 ## Platform-Specific Considerations
 
-### Convex Type Integration
-
-Special considerations for Convex integration:
-
-```typescript
-// Convex document types
-import { Doc, Id } from "./_generated/dataModel";
-
-type CampaignDoc = Doc<"campaigns">;
-type CampaignId = Id<"campaigns">;
-
-// Convex query/mutation argument types
-type CreateCampaignArgs = {
-  name: string;
-  domainId: Id<"domains">;
-  templateId: Id<"templates">;
-};
-```
-
 ### React Component Types
 
 Consistent React component typing:
@@ -246,9 +227,7 @@ interface FormHandlers {
 
 ### Known Constraints
 
-- [Convex Type Limitations](../development/convex-limitations.md#type-system-limitations)
 - [Analytics Type Constraints](../../types/analytics/type-limitations.md)
-- [Performance Considerations](../development/convex-limitations.md#performance-optimization-patterns)
 
 ### Type System Issues
 
@@ -256,7 +235,7 @@ Common type system challenges and their solutions:
 
 #### Deep Type Instantiation
 
-Convex types can become excessively deep, causing TypeScript compilation issues:
+Complex nested types can cause TypeScript compilation issues:
 
 ```typescript
 // Problem: Deep type instantiation
@@ -282,10 +261,6 @@ type ConstrainedGeneric<T extends Record<string, any>> = {
 Common patterns for working around type system limitations:
 
 ```typescript
-// Type assertion for complex Convex types
-// @ts-expect-error - Convex type instantiation is excessively deep
-const result = await convexHelper.query(api.analytics.getCampaignStats, args);
-
 // Utility type for simplifying complex types
 type SimplifiedAnalytics = Pick<CampaignAnalytics, "id" | "name" | "stats">;
 ```
@@ -327,7 +302,6 @@ function migrateCampaignV1ToV2(v1: CampaignV1): CampaignV2 {
 1. **Understanding Type Organization**: Review the structure above
 2. **Feature-Specific Types**: Start with [Analytics Types](../../types/analytics/README.md)
 3. **Common Patterns**: Study the patterns in `types/common.ts`
-4. **Platform Integration**: Review [Convex Limitations](../development/convex-limitations.md)
 
 ## Contributing to Type System
 
@@ -343,4 +317,3 @@ For questions about type organization or patterns, refer to:
 
 - [Development Patterns](../development/README.md#type-patterns)
 - [Analytics Type Patterns](../../types/analytics/README.md)
-- [Convex Integration Patterns](../development/convex-limitations.md)
