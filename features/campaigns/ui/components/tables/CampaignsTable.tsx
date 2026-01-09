@@ -215,7 +215,7 @@ function CampaignsTableRow({ campaign }: { campaign: CampaignDisplay }) {
 // Column Definitions (Matching Legacy)
 // ============================================================
 
-const campaignColumns = [
+export const campaignColumns = [
   { name: "Campaign Name", key: "name" },
   { name: "Status", key: "status" },
   { name: "Mailboxes", key: "mailboxes" },
