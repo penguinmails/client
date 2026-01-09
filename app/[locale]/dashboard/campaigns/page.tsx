@@ -1,7 +1,7 @@
 "use client";
 import CampaignTableSkeleton from "@features/campaigns/ui/components/tables/CampaignTableSkeleton";
 import { CampaignsFilter } from "@features/campaigns/ui/components/tables/CampaignsFilter";
-import { CampaignsTable } from "@features/campaigns/ui/components/tables/CampaignsTable";
+import { CampaignsTable, campaignColumns } from "@features/campaigns/ui/components/tables/CampaignsTable";
 import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/StatsCardSkeleton";
 import { StatsCards } from "@features/campaigns/ui/components/reports/StatsCards";
 import { Button } from "@/components/ui/button/button";
@@ -94,7 +94,7 @@ export default function CampaignsPage({
         fallback={
           <CampaignTableSkeleton
             title="Campaigns Table"
-            columns={[]}
+            columns={campaignColumns}
           />
         }
       >
