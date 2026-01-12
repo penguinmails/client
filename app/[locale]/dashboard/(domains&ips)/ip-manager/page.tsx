@@ -1,11 +1,8 @@
-function  page() {
-  return (
-    <div>
-      page
-    </div>
-  );
+import { IpManagerPage } from "@features/ip-manager";
+
+export default function IpManagerRoute() {
+  return <IpManagerPage />;
 }
-export default page;
 
 // Force dynamic rendering to prevent SSR issues
 export const dynamic = 'force-dynamic';
