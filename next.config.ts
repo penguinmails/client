@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
+// Only run ESLint and TypeScript checks in local development
+const isLocalDev = process.env.NODE_ENV === 'development' && !process.env.CI;
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -16,10 +18,12 @@ const nextConfig: NextConfig = {
       "features",
       "shared",
     ],
-    ignoreDuringBuilds: true,
+    // Only run ESLint during builds in local development
+    ignoreDuringBuilds: !isLocalDev,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    // Only run TypeScript checks during builds in local development
+    ignoreBuildErrors: !isLocalDev,
   },
   images: {
     remotePatterns: [
