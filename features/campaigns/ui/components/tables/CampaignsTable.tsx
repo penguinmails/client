@@ -3,18 +3,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Clock,
-  Copy,
-  Edit,
-  Eye,
-  Pause,
-  Play,
-  Server,
-  Trash2,
-} from "lucide-react";
+import { Clock, Copy, Edit, Eye, Pause, Play, Server } from "lucide-react";
 import Link from "next/link";
 import { CampaignDisplay } from "@features/campaigns/types";
 import AlertDialogDelete from "@/components/ui/custom/AlertDialogDelete";
@@ -239,7 +229,7 @@ export interface CampaignsTableProps {
 
 /**
  * CampaignsTable - Campaigns table matching legacy visual appearance
- * 
+ *
  * Uses DS components (Card, Badge, Button) while maintaining the exact same
  * layout and styling as the legacy CampaignsTable for visual parity.
  */
@@ -294,7 +284,10 @@ export function CampaignsTable({
               ))
             ) : (
               <tr>
-                <td colSpan={campaignColumns.length} className="px-8 py-12 text-center text-muted-foreground">
+                <td
+                  colSpan={campaignColumns.length}
+                  className="px-8 py-12 text-center text-muted-foreground"
+                >
                   No campaigns found. Create a new one to get started.
                 </td>
               </tr>
