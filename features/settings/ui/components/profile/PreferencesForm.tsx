@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Control } from "react-hook-form";
 import {
   FormField,
@@ -16,10 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/components/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ProfileFormValues } from "@/types";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,72 +37,81 @@ export default function PreferencesForm({
 }: PreferencesFormProps) {
   const t = useTranslations();
 
-  const timezones = [
-    { value: "UTC", label: t("Settings.profile.preferences.timezones.UTC") },
-    {
-      value: "America/New_York",
-      label: t("Settings.profile.preferences.timezones.America/New_York"),
-    },
-    {
-      value: "America/Chicago",
-      label: t("Settings.profile.preferences.timezones.America/Chicago"),
-    },
-    {
-      value: "America/Denver",
-      label: t("Settings.profile.preferences.timezones.America/Denver"),
-    },
-    {
-      value: "America/Los_Angeles",
-      label: t("Settings.profile.preferences.timezones.America/Los_Angeles"),
-    },
-    {
-      value: "Europe/London",
-      label: t("Settings.profile.preferences.timezones.Europe/London"),
-    },
-    {
-      value: "Europe/Paris",
-      label: t("Settings.profile.preferences.timezones.Europe/Paris"),
-    },
-    {
-      value: "Asia/Tokyo",
-      label: t("Settings.profile.preferences.timezones.Asia/Tokyo"),
-    },
-    {
-      value: "Asia/Shanghai",
-      label: t("Settings.profile.preferences.timezones.Asia/Shanghai"),
-    },
-    {
-      value: "Australia/Sydney",
-      label: t("Settings.profile.preferences.timezones.Australia/Sydney"),
-    },
-  ];
+  const timezones = useMemo(
+    () => [
+      { value: "UTC", label: t("Settings.profile.preferences.timezones.UTC") },
+      {
+        value: "America/New_York",
+        label: t("Settings.profile.preferences.timezones.America/New_York"),
+      },
+      {
+        value: "America/Chicago",
+        label: t("Settings.profile.preferences.timezones.America/Chicago"),
+      },
+      {
+        value: "America/Denver",
+        label: t("Settings.profile.preferences.timezones.America/Denver"),
+      },
+      {
+        value: "America/Los_Angeles",
+        label: t("Settings.profile.preferences.timezones.America/Los_Angeles"),
+      },
+      {
+        value: "Europe/London",
+        label: t("Settings.profile.preferences.timezones.Europe/London"),
+      },
+      {
+        value: "Europe/Paris",
+        label: t("Settings.profile.preferences.timezones.Europe/Paris"),
+      },
+      {
+        value: "Asia/Tokyo",
+        label: t("Settings.profile.preferences.timezones.Asia/Tokyo"),
+      },
+      {
+        value: "Asia/Shanghai",
+        label: t("Settings.profile.preferences.timezones.Asia/Shanghai"),
+      },
+      {
+        value: "Australia/Sydney",
+        label: t("Settings.profile.preferences.timezones.Australia/Sydney"),
+      },
+    ],
+    [t]
+  );
 
-  const languages = [
-    { value: "en", label: t("Settings.profile.preferences.languages.en") },
-    { value: "es", label: t("Settings.profile.preferences.languages.es") },
-    { value: "fr", label: t("Settings.profile.preferences.languages.fr") },
-    { value: "de", label: t("Settings.profile.preferences.languages.de") },
-    { value: "it", label: t("Settings.profile.preferences.languages.it") },
-    { value: "pt", label: t("Settings.profile.preferences.languages.pt") },
-    { value: "ja", label: t("Settings.profile.preferences.languages.ja") },
-    { value: "ko", label: t("Settings.profile.preferences.languages.ko") },
-    { value: "zh", label: t("Settings.profile.preferences.languages.zh") },
-  ];
+  const languages = useMemo(
+    () => [
+      { value: "en", label: t("Settings.profile.preferences.languages.en") },
+      { value: "es", label: t("Settings.profile.preferences.languages.es") },
+      { value: "fr", label: t("Settings.profile.preferences.languages.fr") },
+      { value: "de", label: t("Settings.profile.preferences.languages.de") },
+      { value: "it", label: t("Settings.profile.preferences.languages.it") },
+      { value: "pt", label: t("Settings.profile.preferences.languages.pt") },
+      { value: "ja", label: t("Settings.profile.preferences.languages.ja") },
+      { value: "ko", label: t("Settings.profile.preferences.languages.ko") },
+      { value: "zh", label: t("Settings.profile.preferences.languages.zh") },
+    ],
+    [t]
+  );
 
-  const sidebarViews = [
-    {
-      value: "expanded",
-      label: t("Settings.profile.preferences.sidebarView.expanded"),
-    },
-    {
-      value: "collapsed",
-      label: t("Settings.profile.preferences.sidebarView.collapsed"),
-    },
-    {
-      value: "hidden",
-      label: t("Settings.profile.preferences.sidebarView.hidden"),
-    },
-  ];
+  const sidebarViews = useMemo(
+    () => [
+      {
+        value: "expanded",
+        label: t("Settings.profile.preferences.sidebarView.expanded"),
+      },
+      {
+        value: "collapsed",
+        label: t("Settings.profile.preferences.sidebarView.collapsed"),
+      },
+      {
+        value: "hidden",
+        label: t("Settings.profile.preferences.sidebarView.hidden"),
+      },
+    ],
+    [t]
+  );
 
   return (
     <Card>
