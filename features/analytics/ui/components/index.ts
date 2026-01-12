@@ -18,7 +18,7 @@ export { default as AnalyticsStatistics } from './dashboard/MigratedAnalyticsSta
 export { default as DashboardOverviewBarChart } from './dashboard/MigratedOverviewBarChart';
 export { default as DashboardOverviewLineChart } from './dashboard/MigratedOverviewLineChart';
 export { default as DashboardPerformanceFilter } from './dashboard/MigratedPerformanceFilter';
-export { default as DashboardStatsCard } from './dashboard/MigratedStatsCard';
+export { default as DashboardStatsCard } from '@/shared/components/MigratedStatsCard';
 export { default as KpiCards } from './dashboard/KpiCards';
 
 // Dashboard Actions

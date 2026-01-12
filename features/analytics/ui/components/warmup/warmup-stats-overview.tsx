@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import StatsCard from "../dashboard/MigratedStatsCard";
+import StatsCard from "@/shared/components/MigratedStatsCard";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 import { mapRawToLegacyMailboxData } from "@features/analytics/lib/mappers";
 import { MailboxWarmupData } from "@/types";
@@ -22,12 +22,15 @@ function WarmupStatsOverview({ mailbox }: { mailbox: Mailbox }) {
   const { fetchMailboxAnalytics } = useAnalytics();
   // Keep local state as legacy UI shape using the mapper's return type to avoid directly depending
   // on legacy type symbols in multiple places.
-  const [analyticsData, setAnalyticsData] = useState<(MailboxWarmupData & {
-    totalWarmups?: number;
-    spamFlags?: number;
-    replies?: number;
-    lastUpdated?: Date;
-  }) | null>(null); // Migration note: mailbox analytics state always set via mapper, legacy type dependency removed.
+  const [analyticsData, setAnalyticsData] = useState<
+    | (MailboxWarmupData & {
+        totalWarmups?: number;
+        spamFlags?: number;
+        replies?: number;
+        lastUpdated?: Date;
+      })
+    | null
+  >(null); // Migration note: mailbox analytics state always set via mapper, legacy type dependency removed.
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
