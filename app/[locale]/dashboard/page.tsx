@@ -186,6 +186,7 @@ function DashboardKpiCards({
  * Wrapper component for Recent Replies to handle async data fetching
  */
 function RecentRepliesWrapper() {
+  const t = useTranslations("Dashboard");
   const [recentReplies, setRecentReplies] = useState<Array<{
     name: string;
     email: string;
@@ -207,7 +208,7 @@ function RecentRepliesWrapper() {
         ...reply,
         name: reply.from.split('@')[0], // Extract name from email
         email: reply.from,
-        company: 'Unknown Company', // Default company
+        company: t("unknownCompany"), // Default company
         message: `Re: ${reply.subject}`, // Generate message preview
         time: reply.date.toLocaleDateString(),
         type: 'positive' as const
@@ -215,7 +216,7 @@ function RecentRepliesWrapper() {
       setRecentReplies(transformedReplies);
       setLoading(false);
     });
-  }, []);
+  }, [t]);
 
   if (loading) {
     return <RecentReplySkeleton />;
