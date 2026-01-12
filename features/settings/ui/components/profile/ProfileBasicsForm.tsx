@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input/input";
 import { ProfileFormValues } from "@/types";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 interface ProfileBasicsFormProps {
   control: Control<ProfileFormValues>;
@@ -24,11 +25,12 @@ export default function ProfileBasicsForm({
   profileLoading,
   submitLoading,
 }: ProfileBasicsFormProps) {
+  const t = useTranslations();
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          Profile Information
+          {t("Settings.profile.title")}
           {(profileLoading || submitLoading) && (
             <Loader2 className="h-4 w-4 animate-spin" />
           )}
@@ -41,10 +43,10 @@ export default function ProfileBasicsForm({
             name="firstName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>First Name</FormLabel>
+                <FormLabel>{t("Settings.profile.firstName.label")}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter your first name"
+                    placeholder={t("Settings.profile.firstName.placeholder")}
                     {...field}
                     disabled={profileLoading || submitLoading}
                   />
@@ -58,10 +60,10 @@ export default function ProfileBasicsForm({
             name="lastName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Last Name</FormLabel>
+                <FormLabel>{t("Settings.profile.lastName.label")}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter your last name"
+                    placeholder={t("Settings.profile.lastName.placeholder")}
                     {...field}
                     disabled={profileLoading || submitLoading}
                   />
@@ -77,11 +79,11 @@ export default function ProfileBasicsForm({
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("Settings.profile.email.label")}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t("Settings.profile.email.placeholder")}
                   {...field}
                   disabled={profileLoading || submitLoading}
                 />
@@ -96,11 +98,11 @@ export default function ProfileBasicsForm({
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone</FormLabel>
+              <FormLabel>{t("Settings.profile.phone.label")}</FormLabel>
               <FormControl>
                 <Input
                   type="tel"
-                  placeholder="Enter your phone number"
+                  placeholder={t("Settings.profile.phone.placeholder")}
                   {...field}
                   disabled={profileLoading || submitLoading}
                 />
@@ -115,10 +117,10 @@ export default function ProfileBasicsForm({
           name="bio"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Bio</FormLabel>
+              <FormLabel>{t("Settings.profile.bio.label")}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Tell us about yourself"
+                  placeholder={t("Settings.profile.bio.placeholder")}
                   {...field}
                   disabled={profileLoading || submitLoading}
                 />

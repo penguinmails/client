@@ -7,15 +7,17 @@ import { HelpSection } from "@/features/onboarding/ui/components/HelpSection";
 import { NavigationButtons } from "@/features/onboarding/ui/components/navigation/NavigationButtons";
 import { EnhancedOnboardingProvider } from "@/context/enhanced-onboarding-context";
 import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
+import { useTranslations } from "next-intl";
 
 function OnboardingContent() {
   const { currentStepData } = useEnhancedOnboarding();
+  const t = useTranslations();
 
   if (!currentStepData) {
     return (
       <Card>
         <CardContent className="p-6 text-center">
-          <p className="text-muted-foreground">No onboarding steps available</p>
+          <p className="text-muted-foreground">{t("Onboarding.noSteps")}</p>
         </CardContent>
       </Card>
     );
@@ -32,14 +34,15 @@ function OnboardingContent() {
 }
 
 function OnboardingPage() {
+  const t = useTranslations();
   return (
     <div className="space-y-8">
       <div className="space-y-3">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-          Welcome to PenguinMails! 🐧
+          {t("Onboarding.welcome")}
         </h1>
         <p className="text-lg text-muted-foreground">
-          Let&apos;s get you set up for cold email success
+          {t("Onboarding.setup")}
         </p>
       </div>
       <EnhancedOnboardingProvider>

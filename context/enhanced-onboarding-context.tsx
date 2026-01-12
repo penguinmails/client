@@ -1,5 +1,5 @@
 "use client";
-import { onboardingSteps } from "@/lib/data/onboarding.mock";
+import { getOnboardingSteps } from "@/lib/data/onboarding.mock";
 import {
   createContext,
   ReactNode,
@@ -10,14 +10,18 @@ import {
 } from "react";
 import { OnboardingStep, OnboardingContextType } from "@/types/onboarding";
 import { developmentLogger } from "@/lib/logger";
+import { useTranslations } from "next-intl";
 
 const EnhancedOnboardingContext = createContext<
   OnboardingContextType | undefined
 >(undefined);
 
 function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
+  const t = useTranslations();
   const [currentStep, setCurrentStep] = useState(1);
-  const [steps, setSteps] = useState<OnboardingStep[]>(onboardingSteps);
+  const [steps, setSteps] = useState<OnboardingStep[]>(() =>
+    getOnboardingSteps(t)
+  );
 
   const totalSteps = steps.length;
 
