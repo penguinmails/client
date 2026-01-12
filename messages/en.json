@@ -391,7 +391,14 @@
       "activeLeads": "Active Leads",
       "completed": "Completed",
       "totalLeads": "Total Leads"
-    }
+    },
+    "unknownCompany": "Unknown Company"
+  },
+  "QuickActions": {
+    "title": "Quick Actions",
+    "createCampaign": "Create Campaign",
+    "uploadLeads": "Upload Leads",
+    "addDomain": "Add Domain"
   },
   "AppearanceSettings": {
     "title": "Appearance",

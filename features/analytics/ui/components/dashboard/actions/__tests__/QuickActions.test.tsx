@@ -1,11 +1,26 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import QuickActions from "../QuickActions";
+
+// Mock the useTranslations hook from next-intl
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key) => {
+    const translations = {
+      title: "Quick Actions",
+      createCampaign: "Create Campaign",
+      uploadLeads: "Upload Leads",
+      addDomain: "Add Domain",
+    };
+    return translations[key];
+  },
+}));
+
 describe("QuickActions", () => {
   it("renders the component title", () => {
     render(<QuickActions />);
     expect(screen.getByText("Quick Actions")).toBeInTheDocument();
   });
+
   it("displays all action buttons", () => {
     render(<QuickActions />);
     expect(
@@ -18,6 +33,7 @@ describe("QuickActions", () => {
       screen.getByRole("link", { name: /add domain/i })
     ).toBeInTheDocument();
   });
+
   it("has correct href for create campaign", () => {
     render(<QuickActions />);
     const createCampaignLink = screen.getByRole("link", {
@@ -28,22 +44,25 @@ describe("QuickActions", () => {
       "/dashboard/campaigns/create"
     );
   });
+
   it("has correct href for upload leads", () => {
     render(<QuickActions />);
     const uploadLeadsLink = screen.getByRole("link", { name: /upload leads/i });
     expect(uploadLeadsLink).toHaveAttribute("href", "/dashboard/leads");
   });
+
   it("has correct href for add domain", () => {
     render(<QuickActions />);
     const addDomainLink = screen.getByRole("link", { name: /add domain/i });
     expect(addDomainLink).toHaveAttribute("href", "/dashboard/domains/new");
   });
+
   it("renders Plus icon for create campaign", () => {
     const { container } = render(<QuickActions />);
-    // Check for icon containers with appropriate classes
     const blueIconContainer = container.querySelector(".bg-blue-100");
     expect(blueIconContainer).toBeInTheDocument();
   });
+
   it("renders Upload icon for upload leads", () => {
     const { container } = render(<QuickActions />);
     const greenIconContainer = container.querySelector(".bg-green-100");
