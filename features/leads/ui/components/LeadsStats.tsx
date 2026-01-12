@@ -1,7 +1,7 @@
 "use client";
 
 import { Mail, Users } from "lucide-react";
-import StatsCard from "@/features/analytics/ui/components/dashboard/MigratedStatsCard";
+import StatsCard from "@/shared/components/MigratedStatsCard";
 import { LeadStats } from "@/types/clients-leads";
 
 interface LeadsStatsProps {
@@ -12,17 +12,17 @@ export default function LeadsStats({ stats }: LeadsStatsProps) {
   return stats.map((stat) => {
     let IconComponent;
     switch (stat.icon) {
-      case 'users':
+      case "users":
         IconComponent = Users;
         break;
-      case 'mail':
+      case "mail":
         IconComponent = Mail;
         break;
       default:
         IconComponent = Users;
         break;
     }
-    
+
     return (
       <StatsCard
         key={stat.title}
