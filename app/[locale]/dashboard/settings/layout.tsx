@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/shared/utils";
 import { useEffect, useState } from "react";
+import { isFeatureEnabled } from "@/lib/features";
 import { useTranslations } from "next-intl";
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -168,24 +169,26 @@ function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Navigation tabs */}
         <div className="flex flex-col space-y-2">
-          {tabs.map((tab) => (
-            <NavLink
-              key={tab.label}
-              href={`/dashboard/settings/${tab.id}`}
-              className={cn(
-                "flex items-center rounded-lg text-left transition-colors gap-2",
-                preferences.sidebarCollapsed
-                  ? "px-2 py-2.5 justify-center"
-                  : "px-3 py-2.5 w-full"
-              )}
-              activeClassName="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
-            >
-              <Icon icon={tab.icon} className="h-4 w-4 shrink-0" />
-              {!preferences.sidebarCollapsed && (
-                <span className="truncate">{tab.label}</span>
-              )}
-            </NavLink>
-          ))}
+          {tabs
+            .filter((tab) => tab.id !== "billing" || isFeatureEnabled("stripe-billing"))
+            .map((tab) => (
+              <NavLink
+                key={tab.label}
+                href={`/dashboard/settings/${tab.id}`}
+                className={cn(
+                  "flex items-center rounded-lg text-left transition-colors gap-2",
+                  preferences.sidebarCollapsed
+                    ? "px-2 py-2.5 justify-center"
+                    : "px-3 py-2.5 w-full"
+                )}
+                activeClassName="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
+              >
+                <Icon icon={tab.icon} className="h-4 w-4 shrink-0" />
+                {!preferences.sidebarCollapsed && (
+                  <span className="truncate">{tab.label}</span>
+                )}
+              </NavLink>
+            ))}
         </div>
 
         {/* Collapsed theme switcher */}

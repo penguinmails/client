@@ -4,10 +4,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripeApi } from '@/lib/stripe/stripe-server';
 import { handleCheckoutSessionCompleted, handleInvoicePaid, handleSubscriptionUpdated } from '@/lib/stripe/webhook-handlers';
 import { developmentLogger } from '@/lib/logger';
+import { isFeatureEnabled } from '@/lib/features';
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SIGNING_SECRET;
 
 export async function POST(request: NextRequest) {
+  // If Stripe billing is disabled, ignore the webhook
+  if (!isFeatureEnabled('stripe-billing')) {
+    return NextResponse.json({ received: true, ignored: true });
+  }
+
   try {
     const body = await request.text();
     const sig = (await headers()).get('stripe-signature');

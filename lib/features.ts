@@ -1,4 +1,4 @@
-export type FeatureFlag = "turnstile";
+export type FeatureFlag = "turnstile" | "stripe-billing";
 
 /**
  * Check if a feature is enabled based on the NEXT_PUBLIC_FEATURE_FLAGS environment variable.
