@@ -69,6 +69,7 @@ export default function VerifyEmailPage() {
     } finally {
       setIsVerifying(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -82,6 +83,7 @@ export default function VerifyEmailPage() {
     }
 
     verifyToken(token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, verifyToken]);
 
   const handleResendEmail = async () => {
