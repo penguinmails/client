@@ -197,7 +197,7 @@ describe('Cross-Feature Integration Tests', () => {
 
       // Cross-feature imports should be prevented
       expect(crossFeatureViolations.length).toBe(0);
-      
+
       if (crossFeatureViolations.length > 0) {
         const violationSummary = crossFeatureViolations.map(v => 
           `${v.file}:${v.line} - ${v.sourceFeature} imports from ${v.targetFeature}: ${v.importPath}`
