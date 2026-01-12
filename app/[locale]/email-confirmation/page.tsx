@@ -15,6 +15,7 @@ export default function EmailConfirmationPage() {
   useEffect(() => {
     const storedEmail = localStorage.getItem("pendingVerificationEmail");
     if (storedEmail) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEmail(storedEmail);
     }
   }, []);
