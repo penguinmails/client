@@ -3,9 +3,27 @@ name: CI - Lint, TypeCheck, Tests & Build
 on:
   push:
     branches: [ main, dev ]
+    paths:
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.js'
+      - '**/*.jsx'
+      - 'package.json'
+      - 'tsconfig*.json'
+      - 'next.config.*'
+      - 'tailwind.config.*'
   pull_request:
     branches: [ main, dev ]
     types: [opened, synchronize, reopened]
+    paths:
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.js'
+      - '**/*.jsx'
+      - 'package.json'
+      - 'tsconfig*.json'
+      - 'next.config.*'
+      - 'tailwind.config.*'
 
 jobs:
   # Job 1: Run linting checks
@@ -27,7 +45,7 @@ jobs:
       run: npm ci
 
     - name: Run ESLint
-      run: npm run lint
+      run: npm run lint:ci
       env:
         CI: true
 
@@ -113,12 +131,17 @@ jobs:
     name: CI Summary
     runs-on: ubuntu-latest
     needs: [lint, typecheck, test, build]
+    if: always()
     
     steps:
     - name: All checks passed
       run: |
-        echo "✅ All CI checks passed successfully!"
-        echo "- ESLint: ${{ needs.lint.result }}"
-        echo "- TypeScript: ${{ needs.typecheck.result }}"
-        echo "- Tests: ${{ needs.test.result }}"
-        echo "- Build: ${{ needs.build.result }}"
+        echo "## CI Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Job Results" >> $GITHUB_STEP_SUMMARY
+        echo "- ESLint: ${{ needs.lint.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- TypeScript: ${{ needs.typecheck.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Tests: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Build: ${{ needs.build.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ CI pipeline completed!" >> $GITHUB_STEP_SUMMARY
