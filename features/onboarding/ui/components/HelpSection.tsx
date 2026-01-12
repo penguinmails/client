@@ -7,14 +7,17 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
-import { faqItems } from "@/lib/data/onboarding.mock";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { developmentLogger } from "@/lib/logger";
 import { useCallback, useState } from "react";
+import { useTranslations } from "next-intl";
+
+const FAQ_COUNT = 4;
 
 export function HelpSection() {
   const [showFAQ, setShowFAQ] = useState(false);
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
+  const t = useTranslations();
 
   const handleContactSupport = useCallback(() => {
     developmentLogger.debug("Contact support clicked");
@@ -23,6 +26,12 @@ export function HelpSection() {
   const handleToggleFAQ = useCallback(() => {
     setShowFAQ(!showFAQ);
   }, [showFAQ]);
+
+  const faqItems = Array.from({ length: FAQ_COUNT }, (_, i) => ({
+    id: i + 1,
+    question: t(`Onboarding.faq.q${i + 1}`),
+    answer: t(`Onboarding.faq.a${i + 1}`),
+  }));
 
   return (
     <Card>
@@ -33,9 +42,11 @@ export function HelpSection() {
               <HelpCircle className="h-5 w-5 text-purple-600" />
             </div>
             <div>
-              <CardTitle className="font-semibold">Need Help?</CardTitle>
+              <CardTitle className="font-semibold">
+                {t("Onboarding.help.title")}
+              </CardTitle>
               <p className="text-sm text-muted-foreground">
-                We&apos;re here to support your success
+                {t("Onboarding.help.description")}
               </p>
             </div>
           </div>
@@ -45,7 +56,7 @@ export function HelpSection() {
               className="bg-purple-600 hover:bg-purple-700"
               size="sm"
             >
-              Contact Support
+              {t("Onboarding.help.contactSupport")}
             </Button>
             <Button
               variant="ghost"
@@ -53,7 +64,7 @@ export function HelpSection() {
               onClick={handleToggleFAQ}
               className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
             >
-              FAQ
+              {t("Onboarding.help.faq")}
               {showFAQ ? (
                 <ChevronUp className="h-4 w-4" />
               ) : (

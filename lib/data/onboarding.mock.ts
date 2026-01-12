@@ -6,18 +6,18 @@ import {
     Users,
 } from 'lucide-react';
 import { OnboardingStep, FAQItem } from '@/types/onboarding';
+import { TFunction } from 'next-intl';
 
-export const onboardingSteps: OnboardingStep[] = [
+export const getOnboardingSteps = (t: TFunction): OnboardingStep[] => [
   {
     id: 1,
-    title: 'Connect Your Domain',
-    subtitle: 'Set up your sending domain for professional email delivery',
-    explanation:
-      'Your domain is the foundation of your email campaigns. By connecting and verifying your domain (like yourcompany.com), you ensure your emails are delivered from a professional address and improve your sender reputation. This step involves adding DNS records to prove you own the domain.',
+    title: t('Onboarding.steps.step1.title'),
+    subtitle: t('Onboarding.steps.step1.subtitle'),
+    explanation: t('Onboarding.steps.step1.explanation'),
     icon: Globe,
     color: 'bg-blue-500',
     href: '/en/dashboard/domains',
-    buttonText: 'Go to Domains Page',
+    buttonText: t('Onboarding.steps.step1.buttonText'),
     kbLink: 'https://docs.penguinmails.com/guides/domain-setup',
     videoId: null,
     videoUrl: 'https://www.youtube.com/watch?v=domain-setup-guide',
@@ -25,14 +25,13 @@ export const onboardingSteps: OnboardingStep[] = [
   },
   {
     id: 2,
-    title: 'Create Mailboxes',
-    subtitle: 'Create email accounts (mailboxes) to send campaigns from',
-    explanation:
-      'Mailboxes are the individual email accounts that will send your campaigns. You can create multiple mailboxes like john@yourcompany.com, sales@yourcompany.com to distribute your sending volume and appear more natural. Each mailbox needs to be properly configured with SMTP settings.',
+    title: t('Onboarding.steps.step2.title'),
+    subtitle: t('Onboarding.steps.step2.subtitle'),
+    explanation: t('Onboarding.steps.step2.explanation'),
     icon: Mail,
     color: 'bg-purple-500',
     href: '/en/dashboard/mailboxes',
-    buttonText: 'Go to Mailboxes Page',
+    buttonText: t('Onboarding.steps.step2.buttonText'),
     kbLink: 'https://docs.penguinmails.com/guides/mailbox-setup',
     videoId: null,
     videoUrl: 'https://www.youtube.com/watch?v=mailbox-setup-guide',
@@ -40,14 +39,13 @@ export const onboardingSteps: OnboardingStep[] = [
   },
   {
     id: 3,
-    title: 'Enable Warmup',
-    subtitle: 'Warming up mailboxes boosts deliverability and reputation',
-    explanation:
-      'Email warmup is the process of gradually increasing your sending volume to build a positive sender reputation. Our automated warmup service sends and receives emails between real accounts to establish trust with email providers like Gmail and Outlook, ensuring your campaigns land in the inbox.',
+    title: t('Onboarding.steps.step3.title'),
+    subtitle: t('Onboarding.steps.step3.subtitle'),
+    explanation: t('Onboarding.steps.step3.explanation'),
     icon: Zap,
     color: 'bg-orange-500',
     href: '/en/dashboard/warmup',
-    buttonText: 'Go to Warmup Page',
+    buttonText: t('Onboarding.steps.step3.buttonText'),
     kbLink: 'https://docs.penguinmails.com/guides/warmup',
     videoId: null,
     videoUrl: 'https://www.youtube.com/watch?v=warmup-guide',
@@ -55,44 +53,39 @@ export const onboardingSteps: OnboardingStep[] = [
   },
   {
     id: 4,
-    title: 'Upload Leads',
-    subtitle: 'Upload your leads to start reaching potential clients',
-    explanation:
-      'Import your prospect list using our CSV upload tool. Your leads should include essential information like first name, last name, email, company, and job title. Quality leads are crucial for campaign success - make sure your list is clean, targeted, and relevant to your offering.',
+    title: t('Onboarding.steps.step4.title'),
+    subtitle: t('Onboarding.steps.step4.subtitle'),
+    explanation: t('Onboarding.steps.step4.explanation'),
     icon: Users,
     color: 'bg-green-500',
     href: '/en/dashboard/leads',
-    buttonText: 'Go to Leads Page',
+    buttonText: t('Onboarding.steps.step4.buttonText'),
     kbLink: 'https://docs.penguinmails.com/guides/csv-format',
     videoId: null,
     videoUrl: 'https://www.youtube.com/watch?v=leads-upload-guide',
     completed: false,
     promotion: {
-      title: 'Need Quality Leads?',
-      description:
-        'Our lead generation service finds verified prospects in your target market.',
+      title: t('Onboarding.promotion.leads.title'),
+      description: t('Onboarding.promotion.leads.description'),
       link: 'https://penguinmails.com/services/lead-generation',
     },
   },
   {
     id: 5,
-    title: 'Create & Launch Your First Campaign',
-    subtitle:
-      'Put everything together and send your first cold outreach campaign',
-    explanation:
-      "Now you're ready to create your first campaign! Use our campaign builder to craft your email sequence, set up follow-ups, choose your leads, assign mailboxes, and configure sending schedules. Start with a small test batch to optimize your approach before scaling up.",
+    title: t('Onboarding.steps.step5.title'),
+    subtitle: t('Onboarding.steps.step5.subtitle'),
+    explanation: t('Onboarding.steps.step5.explanation'),
     icon: Send,
     color: 'bg-emerald-500',
     href: '/en/dashboard/campaigns/create',
-    buttonText: 'Go to Campaign Builder',
+    buttonText: t('Onboarding.steps.step5.buttonText'),
     kbLink: 'https://docs.penguinmails.com/guides/campaign-setup',
     videoId: null,
     videoUrl: 'https://www.youtube.com/watch?v=campaign-setup-guide',
     completed: false,
     promotion: {
-      title: 'Need Help with Copy?',
-      description:
-        'Our copywriting experts create high-converting email sequences for you.',
+      title: t('Onboarding.promotion.copy.title'),
+      description: t('Onboarding.promotion.copy.description'),
       link: 'https://penguinmails.com/services/copywriting',
     },
   },

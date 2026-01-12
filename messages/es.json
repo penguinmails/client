@@ -241,6 +241,91 @@
       "profileInformation": {
         "title": "Información del Perfil",
         "description": "Actualiza tus detalles personales y avatar."
+      },
+      "profile": {
+        "updating": "Actualizando Perfil...",
+        "saveChanges": "Guardar Cambios",
+        "title": "Información del Perfil",
+        "firstName": {
+          "label": "Nombre",
+          "placeholder": "Ingresa tu nombre"
+        },
+        "lastName": {
+          "label": "Apellido",
+          "placeholder": "Ingresa tu apellido"
+        },
+        "email": {
+          "label": "Correo electrónico",
+          "placeholder": "Ingresa tu correo electrónico"
+        },
+        "phone": {
+          "label": "Teléfono",
+          "placeholder": "Ingresa tu número de teléfono"
+        },
+        "bio": {
+          "label": "Biografía",
+          "placeholder": "Cuéntanos sobre ti"
+        },
+        "avatar": {
+          "title": "Avatar",
+          "current": "Avatar actual",
+          "upload": "Subir nuevo avatar",
+          "uploading": "Subiendo...",
+          "chooseFile": "Elegir archivo",
+          "fileDescription": "PNG, JPG hasta 5MB",
+          "chooseFrom": "Elegir de avatares",
+          "alt": "Avatar {index}",
+          "customUrl": "URL de avatar personalizado",
+          "placeholder": "https://example.com/avatar.jpg",
+          "apply": "Aplicar"
+        },
+        "preferences": {
+          "title": "Preferencias",
+          "timezone": {
+            "label": "Zona horaria",
+            "placeholder": "Selecciona tu zona horaria"
+          },
+          "language": {
+            "label": "Idioma",
+            "placeholder": "Selecciona tu idioma"
+          },
+          "sidebarView": {
+            "label": "Vista de la barra lateral",
+            "expanded": "Expandido",
+            "collapsed": "Colapsado",
+            "hidden": "Oculto"
+          },
+          "notifications": {
+            "label": "Preferencias de notificación",
+            "email": "Notificaciones por correo electrónico",
+            "push": "Notificaciones push",
+            "marketing": "Correos de marketing",
+            "product": "Actualizaciones de productos"
+          },
+          "timezones": {
+            "UTC": "UTC",
+            "America/New_York": "Hora del Este",
+            "America/Chicago": "Hora del Centro",
+            "America/Denver": "Hora de la Montaña",
+            "America/Los_Angeles": "Hora del Pacífico",
+            "Europe/London": "Londres",
+            "Europe/Paris": "París",
+            "Asia/Tokyo": "Tokio",
+            "Asia/Shanghai": "Shanghái",
+            "Australia/Sydney": "Sídney"
+          },
+          "languages": {
+            "en": "Inglés",
+            "es": "Español",
+            "fr": "Francés",
+            "de": "Alemán",
+            "it": "Italiano",
+            "pt": "Portugués",
+            "ja": "Japonés",
+            "ko": "Coreano",
+            "zh": "Chino"
+          }
+        }
       }
     },
     "layout": {
@@ -444,5 +529,69 @@
     "sending": "Enviando...",
     "resend": "Reenviar correo de verificación",
     "support": "Si sigues teniendo problemas, por favor contacta a nuestro equipo de soporte."
+  },
+  "Onboarding": {
+    "noSteps": "No hay pasos de onboarding disponibles",
+    "welcome": "¡Bienvenido a PenguinMails! 🐧",
+    "setup": "Vamos a prepararte para el éxito en el correo frío",
+    "help": {
+      "title": "¿Necesitas ayuda?",
+      "description": "Estamos aquí para apoyar tu éxito",
+      "contactSupport": "Contactar a Soporte",
+      "faq": "Preguntas Frecuentes"
+    },
+    "faq": {
+      "q1": "¿Cuánto tiempo lleva el proceso de configuración?",
+      "a1": "La mayoría de los usuarios completan todo el proceso de incorporación en 30-60 minutos. La verificación del dominio puede tardar hasta 24 horas, pero puedes continuar con otros pasos mientras esperas.",
+      "q2": "¿Necesito conocimientos técnicos para configurar esto?",
+      "a2": "¡Para nada! Nuestras guías paso a paso y tutoriales en video te guiarán a través de todo. Para la configuración de DNS, es posible que necesites acceso a tu registrador de dominios, pero proporcionamos instrucciones exactas.",
+      "q3": "¿Puedo saltarme pasos y volver más tarde?",
+      "a3": "Aunque puedes navegar fuera en cualquier momento, recomendamos completar los pasos en orden para obtener la mejor experiencia. Cada paso se basa en el anterior.",
+      "q4": "¿Qué pasa si me quedo atascado en un paso?",
+      "a4": "Usa el botón \"¿Necesitas ayuda?\" a continuación para acceder a nuestro centro de ayuda o contacta a nuestro equipo de soporte. ¡Estamos aquí para ayudarte a tener éxito!"
+    },
+    "promotion": {
+      "learnMore": "Aprende más",
+      "leads": {
+        "title": "¿Necesitas leads de calidad?",
+        "description": "Nuestro servicio de generación de leads encuentra prospectos verificados en tu mercado objetivo."
+      },
+      "copy": {
+        "title": "¿Necesitas ayuda con el copywriting?",
+        "description": "Nuestros expertos en copywriting crean secuencias de correo electrónico de alta conversión para ti."
+      }
+    },
+    "steps": {
+      "step1": {
+        "title": "Conecta tu dominio",
+        "subtitle": "Configura tu dominio de envío para una entrega de correo electrónico profesional",
+        "explanation": "Tu dominio es la base de tus campañas de correo electrónico. Al conectar y verificar tu dominio (como tuempresa.com), te aseguras de que tus correos electrónicos se entreguen desde una dirección profesional y mejoras tu reputación como remitente. Este paso implica agregar registros DNS para demostrar que eres el propietario del dominio.",
+        "buttonText": "Ir a la página de dominios"
+      },
+      "step2": {
+        "title": "Crear buzones de correo",
+        "subtitle": "Crea cuentas de correo electrónico (buzones) para enviar campañas desde ellas",
+        "explanation": "Los buzones de correo son las cuentas de correo electrónico individuales que enviarán tus campañas. Puedes crear múltiples buzones como juan@tuempresa.com, ventas@tuempresa.com para distribuir tu volumen de envío y parecer más natural. Cada buzón debe configurarse correctamente con la configuración SMTP.",
+        "buttonText": "Ir a la página de buzones de correo"
+      },
+      "step3": {
+        "title": "Habilitar calentamiento",
+        "subtitle": "El calentamiento de los buzones de correo aumenta la entregabilidad y la reputación",
+        "explanation": "El calentamiento de correo electrónico es el proceso de aumentar gradualmente tu volumen de envío para construir una reputación de remitente positiva. Nuestro servicio de calentamiento automatizado envía y recibe correos electrónicos entre cuentas reales para establecer confianza con proveedores de correo electrónico como Gmail y Outlook, asegurando que tus campañas lleguen a la bandeja de entrada.",
+        "buttonText": "Ir a la página de calentamiento"
+      },
+      "step4": {
+        "title": "Subir leads",
+        "subtitle": "Sube tus leads para empezar a llegar a clientes potenciales",
+        "explanation": "Importa tu lista de prospectos utilizando nuestra herramienta de carga de CSV. Tus leads deben incluir información esencial como nombre, apellido, correo electrónico, empresa y cargo. Los leads de calidad son cruciales para el éxito de la campaña: asegúrate de que tu lista esté limpia, segmentada y sea relevante para tu oferta.",
+        "buttonText": "Ir a la página de leads"
+      },
+      "step5": {
+        "title": "Crea y lanza tu primera campaña",
+        "subtitle": "Junta todo y envía tu primera campaña de correo en frío",
+        "explanation": "¡Ahora estás listo para crear tu primera campaña! Utiliza nuestro creador de campañas para elaborar tu secuencia de correos electrónicos, configurar seguimientos, elegir tus leads, asignar buzones y configurar horarios de envío. Comienza con un pequeño lote de prueba para optimizar tu enfoque antes de escalar.",
+        "buttonText": "Ir al creador de campañas"
+      }
+    }
   }
 }

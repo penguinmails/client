@@ -10,8 +10,10 @@ import AvatarForm from "./AvatarForm";
 import PreferencesForm from "./PreferencesForm";
 import ProfileErrorHandler from "./ProfileErrorHandler";
 import ProfileLoadingStates from "./ProfileLoadingStates";
+import { useTranslations } from "next-intl";
 
 function ProfileForm() {
+  const t = useTranslations();
   const {
     form,
     profileLoading,
@@ -96,10 +98,10 @@ function ProfileForm() {
             {submitLoading || isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Updating Profile...
+                {t("Settings.profile.updating")}
               </>
             ) : (
-              "Save Changes"
+              t("Settings.profile.saveChanges")
             )}
           </Button>
         </div>

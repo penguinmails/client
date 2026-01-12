@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload, User, Loader2, Check, X } from "lucide-react";
 import { developmentLogger } from "@/lib/logger";
+import { useTranslations } from "next-intl";
 
 interface AvatarFormProps {
   currentAvatarUrl: string;
@@ -27,6 +28,7 @@ export default function AvatarForm({
   onCustomUrlChange,
   onCustomUrlApply,
 }: AvatarFormProps) {
+  const t = useTranslations();
   const [uploading, setUploading] = useState(false);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +76,7 @@ export default function AvatarForm({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          Avatar
+          {t("Settings.profile.avatar.title")}
           {(profileLoading || submitLoading || uploading) && (
             <Loader2 className="h-4 w-4 animate-spin" />
           )}
@@ -84,21 +86,26 @@ export default function AvatarForm({
         {/* Current Avatar Display */}
         <div className="flex items-center space-x-4">
           <Avatar className="h-20 w-20">
-            <AvatarImage src={currentAvatarUrl} alt="Current Avatar" />
+            <AvatarImage
+              src={currentAvatarUrl}
+              alt={t("Settings.profile.avatar.current")}
+            />
             <AvatarFallback>
               <User className="h-8 w-8" />
             </AvatarFallback>
           </Avatar>
           <div>
             <p className="text-sm text-muted-foreground">
-              Current avatar
+              {t("Settings.profile.avatar.current")}
             </p>
           </div>
         </div>
 
         {/* File Upload */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Upload New Avatar</label>
+          <label className="text-sm font-medium">
+            {t("Settings.profile.avatar.upload")}
+          </label>
           <div className="flex items-center space-x-2">
             <Input
               type="file"
@@ -118,24 +125,26 @@ export default function AvatarForm({
               {uploading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Uploading...
+                  {t("Settings.profile.avatar.uploading")}
                 </>
               ) : (
                 <>
                   <Upload className="mr-2 h-4 w-4" />
-                  Choose File
+                  {t("Settings.profile.avatar.chooseFile")}
                 </>
               )}
             </Button>
             <span className="text-sm text-muted-foreground">
-              PNG, JPG up to 5MB
+              {t("Settings.profile.avatar.fileDescription")}
             </span>
           </div>
         </div>
 
         {/* Predefined Avatars */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Choose from Avatars</label>
+          <label className="text-sm font-medium">
+            {t("Settings.profile.avatar.chooseFrom")}
+          </label>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {predefinedAvatars.map((avatarUrl, index) => (
               <button
@@ -144,11 +153,18 @@ export default function AvatarForm({
                 onClick={() => onAvatarChange(avatarUrl)}
                 disabled={isDisabled}
                 className={`relative group rounded-lg overflow-hidden transition-all hover:scale-105 ${
-                  currentAvatarUrl === avatarUrl ? 'ring-2 ring-primary' : ''
-                } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                  currentAvatarUrl === avatarUrl ? "ring-2 ring-primary" : ""
+                } ${
+                  isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
               >
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src={avatarUrl} alt={`Avatar ${index + 1}`} />
+                  <AvatarImage
+                    src={avatarUrl}
+                    alt={t("Settings.profile.avatar.alt", {
+                      index: index + 1,
+                    })}
+                  />
                   <AvatarFallback>
                     <User className="h-6 w-6" />
                   </AvatarFallback>
@@ -165,10 +181,12 @@ export default function AvatarForm({
 
         {/* Custom URL */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Custom Avatar URL</label>
+          <label className="text-sm font-medium">
+            {t("Settings.profile.avatar.customUrl")}
+          </label>
           <div className="flex space-x-2">
             <Input
-              placeholder="https://example.com/avatar.jpg"
+              placeholder={t("Settings.profile.avatar.placeholder")}
               value={customAvatarUrl}
               onChange={(e) => onCustomUrlChange(e.target.value)}
               disabled={isDisabled}
@@ -180,7 +198,7 @@ export default function AvatarForm({
               disabled={!customAvatarUrl || isDisabled}
               onClick={onCustomUrlApply}
             >
-              Apply
+              {t("Settings.profile.avatar.apply")}
             </Button>
             {customAvatarUrl && (
               <Button
