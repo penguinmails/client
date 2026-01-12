@@ -6,11 +6,10 @@ import {
     Users,
 } from 'lucide-react';
 import { OnboardingStep, FAQItem } from '@/types/onboarding';
-import type { useTranslations } from 'next-intl';
 
-type TFunction = ReturnType<typeof useTranslations>;
-
-export const getOnboardingSteps = (t: TFunction): OnboardingStep[] => [
+export const getOnboardingSteps = (
+  t: (key: string) => string
+): OnboardingStep[] => [
   {
     id: 1,
     title: t('Onboarding.steps.step1.title'),
