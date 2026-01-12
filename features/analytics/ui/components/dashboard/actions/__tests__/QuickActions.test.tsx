@@ -1,11 +1,11 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import QuickActions from "../QuickActions";
+import messages from "../../../../../../../messages/en.json";
 
 // Mock the useTranslations hook from next-intl
 jest.mock("next-intl", () => ({
   useTranslations: (namespace) => {
-    const messages = require("../../../../../../../messages/en.json");
     const namespaceMessages = messages[namespace] || {};
     return (key) => namespaceMessages[key] || key;
   },
