@@ -9,7 +9,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { developmentLogger } from "@/lib/logger";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
 const FAQ_COUNT = 4;
@@ -27,11 +27,15 @@ export function HelpSection() {
     setShowFAQ(!showFAQ);
   }, [showFAQ]);
 
-  const faqItems = Array.from({ length: FAQ_COUNT }, (_, i) => ({
-    id: i + 1,
-    question: t(`Onboarding.faq.q${i + 1}`),
-    answer: t(`Onboarding.faq.a${i + 1}`),
-  }));
+  const faqItems = useMemo(
+    () =>
+      Array.from({ length: FAQ_COUNT }, (_, i) => ({
+        id: i + 1,
+        question: t(`Onboarding.faq.q${i + 1}`),
+        answer: t(`Onboarding.faq.a${i + 1}`),
+      })),
+    [t]
+  );
 
   return (
     <Card>
