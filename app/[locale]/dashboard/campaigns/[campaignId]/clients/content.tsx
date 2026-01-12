@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 import { createLeadTableColumns } from "@/features/leads/ui/components/tables/LeadTableColumns";
-import { getClientsPage } from "./actions";
+import { getClientsPage } from "@features/campaigns/actions/campaign-clients";
 import { ClientsHeader } from "@/features/leads/ui/components/filters/ClientsHeader";
 import { ClientsTable } from "@/features/leads/ui/components/tables/ClientsTable";
 import { ClientsFilters } from "@/features/leads/ui/components/filters/ClientsFilters";

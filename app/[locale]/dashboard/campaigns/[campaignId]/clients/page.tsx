@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import ClientsContent from "./content";
-import { getClientsPage } from "./actions";
+import { getClientsPage } from "@features/campaigns/actions/campaign-clients";
 
 export default async function ClientsPage({
   params,
