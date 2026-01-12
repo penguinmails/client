@@ -12,7 +12,7 @@ import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checko
 import { productionLogger } from "@/lib/logger";
 import { useTranslations } from "next-intl";
 import { isFeatureEnabled } from "@/lib/features";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 // Simple loading skeleton component
 function BillingLoadingSkeleton() {
@@ -33,6 +33,7 @@ function BillingLoadingSkeleton() {
 export default function BillingSettingsPage() {
   const t = useTranslations();
   const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
+  const router = useRouter();
 
   // Server action hooks for billing data
   const billingOptions = {
@@ -52,8 +53,16 @@ export default function BillingSettingsPage() {
     loadBilling();
   }, [loadBilling]);
 
+  // Redirect if stripe billing feature is disabled
+  useEffect(() => {
+    if (!isFeatureEnabled("stripe-billing")) {
+      router.push("/dashboard/settings");
+    }
+  }, [router]);
+
+  // Don't render anything if feature is disabled (will redirect)
   if (!isFeatureEnabled("stripe-billing")) {
-    return redirect("/dashboard/settings");
+    return null;
   }
 
   // Show loading skeleton while data is loading
