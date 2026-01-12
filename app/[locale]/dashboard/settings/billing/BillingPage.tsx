@@ -11,6 +11,8 @@ import { ChangePlanTrigger } from "@features/billing/ui/components/change-plan-d
 import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checkout";
 import { productionLogger } from "@/lib/logger";
 import { useTranslations } from "next-intl";
+import { isFeatureEnabled } from "@/lib/features";
+import { redirect } from "next/navigation";
 
 // Simple loading skeleton component
 function BillingLoadingSkeleton() {
@@ -49,6 +51,10 @@ export default function BillingSettingsPage() {
   useEffect(() => {
     loadBilling();
   }, [loadBilling]);
+
+  if (!isFeatureEnabled("stripe-billing")) {
+    return redirect("/dashboard/settings");
+  }
 
   // Show loading skeleton while data is loading
   if (billingDataAction.loading && !billingDataAction.data) {
