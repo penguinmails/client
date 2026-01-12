@@ -8,7 +8,7 @@ import { Suspense } from "react";
 import CSVUploadTab from "@features/leads/ui/components/CSVUploadTab";
 import ContactsTab from "@features/leads/ui/components/ContactsTab";
 import { FileText, Upload, Users } from "lucide-react";
-import LeadsStats from "./LeadsStats";
+import LeadsStats from "@features/leads/ui/components/LeadsStats";
 
 // Force dynamic rendering since this page uses authentication and headers
 export const dynamic = "force-dynamic";
