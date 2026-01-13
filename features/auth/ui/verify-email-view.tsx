@@ -81,7 +81,7 @@ export function VerifyEmailView() {
     }
 
     verifyToken(token);
-  }, [token, verifyToken, t]);
+  }, [token, verifyToken]);
 
   const handleResendEmail = async () => {
     if (!verificationResult?.email) return;
