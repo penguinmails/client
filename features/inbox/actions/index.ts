@@ -4,80 +4,11 @@ import { NextRequest } from "next/server";
 import { productionLogger } from "@/lib/logger";
 import { ActionResult } from "@/types";
 import { Conversation, Message } from "../types";
-import { listMailboxes, getMailbox, createMailbox, updateMailbox, deleteMailbox, getMailboxesAction, getMultipleMailboxAnalyticsAction, MailboxData } from './mailboxes';
+import { mockConversations, mockMessages, mockFilters } from "../data/mocks";
+
 
 // Explicit re-exports for Turbopack compatibility
-export async function getAllMailboxes(req?: NextRequest) { return listMailboxes(req); }
-export async function getMailboxById(id: string, req?: NextRequest) { return getMailbox(id, req); }
-export async function createNewMailbox(data: Partial<MailboxData>, req?: NextRequest) { return createMailbox(data, req); }
-export async function updateMailboxData(id: string, data: Partial<MailboxData>, req?: NextRequest) { return updateMailbox(id, data, req); }
-export async function removeMailbox(id: string, req?: NextRequest) { return deleteMailbox(id, req); }
-export async function getMailboxes(domainId?: string, req?: NextRequest) { return getMailboxesAction(domainId, req); }
-export async function getMultipleMailboxAnalytics(ids: string[], req?: NextRequest) { return getMultipleMailboxAnalyticsAction(ids, req); }
-
-// Mock data aligned with ConversationSchema
-const mockConversations: Conversation[] = [
-  {
-    id: '1',
-    name: 'John Doe',
-    email: 'john@example.com',
-    subject: 'Interested in product',
-    preview: 'Hi, I saw your product and I am interested...',
-    time: new Date().toISOString(),
-    status: 'unread',
-    unreadCount: 1,
-    lastMessage: 'incoming',
-    tag: 'interested',
-    campaign: 'Q1 Outreach',
-    company: 'TechCorp',
-    title: 'CTO',
-    isPinned: false,
-    isStarred: true,
-    avatar: 'JD',
-    notes: 'Very interested in enterprise solution',
-    followUpDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    subject: 'Follow up needed',
-    preview: 'Thanks for your email, I need some more information...',
-    time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    status: 'read',
-    unreadCount: 0,
-    lastMessage: 'incoming',
-    tag: 'follow-up',
-    campaign: 'Product Launch',
-    company: 'StartupXYZ',
-    title: 'Product Manager',
-    isPinned: true,
-    isStarred: false,
-    avatar: 'JS',
-    notes: 'Follow up about demo scheduling',
-    followUpDate: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: '3',
-    name: 'Mike Johnson',
-    email: 'mike@example.com',
-    subject: 'Hot lead opportunity',
-    preview: 'This looks very promising, when can we schedule a call?',
-    time: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-    status: 'unread',
-    unreadCount: 2,
-    lastMessage: 'incoming',
-    tag: 'hot-lead',
-    campaign: 'Q1 Outreach',
-    company: 'InnovateCorp',
-    title: 'VP Sales',
-    isPinned: true,
-    isStarred: true,
-    avatar: 'MJ',
-    notes: 'High priority - budget confirmed',
-    followUpDate: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString()
-  }
-];
+// Note: Wildcard exports are not allowed in "use server" files
 
 /**
  * Fetches filtered conversations
@@ -170,51 +101,6 @@ export async function sendMessage(_conversationId: string, _message: string, _re
  */
 export async function getMessages(conversationId?: string, _req?: NextRequest): Promise<ActionResult<Message[]>> {
   try {
-    // Mock messages for different conversations
-    const mockMessages: Record<string, Message[]> = {
-      '1': [
-        {
-          id: 'msg1',
-          type: 'incoming',
-          sender: 'John Doe',
-          time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          content: 'Hi there! I saw your product and I am very interested in learning more about it. Could you provide some additional details?'
-        },
-        {
-          id: 'msg2',
-          type: 'outgoing',
-          sender: 'You',
-          time: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-          content: 'Hello John! Thank you for your interest. I\'d be happy to schedule a demo to show you our features. When would be a good time for you?'
-        },
-        {
-          id: 'msg3',
-          type: 'incoming',
-          sender: 'John Doe',
-          time: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-          content: 'That sounds great! How about tomorrow at 2 PM EST? I\'m particularly interested in the integration capabilities.'
-        }
-      ],
-      '2': [
-        {
-          id: 'msg4',
-          type: 'incoming',
-          sender: 'Jane Smith',
-          time: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-          content: 'Thanks for reaching out! I need some more information about your pricing structure and implementation timeline.'
-        }
-      ],
-      '3': [
-        {
-          id: 'msg5',
-          type: 'incoming',
-          sender: 'Mike Johnson',
-          time: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-          content: 'This looks very promising! We\'re ready to move forward. When can we schedule a call to discuss the contract details?'
-        }
-      ]
-    };
-
     const messages = conversationId ? (mockMessages[conversationId] || []) : [];
     return {
       success: true,
@@ -236,10 +122,7 @@ export async function getUniqueFiltersAction(_req?: NextRequest): Promise<Action
   try {
     return {
       success: true,
-      data: {
-        senders: ['john@example.com', 'jane@example.com'],
-        campaigns: ['Q1 Outreach', 'Product Launch']
-      }
+      data: mockFilters
     };
   } catch (error) {
     productionLogger.error("Error fetching unique filters:", error);
@@ -248,4 +131,43 @@ export async function getUniqueFiltersAction(_req?: NextRequest): Promise<Action
       error: "Failed to fetch unique filters"
     };
   }
+}
+
+// Import legacy server actions and re-export as local async functions to satisfy Turbopack
+import {
+  getAllMessagesAction as _getAllMessagesAction,
+  fetchEmailByIdAction as _fetchEmailByIdAction,
+  fetchConversationByIdActionLegacy as _fetchConversationByIdActionLegacy,
+  markEmailAsReadAction as _markEmailAsReadAction,
+  markEmailAsStarredAction as _markEmailAsStarredAction,
+  softDeleteEmailAction as _softDeleteEmailAction,
+  hideEmailAction as _hideEmailAction,
+} from "./inbox-legacy";
+
+export async function getAllMessagesAction(...args: Parameters<typeof _getAllMessagesAction>) {
+  return _getAllMessagesAction(...args);
+}
+
+export async function fetchEmailByIdAction(...args: Parameters<typeof _fetchEmailByIdAction>) {
+  return _fetchEmailByIdAction(...args);
+}
+
+export async function fetchConversationByIdActionLegacy(...args: Parameters<typeof _fetchConversationByIdActionLegacy>) {
+  return _fetchConversationByIdActionLegacy(...args);
+}
+
+export async function markEmailAsReadAction(...args: Parameters<typeof _markEmailAsReadAction>) {
+  return _markEmailAsReadAction(...args);
+}
+
+export async function markEmailAsStarredAction(...args: Parameters<typeof _markEmailAsStarredAction>) {
+  return _markEmailAsStarredAction(...args);
+}
+
+export async function softDeleteEmailAction(...args: Parameters<typeof _softDeleteEmailAction>) {
+  return _softDeleteEmailAction(...args);
+}
+
+export async function hideEmailAction(...args: Parameters<typeof _hideEmailAction>) {
+  return _hideEmailAction(...args);
 }

@@ -16,10 +16,10 @@ import {
   BarChart3,
   CheckCircle,
   Clock,
+  Loader2,
   Mail,
   Pause,
   Settings,
-  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { DomainWithMailboxesData } from "@features/domains/actions";

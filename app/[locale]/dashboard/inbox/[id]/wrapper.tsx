@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useConversation } from "@features/inbox/ui/context/conversation-context";
-import { fetchConversationByIdAction } from "@/app/[locale]/dashboard/inbox/actions";
+import { getConversationById } from "@features/inbox/actions";
 import { notFound } from "next/navigation";
 import {
   Card,
@@ -25,8 +25,9 @@ function ClientConversationWrapper({ params }: { params: Promise<{ id: string }>
         return notFound();
       }
       
-      const conversation = await fetchConversationByIdAction(id);
-      if (conversation) {
+      const result = await getConversationById(id);
+      if (result.success && result.data) {
+        const conversation = result.data;
         // Transform mock conversation to match expected interface
         const transformedConversation = {
           ...conversation,

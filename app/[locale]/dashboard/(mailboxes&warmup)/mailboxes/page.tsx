@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MailboxesTab from "@features/domains/ui/components/mailboxes/mailboxes-tab";
+import MailboxesTab from "@features/mailboxes/ui/components/mailboxes-tab";
 import {
   getMailboxesAction,
   getMultipleMailboxAnalyticsAction,
-} from "@features/inbox/actions/mailboxes";
+} from "@features/mailboxes/actions";
 import { MailboxWarmupData } from "@/types";
 import { mapRawToLegacyMailboxData } from "@features/analytics/lib/mappers";
 import { developmentLogger } from "@/lib/logger";

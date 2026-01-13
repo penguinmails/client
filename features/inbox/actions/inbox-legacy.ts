@@ -111,7 +111,7 @@ export async function fetchEmailByIdAction(id: string, _idToken = "") {
   }
 }
 
-export async function fetchConversationByIdAction(id: string, _idToken = "") {
+export async function fetchConversationByIdActionLegacy(id: string, _idToken = "") {
   try {
     const conversation = conversations.find((conv) => conv.id.toString() === id);
     if (!conversation) {

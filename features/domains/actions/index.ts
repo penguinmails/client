@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { NextRequest } from "next/server";
 import { Domain, EmailAccount, DomainSettings, DNSProvider } from "../types";
 import { productionLogger } from "@/lib/logger";
@@ -61,12 +62,70 @@ export interface DomainsDataResponse {
  */
 export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataResponse> {
   try {
-    // TODO: Implement actual data fetching from NileDB
-    // This is a placeholder implementation that should be replaced with actual database queries
-    
-    // For now, return empty data to prevent runtime errors
-    const domains: Domain[] = [];
-    const domainsWithMailboxes: DomainWithMailboxesData[] = [];
+    // Mock data for domains (placeholder implementation)
+    // TODO: Replace with actual NileDB queries when backend is ready
+    const domains: Domain[] = [
+      {
+        id: 1,
+        domain: 'example.com',
+        status: 'VERIFIED',
+        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        emailAccounts: 3,
+        records: {
+          spf: 'verified',
+          dkim: 'verified',
+          dmarc: 'verified',
+          mx: 'verified'
+        }
+      },
+      {
+        id: 2,
+        domain: 'testdomain.io',
+        status: 'PENDING',
+        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        emailAccounts: 1,
+        records: {
+          spf: 'pending',
+          dkim: 'pending',
+          dmarc: 'pending',
+          mx: 'pending'
+        }
+      }
+    ];
+
+    const domainsWithMailboxes: DomainWithMailboxesData[] = domains.map(domain => ({
+      domain,
+      mailboxes: [],
+      id: domain.id.toString(),
+      name: domain.domain,
+      provider: 'nile',
+      reputation: 95,
+      spf: domain.records?.spf === 'verified',
+      dkim: domain.records?.dkim === 'verified',
+      dmarc: domain.records?.dmarc === 'verified',
+      emailAccounts: [],
+      aggregated: {
+        totalMailboxes: domain.emailAccounts || 0,
+        activeMailboxes: domain.emailAccounts || 0,
+        statusSummary: {
+          NOT_STARTED: 0,
+          WARMING: 0,
+          WARMED: domain.emailAccounts || 0,
+          PAUSED: 0
+        },
+        totalWarmups: 0,
+        avgDailyLimit: 100,
+        totalSent: 0,
+        avgWarmupProgress: 100
+      },
+      metrics: {
+        total24h: 0,
+        bounceRate: 0,
+        openRate: 0,
+        replyRate: 0,
+        spamRate: 0
+      }
+    }));
 
     // Default DNS records for the component
     const defaultDnsRecords = [
@@ -115,14 +174,29 @@ export async function getDomainById(
  * @returns Promise containing the created domain
  */
 export async function createDomain(
-  _domainData: Partial<Domain>,
-  _req: NextRequest
+  domainData: Partial<Domain>,
+  _req?: NextRequest
 ): Promise<Domain> {
   try {
-    // TODO: Implement actual domain creation in NileDB
-    // This is a placeholder implementation
-    
-    throw new Error("Domain creation not yet implemented");
+    // Mock implementation - create domain with generated ID
+    // TODO: Replace with actual NileDB query when backend is ready
+    const newDomain: Domain = {
+      id: Math.floor(Math.random() * 10000),
+      domain: domainData.domain || 'new-domain.com',
+      status: 'PENDING',
+      createdAt: new Date().toISOString(),
+      emailAccounts: 0,
+      records: {
+        spf: 'pending',
+        dkim: 'pending',
+        dmarc: 'pending',
+        mx: 'pending'
+      }
+    };
+
+    // Revalidate the domains page cache
+    revalidatePath("/dashboard/domains");
+    return newDomain;
   } catch (error) {
     productionLogger.error("Error creating domain:", error);
     throw new Error("Failed to create domain");
