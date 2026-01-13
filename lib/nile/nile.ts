@@ -141,7 +141,7 @@ export const nile = {
 export const getCurrentUser = async () => {
   const users = await nile.getUsers();
   if (!users) return null;
-  
+
   try {
     const user = await (users as NileUsersClient).getSelf();
     return user instanceof Response ? null : user as NileClientUser;

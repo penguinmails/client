@@ -3,7 +3,7 @@
 import { leadsStats, leadLists } from "@/features/leads/data/mock";
 import { LeadStats } from "@/types/clients-leads";
 import { nile } from "@/app/api/[...nile]/nile";
-import { getCurrentUser } from "@/features/auth/queries";
+import { getCurrentUser } from "@/lib/auth";
 import { DbLeadList, DbLeadListRow } from "@/types/clients-leads";
 import { developmentLogger, productionLogger } from "@/lib/logger";
 

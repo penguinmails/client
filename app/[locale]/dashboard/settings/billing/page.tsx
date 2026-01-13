@@ -1,8 +1,8 @@
 import Icon from "@/components/ui/custom/Icon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, CreditCard } from "lucide-react";
-import BillingTab from "./Billing-Tab";
-import UsageTab from "./usage-tab";
+import BillingTab from "@features/billing/ui/components/BillingTab";
+import UsageTab from "@features/billing/ui/components/UsageTab";
 import { useTranslations } from "next-intl";
 
 function BillingUsagePage() {

@@ -199,10 +199,10 @@ describe('Cross-Feature Integration Tests', () => {
       expect(crossFeatureViolations.length).toBe(0);
 
       if (crossFeatureViolations.length > 0) {
-        const violationSummary = crossFeatureViolations.map(v => 
+        const violationSummary = crossFeatureViolations.map(v =>
           `${v.file}:${v.line} - ${v.sourceFeature} imports from ${v.targetFeature}: ${v.importPath}`
         ).join('\n');
-        
+
         throw new Error(`Found ${crossFeatureViolations.length} cross-feature import violations:\n${violationSummary}`);
       }
     });
