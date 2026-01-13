@@ -144,30 +144,30 @@ import {
   hideEmailAction as _hideEmailAction,
 } from "./inbox-legacy";
 
-export async function getAllMessagesAction(...args: any[]) {
-  return (_getAllMessagesAction as any)(...args as any);
+export async function getAllMessagesAction(...args: Parameters<typeof _getAllMessagesAction>) {
+  return _getAllMessagesAction(...args);
 }
 
-export async function fetchEmailByIdAction(id: string, ...args: any[]) {
-  return (_fetchEmailByIdAction as any)(id, ...args as any);
+export async function fetchEmailByIdAction(...args: Parameters<typeof _fetchEmailByIdAction>) {
+  return _fetchEmailByIdAction(...args);
 }
 
-export async function fetchConversationByIdActionLegacy(id: string, ...args: any[]) {
-  return (_fetchConversationByIdActionLegacy as any)(id, ...args as any);
+export async function fetchConversationByIdActionLegacy(...args: Parameters<typeof _fetchConversationByIdActionLegacy>) {
+  return _fetchConversationByIdActionLegacy(...args);
 }
 
-export async function markEmailAsReadAction(...args: any[]) {
-  return (_markEmailAsReadAction as any)(...args as any);
+export async function markEmailAsReadAction(...args: Parameters<typeof _markEmailAsReadAction>) {
+  return _markEmailAsReadAction(...args);
 }
 
-export async function markEmailAsStarredAction(...args: any[]) {
-  return (_markEmailAsStarredAction as any)(...args as any);
+export async function markEmailAsStarredAction(...args: Parameters<typeof _markEmailAsStarredAction>) {
+  return _markEmailAsStarredAction(...args);
 }
 
-export async function softDeleteEmailAction(...args: any[]) {
-  return (_softDeleteEmailAction as any)(...args as any);
+export async function softDeleteEmailAction(...args: Parameters<typeof _softDeleteEmailAction>) {
+  return _softDeleteEmailAction(...args);
 }
 
-export async function hideEmailAction(...args: any[]) {
-  return (_hideEmailAction as any)(...args as any);
+export async function hideEmailAction(...args: Parameters<typeof _hideEmailAction>) {
+  return _hideEmailAction(...args);
 }
