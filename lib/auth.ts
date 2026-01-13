@@ -5,7 +5,7 @@
  */
 
 import { NextRequest } from 'next/server';
-import { nile, getCachedSession } from '@/lib/nile/nile';
+import { getCachedSession, getCurrentUser as getUncachedCurrentUser } from '@/lib/nile/nile';
 import { productionLogger } from '@/lib/logger';
 import {
   NileClientUser
@@ -25,12 +25,8 @@ export const getCurrentUser = async (req?: NextRequest): Promise<NileClientUser 
       return null;
     }
 
-    // Fallback for requests without context
-    const users = await nile.getUsers();
-    if (!users) return null;
-
-    const user = await (users as { getSelf(): Promise<NileClientUser | Response> }).getSelf();
-    return user instanceof Response ? null : user as NileClientUser;
+    // Fallback for requests without context - use existing function to avoid duplication
+    return getUncachedCurrentUser();
   } catch (error) {
     productionLogger.error('[Auth] Failed to get current user:', error);
 

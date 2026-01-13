@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button/button";
 import { ShieldCheck, Server, AlertCircle } from "lucide-react";
+import { developmentLogger } from "@/lib/logger";
 
 export default function IpManagerPage() {
   return (
@@ -15,7 +16,11 @@ export default function IpManagerPage() {
             warming status.
           </p>
         </div>
-        <Button>
+        <Button
+          onClick={() =>
+            developmentLogger.debug("Add IP Address button clicked")
+          }
+        >
           <Server className="mr-2 h-4 w-4" />
           Add IP Address
         </Button>
@@ -51,7 +56,16 @@ export default function IpManagerPage() {
           You haven&apos;t added any dedicated IP addresses yet. Add an IP to
           start monitoring its reputation.
         </p>
-        <Button variant="outline">Learn more about IP Management</Button>
+        <Button
+          variant="outline"
+          onClick={() =>
+            developmentLogger.debug(
+              "Learn more about IP Management button clicked"
+            )
+          }
+        >
+          Learn more about IP Management
+        </Button>
       </Card>
     </div>
   );
