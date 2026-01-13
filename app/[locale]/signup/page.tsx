@@ -6,7 +6,7 @@ import { useAuth } from "@features/auth/ui/context/auth-context";
 import { User } from "lucide-react";
 import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
 import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate";
-import SignUpFormView from "./SignUpFormView";
+import SignUpFormView from "@/features/auth/ui/signup-form";
 import { useTranslations } from "next-intl";
 
 export default function SignUpPage() {
