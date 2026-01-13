@@ -1,19 +1,11 @@
-'use server';
-
 import { NextRequest } from "next/server";
 import { productionLogger } from "@/lib/logger";
 import { ActionResult } from "@/types";
 import { Conversation, Message } from "../types";
-import { listMailboxes, getMailbox, createMailbox, updateMailbox, deleteMailbox, getMailboxesAction, getMultipleMailboxAnalyticsAction, MailboxData } from './mailboxes';
+
 
 // Explicit re-exports for Turbopack compatibility
-export async function getAllMailboxes(req?: NextRequest) { return listMailboxes(req); }
-export async function getMailboxById(id: string, req?: NextRequest) { return getMailbox(id, req); }
-export async function createNewMailbox(data: Partial<MailboxData>, req?: NextRequest) { return createMailbox(data, req); }
-export async function updateMailboxData(id: string, data: Partial<MailboxData>, req?: NextRequest) { return updateMailbox(id, data, req); }
-export async function removeMailbox(id: string, req?: NextRequest) { return deleteMailbox(id, req); }
-export async function getMailboxes(domainId?: string, req?: NextRequest) { return getMailboxesAction(domainId, req); }
-export async function getMultipleMailboxAnalytics(ids: string[], req?: NextRequest) { return getMultipleMailboxAnalyticsAction(ids, req); }
+// Note: Wildcard exports are not allowed in "use server" files
 
 // Mock data aligned with ConversationSchema
 const mockConversations: Conversation[] = [
@@ -249,3 +241,15 @@ export async function getUniqueFiltersAction(_req?: NextRequest): Promise<Action
     };
   }
 }
+
+// Explicit re-exports from inbox-legacy (required for server actions)
+// Note: getUniqueFiltersAction is already defined above, so we exclude it here
+export { 
+  getAllMessagesAction,
+  fetchEmailByIdAction,
+  fetchConversationByIdActionLegacy,
+  markEmailAsReadAction,
+  markEmailAsStarredAction,
+  softDeleteEmailAction,
+  hideEmailAction 
+} from "./inbox-legacy";
