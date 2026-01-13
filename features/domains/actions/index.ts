@@ -62,39 +62,70 @@ export interface DomainsDataResponse {
  */
 export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataResponse> {
   try {
-    const response = await fetch(`${process.env.APP_URL}/api/domains`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: 'no-store'
-    });
-
-    if (!response.ok) {
-      let errorMessage = "Failed to fetch domains";
-      try {
-        const error = (await response.json()) as { message?: string };
-        if (error.message && typeof error.message === "string") {
-          errorMessage = error.message;
+    // Mock data for domains (placeholder implementation)
+    // TODO: Replace with actual NileDB queries when backend is ready
+    const domains: Domain[] = [
+      {
+        id: 1,
+        domain: 'example.com',
+        status: 'VERIFIED',
+        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        emailAccounts: 3,
+        records: {
+          spf: 'verified',
+          dkim: 'verified',
+          dmarc: 'verified',
+          mx: 'verified'
         }
-      } catch {
-        // Ignore JSON parsing errors
+      },
+      {
+        id: 2,
+        domain: 'testdomain.io',
+        status: 'PENDING',
+        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        emailAccounts: 1,
+        records: {
+          spf: 'pending',
+          dkim: 'pending',
+          dmarc: 'pending',
+          mx: 'pending'
+        }
       }
-      productionLogger.error("Failed to fetch domains:", errorMessage);
-      // Fallback to empty
-      return {
-        domains: [],
-        domainsWithMailboxes: [],
-        dnsRecords: [
-            { name: 'TXT', value: 'v=spf1 include:_spf.google.com ~all' },
-            { name: 'TXT', value: 'v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain.com' },
-            { name: 'CNAME', value: 'selector1._domainkey.yourdomain.com' },
-            { name: 'MX', value: '10 mail.yourdomain.com' }
-        ],
-      };
-    }
+    ];
 
-    const domains: Domain[] = await response.json();
-    const domainsWithMailboxes: DomainWithMailboxesData[] = [];
+    const domainsWithMailboxes: DomainWithMailboxesData[] = domains.map(domain => ({
+      domain,
+      mailboxes: [],
+      id: domain.id.toString(),
+      name: domain.domain,
+      provider: 'nile',
+      reputation: 95,
+      spf: domain.records?.spf === 'verified',
+      dkim: domain.records?.dkim === 'verified',
+      dmarc: domain.records?.dmarc === 'verified',
+      emailAccounts: [],
+      aggregated: {
+        totalMailboxes: domain.emailAccounts || 0,
+        activeMailboxes: domain.emailAccounts || 0,
+        statusSummary: {
+          NOT_STARTED: 0,
+          WARMING: 0,
+          WARMED: domain.emailAccounts || 0,
+          PAUSED: 0
+        },
+        totalWarmups: 0,
+        avgDailyLimit: 100,
+        totalSent: 0,
+        avgWarmupProgress: 100
+      },
+      metrics: {
+        total24h: 0,
+        bounceRate: 0,
+        openRate: 0,
+        replyRate: 0,
+        spamRate: 0
+      }
+    }));
 
     // Default DNS records for the component
     const defaultDnsRecords = [
@@ -147,33 +178,28 @@ export async function createDomain(
   _req?: NextRequest
 ): Promise<Domain> {
   try {
-    const response = await fetch(`${process.env.APP_URL}/api/domains`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(domainData),
-    });
-
-    if (!response.ok) {
-      let errorMessage = "Failed to create domain";
-      try {
-        const error = (await response.json()) as { message?: string };
-        if (error.message && typeof error.message === "string") {
-          errorMessage = error.message;
-        }
-      } catch {
-        // Ignore JSON parsing errors
+    // Mock implementation - create domain with generated ID
+    // TODO: Replace with actual NileDB query when backend is ready
+    const newDomain: Domain = {
+      id: Math.floor(Math.random() * 10000),
+      domain: domainData.domain || 'new-domain.com',
+      status: 'PENDING',
+      createdAt: new Date().toISOString(),
+      emailAccounts: 0,
+      records: {
+        spf: 'pending',
+        dkim: 'pending',
+        dmarc: 'pending',
+        mx: 'pending'
       }
-      throw new Error(errorMessage);
-    }
+    };
 
-    const domain = await response.json();
+    // Revalidate the domains page cache
     revalidatePath("/dashboard/domains");
-    return domain;
+    return newDomain;
   } catch (error) {
     productionLogger.error("Error creating domain:", error);
-    throw error;
+    throw new Error("Failed to create domain");
   }
 }
 
