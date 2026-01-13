@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { NextRequest } from "next/server";
 import { Domain, EmailAccount, DomainSettings, DNSProvider } from "../types";
 import { productionLogger } from "@/lib/logger";
@@ -61,11 +62,38 @@ export interface DomainsDataResponse {
  */
 export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataResponse> {
   try {
-    // TODO: Implement actual data fetching from NileDB
-    // This is a placeholder implementation that should be replaced with actual database queries
-    
-    // For now, return empty data to prevent runtime errors
-    const domains: Domain[] = [];
+    const response = await fetch(`${process.env.APP_URL}/api/domains`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: 'no-store'
+    });
+
+    if (!response.ok) {
+      let errorMessage = "Failed to fetch domains";
+      try {
+        const error = (await response.json()) as { message?: string };
+        if (error.message && typeof error.message === "string") {
+          errorMessage = error.message;
+        }
+      } catch {
+        // Ignore JSON parsing errors
+      }
+      productionLogger.error("Failed to fetch domains:", errorMessage);
+      // Fallback to empty
+      return {
+        domains: [],
+        domainsWithMailboxes: [],
+        dnsRecords: [
+            { name: 'TXT', value: 'v=spf1 include:_spf.google.com ~all' },
+            { name: 'TXT', value: 'v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain.com' },
+            { name: 'CNAME', value: 'selector1._domainkey.yourdomain.com' },
+            { name: 'MX', value: '10 mail.yourdomain.com' }
+        ],
+      };
+    }
+
+    const domains: Domain[] = await response.json();
     const domainsWithMailboxes: DomainWithMailboxesData[] = [];
 
     // Default DNS records for the component
@@ -115,17 +143,37 @@ export async function getDomainById(
  * @returns Promise containing the created domain
  */
 export async function createDomain(
-  _domainData: Partial<Domain>,
-  _req: NextRequest
+  domainData: Partial<Domain>,
+  _req?: NextRequest
 ): Promise<Domain> {
   try {
-    // TODO: Implement actual domain creation in NileDB
-    // This is a placeholder implementation
-    
-    throw new Error("Domain creation not yet implemented");
+    const response = await fetch(`${process.env.APP_URL}/api/domains`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(domainData),
+    });
+
+    if (!response.ok) {
+      let errorMessage = "Failed to create domain";
+      try {
+        const error = (await response.json()) as { message?: string };
+        if (error.message && typeof error.message === "string") {
+          errorMessage = error.message;
+        }
+      } catch {
+        // Ignore JSON parsing errors
+      }
+      throw new Error(errorMessage);
+    }
+
+    const domain = await response.json();
+    revalidatePath("/dashboard/domains");
+    return domain;
   } catch (error) {
     productionLogger.error("Error creating domain:", error);
-    throw new Error("Failed to create domain");
+    throw error;
   }
 }
 
