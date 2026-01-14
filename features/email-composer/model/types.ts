@@ -1,4 +1,4 @@
-import { PersonalizationTag } from "entities/template/model/types";
+import { PersonalizationTag } from "entities/template";
 // Email composition types
 export interface EmailComposition {
   subject: string;

@@ -1,4 +1,4 @@
-import { MailboxWarmupData } from "@/types";
+import { MailboxWarmupData } from "@/entities/email";
 import { MailboxAnalytics } from "@features/analytics/types/domain-specific";
 
 // Raw mailbox data interface for type safety

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button/button";
 import { PopoverContent } from "@/components/ui/popover";
-import { Notification } from "@features/notifications/types";
+import { Notification } from "@/entities/notification/model/types";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";

@@ -14,8 +14,6 @@ export {
 
 // Types - Public type definitions
 export type {
-  Notification,
-  NotificationType,
   NotificationStatus,
 } from './types';
 

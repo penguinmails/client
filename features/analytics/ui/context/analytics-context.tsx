@@ -1,9 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
-import { MailboxWarmupData } from "@/types";
+import { MailboxWarmupData, WarmupChartData } from "@/entities/email";
 import { DomainAnalytics, MailboxAnalytics as DomainMailboxAnalytics } from "@features/analytics/types/domain-specific";
-import { WarmupChartData } from "@/types";
 import { DateRangePreset, AnalyticsUIFilters } from "@features/analytics/types/ui";
 import { DataGranularity } from "@features/analytics/types/core";
 import { AccountMetrics as TypesAccountMetrics } from "@features/analytics/types";

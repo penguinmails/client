@@ -1,7 +1,7 @@
 'use server';
 
 import { NextRequest } from 'next/server';
-import { NotificationType, Notification } from '../types';
+import { NotificationType, Notification } from '@/entities/notification/model/types';
 
 // Mock data
 const mockNotifications: Notification[] = [

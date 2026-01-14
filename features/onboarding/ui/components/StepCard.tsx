@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentProps } from '@/types';
+import { ComponentProps } from '@/shared/lib/types/ui';
 
 interface StepCardProps extends ComponentProps {
   number: number;

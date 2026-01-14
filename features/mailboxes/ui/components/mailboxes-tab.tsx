@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Mail, Plus, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { MailboxWarmupData } from "@/types";
+import { MailboxWarmupData } from "@/entities/email";
 import { mapRawToLegacyMailboxData } from "@features/analytics/lib/mappers";
 // Migration note: Using local alias for mailbox analytics state, all mailbox analytics set via mapper.
 import MailboxesFilter from "./MailboxesFilter";

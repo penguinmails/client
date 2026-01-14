@@ -8,9 +8,12 @@
 // Types - Public type definitions
 export type {
   AuthUser,
-  TenantMembership,
   UserRole,
-} from './types';
+} from '@/entities/user';
+
+export type {
+  TenantMembership,
+} from '@/entities/tenant';
 
 // Queries - Data fetching operations
 export {

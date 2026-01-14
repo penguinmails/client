@@ -2,7 +2,7 @@
 
 import { NextRequest } from "next/server";
 import { productionLogger } from "@/lib/logger";
-import { ActionResult } from "@/types";
+import { ActionResult } from "@/shared/types";
 import { Conversation, Message } from "../types";
 import { mockConversations, mockMessages, mockFilters } from "../data/mocks";
 

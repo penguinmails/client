@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Globe, Mail, PenTool, Send } from "lucide-react";
-import { OnboardingStep } from "@/types/onboarding";
+import { OnboardingStep } from "@/entities/onboarding";
 
 interface OnboardingContextType {
   currentStep: number;

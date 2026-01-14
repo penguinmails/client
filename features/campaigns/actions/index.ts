@@ -1,12 +1,12 @@
 'use server';
 
 import { NextRequest } from 'next/server';
-import { ActionResult } from '@/types';
+import { ActionResult } from '@/shared/types';
 import { campaignsData, availableMailboxes } from '@/shared/mocks/providers';
 import { productionLogger } from '@/lib/logger';
 import { Campaign } from '../types';
-import { FormHandlerParams } from '@/types';
-import type { Template } from '@/types/templates';
+import { FormHandlerParams } from '@/shared/api/types';
+import type { Template } from 'entities/template';
 import { 
   getTemplates, 
   getTemplateById, 

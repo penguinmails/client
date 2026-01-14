@@ -1,5 +1,5 @@
 import { initialTemplates, MockTemplate } from "@/features/campaigns/data/templates.mock";
-import { Template, TemplateCategoryType } from "@/types";
+import { Template, TemplateCategoryType } from "entities/template";
 import { developmentLogger, productionLogger } from "@/lib/logger";
 
 // Type for simplified template derived from MockTemplate data

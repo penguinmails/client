@@ -1,6 +1,6 @@
 // Email Types
 import { ComponentType, SVGProps } from "react";
-import type { Client } from "@/types/clients-leads";
+import type { Client } from "@/entities/client";
 
 // Email campaign association type (different from Campaign management type)
 export interface EmailCampaign {

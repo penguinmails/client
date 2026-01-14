@@ -1,10 +1,10 @@
 "use server";
 
 import { leadsStats, leadLists } from "@/features/leads/data/mock";
-import { LeadStats } from "@/types/clients-leads";
+import { LeadStats } from "@/features/leads/types";
 import { nile } from "@/app/api/[...nile]/nile";
 import { getCurrentUser } from "@/lib/auth";
-import { DbLeadList, DbLeadListRow } from "@/types/clients-leads";
+import { DbLeadList, DbLeadListRow } from "@/entities/lead";
 import { developmentLogger, productionLogger } from "@/lib/logger";
 
 export async function getLeadsStats(): Promise<LeadStats> {

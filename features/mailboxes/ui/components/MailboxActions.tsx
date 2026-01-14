@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input/input";
 import { Switch } from "@/components/ui/switch";
-import { Mailbox } from "@/types";
+import { Mailbox } from "@/entities/email";
 import { developmentLogger } from "@/lib/logger";
 
 function MailboxActions({ mailbox }: { mailbox: Mailbox }) {

@@ -1,5 +1,5 @@
 import { notificationStyles } from "@/shared/ui/theme";
-import { Notification } from "@/types/notification";
+import { Notification } from "@/entities/notification/model/types";
 import { Clock, CheckCircle, XCircle, AlertTriangle, Info } from "lucide-react";
 
 function NotificationListItem({

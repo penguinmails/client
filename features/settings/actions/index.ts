@@ -1,10 +1,10 @@
 'use server';
 
 import { NextRequest } from 'next/server';
-import { ActionResult } from '@/types';
+import { ActionResult } from '@/shared/types/api';
 import { productionLogger } from '@/lib/logger';
 import { getUserProfile, updateUserProfile, uploadAvatar, updateProfile } from './profile';
-import { FormHandlerParams } from '@/types';
+import { FormHandlerParams } from '@/shared/types/api';
 import type { UserProfile } from './profile';
 import type { ProfileFormValues } from '@/types';
 

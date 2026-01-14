@@ -1,6 +1,6 @@
 "use client";
 
-import { RegularUser } from "@/types/admin";
+import { RegularUser } from "@/entities/user";
 
 interface AdminUserTableProps {
   users: RegularUser[];

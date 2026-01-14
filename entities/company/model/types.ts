@@ -41,19 +41,19 @@ export interface CoreCompany {
   name: string;
 }
 
-export interface CompanyInfo {
-  name: string;
-  industry: string;
-  size: string;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    country: string;
-  };
-  vatId?: string;
-}
+// export interface CompanyInfo {
+//   name: string;
+//   industry: string;
+//   size: string;
+//   address: {
+//     street: string;
+//     city: string;
+//     state: string;
+//     zipCode: string;
+//     country: string;
+//   };
+//   vatId?: string;
+// }
 
 export interface BillingAddress {
   street: string;

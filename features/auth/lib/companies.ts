@@ -6,7 +6,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { CompanyInfo } from "@/types/company";
+import { CompanyInfo } from "@/entities/company";
 import { getCurrentUser, queryWithContext } from "@/features/auth/queries/session";
 import { ResourceNotFoundError } from "@/lib/nile/errors";
 import { productionLogger } from "@/lib/logger";

@@ -2,7 +2,7 @@
 
 import { NextRequest } from 'next/server';
 import { TeamMember, TeamInvite } from '../types';
-import { ActionResult } from '@/types';
+import { ActionResult } from '@/shared/types/api';
 
 // Mock data
 const mockMembers: TeamMember[] = [

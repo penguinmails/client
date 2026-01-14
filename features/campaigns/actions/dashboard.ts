@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { productionLogger } from "@/lib/logger";
 import { SequenceStep } from "@features/campaigns/types";
-import { ActionResult } from "@/types";
+import { ActionResult } from "@/shared/types";
 
 
 /**

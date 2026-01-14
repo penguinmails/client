@@ -1,7 +1,7 @@
 import { ActiveSession, auth } from "@niledatabase/client";
-import { AuthUser, TenantMembership } from "../types/auth-user";
+import { AuthUser } from "@/entities/user/";
 import { productionLogger } from "@/lib/logger";
-
+import {  TenantMembership } from "@/entities/tenant";
 /**
  * Check NileDB session - fast, hard gate for auth
  */

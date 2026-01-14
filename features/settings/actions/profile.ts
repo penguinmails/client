@@ -1,9 +1,9 @@
 'use server';
 
 import { NextRequest } from 'next/server';
-import { FormHandlerParams, FormHandlerResult } from '@/types';
+import { FormHandlerParams, FormHandlerResult } from '@/shared/types/api';
 import { ProfileFormValues } from '@/types';
-import { UserRole } from '@/types';
+import { UserRole } from '@/entities/user';
 import { BaseUser } from "@/shared/types";
 
 // Extend BaseUser for profile-specific data

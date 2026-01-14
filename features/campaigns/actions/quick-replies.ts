@@ -8,7 +8,7 @@
 import { NextRequest } from "next/server";
 import { createActionError as _createActionError } from "@/shared/utils/errors";
 import { productionLogger, developmentLogger } from "@/lib/logger";
-import type { Template, TemplateCategoryType } from "@/types/templates";
+import type { Template, TemplateCategoryType } from "entities/template";
 
 // Simple auth check function to avoid cross-feature dependency
 async function requireAuth(req?: NextRequest) {

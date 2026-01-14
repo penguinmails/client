@@ -2,7 +2,7 @@
 
 import { NextRequest } from "next/server";
 import { productionLogger } from "@/lib/logger";
-import { ActionResult } from "@/types";
+import { ActionResult } from "@/shared/types";
 
 /**
  * Mailbox-related server actions

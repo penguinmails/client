@@ -1,7 +1,7 @@
 'use server';
 
 import { NextRequest } from 'next/server';
-import { ActionResult } from '@/types';
+import { ActionResult } from '@/shared/types';
 
 export interface Client {
   id: string;

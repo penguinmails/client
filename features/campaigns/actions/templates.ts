@@ -1,8 +1,8 @@
 'use server';
 
 import { NextRequest } from 'next/server';
-import { FormHandlerParams, FormHandlerResult } from '@/types';
-import { Template as TemplateType, TemplateFolder as TemplateFolderType } from '@/types/templates';
+import { FormHandlerParams, FormHandlerResult } from '@/shared/api/types';
+import { Template as TemplateType, TemplateFolder as TemplateFolderType } from 'entities/template';
 
 // Use the standardized types from types/templates.ts
 export type Template = TemplateType;

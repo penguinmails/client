@@ -5,4 +5,4 @@ export { PromotionAlert } from "./PromotionAlert";
 export { Step } from "./steps/Step";
 export { Stepper } from "./Stepper";
 export { VideoTutorial } from "./VideoTutorial";
-export type { OnboardingStep } from "@/types/onboarding";
+export type { OnboardingStep } from "@/entities/onboarding";

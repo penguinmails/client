@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AdminUsersResponse } from "@/types/admin";
+import { AdminUsersResponse } from "../../../model/types";
 import { AdminUserTable } from "../users/AdminUserTable";
 import { AdminUserFilters } from "../users/AdminUserFilters";
 import { AdminDashboardSkeleton } from "./AdminDashboardSkeleton";

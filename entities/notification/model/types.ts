@@ -1,4 +1,5 @@
 // Core Notification Types
+export * from './alerts';
 export type Notification = {
   // Id can be either string or number for backward compatibility
   id: string | number;

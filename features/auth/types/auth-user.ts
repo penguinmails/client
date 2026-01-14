@@ -1,5 +1,5 @@
 import { Tenant } from "@/entities/tenant";
-import { CompanyInfo } from "@/types/company";
+import { CompanyInfo } from "@/entities/company";
 import { AuthUser } from "@/entities/user/model/types";
 
 export interface AuthLoadingState {

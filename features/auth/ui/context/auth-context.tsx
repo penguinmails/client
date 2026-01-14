@@ -16,7 +16,8 @@ import { developmentLogger, productionLogger } from "@/lib/logger";
 import { toast } from "sonner";
 import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
 
-import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
+import { AuthLoadingState, AuthContextValue } from "../../types";
+import { AuthUser } from "@/entities/user";
 import {
   checkSession,
   fetchUserEnrichment,

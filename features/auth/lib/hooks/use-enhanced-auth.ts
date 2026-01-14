@@ -1,6 +1,6 @@
 import { useAuth } from '@features/auth/ui/context/auth-context';
 import { useSystemHealth } from "@/shared/hooks";
-import { UserRole } from '@features/auth/types';
+import { UserRole } from '@/entities/user';
 import { developmentLogger } from '@/lib/logger';
 import { useCallback, useState } from 'react';
 

@@ -8,7 +8,7 @@ import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
 import { cn } from "@/shared/utils";
 import { CheckCircle } from "lucide-react";
 import { Fragment } from "react";
-import { OnboardingStep } from "@/types/onboarding";
+import { OnboardingStep } from "@/entities/onboarding";
 import { developmentLogger } from "@/lib/logger";
 
 interface StepIndicatorProps {

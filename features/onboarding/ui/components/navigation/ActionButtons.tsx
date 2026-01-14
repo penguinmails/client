@@ -4,7 +4,7 @@ import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
 import { ArrowRight, BookOpen, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
-import { OnboardingStep } from "@/types/onboarding";
+import { OnboardingStep } from "@/entities/onboarding";
 import { developmentLogger } from "@/lib/logger";
 
 interface ActionButtonsProps {
