@@ -9,3 +9,5 @@ export const templateFormSchema = z.object({
   description: z.string().optional(),
   folderId: z.number().nullable().optional(),
 });
+
+export type TemplateFormValues = z.infer<typeof templateFormSchema>;

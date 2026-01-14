@@ -9,6 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/button";
+import { LeadListData } from "@/features/leads/types";
 
 // Type for performance metrics
 type PerformanceMetrics = {
@@ -50,8 +51,6 @@ const getStatusLabel = (status: string) => {
       return "Not Used Yet";
   }
 };
-
-import { LeadListData } from "@/types/clients-leads";
 
 function ListTableRow({ list }: { list: LeadListData }) {
   const isUsed = list.status === "used" || list.status === "being-used";

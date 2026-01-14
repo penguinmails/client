@@ -11,7 +11,7 @@ import { productionLogger } from '@/lib/logger';
 import {
   ApiSuccessResponse,
   ApiErrorResponse
-} from '@/types';
+} from '@/shared/types/api';
 
 // Test endpoint to send verification email
 export async function GET(request: Request) {

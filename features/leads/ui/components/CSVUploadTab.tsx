@@ -28,7 +28,7 @@ import {
 import { AlertCircle, Download, Loader2, Plus, Upload, X } from "lucide-react";
 import Papa from "papaparse";
 import { useRef, useState } from "react";
-import { CSV_COLUMNS, CSVRecord } from "@/types/clients-leads";
+import { CSV_COLUMNS, CSVRecord } from "@/features/leads/types";
 import { developmentLogger, productionLogger } from "@/lib/logger";
 
 const downloadSampleCSV = () => {

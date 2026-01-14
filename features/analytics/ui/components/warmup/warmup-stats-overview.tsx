@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import StatsCard from "@/shared/components/MigratedStatsCard";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 import { mapRawToLegacyMailboxData } from "@features/analytics/lib/mappers";
-import { MailboxWarmupData } from "@/types";
+import { MailboxWarmupData } from "@/entities/email";
 import { productionLogger } from "@/lib/logger";
 import { AlertTriangle, Mail, MessageSquare, Zap } from "lucide-react";
 

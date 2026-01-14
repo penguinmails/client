@@ -11,16 +11,10 @@ import { getRedisClient } from "@/lib/cache";
 import { productionLogger } from "@/lib/logger";
 import { getCachedSession } from "@/lib/nile/nile";
 
-
-
-
-
-
-
 import {
   ApiSuccessResponse,
   ApiErrorResponse
-} from '@/types';
+} from '@/shared/types/api';
 
 // Cache TTL values based on health status (in seconds)
 const HEALTH_CACHE_TTL = {

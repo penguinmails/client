@@ -19,7 +19,7 @@ import {
 import { Mail, Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
-import { MailboxWarmupData } from "@/types";
+import { MailboxWarmupData } from "@/entities/email";
 import { productionLogger } from "@/lib/logger";
 // Migration note: Replaced legacy ProgressiveAnalyticsState with local alias for mailbox analytics state.
 type LocalProgressiveAnalyticsState = Record<

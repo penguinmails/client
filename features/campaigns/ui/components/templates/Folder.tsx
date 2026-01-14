@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import File from "./File";
-import { Template, TemplateFolder } from "@/types";
+import { Template, TemplateFolder } from "@/entities/template";
 
 function Folder({
   folder,

@@ -7,3 +7,4 @@
 
 // Context - Public context providers
 export * from './ui/context/onboarding-context';
+export * from './model/types';

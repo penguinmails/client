@@ -11,7 +11,7 @@ import { productionLogger } from '@/lib/logger';
 import {
   ApiSuccessResponse,
   ApiErrorResponse,
-} from '@/types';
+} from '@/shared/types/api';
 
 /**
  * GET /api/analytics/cross-domain

@@ -13,7 +13,7 @@ import { productionLogger } from '@/lib/logger';
 import {
   ApiSuccessResponse,
   ApiErrorResponse,
-} from '@/types';
+} from '@/shared/types/api';
 
 // Schema for notification email requests
 const notificationEmailSchema = z.object({

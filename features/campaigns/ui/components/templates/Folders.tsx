@@ -1,6 +1,6 @@
 import { Accordion } from "@/components/ui/accordion";
 import Folder from "./Folder";
-import { TemplateFolder } from "@/types";
+import { TemplateFolder } from "@/entities/template";
 
 function Folders({
   folders,

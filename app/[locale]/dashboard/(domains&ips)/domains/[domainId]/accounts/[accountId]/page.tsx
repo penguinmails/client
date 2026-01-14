@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import AccountWarmupDetailsContent from "./content";
-import { AccountDetails } from "@/types";
+import { AccountDetails } from "@/entities/email";
 import { productionLogger } from "@/lib/logger";
 
 type AccountPageParams = Promise<{

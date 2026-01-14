@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/shared/utils";
-import { NavLinkItem } from "@/types/nav-link";
+import { NavLinkItem } from "@/shared/ui/navigation/types";
 import { usePathname, useRouter } from "next/navigation";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { LucideIcon } from "lucide-react";

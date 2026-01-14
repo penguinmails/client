@@ -7,7 +7,7 @@ import {
 import { Clock, Eye, Mail, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import TemplateActions from "./TemplateActions";
-import { Template } from "@/types";
+import { Template } from "@/entities/template";
 
 function TemplateItem({ template }: { template: Template }) {
   return (

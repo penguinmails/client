@@ -7,7 +7,7 @@ import { TemplateSelector } from "../../forms/TemplateSelector";
 import PersonalizationTags from "@/shared/components/email/PersonalizationTags";
 import { copyText as t } from "../../data/copy";
 import { PartialCampaignStep } from "@features/campaigns/types";
-import { Template } from "@/types";
+import { Template } from "@/entities/template";
 
 interface EmailStepProps {
   index: number;

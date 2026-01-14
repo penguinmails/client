@@ -14,7 +14,7 @@ import { cn } from "@/shared/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { developmentLogger } from "@/lib/logger";
-import { newFolderFormSchema, NewFolderFormValues } from "@/types";
+import { newFolderFormSchema, NewFolderFormValues } from "@/features/manage-folders/model/types";
 
 
 interface NewFolderFormProps {

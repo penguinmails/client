@@ -5,7 +5,8 @@ import {
     Zap,
     Users,
 } from 'lucide-react';
-import { OnboardingStep, FAQItem } from '@/types/onboarding';
+import { OnboardingStep } from '@/entities/onboarding';
+import { FAQItem } from '@/entities/faq';
 
 export const getOnboardingSteps = (
   t: (key: string) => string

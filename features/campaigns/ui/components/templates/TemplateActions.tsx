@@ -31,7 +31,7 @@ import { Copy, Edit, FolderX, MoreHorizontal, Star, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState, useEffect } from "react";
 import Folders from "./Folders";
-import { TemplateFolder } from "@/types";
+import { TemplateFolder } from "@/entities/template";
 import { developmentLogger } from "@/lib/logger";
 
 interface TemplateActionsProps {

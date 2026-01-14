@@ -1,7 +1,7 @@
 import QuickReplyItem from "@/features/campaigns/ui/components/templates/quick-replies/QuickReplyItem";
 import { Input } from "@/components/ui/input/input";
 import { listQuickReplies } from "@features/campaigns/actions";
-import { Template } from "@/types";
+import { Template } from "@/entities/template";
 
 // Force dynamic rendering since this page uses authentication
 export const dynamic = "force-dynamic";

@@ -4,7 +4,8 @@ import { cn } from "@/shared/utils";
 import { CheckCircle, Clock, Globe, Mail } from "lucide-react";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 import { useState, useEffect } from "react";
-import type { MailboxWarmupData, Domain } from "@/types";
+import type { Domain } from "@/types";
+import type { MailboxWarmupData } from "@/entities/email";
 import { StatsCard } from "@/shared/ui/components/stats-card";
 import { productionLogger } from "@/lib/logger";
 

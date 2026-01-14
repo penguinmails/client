@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { NavLink } from "@/types/nav-link";
+import { NavLink } from "@/shared/ui/navigation/types";
 import {
   BarChart3,
   BookOpen,

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import GalleryTab from "@/features/campaigns/ui/components/templates/GalleryTab";
 import MyTemplatesTab from "@/features/campaigns/ui/components/templates/MyTemplatesTab";
 import QuickRepliesTab from "@/features/campaigns/ui/components/templates/QuickRepliesTab";
-import { Tab } from "@/types/tab";
+import { Tab } from "@/shared/ui/tabs/types";
 import { getTabCounts } from "@features/campaigns/actions/templates";
 
 // Tab definitions - UI structure

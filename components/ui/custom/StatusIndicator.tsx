@@ -1,5 +1,5 @@
 import React from "react";
-import { DisplayStatus } from "@/types/common";
+import { DisplayStatus } from "@/shared/types/base";
 import { CampaignStatus } from "@features/campaigns/types";
 
 interface StatusIndicatorProps {

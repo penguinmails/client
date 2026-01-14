@@ -10,7 +10,7 @@ import {
   ApiSuccessResponse,
   ApiErrorResponse,
   EnhancedApiResponse
-} from '@/types';
+} from '@/shared/types/api';
 import {
   handleSupportedError,
   toSupportedError,

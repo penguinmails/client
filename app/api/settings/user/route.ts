@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import {
   ApiSuccessResponse,
   EnhancedApiResponse
-} from '@/types';
+} from '@/shared/types/api';
 
 /**
  * STUB: User settings endpoint

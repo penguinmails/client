@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateTurnstileToken } from "next-turnstile";
 import { productionLogger, developmentLogger } from "@/lib/logger";
-import { ApiErrorResponse, ApiSuccessResponse } from '@/types';
+import { ApiErrorResponse, ApiSuccessResponse } from '@/shared/types/api';
 import { isFeatureEnabled } from "@/lib/features";
 
 // Cloudflare test key that always passes (for dev/test environments)

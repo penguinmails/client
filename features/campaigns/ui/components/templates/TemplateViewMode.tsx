@@ -1,6 +1,6 @@
 import React from "react";
 import { copyText as t } from "./copy";
-import { Template } from "@/types";
+import { Template } from "@/entities/template";
 
 interface TemplateViewModeProps {
   template: Template;

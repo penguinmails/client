@@ -1,6 +1,6 @@
 import Folders from "@/features/campaigns/ui/components/templates/Folders";
 import { getTemplateFolders } from "@features/campaigns/actions/templates";
-import { TemplateFolder } from "@/types";
+import { TemplateFolder } from "@/entities/template";
 import { FolderIcon } from "lucide-react";
 
 async function TemplateFolders() {

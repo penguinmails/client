@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Calendar, Download, HelpCircle } from "lucide-react";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
-import { WarmupChartData } from "@/types";
+import { WarmupChartData } from "@/entities/email";
 
 import type { ReactElement } from "react";
 

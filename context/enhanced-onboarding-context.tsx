@@ -8,7 +8,8 @@ import {
   useMemo,
   useState,
 } from "react";
-import { OnboardingStep, OnboardingContextType } from "@/types/onboarding";
+import { OnboardingStep } from "@/entities/onboarding";
+import { OnboardingContextType } from "@/features/onboarding";
 import { developmentLogger } from "@/lib/logger";
 import { useTranslations } from "next-intl";
 

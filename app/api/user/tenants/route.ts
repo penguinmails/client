@@ -7,7 +7,7 @@
 import { NextRequest } from "next/server";
 import { getUserTenants, requireAuth } from "@/features/auth/queries";
 import { withQueryErrorCatch } from "@/shared/utils/api";
-import { Tenant } from '@features/auth/types';
+import { Tenant } from '@/entities/tenant';
 
 // Nile tenant interface to replace 'any' types
 interface NileTenant {

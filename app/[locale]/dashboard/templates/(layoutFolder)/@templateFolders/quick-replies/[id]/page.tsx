@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { listQuickReplies } from "@features/campaigns/actions";
 import { cn } from "@/shared/utils";
-import { Template } from "@/types";
+import { Template } from "@/entities/template";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 

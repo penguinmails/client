@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
-import { TemplateFormValues } from '@/types';
+import { TemplateFormValues } from '@/features/create-template/model/types';
 
 export interface TemplateStep {
   id: string;

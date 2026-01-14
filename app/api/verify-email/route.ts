@@ -7,7 +7,7 @@ import {
   storeVerificationToken
 } from '@features/auth/lib/email-verification';
 import { productionLogger } from '@/lib/logger';
-import { ApiErrorResponse, ApiSuccessResponse } from '@/types';
+import { ApiErrorResponse, ApiSuccessResponse } from '@/shared/types/api';
 
 // Schema for email verification requests
 const verifyEmailSchema = z.object({

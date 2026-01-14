@@ -1,4 +1,4 @@
-import { TemplateCategoryType } from "@/types";
+import { TemplateCategoryType } from "@/entities/template";
 
 export const copyText = {
   page: {

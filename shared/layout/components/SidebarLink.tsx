@@ -1,5 +1,5 @@
 import { cn } from "@/shared/utils";
-import { NavLinkItem } from "@/types/nav-link";
+import { NavLinkItem } from "@/shared/ui/navigation/types";
 import { usePathname, useRouter } from "next/navigation";
 import Icon from "@/components/ui/custom/Icon";
 import { SidebarMenuButton } from "@/components/ui/sidebar";

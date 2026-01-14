@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentProps } from '@/types';
+import { ComponentProps } from '@/shared/lib/types/ui';
 
 interface ProgressBarProps extends ComponentProps {
   current: number;

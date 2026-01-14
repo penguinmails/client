@@ -9,8 +9,8 @@ import { getUserProfile, updateUserProfile, getUserTenants } from "@/features/au
 import { withQueryErrorCatch, withMutationErrorCatch, manualErrorResponse } from "@/shared/utils/api";
 import {
   EnhancedApiResponse
-} from '@/types';
-import { AuthUser } from "@/features/auth/types";
+} from '@/shared/types/api';
+import { AuthUser } from "@/entities/user";
 
 // Enhanced profile type that includes tenant information
 interface EnhancedProfile extends AuthUser {

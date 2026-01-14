@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/context-menu";
 
 import { FileText, Edit2, Trash2 } from "lucide-react";
-import { Template } from "@/types";
+import { Template } from "@/entities/template";
 
 interface FileProps {
   file: Template;

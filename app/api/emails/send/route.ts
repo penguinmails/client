@@ -10,7 +10,7 @@ import { productionLogger, developmentLogger } from '@/lib/logger';
 import {
   ApiSuccessResponse,
   ApiErrorResponse
-} from '@/types';
+} from '@/shared/types/api';
 
 // Schema for transactional email requests
 const transactionalEmailSchema = z.object({

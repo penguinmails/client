@@ -10,7 +10,7 @@ import { productionLogger } from "@/lib/logger";
 import {
   ApiSuccessResponse,
   ApiErrorResponse
-} from '@/types';
+} from '@/shared/types/api';
 
 export async function GET(req: NextRequest) {
   try {

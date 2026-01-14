@@ -30,7 +30,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { WarmupChartData } from "@/types";
+import { WarmupChartData } from "@/entities/email";
 
 interface TooltipPayloadItem {
   dataKey: string;

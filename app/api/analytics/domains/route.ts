@@ -11,7 +11,7 @@ import { DomainAnalytics } from '@features/analytics/types/domain-specific';
 import { productionLogger } from '@/lib/logger';
 import {
   ApiSuccessResponse
-} from '@/types';
+} from '@/shared/types/api';
 
 /**
  * GET /api/analytics/domains

@@ -31,9 +31,9 @@ import {
 import { copyText as t } from "./copy";
 import PersonalizationTags from "@/shared/components/email/PersonalizationTags";
 import LexicalEditor, { LexicalEditorRef } from "@/components/ui/custom/LexicalEditor";
-import { templateFormSchema, TemplateFormValues } from "@/types";
+import { templateFormSchema, TemplateFormValues } from "@features/create-template/model/types";
 
-import { TemplateCategory } from "@/types";
+import { TemplateCategory } from "@/entities/template";
 
 interface TemplateFormProps {
   initialData?: TemplateFormValues;

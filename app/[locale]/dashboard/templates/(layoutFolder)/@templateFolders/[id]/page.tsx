@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { getTemplates } from "@features/campaigns/actions/templates";
 import { cn } from "@/shared/utils";
-import { Template } from "@/types";
+import { Template } from "@/entities/template";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";

@@ -6,7 +6,7 @@ import {
   getMailboxesAction,
   getMultipleMailboxAnalyticsAction,
 } from "@features/mailboxes/actions";
-import { MailboxWarmupData } from "@/types";
+import { MailboxWarmupData } from "@/entities/email";
 import { mapRawToLegacyMailboxData } from "@features/analytics/lib/mappers";
 import { developmentLogger } from "@/lib/logger";
 // Migration note: Using local alias for mailbox analytics state, all mailbox analytics set via mapper.

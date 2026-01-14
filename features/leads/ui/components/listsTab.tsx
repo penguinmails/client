@@ -10,8 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getLeadsLists } from "@features/leads/actions";
-import { LeadListData } from "@/types/clients-leads";
-import type { ActionResult } from "@/types";
+import { LeadListData } from "@/features/leads/types";
+import type { ActionResult } from "@/shared/types";
 import type { LeadList } from "@features/leads/actions";
 import { ArrowUpDown } from "lucide-react";
 import { useState, useEffect } from "react";
