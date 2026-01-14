@@ -20,7 +20,6 @@ export const ProtectedRoute = ({
   useEffect(() => {
     // Wait for loading to complete before redirecting
     if (!loading && !user) {
-      console.warn("[ProtectedRoute] Redirecting to", redirectTo, "because !loading && !user", { loading });
       router.push(redirectTo);
     }
   }, [loading, user, router, redirectTo, sessionExpired]);

@@ -326,6 +326,176 @@
             "zh": "中文"
           }
         }
+      },
+      "profile": {
+        "updating": "Updating Profile...",
+        "saveChanges": "Save Changes",
+        "title": "Profile Information",
+        "firstName": {
+          "label": "First Name",
+          "placeholder": "Enter your first name"
+        },
+        "lastName": {
+          "label": "Last Name",
+          "placeholder": "Enter your last name"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "Enter your email"
+        },
+        "phone": {
+          "label": "Phone",
+          "placeholder": "Enter your phone number"
+        },
+        "bio": {
+          "label": "Bio",
+          "placeholder": "Tell us about yourself"
+        },
+        "avatar": {
+          "title": "Avatar",
+          "current": "Current avatar",
+          "upload": "Upload New Avatar",
+          "uploading": "Uploading...",
+          "chooseFile": "Choose File",
+          "fileDescription": "PNG, JPG up to 5MB",
+          "chooseFrom": "Choose from Avatars",
+          "alt": "Avatar {index}",
+          "customUrl": "Custom Avatar URL",
+          "placeholder": "https://example.com/avatar.jpg",
+          "apply": "Apply"
+        },
+        "preferences": {
+          "title": "Preferences",
+          "timezone": {
+            "label": "Timezone",
+            "placeholder": "Select your timezone"
+          },
+          "language": {
+            "label": "Language",
+            "placeholder": "Select your language"
+          },
+          "sidebarView": {
+            "label": "Sidebar View",
+            "expanded": "Expanded",
+            "collapsed": "Collapsed",
+            "hidden": "Hidden"
+          },
+          "notifications": {
+            "label": "Notification Preferences",
+            "email": "Email notifications",
+            "push": "Push notifications",
+            "marketing": "Marketing emails",
+            "product": "Product updates"
+          },
+          "timezones": {
+            "UTC": "UTC",
+            "America/New_York": "Eastern Time",
+            "America/Chicago": "Central Time",
+            "America/Denver": "Mountain Time",
+            "America/Los_Angeles": "Pacific Time",
+            "Europe/London": "London",
+            "Europe/Paris": "Paris",
+            "Asia/Tokyo": "Tokyo",
+            "Asia/Shanghai": "Shanghai",
+            "Australia/Sydney": "Sydney"
+          },
+          "languages": {
+            "en": "English",
+            "es": "Español",
+            "fr": "Français",
+            "de": "Deutsch",
+            "it": "Italiano",
+            "pt": "Português",
+            "ja": "日本語",
+            "ko": "한국어",
+            "zh": "中文"
+          }
+        }
+      }
+    },
+    "profile": {
+      "updating": "Updating Profile...",
+      "saveChanges": "Save Changes",
+      "title": "Profile Information",
+      "firstName": {
+        "label": "First Name",
+        "placeholder": "Enter your first name"
+      },
+      "lastName": {
+        "label": "Last Name",
+        "placeholder": "Enter your last name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email"
+      },
+      "phone": {
+        "label": "Phone",
+        "placeholder": "Enter your phone number"
+      },
+      "bio": {
+        "label": "Bio",
+        "placeholder": "Tell us about yourself"
+      },
+      "avatar": {
+        "title": "Avatar",
+        "current": "Current avatar",
+        "upload": "Upload New Avatar",
+        "uploading": "Uploading...",
+        "chooseFile": "Choose File",
+        "fileDescription": "PNG, JPG up to 5MB",
+        "chooseFrom": "Choose from Avatars",
+        "alt": "Avatar {index}",
+        "customUrl": "Custom Avatar URL",
+        "placeholder": "https://example.com/avatar.jpg",
+        "apply": "Apply"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "timezone": {
+          "label": "Timezone",
+          "placeholder": "Select your timezone"
+        },
+        "language": {
+          "label": "Language",
+          "placeholder": "Select your language"
+        },
+        "sidebarView": {
+          "label": "Sidebar View",
+          "expanded": "Expanded",
+          "collapsed": "Collapsed",
+          "hidden": "Hidden"
+        },
+        "notifications": {
+          "label": "Notification Preferences",
+          "email": "Email notifications",
+          "push": "Push notifications",
+          "marketing": "Marketing emails",
+          "product": "Product updates"
+        },
+        "timezones": {
+          "UTC": "UTC",
+          "America/New_York": "Eastern Time",
+          "America/Chicago": "Central Time",
+          "America/Denver": "Mountain Time",
+          "America/Los_Angeles": "Pacific Time",
+          "Europe/London": "London",
+          "Europe/Paris": "Paris",
+          "Asia/Tokyo": "Tokyo",
+          "Asia/Shanghai": "Shanghai",
+          "Australia/Sydney": "Sydney"
+        },
+        "languages": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "ja": "日本語",
+          "ko": "한국어",
+          "zh": "中文"
+        }
       }
     },
     "layout": {
@@ -347,7 +517,8 @@
         "security": "Security",
         "notifications": "Notifications",
         "tracking": "Tracking",
-        "billing": "Billing"
+        "billing": "Billing",
+        "team": "Team"
       }
     },
     "notifications": {

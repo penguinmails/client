@@ -9,7 +9,7 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSignIn, useSignUp } from "@niledatabase/react";
 import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
 import { developmentLogger } from "@/lib/logger";
@@ -32,11 +32,9 @@ export interface BaseAuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: Error | null;
-  sessionExpired: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
-  setSessionExpired: (expired: boolean) => void;
   clearError: () => void;
 }
 
@@ -122,36 +120,11 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   // State
-  const [user, setUser] = useState<BaseUser | null>(() => {
-    // Only start in "pending" state if we are on a dashboard route
-    // AND we have a hint that the user should be logged in.
-    // This prevents random 15s waits for definitely-logged-out users.
-    if (typeof window !== "undefined") {
-      const isDashboard = window.location.pathname.includes("/dashboard");
-      const hasSessionHint = localStorage.getItem("nile_session_hint") === "true";
-      
-      if (isDashboard && hasSessionHint) {
-        developmentLogger.info("[BaseAuth] Starting in \"pending\" state (session hint found)");
-        return { id: "pending", email: "", emailVerified: null };
-      }
-    }
-    return null;
-  });
+  const [user, setUser] = useState<BaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [sessionExpired, setSessionExpired] = useState(false);
 
   const isInitialized = useRef(false);
-
-  // Debug logging for state changes (development only)
-  useEffect(() => {
-    developmentLogger.debug("[BaseAuth] State Update:", { 
-      userId: user?.id, 
-      isLoading,
-      isAuthenticated: !!user 
-    });
-  }, [user?.id, isLoading]);
 
   // ============================================================================
   // Session Check with Retry (fixes timing issue)
@@ -161,8 +134,6 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     email: string;
     emailVerified: Date | null;
   } | null> => {
-    if (isLoggingOut) return null;
-    
     for (let attempt = 0; attempt < SESSION_CHECK_RETRIES; attempt++) {
       const session = await checkSession();
       if (session) {
@@ -188,35 +159,26 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setError(null);
 
       try {
-        developmentLogger.info(`[BaseAuth] Starting login for ${email}...`);
-        
-        // Pass redirect: false to prevent NileDB from performing its own redirect
-        // to '/' or any other URL. We will handle redirection ourselves.
-        await signInHook({ 
-          provider: "credentials", 
-          email, 
-          password,
-          redirect: false 
-        } as any); 
-        
-        developmentLogger.info(`[BaseAuth] signInHook resolved.`);
+        await signInHook({ provider: "credentials", email, password });
 
-        // signInHook succeeded - set a temporary user state and session hint
-        localStorage.setItem("nile_session_hint", "true");
+        // signInHook succeeded - set a temporary user state
+        // The actual session will be verified on dashboard load
         setUser({
-          id: "pending", 
+          id: "pending", // Will be updated when session is fully ready
           email: email,
           emailVerified: null,
         });
 
+        // Add a small delay to allow session cookie to propagate
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
+        // Redirect to dashboard - the ProtectedRoute will handle session verification
         const next = searchParams.get("next") || "/dashboard";
-        developmentLogger.info(`[BaseAuth] Redirecting manually to ${next}...`);
         await safePush(next);
 
         // Try to get the actual session in background (non-blocking)
         checkSessionWithRetry().then((session) => {
           if (session) {
-            developmentLogger.info("[BaseAuth] Session recovered early via login background check");
             setUser({
               id: session.id,
               email: session.email,
@@ -225,8 +187,6 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         });
       } catch (err) {
-        developmentLogger.error("[BaseAuth] Login error:", err);
-        localStorage.removeItem("nile_session_hint");
         const loginError =
           err instanceof Error ? err : new Error("Login failed");
         setError(loginError);
@@ -254,22 +214,10 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const logout = useCallback(async () => {
-    developmentLogger.info("[BaseAuth] Starting logout...");
-    setIsLoggingOut(true);
     setUser(null);
-    setIsLoading(false); // Ensure we're not stuck in loading
-    
-    try {
-      localStorage.removeItem("nile_session_hint");
-      await performLogout();
-      developmentLogger.info("[BaseAuth] Logout successful, redirecting home.");
-    } catch (err) {
-      developmentLogger.error("[BaseAuth] Logout error:", err);
-    } finally {
-      router.push("/");
-      // Keep isLoggingOut true for a brief window to allow navigation to settle
-      setTimeout(() => setIsLoggingOut(false), 2000);
-    }
+    await performLogout();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    router.push("/");
   }, [router]);
 
   const clearError = useCallback(() => setError(null), []);
@@ -282,13 +230,9 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     isInitialized.current = true;
 
     const init = async () => {
-      if (isLoggingOut) return;
       try {
-        developmentLogger.debug("[BaseAuth] Initializing session...");
         const session = await checkSession();
         if (session) {
-          developmentLogger.info("[BaseAuth] Initial session found:", session.id);
-          localStorage.setItem("nile_session_hint", "true");
           setUser({
             id: session.id,
             email: session.email,
@@ -307,22 +251,13 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
           if (isPublicPage) {
             const next = searchParams.get("next") || "/dashboard";
-            developmentLogger.info("[BaseAuth] Redirecting authenticated user to:", next);
             await safePush(next);
-          }
-        } else {
-          developmentLogger.debug("[BaseAuth] No initial session found.");
-          // If NOT on a dashboard route, clear pending state
-          // If we ARE on dashboard, we stay "pending" to let the poll work
-          if (typeof window !== "undefined" && !window.location.pathname.includes("/dashboard")) {
-            setUser(null);
           }
         }
       } catch (err) {
-        developmentLogger.error("[BaseAuth] Failed to initialize session", err);
+        developmentLogger.error("Failed to initialize session", err);
       } finally {
         setIsLoading(false);
-        developmentLogger.debug("[BaseAuth] Initialization complete (isLoading=false)");
       }
     };
 
@@ -332,89 +267,41 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // ============================================================================
   // Background Session Polling (when user.id is "pending")
   // ============================================================================
-  // Stabilize navigation deps for AuthPoll
-  const safePushRef = useRef(safePush);
-  const searchParamsRef = useRef(searchParams);
-  
-  useEffect(() => {
-    safePushRef.current = safePush;
-    searchParamsRef.current = searchParams;
-  }, [safePush, searchParams]);
-
   useEffect(() => {
     if (user?.id !== "pending") return;
 
-    let isCancelled = false;
-    let pollTimeoutId: NodeJS.Timeout | null = null;
     let attempts = 0;
-    const maxAttempts = 15;
-    const pollInterval = 1000;
+    const maxAttempts = 10;
+    const pollInterval = 500; // ms
+
+    const pollSession = async () => {
+      attempts++;
+      const session = await checkSession();
+      
+      if (session) {
+        setUser({
+          id: session.id,
+          email: session.email,
+          emailVerified: session.emailVerified,
+        });
+        return true; // Stop polling
+      }
+      
+      return attempts >= maxAttempts; // Stop if max attempts reached
+    };
 
     const poll = async () => {
-      if (isCancelled || isLoggingOut) return;
-      
-      attempts++;
-      developmentLogger.debug(`[AuthPoll] Attempt ${attempts}/${maxAttempts} for session...`);
-      
-      try {
-        const session = await checkSession();
-        if (isCancelled) return;
-
-        if (session) {
-          developmentLogger.info(`[AuthPoll] ✅ Session recovered on attempt ${attempts}`);
-          
-          setUser({
-            id: session.id,
-            email: session.email,
-            emailVerified: session.emailVerified,
-          });
-
-          // If we were prematurely redirected to a public page, go back to dashboard
-          if (typeof window !== "undefined") {
-            const currentPath = window.location.pathname;
-            const isPublicPage =
-              /^\/[a-z]{2}\/?$/.test(currentPath) ||
-              /^\/[a-z]{2}\/login\/?$/.test(currentPath) ||
-              /^\/[a-z]{2}\/signup\/?$/.test(currentPath) ||
-              currentPath === "/" ||
-              currentPath === "/login" ||
-              currentPath === "/signup";
-            
-            if (isPublicPage) {
-              developmentLogger.info("[AuthPoll] Recovered on public page, redirecting to dashboard");
-              const next = searchParamsRef.current.get("next") || "/dashboard";
-              await safePushRef.current(next);
-            }
-          }
-          return; // Stop polling
-        }
-      } catch (err) {
-        developmentLogger.warn(`[AuthPoll] Check failed on attempt ${attempts}`, err);
-      }
-      
-      if (attempts >= maxAttempts) {
-        developmentLogger.warn(`[AuthPoll] ❌ Max attempts reached, session not recovered.`);
-        localStorage.removeItem("nile_session_hint");
-        setUser(null);
-        return; 
-      }
-      
-      if (!isCancelled) {
-        pollTimeoutId = setTimeout(poll, pollInterval);
+      const shouldStop = await pollSession();
+      if (!shouldStop) {
+        setTimeout(poll, pollInterval);
       }
     };
 
-    developmentLogger.info(`[AuthPoll] Starting persistent session polling (max ${maxAttempts}s)...`);
-    pollTimeoutId = setTimeout(poll, 500);
+    // Start polling after a short delay
+    const timeoutId = setTimeout(poll, pollInterval);
 
-    return () => {
-      developmentLogger.info("[AuthPoll] Stopping poll (cleanup)");
-      isCancelled = true;
-      if (pollTimeoutId) clearTimeout(pollTimeoutId);
-    };
-  }, [user?.id, isLoggingOut]); // React to user transitions AND logout events
-
-
+    return () => clearTimeout(timeoutId);
+  }, [user?.id]);
 
   // ============================================================================
   // Context Value
@@ -425,14 +312,12 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       isAuthenticated: !!user,
       isLoading,
       error,
-      sessionExpired,
       login,
       signup,
       logout,
-      setSessionExpired,
       clearError,
     }),
-    [user, isLoading, error, sessionExpired, login, signup, logout, setSessionExpired, clearError]
+    [user, isLoading, error, login, signup, logout, clearError]
   );
 
   return (

@@ -11,7 +11,7 @@
  * - `useEnrichment()` for enriched user data (profile, roles, tenant)
  */
 
-import React, { useMemo, useEffect, useCallback, useRef } from "react";
+import React, { useMemo, useEffect, useCallback } from "react";
 import {
   BaseAuthProvider,
   useBaseAuth,
@@ -19,11 +19,8 @@ import {
 import {
   UserEnrichmentProvider,
   useEnrichment,
-  EnrichedUser,
 } from "./enrichment-context";
-import { AuthUser, AuthLoadingState, AuthContextValue, Tenant } from "../../types";
-import { CompanyInfo } from "@/types/company";
-import { developmentLogger } from "@/lib/logger";
+import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
 import { SessionProvider } from "@niledatabase/react";
 
 // ============================================================================
@@ -51,42 +48,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 const GlobalFetchInterceptor: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { logout, user, setSessionExpired } = useBaseAuth();
-  
-  // Use a ref to always have the latest user state in the interceptor closure.
-  // We update it during render to ensure zero stale window.
-  const userRef = useRef(user);
-  userRef.current = user;
+  const { logout } = useBaseAuth();
 
   const handleAuthError = useCallback(
     (error: { status?: number; code?: string; message?: string }) => {
-      // Don't trigger logout if session is still in 'pending' state
-      if (userRef.current?.id === "pending") {
-        developmentLogger.info(`[AuthInterceptor] 401 ignored (user.id is "pending")`);
-        return false;
-      }
-
-      const isAuthError = 
+      if (
         error?.status === 401 ||
         error?.code === "AUTH_REQUIRED" ||
-        error?.message?.includes("Authentication required");
-
-      if (isAuthError) {
-        developmentLogger.warn(`[AuthInterceptor] 401 caught, triggering logout. User state:`, userRef.current);
-        setSessionExpired(true);
+        error?.message?.includes("Authentication required")
+      ) {
         logout();
         return true;
       }
       return false;
     },
-    [logout, setSessionExpired]
+    [logout]
   );
-
-  // Keep handleAuthError in a ref too for the same reason
-  const handleAuthErrorRef = useRef(handleAuthError);
-  useEffect(() => {
-    handleAuthErrorRef.current = handleAuthError;
-  }, [handleAuthError]);
 
   useEffect(() => {
     const originalFetch = window.fetch;
@@ -108,7 +85,7 @@ const GlobalFetchInterceptor: React.FC<{ children: React.ReactNode }> = ({
           response.headers.get("X-Auth-Error") === "true";
 
         if (isAuthError) {
-          handleAuthErrorRef.current({ status: 401, message: "Authentication required" });
+          handleAuthError({ status: 401, message: "Authentication required" });
         }
 
         return response;
@@ -120,7 +97,7 @@ const GlobalFetchInterceptor: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       window.fetch = originalFetch;
     };
-  }, []); // Only wrap once on mount
+  }, [handleAuthError]);
 
   return <>{children}</>;
 };
@@ -192,7 +169,7 @@ export const useAuth = (): AuthContextValue => {
       isStaff: enrichment.isStaff,
       selectedTenantId: enrichment.selectedTenantId,
       selectedCompanyId: enrichment.selectedCompanyId,
-      sessionExpired: baseAuth.sessionExpired,
+      sessionExpired: false, // TODO: Implement session expiry detection
       setSelectedTenant: enrichment.setSelectedTenant,
       setSelectedCompany: enrichment.setSelectedCompany,
       refreshUserData: refreshUser,

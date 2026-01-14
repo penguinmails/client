@@ -26,7 +26,7 @@ export const getCurrentUser = async (req?: NextRequest): Promise<NileClientUser 
     }
 
     // Fallback for requests without context - use existing function to avoid duplication
-    return getUncachedCurrentUser();
+    return getUncachedCurrentUser(req);
   } catch (error) {
     productionLogger.error('[Auth] Failed to get current user:', error);
 

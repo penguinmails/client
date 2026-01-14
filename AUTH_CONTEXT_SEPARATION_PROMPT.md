@@ -9,8 +9,7 @@ We use two nested providers to separate concerns:
 1. **BaseAuthProvider** (NileDB)
    - Handles the "Hard Auth" (login, logout, session cookies).
    - Provides `user.id`, `user.email`, `isAuthenticated`.
-   - Optimized for speed and instant session recovery.
-   - Solves the **Login Timing Issue** with internal retry logic.
+   - Optimized for baseline navigation and manual redirection controls.
 
 2. **UserEnrichmentProvider** (Application Data)
    - Depends on `BaseAuthProvider`.
@@ -20,111 +19,42 @@ We use two nested providers to separate concerns:
 
 ---
 
-## Problems Solved
+## Problems Solved & Lessons Learned
 
-### 1. Login "No Session" Flash
-- **Problem**: Calling `checkSession()` too fast after `signInHook()` returns 401.
-- **Solution**: `BaseAuthProvider` implements a 3-retry backoff (200ms intervals) before reporting a failed session.
+### 1. Login Cookie Propagation
+- **Problem**: Calling `checkSession()` too fast after `signInHook()` returns 401 because cookies aren't yet available.
+- **Solution**: Added a small delay (300ms) after `signInHook` before redirecting, and an background background polling loop in `BaseAuthProvider` that keeps checking for the session until found.
 
-### 2. Tight Coupling vs. Parallel Loading
-- **Problem**: UI blocked waiting for DB enrichment despite having a valid session.
-- **Solution**: Split contexts allow the App Shell (Sidebar, Header) to render immediately while role-dependent features show skeletons during enrichment.
+### 2. Manual Redirection Control
+- **Problem**: NileDB's default behavior can trigger unexpected redirects to `/`.
+- **Solution**: Explicitly handling redirects in the `login` function using `safePush` and ensuring the `ProtectedRoute` is the source of truth for dashboard access.
 
-### 3. Role-Based Navigation
-- **Problem**: Nav links visible before role is known.
-- **Solution**: Sidebar now checks `isLoadingEnrichment`. If true, it renders `NavLinkSkeleton` for protected routes.
-
----
-
-## Implementation Details
-
-### Provider Composition
-```tsx
-// Root Provider (features/auth/ui/context/auth-context.tsx)
-export const AuthProvider = ({ children }) => {
-  return (
-    <BaseAuthProvider>
-      <UserEnrichmentProvider>
-        {children}
-      </UserEnrichmentProvider>
-    </BaseAuthProvider>
-  );
-};
-```
-
-### Usage Patterns
-
-**Protective Routing (Instant)**:
-```tsx
-const { isAuthenticated } = useBaseAuth();
-if (!isAuthenticated) return <Redirect to="/login" />;
-```
-
-**Feature Rendering (Enriched)**:
-```tsx
-const { enrichedUser, isLoadingEnrichment } = useEnrichment();
-
-if (isLoadingEnrichment) return <FeatureSkeleton />;
-if (enrichedUser.role !== 'admin') return null;
-return <AdminFeature />;
-```
-
----
-
-## Dashboard Enrichment Gate
-
-The `EnrichedUserGate` component (in `features/auth/ui/components/`) wraps the main dashboard content:
-
-- While `isLoadingEnrichment` is true → Show global dashboard skeleton.
-- Once loaded, check business rules:
-  - **Email Unverified**: Show "Verification Required" banner with resend CTA.
-  - **Payment Overdue**: Show "Billing Action Required" gate with Stripe link.
-  - **Active**: Render children.
-
----
-
-### 4. Direct/Automatic Redirect Loops
-- **Problem**: NileDB's `signInHook` redirects to `/` by default, conflicting with our `/dashboard` manual navigation.
-- **Solution**: Use `redirect: false` in `signInHook` and perform manual `safePush('/dashboard')`.
-
-### 5. NileDB Context Warnings
+### 3. NileDB Context Warnings
 - **Problem**: Terminal warnings about `nile.userId is not set` in server-side API routes.
-- **Solution**: All core queries (`getCurrentUser`, `getUserTenants`, etc.) now accept an optional `NextRequest`. They extract headers and use `withContext({ headers, userId })` to ensure the session is properly propagated for every call.
-
-### 6. Dashboard Initialization Lag
-- **Problem**: Definitely unauthenticated users waiting 15s for polling on the `/dashboard` route.
-- **Solution**: **Session Hinting**. We store `nile_session_hint: "true"` in `localStorage` upon success. The dashboard only enters the "pending" polling state if this hint is present.
+- **Solution**: All core queries (`getCurrentUser`, `getUserTenants`, etc.) now accept an optional `NextRequest`. They extract headers and use `withContext({ headers, userId })` to ensure the session is properly propagated.
 
 ---
 
-## Implementation Details
+## Next Steps: Dashboard-Centric Session Optimization
 
-### Request-Aware Backend Queries
-```typescript
-// Example from lib/nile/nile.ts
-export const getUserTenants = async (req?: NextRequest) => {
-  const tenants = await nile.getTenants();
-  if (req) {
-    const headers = { ... };
-    const session = await getCachedSession(req.headers);
-    return await tenants.withContext({ headers, userId: session?.user?.id }, async () => {
-      return await tenants.list();
-    });
-  }
-  return await tenants.list();
-};
-```
+We are investigating a strategy to further simplify the auth flow and improve perceived performance:
 
-### Logout Safety State
-`BaseAuthProvider` maintains `isLoggingOut`. When true:
-- `init()` escapes early.
-- `AuthPoll` loop terminates instantly.
-- `checkSessionWithRetry` returns null immediately.
+### 1. Delayed Verification
+- Instead of checking the session globally on every page load, we should defer the full NileDB validation until the user reaches a **Protected Route** inside the dashboard layout.
+- The sidebar and navbar should render immediately (unblocked) while the `BaseAuthProvider` verifies the session in the background.
+
+### 2. Layout-Level Logic
+- Move the "pending" session logic into the dashboard layout. While the session is being verified:
+  - Header/Sidebar are visible.
+  - Main content area shows a skeleton.
+  - Once NileDB session is confirmed, unblock feature items and trigger the `UserEnrichmentProvider`.
+
+### 3. Fetch Interceptor Simplification
+- With the authentication logic concentrated in the context recovery, we may no longer need the `GlobalFetchInterceptor` to handle 401s globally. The auth context itself can handle the "session gone" state by observing its own recovery status.
 
 ---
 
-## Technical Challenges
+## Technical Maintenance
 
-- **Provider Nesting**: Ensure `UserEnrichmentProvider` properly resets its state when `BaseAuth.user` changes (e.g., on logout).
-- **Type Safety**: Use discriminating unions or clear interfaces for `BaseUser` vs `EnrichedUser`.
+- **Provider Nesting**: Ensure `UserEnrichmentProvider` properly resets its state when `BaseAuth.user` changes.
 - **Environment Parity**: Rate limits are loosened in `middleware.ts` during development to prevent 429 errors from high-frequency polling.
