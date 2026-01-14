@@ -5,7 +5,7 @@ import {
   SettingsErrorBoundary,
   SettingsErrorFallback,
 } from "../SettingsErrorBoundary";
-import { MockFunction } from '@/types/test-utils';
+import { MockFunction } from "@/shared/lib/testing/types";
 
 // Mock console methods to avoid noise in tests
 let consoleErrorSpy: jest.SpyInstance;

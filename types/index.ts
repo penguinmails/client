@@ -1,64 +1,5 @@
-// Barrel exports for all centralized TypeScript types
-// This allows importing types from '@/types' 
+export * from "../shared/lib/testing/types";
 
-// ============================================================================
-// SHARED TYPES (Root types directory) - EXPORT FIRST
-// ============================================================================
-
-// Common utility types
-export {
-  type ID,
-  type Timestamp,
-  type Status,
-  type DisplayStatus,
-  type BaseEntity,
-  type PaginationParams,
-  type PaginatedResponse,
-  type SelectOption,
-  type MetricData,
-  type BillingAddress,
-  type TeamMember,
-  type MailboxWarmupData,
-  type WarmupChartData,
-} from "./common";
-
-// Core types for utilities (exported to avoid circular deps)
-export {
-  type CoreUser,
-  type CoreCompany,
-  type CoreTeam,
-  type CoreTenant,
-  CoreUserRole,
-  CoreTeamRole,
-} from "./core";
-
-// Utility functions
-export * from "./utils";
-
-
-// Company types (Auth/Relationship-aware)
-export {
-  type CompanySettings,
-  type CompanyInfo,
-  mapCompanyInfoToCompany,
-  createDefaultCompanySettings,
-} from "./company";
-
-// API Response types (Standard ActionResult, ApiResponse)
-export * from "./api";
-
-// UI and component prop types (Includes ComponentProps)
-export * from "./ui";
-
-// Other legacy/unmigrated types
-export * from "./templates";
-export * from "./accounts"; // Added accounts exports
-export * from "./nav-link";
-export * from "./notification";
-export * from "./tab";
-export * from "./test-utils";
-export * from "./utils";
-export * from "./onboarding";
 
 // ============================================================================
 // FEATURE TYPES (Re-exported from features)
@@ -66,9 +7,7 @@ export * from "./onboarding";
 
 // Auth
 export {
-  UserRole,
   AuthErrorCodes,
-  type Tenant,
   type AuthErrorCode,
   type NileDBUser,
 } from "@features/auth/types";

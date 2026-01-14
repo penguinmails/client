@@ -15,7 +15,7 @@ import {
   Code,
   Image as ImageIcon,
 } from "lucide-react";
-import { eventTypes, type EventType, type PluginItem } from "@/types/toolbar";
+import { eventTypes, type EventType, type PluginItem } from "@/shared/ui/editor/model/types";
 
 export { eventTypes, type EventType, type PluginItem };
 

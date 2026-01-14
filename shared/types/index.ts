@@ -157,3 +157,6 @@ export interface PaginatedResponse<T> {
     totalPages: number;
   };
 }
+
+// API Response types (Standard ActionResult, ApiResponse)
+export * from "./api";

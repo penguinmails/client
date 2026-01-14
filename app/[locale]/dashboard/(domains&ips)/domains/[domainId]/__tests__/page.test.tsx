@@ -6,7 +6,8 @@
  */
 
 import { getDomainById, getTopAccountsForDomain, DomainWithMailboxesData } from "@features/domains/actions";
-import { EmailAccount, Mailbox, WarmupStatus } from "@/types";
+import { Mailbox } from "@/entities/email";
+import { WarmupStatus, EmailAccount } from "@/types";
 import { jest } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import React from "react";
