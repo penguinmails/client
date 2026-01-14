@@ -83,8 +83,48 @@ The `EnrichedUserGate` component (in `features/auth/ui/components/`) wraps the m
 
 ---
 
+### 4. Direct/Automatic Redirect Loops
+- **Problem**: NileDB's `signInHook` redirects to `/` by default, conflicting with our `/dashboard` manual navigation.
+- **Solution**: Use `redirect: false` in `signInHook` and perform manual `safePush('/dashboard')`.
+
+### 5. NileDB Context Warnings
+- **Problem**: Terminal warnings about `nile.userId is not set` in server-side API routes.
+- **Solution**: All core queries (`getCurrentUser`, `getUserTenants`, etc.) now accept an optional `NextRequest`. They extract headers and use `withContext({ headers, userId })` to ensure the session is properly propagated for every call.
+
+### 6. Dashboard Initialization Lag
+- **Problem**: Definitely unauthenticated users waiting 15s for polling on the `/dashboard` route.
+- **Solution**: **Session Hinting**. We store `nile_session_hint: "true"` in `localStorage` upon success. The dashboard only enters the "pending" polling state if this hint is present.
+
+---
+
+## Implementation Details
+
+### Request-Aware Backend Queries
+```typescript
+// Example from lib/nile/nile.ts
+export const getUserTenants = async (req?: NextRequest) => {
+  const tenants = await nile.getTenants();
+  if (req) {
+    const headers = { ... };
+    const session = await getCachedSession(req.headers);
+    return await tenants.withContext({ headers, userId: session?.user?.id }, async () => {
+      return await tenants.list();
+    });
+  }
+  return await tenants.list();
+};
+```
+
+### Logout Safety State
+`BaseAuthProvider` maintains `isLoggingOut`. When true:
+- `init()` escapes early.
+- `AuthPoll` loop terminates instantly.
+- `checkSessionWithRetry` returns null immediately.
+
+---
+
 ## Technical Challenges
 
 - **Provider Nesting**: Ensure `UserEnrichmentProvider` properly resets its state when `BaseAuth.user` changes (e.g., on logout).
 - **Type Safety**: Use discriminating unions or clear interfaces for `BaseUser` vs `EnrichedUser`.
-- **Performance**: Ensure no redundant re-renders when enrichment completes. Use `useMemo` for context values.
+- **Environment Parity**: Rate limits are loosened in `middleware.ts` during development to prevent 429 errors from high-frequency polling.

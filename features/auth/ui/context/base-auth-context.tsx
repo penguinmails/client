@@ -32,9 +32,11 @@ export interface BaseAuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: Error | null;
+  sessionExpired: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
+  setSessionExpired: (expired: boolean) => void;
   clearError: () => void;
 }
 
@@ -138,6 +140,7 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   const isInitialized = useRef(false);
 
@@ -422,12 +425,14 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       isAuthenticated: !!user,
       isLoading,
       error,
+      sessionExpired,
       login,
       signup,
       logout,
+      setSessionExpired,
       clearError,
     }),
-    [user, isLoading, error, login, signup, logout, clearError]
+    [user, isLoading, error, sessionExpired, login, signup, logout, setSessionExpired, clearError]
   );
 
   return (

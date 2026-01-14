@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 const GlobalFetchInterceptor: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { logout, user } = useBaseAuth();
+  const { logout, user, setSessionExpired } = useBaseAuth();
   
   // Use a ref to always have the latest user state in the interceptor closure.
   // We update it during render to ensure zero stale window.
@@ -73,12 +73,13 @@ const GlobalFetchInterceptor: React.FC<{ children: React.ReactNode }> = ({
 
       if (isAuthError) {
         developmentLogger.warn(`[AuthInterceptor] 401 caught, triggering logout. User state:`, userRef.current);
+        setSessionExpired(true);
         logout();
         return true;
       }
       return false;
     },
-    [logout]
+    [logout, setSessionExpired]
   );
 
   // Keep handleAuthError in a ref too for the same reason
@@ -191,7 +192,7 @@ export const useAuth = (): AuthContextValue => {
       isStaff: enrichment.isStaff,
       selectedTenantId: enrichment.selectedTenantId,
       selectedCompanyId: enrichment.selectedCompanyId,
-      sessionExpired: false, // TODO: Implement session expiry detection
+      sessionExpired: baseAuth.sessionExpired,
       setSelectedTenant: enrichment.setSelectedTenant,
       setSelectedCompany: enrichment.setSelectedCompany,
       refreshUserData: refreshUser,
