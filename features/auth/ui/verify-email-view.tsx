@@ -25,50 +25,53 @@ export function VerifyEmailView() {
   const token = searchParams.get("token");
   const t = useTranslations("VerifyEmail");
 
-  const verifyToken = useCallback(async (token: string) => {
-    setIsVerifying(true);
-    try {
-      const response = await fetch("/api/verify-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setVerificationResult({
-          success: true,
-          message: t("success"),
-          email: data.email,
+  const verifyToken = useCallback(
+    async (token: string) => {
+      setIsVerifying(true);
+      try {
+        const response = await fetch("/api/verify-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
         });
-      } else {
-        let errorMessage = data.error || t("fail");
 
-        if (data.expired) {
-          errorMessage = t("expired");
-        } else if (data.used) {
-          errorMessage = t("used");
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          setVerificationResult({
+            success: true,
+            message: t("success"),
+            email: data.email,
+          });
+        } else {
+          let errorMessage = data.error || t("fail");
+
+          if (data.expired) {
+            errorMessage = t("expired");
+          } else if (data.used) {
+            errorMessage = t("used");
+          }
+
+          setVerificationResult({
+            success: false,
+            message: errorMessage,
+            email: data.email,
+          });
         }
-
+      } catch (error) {
+        productionLogger.error("Verification error:", error);
         setVerificationResult({
           success: false,
-          message: errorMessage,
-          email: data.email,
+          message: t("error"),
         });
+      } finally {
+        setIsVerifying(false);
       }
-    } catch (error) {
-      productionLogger.error("Verification error:", error);
-      setVerificationResult({
-        success: false,
-        message: t("error"),
-      });
-    } finally {
-      setIsVerifying(false);
-    }
-  }, [t]);
+    },
+    [t]
+  );
 
   useEffect(() => {
     if (!token) {
@@ -81,6 +84,7 @@ export function VerifyEmailView() {
     }
 
     verifyToken(token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, verifyToken]);
 
   const handleResendEmail = async () => {
