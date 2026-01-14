@@ -24,7 +24,11 @@ import {
   Users,
 } from "lucide-react";
 import SidebarLink from "./SidebarLink";
-const navigationGroups: NavLink[] = [
+import { useEnrichment } from "@features/auth/ui/context/enrichment-context";
+
+
+// Navigation groups that are always visible (public)
+const publicNavigationGroups: NavLink[] = [
   {
     title: "Overview",
     items: [{ to: "/dashboard", label: "Dashboard", icon: LayoutDashboard }],
@@ -40,6 +44,10 @@ const navigationGroups: NavLink[] = [
       },
     ],
   },
+];
+
+// Navigation groups that require enriched user data (role-dependent)
+const enrichedNavigationGroups: NavLink[] = [
   {
     title: "Outreach Hub",
     items: [
@@ -74,7 +82,48 @@ const navigationGroups: NavLink[] = [
   },
 ];
 
+// Skeleton for nav items
+function NavItemSkeleton({ count = 1 }: { count?: number }) {
+  return (
+    <>
+      {Array.from({ length: count }).map((_, index) => (
+        <SidebarMenuItem key={index}>
+          <SidebarMenuButton className="animate-pulse">
+            <div className="h-4 w-4 bg-muted rounded" />
+            <div className="h-4 w-20 bg-muted rounded" />
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </>
+  );
+}
+
+function NavGroupSkeleton({ count = 2 }: { count?: number }) {
+  return (
+    <>
+      {Array.from({ length: count }).map((_, index) => (
+        <SidebarGroup key={index}>
+          <SidebarGroupLabel className="animate-pulse">
+            <div className="h-3 w-16 bg-muted rounded" />
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <NavItemSkeleton count={2} />
+          </SidebarGroupContent>
+        </SidebarGroup>
+      ))}
+    </>
+  );
+}
+
 function AppSideBar() {
+  const { isLoadingEnrichment, enrichedUser } = useEnrichment();
+  
+  // Show skeletons if:
+  // 1. Enrichment is actively loading, OR
+  // 2. We have a user but no role yet (enrichment not complete)
+  const hasEnrichedData = !!enrichedUser?.role;
+  const showSkeletons = isLoadingEnrichment || (enrichedUser && !hasEnrichedData);
+
   return (
     <Sidebar collapsible="icon" variant="inset">
       <>
@@ -89,7 +138,8 @@ function AppSideBar() {
         </SidebarHeader>
         <SidebarContent className="gap-0">
           <SidebarMenu>
-            {navigationGroups.map((group) => (
+            {/* Always show public navigation groups */}
+            {publicNavigationGroups.map((group) => (
               <SidebarGroup key={group.title}>
                 <SidebarGroupLabel className="select-none">
                   {group.title}
@@ -103,6 +153,26 @@ function AppSideBar() {
                 </SidebarGroupContent>
               </SidebarGroup>
             ))}
+            
+            {/* Show skeletons or actual enriched navigation groups */}
+            {showSkeletons ? (
+              <NavGroupSkeleton count={5} />
+            ) : (
+              enrichedNavigationGroups.map((group) => (
+                <SidebarGroup key={group.title}>
+                  <SidebarGroupLabel className="select-none">
+                    {group.title}
+                  </SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    {group.items.map((item) => (
+                      <SidebarMenuItem key={item.to}>
+                        <SidebarLink link={item} />
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ))
+            )}
           </SidebarMenu>
         </SidebarContent>
       </>
@@ -110,3 +180,4 @@ function AppSideBar() {
   );
 }
 export default AppSideBar;
+

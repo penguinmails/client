@@ -20,7 +20,7 @@ export const ProtectedRoute = ({
   useEffect(() => {
     // Wait for loading to complete before redirecting
     if (!loading && !user) {
-      // Session expired toast is handled in AuthContext
+      console.warn("[ProtectedRoute] Redirecting to", redirectTo, "because !loading && !user", { loading });
       router.push(redirectTo);
     }
   }, [loading, user, router, redirectTo, sessionExpired]);

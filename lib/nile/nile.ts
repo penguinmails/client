@@ -137,12 +137,24 @@ export const nile = {
  * Core NileDB functions for server-side usage
  */
 
+import { NextRequest } from 'next/server';
+
+// ... (other imports)
+
 // Get current authenticated user
-export const getCurrentUser = async () => {
+export const getCurrentUser = async (req?: NextRequest) => {
   const users = await nile.getUsers();
   if (!users) return null;
 
   try {
+    if (req) {
+      const headers: Record<string, string> = {};
+      req.headers.forEach((value: string, key: string) => { headers[key] = value; });
+      return await (users as any).withContext({ headers }, async () => {
+        const user = await (users as NileUsersClient).getSelf();
+        return user instanceof Response ? null : user as NileClientUser;
+      });
+    }
     const user = await (users as NileUsersClient).getSelf();
     return user instanceof Response ? null : user as NileClientUser;
   } catch (error) {
@@ -152,11 +164,19 @@ export const getCurrentUser = async () => {
 };
 
 // Get current session
-export const getCurrentSession = async () => {
+export const getCurrentSession = async (req?: NextRequest) => {
   const auth = await nile.getAuth();
   if (!auth) return null;
   
   try {
+    if (req) {
+      const headers: Record<string, string> = {};
+      req.headers.forEach((value: string, key: string) => { headers[key] = value; });
+      return await (auth as any).withContext({ headers }, async () => {
+        const session = await (auth as NileAuthClient).getSession();
+        return session instanceof Response ? null : session as NileClientSession;
+      });
+    }
     const session = await (auth as NileAuthClient).getSession();
     return session instanceof Response ? null : session as NileClientSession;
   } catch (error) {
@@ -166,11 +186,24 @@ export const getCurrentSession = async () => {
 };
 
 // Get user's tenants
-export const getUserTenants = async () => {
+export const getUserTenants = async (req?: NextRequest) => {
   const tenants = await nile.getTenants();
   if (!tenants) return [];
   
   try {
+    if (req) {
+      const headers: Record<string, string> = {};
+      req.headers.forEach((value: string, key: string) => { headers[key] = value; });
+      
+      // Get session for userId
+      const session = await getCachedSession(req.headers);
+      const userId = session?.user?.id;
+
+      return await (tenants as any).withContext({ headers, userId }, async () => {
+        const tenantList = await (tenants as NileTenantsClient).list();
+        return tenantList instanceof Response ? [] : tenantList as NileClientTenant[];
+      });
+    }
     const tenantList = await (tenants as NileTenantsClient).list();
     return tenantList instanceof Response ? [] : tenantList as NileClientTenant[];
   } catch (error) {
