@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
 import { Turnstile } from "next-turnstile";
-import { verifyTurnstileToken } from "./verifyToken";
+import { verifyTurnstileToken } from "@/features/auth/lib/verify-token";
 
 import { useFeature } from "@/lib/features";
 

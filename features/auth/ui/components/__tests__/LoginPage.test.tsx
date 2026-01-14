@@ -22,7 +22,7 @@ jest.mock("@/features/auth/ui/context/auth-context", () => ({
   useAuth: jest.fn(),
 }));
 
-jest.mock("@/app/[locale]/signup/verifyToken", () => ({
+jest.mock("@/features/auth/lib/verify-token", () => ({
   verifyTurnstileToken: jest.fn().mockResolvedValue(true),
 }));
 

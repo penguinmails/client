@@ -10,6 +10,3 @@ export * from './components/form';
 export * from './components/label';
 export * from './components/settings-error-state';
 export * from './components/settings-success-notification';
-
-// Unified design system components
-export * from './unified';
