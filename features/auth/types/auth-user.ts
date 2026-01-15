@@ -2,13 +2,22 @@ import { Tenant } from "./base";
 import { CompanyInfo } from "@/types/company";
 
 /**
+ * Base user from NileDB session (id + email only)
+ */
+export interface BaseUser {
+  id: string;
+  email: string;
+  emailVerified?: Date | null;
+}
+
+/**
  * Unified user model mirroring DB schema
  * Starts with session data (id, email), enriched from DB
  */
-export interface AuthUser {
+export interface AuthUser extends BaseUser {
   // === From users table (Session provides id/email) ===
-  id: string;
-  email: string;
+  // === From users table (Session provides id/email) ===
+  // Inherited from BaseUser
   name?: string;
   givenName?: string;
   familyName?: string;

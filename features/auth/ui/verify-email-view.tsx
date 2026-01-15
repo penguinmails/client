@@ -127,7 +127,7 @@ export function VerifyEmailView() {
   };
 
   const handleGoToLogin = () => {
-    router.push("/login");
+    router.push("/");
   };
 
   const icon = isVerifying

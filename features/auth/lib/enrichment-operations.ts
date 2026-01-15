@@ -1,4 +1,3 @@
-import { ActiveSession, auth } from "@niledatabase/client";
 import { AuthUser, TenantMembership } from "../types/auth-user";
 import { CompanyInfo } from "@/types";
 import { productionLogger } from "@/lib/logger";
@@ -12,31 +11,10 @@ import {
 } from "../api/user";
 
 /**
- * Check NileDB session - fast, hard gate for auth
- */
-export async function checkSession(): Promise<{ id: string; email: string; emailVerified: Date | null } | null> {
-  try {
-    const session = await auth.getSession() as ActiveSession; // Cast for simplified access
-    const nileUser = session?.user;
-    
-    if (!nileUser) return null;
-    
-    return {
-      id: nileUser.id,
-      email: nileUser.email,
-      emailVerified: nileUser.emailVerified ? new Date(nileUser.emailVerified) : null,
-    };
-  } catch (error) {
-    productionLogger.error("[AuthOps] Session check failed:", error);
-    return null;
-  }
-}
-
-/**
  * Fetch all DB info to enrich the session user
  * Mirrored from DB schema
  */
-export async function fetchUserEnrichment(userId: string): Promise<Partial<AuthUser>> {
+export async function fetchEnrichedUser(userId: string): Promise<Partial<AuthUser>> {
   // 1. Fetch Profile (Custom table user_profiles + users)
   // 2. Fetch Tenant Membership (tenant_users join tenants)
   // 3. Fetch Companies (filtered by tenant)
@@ -125,14 +103,5 @@ export async function fetchUserEnrichment(userId: string): Promise<Partial<AuthU
       },
       preferences: {},
     };
-  }
-}
-
-export async function performLogout(): Promise<void> {
-  try {
-    await auth.signOut();
-  } catch (error) {
-    // Don't throw on logout errors - the session is likely already cleared
-    productionLogger.warn('[AuthOps] Logout failed (this may be expected during page navigation):', error);
   }
 }

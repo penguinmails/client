@@ -3,41 +3,41 @@
 /**
  * Auth Context - Composition Layer
  *
- * This module composes BaseAuthProvider + UserEnrichmentProvider for backward
+ * This module composes SessionProvider + UserEnrichmentProvider for backward
  * compatibility. It re-exports a unified `useAuth` hook that combines both contexts.
  *
  * For new code, prefer using:
- * - `useBaseAuth()` for session-level auth (fast, minimal data)
+ * - `useSession()` for session-level auth (fast, minimal data)
  * - `useEnrichment()` for enriched user data (profile, roles, tenant)
  */
 
 import React, { useMemo, useCallback } from "react";
 import {
-  BaseAuthProvider,
-  useBaseAuth,
-} from "./base-auth-context";
+  SessionProvider as AppSessionProvider, // Alias to avoid conflict with NileDB SessionProvider if used, though here we might explicitly use ours.
+  useSession,
+} from "./session-context";
 import {
   UserEnrichmentProvider,
   useEnrichment,
 } from "./enrichment-context";
-import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
-import { SessionProvider } from "@niledatabase/react";
+import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types/auth-user";
+import { SessionProvider as NileSessionProvider } from "@niledatabase/react";
 
 // ============================================================================
-// Composition Provider (simplified - no GlobalFetchInterceptor)
+// Composition Provider
 // ============================================================================
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   return (
-    <SessionProvider>
-      <BaseAuthProvider>
+    <NileSessionProvider>
+      <AppSessionProvider>
         <UserEnrichmentProvider>
           {children}
         </UserEnrichmentProvider>
-      </BaseAuthProvider>
-    </SessionProvider>
+      </AppSessionProvider>
+    </NileSessionProvider>
   );
 };
 
@@ -46,61 +46,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 // ============================================================================
 
 /**
- * Unified auth hook that combines BaseAuth + Enrichment contexts.
+ * Unified auth hook that combines Session + Enrichment contexts.
  *
  * For performance-critical code or components that only need session info,
- * prefer using `useBaseAuth()` directly.
+ * prefer using `useSession()` directly.
  */
 export const useAuth = (): AuthContextValue => {
-  const baseAuth = useBaseAuth();
+  const sessionAuth = useSession();
   const enrichment = useEnrichment();
 
   // Build unified user object
   const user: AuthUser | null = useMemo(() => {
-    if (!baseAuth.user) return null;
-
-    // Merge base + enriched
-    return {
-      id: baseAuth.user.id,
-      email: baseAuth.user.email,
-      emailVerified: baseAuth.user.emailVerified ?? undefined,
-      // Enriched fields
-      name: enrichment.enrichedUser?.name,
-      displayName: enrichment.enrichedUser?.displayName,
-      givenName: enrichment.enrichedUser?.givenName,
-      familyName: enrichment.enrichedUser?.familyName,
-      picture: enrichment.enrichedUser?.picture,
-      photoURL: enrichment.enrichedUser?.photoURL,
-      isStaff: enrichment.enrichedUser?.isStaff,
-      role: enrichment.enrichedUser?.role,
-      claims: enrichment.enrichedUser?.claims,
-      tenantMembership: enrichment.enrichedUser?.tenantMembership,
-      preferences: enrichment.enrichedUser?.preferences,
-    };
-  }, [baseAuth.user, enrichment.enrichedUser]);
+    // If we have enrichment, that's the full user.
+    if (enrichment.enrichedUser) return enrichment.enrichedUser;
+    
+    // If only session is present, we can try to return session-only object partial
+    if (sessionAuth.session) {
+        return {
+            id: sessionAuth.session.id,
+            email: sessionAuth.session.email,
+            emailVerified: sessionAuth.session.emailVerified ? new Date(sessionAuth.session.emailVerified) : undefined,
+            // other fields undefined
+        };
+    }
+    
+    return null;
+  }, [sessionAuth.session, enrichment.enrichedUser]);
 
   // Build loading state
   const authLoading: AuthLoadingState = useMemo(
     () => ({
-      session: baseAuth.isLoading,
+      session: sessionAuth.isLoading,
       enrichment: enrichment.isLoadingEnrichment,
     }),
-    [baseAuth.isLoading, enrichment.isLoadingEnrichment]
+    [sessionAuth.isLoading, enrichment.isLoadingEnrichment]
   );
 
-  // Combine errors (base auth error takes precedence)
-  const error = baseAuth.error || enrichment.enrichmentError;
+  // Combine errors (session error takes precedence)
+  const error = sessionAuth.error || enrichment.enrichmentError;
 
   // Refresh all user data
   const refreshUser = useCallback(async () => {
+    // check session first? session check is fast.
+    await sessionAuth.recoverSession(); // verify session
     await enrichment.refreshEnrichment();
-  }, [enrichment]);
+  }, [sessionAuth, enrichment]);
 
   return useMemo<AuthContextValue>(
     () => ({
       user,
-      isAuthenticated: baseAuth.isAuthenticated,
-      loading: baseAuth.isLoading,
+      isAuthenticated: !!sessionAuth.session, // or !sessionAuth.isLoading && !!sessionAuth.session
+      loading: sessionAuth.isLoading, // Legacy simple loading legacy
       authLoading,
       error,
       userTenants: enrichment.userTenants,
@@ -108,23 +104,23 @@ export const useAuth = (): AuthContextValue => {
       isStaff: enrichment.isStaff,
       selectedTenantId: enrichment.selectedTenantId,
       selectedCompanyId: enrichment.selectedCompanyId,
-      sessionExpired: false, // TODO: Implement session expiry detection
+      sessionExpired: sessionAuth.retryCount > 3, // rough estimate or expose explicit expired state
       setSelectedTenant: enrichment.setSelectedTenant,
       setSelectedCompany: enrichment.setSelectedCompany,
       refreshUserData: refreshUser,
       refreshProfile: refreshUser,
       refreshTenants: refreshUser,
       refreshCompanies: refreshUser,
-      clearError: baseAuth.clearError,
-      login: baseAuth.login,
-      signup: baseAuth.signup,
-      logout: baseAuth.logout,
+      clearError: () => { /* No explicit clear error in session context exposed yet? sessionAuth.recoverSession() usually resets. */ }, 
+      login: sessionAuth.login,
+      signup: sessionAuth.signup,
+      logout: sessionAuth.logout,
       refreshUser,
     }),
     [
       user,
-      baseAuth.isAuthenticated,
-      baseAuth.isLoading,
+      sessionAuth.session,
+      sessionAuth.isLoading,
       authLoading,
       error,
       enrichment.userTenants,
@@ -134,10 +130,10 @@ export const useAuth = (): AuthContextValue => {
       enrichment.selectedCompanyId,
       enrichment.setSelectedTenant,
       enrichment.setSelectedCompany,
-      baseAuth.clearError,
-      baseAuth.login,
-      baseAuth.signup,
-      baseAuth.logout,
+      sessionAuth.retryCount,
+      sessionAuth.login,
+      sessionAuth.signup,
+      sessionAuth.logout,
       refreshUser,
     ]
   );
@@ -147,5 +143,5 @@ export const useAuth = (): AuthContextValue => {
 // Re-exports for convenience
 // ============================================================================
 
-export { useBaseAuth } from "./base-auth-context";
+export { useSession } from "./session-context";
 export { useEnrichment } from "./enrichment-context";

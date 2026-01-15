@@ -43,4 +43,4 @@ export {
 // Operations - Public auth operations
 export {
   checkSession,
-} from './lib/auth-operations';
+} from './lib/session-operations';
