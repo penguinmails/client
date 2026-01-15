@@ -20,6 +20,19 @@ interface NotificationData {
   marketingEmails?: boolean;
 }
 
+interface NotificationSettingsResponse {
+  emailNotifications: boolean;
+  browserNotifications: boolean;
+  summaryFrequency: string;
+  campaignUpdates?: boolean;
+  weeklyReports?: boolean;
+  domainAlerts?: boolean;
+  warmupCompletion?: boolean;
+  systemAlerts?: boolean;
+  marketingEmails?: boolean;
+  updatedAt?: string;
+}
+
 // Explicit re-exports for Turbopack compatibility
 export async function getProfile(req?: NextRequest) { return getUserProfile(req); }
 export async function updateProfileData(params: FormHandlerParams<Partial<UserProfile>>) { return updateUserProfile(params); }
@@ -121,22 +134,24 @@ export async function updateComplianceSettings(params: { data: Record<string, un
 /**
  * Fetches notification settings
  */
-export async function getNotificationSettings(_req?: NextRequest): Promise<ActionResult<{emailNotifications: boolean; browserNotifications: boolean; summaryFrequency: string; campaignUpdates?: boolean; weeklyReports?: boolean; domainAlerts?: boolean; warmupCompletion?: boolean; systemAlerts?: boolean; marketingEmails?: boolean; updatedAt?: string}>> {
+export async function getNotificationSettings(_req?: NextRequest): Promise<ActionResult<NotificationSettingsResponse>> {
   try {
+    const response: NotificationSettingsResponse = {
+      emailNotifications: true,
+      browserNotifications: false,
+      summaryFrequency: 'daily',
+      campaignUpdates: true,
+      weeklyReports: true,
+      domainAlerts: true,
+      warmupCompletion: false,
+      systemAlerts: true,
+      marketingEmails: false,
+      updatedAt: new Date().toISOString()
+    };
+
     return {
       success: true,
-      data: {
-        emailNotifications: true,
-        browserNotifications: false,
-        summaryFrequency: 'daily',
-        campaignUpdates: true,
-        weeklyReports: true,
-        domainAlerts: true,
-        warmupCompletion: false,
-        systemAlerts: true,
-        marketingEmails: false,
-        updatedAt: new Date().toISOString()
-      }
+      data: response
     };
   } catch (error) {
     productionLogger.error("Error fetching notification settings:", error);
@@ -150,23 +165,25 @@ export async function getNotificationSettings(_req?: NextRequest): Promise<Actio
 /**
  * Updates notification settings
  */
-export async function updateNotificationSettings(data: Record<string, unknown>, _req?: NextRequest): Promise<ActionResult<{emailNotifications: boolean; browserNotifications: boolean; summaryFrequency: string; campaignUpdates?: boolean; weeklyReports?: boolean; domainAlerts?: boolean; warmupCompletion?: boolean; systemAlerts?: boolean; marketingEmails?: boolean; updatedAt?: string}>> {
+export async function updateNotificationSettings(data: Record<string, unknown>, _req?: NextRequest): Promise<ActionResult<NotificationSettingsResponse>> {
   try {
     const typedData = data as NotificationData;
+    const response: NotificationSettingsResponse = {
+      emailNotifications: typedData.emailNotifications ?? true,
+      browserNotifications: typedData.browserNotifications ?? false,
+      summaryFrequency: typedData.summaryFrequency ?? 'daily',
+      campaignUpdates: typedData.campaignUpdates ?? true,
+      weeklyReports: typedData.weeklyReports ?? true,
+      domainAlerts: typedData.domainAlerts ?? true,
+      warmupCompletion: typedData.warmupCompletion ?? false,
+      systemAlerts: typedData.systemAlerts ?? true,
+      marketingEmails: typedData.marketingEmails ?? false,
+      updatedAt: new Date().toISOString()
+    };
+
     return {
       success: true,
-      data: {
-        emailNotifications: typedData.emailNotifications ?? true,
-        browserNotifications: typedData.browserNotifications ?? false,
-        summaryFrequency: typedData.summaryFrequency ?? 'daily',
-        campaignUpdates: typedData.campaignUpdates ?? true,
-        weeklyReports: typedData.weeklyReports ?? true,
-        domainAlerts: typedData.domainAlerts ?? true,
-        warmupCompletion: typedData.warmupCompletion ?? false,
-        systemAlerts: typedData.systemAlerts ?? true,
-        marketingEmails: typedData.marketingEmails ?? false,
-        updatedAt: new Date().toISOString()
-      }
+      data: response
     };
   } catch (error) {
     productionLogger.error("Error updating notification settings:", error);
@@ -180,12 +197,12 @@ export async function updateNotificationSettings(data: Record<string, unknown>, 
 /**
  * Compatibility aliases
  */
-export async function getSimpleNotificationPreferences(req?: NextRequest) {
+export async function getSimpleNotificationPreferences(req?: NextRequest): Promise<ActionResult<NotificationSettingsResponse>> {
   return getNotificationSettings(req);
 }
 
-export async function updateSimpleNotificationPreferences(params: { data: Record<string, unknown>, req?: NextRequest }) {
-  return updateNotificationSettings(params.data, params.req);
+export async function updateSimpleNotificationPreferences(data: Record<string, unknown>, req?: NextRequest): Promise<ActionResult<NotificationSettingsResponse>> {
+  return updateNotificationSettings(data, req);
 }
 
 /**

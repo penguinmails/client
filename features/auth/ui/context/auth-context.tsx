@@ -1,499 +1,151 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useSignIn, useSignUp } from "@niledatabase/react";
-import { useSystemHealth } from "@/shared/hooks";
-import { developmentLogger, productionLogger } from "@/lib/logger";
-import { toast } from "sonner";
-import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
+/**
+ * Auth Context - Composition Layer
+ *
+ * This module composes BaseAuthProvider + UserEnrichmentProvider for backward
+ * compatibility. It re-exports a unified `useAuth` hook that combines both contexts.
+ *
+ * For new code, prefer using:
+ * - `useBaseAuth()` for session-level auth (fast, minimal data)
+ * - `useEnrichment()` for enriched user data (profile, roles, tenant)
+ */
 
-import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
+import React, { useMemo, useCallback } from "react";
 import {
-  checkSession,
-  fetchUserEnrichment,
-  performLogout,
-} from "../../lib/auth-operations";
-import { DatabaseErrorPage } from "../components/db-error-page";
+  BaseAuthProvider,
+  useBaseAuth,
+} from "./base-auth-context";
+import {
+  UserEnrichmentProvider,
+  useEnrichment,
+} from "./enrichment-context";
+import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
+import { SessionProvider } from "@niledatabase/react";
 
-const AuthContext = createContext<AuthContextValue | null>(null);
-
-const DB_MAX_RETRIES = 3;
-const RETRY_DELAY = 3000;
+// ============================================================================
+// Composition Provider (simplified - no GlobalFetchInterceptor)
+// ============================================================================
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const { systemHealth } = useSystemHealth();
-  const { safePush } = useSafeNavigation();
-  const isHealthy = systemHealth.status === "healthy";
-
-  // NileDB React Hooks
-  const signInHook = useSignIn() as unknown as {
-    (credentials: {
-      provider: string;
-      email: string;
-      password: string;
-    }): Promise<void>;
-  };
-  // Create callbacks for the signUp hook
-  const signUpSuccessCallback = useCallback(
-    async (_data: unknown, variables: { email: string; name?: string }) => {
-      // Send verification email after successful signup
-      try {
-        const response = await fetch("/api/emails/send", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "verification",
-            email: variables.email,
-            userName: variables.name,
-            token: "temp-token", // Backend will generate actual token
-          }),
-        });
-
-        if (response.ok) {
-          // Store email for resend functionality only when email was actually sent
-          localStorage.setItem("pendingVerificationEmail", variables.email);
-          toast.success(
-            "Account created successfully! Please check your email to verify your account.",
-            {
-              duration: 5000,
-            }
-          );
-        } else {
-          // Still show success even if email sending fails
-          toast.success("Account created successfully!", {
-            duration: 4000,
-          });
-        }
-      } catch {
-        // Don't fail signup if email sending fails
-        toast.success("Account created successfully!", {
-          duration: 4000,
-        });
-      }
-
-      setLoading((prev) => ({ ...prev, session: false }));
-    },
-    []
+  return (
+    <SessionProvider>
+      <BaseAuthProvider>
+        <UserEnrichmentProvider>
+          {children}
+        </UserEnrichmentProvider>
+      </BaseAuthProvider>
+    </SessionProvider>
   );
+};
 
-  const signUpErrorCallback = useCallback((error: Error) => {
-    // Implement precise error handling based on actual NileDB error format
-    let processedError = error;
+// ============================================================================
+// Unified useAuth Hook (Backward Compatible)
+// ============================================================================
 
-    // Check for duplicate email based on actual NileDB error format
-    // Format: "The user {email} already exists"
-    const emailMatch = error.message.match(/The user (.+?) already exists/);
-    if (error.name === "Error" && emailMatch) {
-      productionLogger.info(
-        "[AuthContext] Duplicate email detected - NileDB format"
-      );
+/**
+ * Unified auth hook that combines BaseAuth + Enrichment contexts.
+ *
+ * For performance-critical code or components that only need session info,
+ * prefer using `useBaseAuth()` directly.
+ */
+export const useAuth = (): AuthContextValue => {
+  const baseAuth = useBaseAuth();
+  const enrichment = useEnrichment();
 
-      // Extract email from message
-      const email = emailMatch ? emailMatch[1] : "";
+  // Build unified user object
+  const user: AuthUser | null = useMemo(() => {
+    if (!baseAuth.user) return null;
 
-      const duplicateError = new Error(
-        "Email address already registered"
-      ) as Error & {
-        code?: string;
-        i18nKey?: string;
-        actionType?: string;
-        isDuplicate?: boolean;
-        email?: string;
-      };
-      duplicateError.code = "DUPLICATE_EMAIL";
-      duplicateError.i18nKey = "emailAlreadyExistsVerified";
-      duplicateError.actionType = "LOGIN";
-      duplicateError.isDuplicate = true;
-      duplicateError.email = email;
-      duplicateError.stack = error.stack; // Preserve original stack
-      processedError = duplicateError;
-    } else {
-      productionLogger.warn("[AuthContext] Unknown signup error format:", {
-        errorName: error.name,
-        errorMessage: error.message,
-        errorKeys: error && typeof error === "object" ? Object.keys(error) : [],
-      });
-    }
-
-    setError(processedError);
-    setLoading((prev) => ({ ...prev, session: false }));
-  }, []);
-
-  const signUpHook = useSignUp({
-    onSuccess: signUpSuccessCallback,
-    onError: signUpErrorCallback,
-  });
-
-  // Core State
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState<AuthLoadingState>({
-    session: true,
-    enrichment: false,
-  });
-  const [error, setError] = useState<Error | null>(null);
-  const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
-    null
-  );
-  const [sessionExpired, _setSessionExpired] = useState(false);
-
-  // Internal State
-  const retryCountRef = useRef(0);
-  const enrichmentPromiseRef = useRef<Promise<void> | null>(null);
-
-  const logout = useCallback(async () => {
-    setUser(null);
-    setSelectedTenantId(null);
-    setSelectedCompanyId(null);
-    await performLogout();
-    // Add a small delay to allow state to settle
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    router.push("/"); // Redirect to home/login page
-  }, [router]);
-
-  const signup = useCallback(
-    async (email: string, password: string, name: string) => {
-      setLoading((prev) => ({ ...prev, session: true }));
-      setError(null); // Clear any previous errors
-
-      const signupData = { email, password, name };
-
-      try {
-        await signUpHook(signupData);
-      } catch (err) {
-        // The onError callback is likely called before this throw.
-        // We re-throw so the calling component can react.
-        throw err;
-      }
-    },
-    [signUpHook]
-  );
-
-  /**
-   * Enrich user data from DB with retry logic
-   */
-  const enrichUser = useCallback(
-    async (userId: string) => {
-      if (enrichmentPromiseRef.current) return enrichmentPromiseRef.current;
-
-      const performEnrichment = async () => {
-        // Check health only if we failed previously
-        if (!isHealthy && retryCountRef.current > 0) {
-          return;
-        }
-
-        setLoading((prev) => ({ ...prev, enrichment: true }));
-
-        try {
-          const enrichedData = await fetchUserEnrichment(userId);
-          setUser((prev) => (prev ? { ...prev, ...enrichedData } : null));
-
-          // Auto-select tenant if available
-          if (enrichedData.tenantMembership?.tenantId) {
-            setSelectedTenantId(enrichedData.tenantMembership.tenantId);
-          }
-
-          setError(null);
-          retryCountRef.current = 0;
-        } catch (err) {
-          // Check if this is an authentication error that should trigger logout
-          if (
-            err instanceof Error &&
-            (err.message.includes("Failed to fetch enrichment data") ||
-              err.message.includes("Authentication required"))
-          ) {
-            // Use a simple timeout to avoid dependency issues
-            setTimeout(() => {
-              logout();
-            }, 0);
-            return;
-          }
-
-          if (retryCountRef.current < DB_MAX_RETRIES) {
-            retryCountRef.current += 1;
-
-            setTimeout(() => {
-              enrichmentPromiseRef.current = null;
-              enrichUser(userId);
-            }, RETRY_DELAY);
-          } else {
-            // Max retries reached, set error but don't block the UI
-
-            setError(
-              err instanceof Error
-                ? err
-                : new Error("Failed to load user profile")
-            );
-          }
-        } finally {
-          setLoading((prev) => ({ ...prev, enrichment: false }));
-          enrichmentPromiseRef.current = null;
-        }
-      };
-
-      enrichmentPromiseRef.current = performEnrichment();
-      return enrichmentPromiseRef.current;
-    },
-    [isHealthy, logout]
-  );
-
-  /**
-   * Handle authentication errors globally
-   */
-  const handleAuthError = useCallback(
-    (error: { status?: number; code?: string; message?: string }) => {
-      // Check if this is an authentication error
-      if (
-        error?.status === 401 ||
-        error?.code === "AUTH_REQUIRED" ||
-        error?.message?.includes("Authentication required")
-      ) {
-        logout();
-        return true; // Error was handled
-      }
-      return false; // Error was not handled
-    },
-    [logout]
-  );
-
-  const login = useCallback(
-    async (email: string, password: string) => {
-      setLoading((prev) => ({ ...prev, session: true }));
-      setError(null); // Clear any previous errors first
-
-      try {
-        await signInHook({ provider: "credentials", email, password });
-
-        const session = await checkSession();
-        if (session) {
-          setUser({ id: session.id, email: session.email });
-          enrichUser(session.id);
-
-          const next = searchParams.get("next") || "/dashboard";
-          // Use safe navigation to prevent chunk loading errors
-          await safePush(next);
-        } else {
-          // No session means login failed
-          throw new Error("Login failed - no valid session");
-        }
-      } catch (err) {
-        const loginError =
-          err instanceof Error ? err : new Error("Login failed");
-        setError(loginError);
-        setUser(null); // Ensure no user state is set on error
-        throw loginError;
-      } finally {
-        setLoading((prev) => ({ ...prev, session: false }));
-      }
-    },
-    [signInHook, searchParams, enrichUser, safePush]
-  );
-
-  /**
-   * Initial Session Load
-   */
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const session = await checkSession();
-
-        if (session && !error) {
-          // Only set user if no existing error
-          setUser({
-            id: session.id,
-            email: session.email,
-            emailVerified: session.emailVerified || undefined,
-          });
-          setLoading({ session: false, enrichment: true });
-          enrichUser(session.id);
-
-          // Only redirect if user is on a public page (not already in dashboard)
-          const currentPath = window.location.pathname;
-          // Check if current path is a public page (handles locale prefixes)
-          const isPublicPage =
-            /^\/[a-z]{2}\/?$/.test(currentPath) || // /en or /en/
-            /^\/[a-z]{2}\/login\/?$/.test(currentPath) || // /en/login
-            /^\/[a-z]{2}\/signup\/?$/.test(currentPath) || // /en/signup
-            currentPath === "/" || // root
-            currentPath === "/login" || // /login
-            currentPath === "/signup"; // /signup
-
-          if (isPublicPage) {
-            // User is on a public page with valid session - redirect to dashboard
-            const next = searchParams.get("next") || "/dashboard";
-            await safePush(next);
-          }
-        } else {
-          setLoading({ session: false, enrichment: false });
-        }
-      } catch (error) {
-        // Don't redirect here, let the UI components handle it
-        setLoading({ session: false, enrichment: false });
-        developmentLogger.error("Failed to initialize session", error);
-      }
+    // Merge base + enriched
+    return {
+      id: baseAuth.user.id,
+      email: baseAuth.user.email,
+      emailVerified: baseAuth.user.emailVerified ?? undefined,
+      // Enriched fields
+      name: enrichment.enrichedUser?.name,
+      displayName: enrichment.enrichedUser?.displayName,
+      givenName: enrichment.enrichedUser?.givenName,
+      familyName: enrichment.enrichedUser?.familyName,
+      picture: enrichment.enrichedUser?.picture,
+      photoURL: enrichment.enrichedUser?.photoURL,
+      isStaff: enrichment.enrichedUser?.isStaff,
+      role: enrichment.enrichedUser?.role,
+      claims: enrichment.enrichedUser?.claims,
+      tenantMembership: enrichment.enrichedUser?.tenantMembership,
+      preferences: enrichment.enrichedUser?.preferences,
     };
-    init();
-  }, [enrichUser, logout, error, searchParams, safePush]);
+  }, [baseAuth.user, enrichment.enrichedUser]);
 
-  /**
-   * Global fetch interceptor for handling 401 errors
-   */
-  useEffect(() => {
-    const originalFetch = window.fetch;
+  // Build loading state
+  const authLoading: AuthLoadingState = useMemo(
+    () => ({
+      session: baseAuth.isLoading,
+      enrichment: enrichment.isLoadingEnrichment,
+    }),
+    [baseAuth.isLoading, enrichment.isLoadingEnrichment]
+  );
 
-    window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-      try {
-        const response = await originalFetch(input, init);
+  // Combine errors (base auth error takes precedence)
+  const error = baseAuth.error || enrichment.enrichmentError;
 
-        // Skip auth callback errors - they are handled by the login form
-        const url = typeof input === "string" ? input : input.toString();
-        const isAuthCallback =
-          url.includes("/api/auth/callback/") || url.includes("/api/auth/csrf");
-
-        if (isAuthCallback) {
-          return response;
-        }
-
-        // Check for authentication errors via headers or status
-        const isAuthError =
-          response.status === 401 ||
-          response.headers.get("X-Auth-Error") === "true";
-
-        if (isAuthError) {
-          handleAuthError({ status: 401, message: "Authentication required" });
-        }
-
-        return response;
-      } catch (error) {
-        // Re-throw non-auth errors
-        throw error;
-      }
-    };
-
-    // Cleanup: restore original fetch
-    return () => {
-      window.fetch = originalFetch;
-    };
-  }, [handleAuthError]);
-
-  // Compatibility Methods
+  // Refresh all user data
   const refreshUser = useCallback(async () => {
-    if (user?.id) await enrichUser(user.id);
-  }, [user?.id, enrichUser]);
+    await enrichment.refreshEnrichment();
+  }, [enrichment]);
 
-  const refreshUserData = refreshUser;
-  const refreshProfile = refreshUser;
-  const refreshTenants = refreshUser;
-  const refreshCompanies = refreshUser;
-
-  const clearError = useCallback(() => setError(null), []);
-
-  const userTenants = useMemo(
-    () =>
-      user?.tenantMembership?.tenant
-        ? [
-            {
-              id: user.tenantMembership.tenantId,
-              name: user.tenantMembership.tenant.name,
-              created: "",
-            },
-          ]
-        : [],
-    [user]
-  );
-  const userCompanies = useMemo(
-    () => user?.tenantMembership?.tenant?.companies || [],
-    [user]
-  );
-  const isStaff = !!user?.isStaff;
-
-  const contextValue = useMemo<AuthContextValue>(
+  return useMemo<AuthContextValue>(
     () => ({
       user,
-      isAuthenticated: !!user,
-      loading: loading.session,
-      authLoading: loading,
+      isAuthenticated: baseAuth.isAuthenticated,
+      loading: baseAuth.isLoading,
+      authLoading,
       error,
-      userTenants,
-      userCompanies,
-      isStaff,
-      selectedTenantId,
-      selectedCompanyId,
-      sessionExpired,
-      setSelectedTenant: setSelectedTenantId,
-      setSelectedCompany: setSelectedCompanyId,
-      refreshUserData,
-      refreshProfile,
-      refreshTenants,
-      refreshCompanies,
-      clearError,
-      login,
-      signup,
-      logout,
+      userTenants: enrichment.userTenants,
+      userCompanies: enrichment.userCompanies,
+      isStaff: enrichment.isStaff,
+      selectedTenantId: enrichment.selectedTenantId,
+      selectedCompanyId: enrichment.selectedCompanyId,
+      sessionExpired: false, // TODO: Implement session expiry detection
+      setSelectedTenant: enrichment.setSelectedTenant,
+      setSelectedCompany: enrichment.setSelectedCompany,
+      refreshUserData: refreshUser,
+      refreshProfile: refreshUser,
+      refreshTenants: refreshUser,
+      refreshCompanies: refreshUser,
+      clearError: baseAuth.clearError,
+      login: baseAuth.login,
+      signup: baseAuth.signup,
+      logout: baseAuth.logout,
       refreshUser,
     }),
     [
       user,
-      loading,
+      baseAuth.isAuthenticated,
+      baseAuth.isLoading,
+      authLoading,
       error,
-      userTenants,
-      userCompanies,
-      isStaff,
-      selectedTenantId,
-      selectedCompanyId,
-      sessionExpired,
-      refreshUserData,
-      refreshProfile,
-      refreshTenants,
-      refreshCompanies,
-      clearError,
-      login,
-      signup,
-      logout,
+      enrichment.userTenants,
+      enrichment.userCompanies,
+      enrichment.isStaff,
+      enrichment.selectedTenantId,
+      enrichment.selectedCompanyId,
+      enrichment.setSelectedTenant,
+      enrichment.setSelectedCompany,
+      baseAuth.clearError,
+      baseAuth.login,
+      baseAuth.signup,
+      baseAuth.logout,
       refreshUser,
     ]
   );
-
-  // If enrichment failed and we've exhausted retries, but we ARE authenticated
-  if (
-    user &&
-    error &&
-    !loading.enrichment &&
-    retryCountRef.current >= DB_MAX_RETRIES
-  ) {
-    return (
-      <DatabaseErrorPage
-        onRetry={() => {
-          retryCountRef.current = 0;
-          enrichUser(user.id);
-        }}
-        error={error}
-      />
-    );
-  }
-
-  return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+// ============================================================================
+// Re-exports for convenience
+// ============================================================================
+
+export { useBaseAuth } from "./base-auth-context";
+export { useEnrichment } from "./enrichment-context";

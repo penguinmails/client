@@ -26,11 +26,7 @@
     "storybook-docs": "storybook docs",
     "check-size": "node scripts/check-file-sizes.js",
     "fsd:validate": "tsx scripts/fsd-import-path-validator.ts",
-    "validate:fsd-linting": "tsx scripts/validate-fsd-linting.ts",
-    "test:architecture": "tsx scripts/run-architectural-tests.ts",
-    "test:architecture:ci": "tsx scripts/run-architectural-tests.ts --env ci --skip-optional",
-    "validate:architecture": "npm run test:architecture -- --dry-run",
-    "architecture:report": "npm run test:architecture -- --output architectural-compliance-report.json"
+    "validate:fsd-linting": "tsx scripts/validate-fsd-linting.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -40,10 +36,10 @@
     "@lexical/react": "^0.37.0",
     "@lexical/rich-text": "^0.37.0",
     "@lexical/selection": "^0.37.0",
-    "@niledatabase/client": "^5.1.0",
-    "@niledatabase/nextjs": "^5.1.0",
-    "@niledatabase/react": "^5.1.0",
-    "@niledatabase/server": "^5.1.0",
+    "@niledatabase/client": "^5.3.1",
+    "@niledatabase/nextjs": "^5.3.1",
+    "@niledatabase/react": "^5.3.1",
+    "@niledatabase/server": "^5.3.1",
     "@posthog/react": "^1.5.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",

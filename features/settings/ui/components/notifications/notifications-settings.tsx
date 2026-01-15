@@ -25,7 +25,6 @@ import {
 } from "@features/settings/actions";
 import type { SimpleNotificationPreferences } from "@features/settings/types/settings";
 import { productionLogger } from "@/lib/logger";
-import { NextRequest } from 'next/server';
 
 const notificationSchema = z.object({
   newReplies: z.boolean(),
@@ -160,7 +159,7 @@ function NotificationsSettings() {
   const onSubmit = (data: NotificationFormValues) => {
     startTransition(async () => {
       try {
-        const result = await updateSimpleNotificationPreferences({ data, req: undefined as unknown as NextRequest });
+        const result = await updateSimpleNotificationPreferences(data);
 
         if (result.success && result.data) {
           // Map server response to expected format

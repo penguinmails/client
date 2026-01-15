@@ -137,14 +137,26 @@ export const nile = {
  * Core NileDB functions for server-side usage
  */
 
+import { NextRequest } from 'next/server';
+
+// ... (other imports)
+
 // Get current authenticated user
-export const getCurrentUser = async () => {
+export const getCurrentUser = async (req?: NextRequest): Promise<NileClientUser | null> => {
   const users = await nile.getUsers();
   if (!users) return null;
 
   try {
+    if (req) {
+      const headers: Record<string, string> = {};
+      req.headers.forEach((value: string, key: string) => { headers[key] = value; });
+      return await (users as NileUsersClient & { withContext: (ctx: unknown, fn: () => Promise<unknown>) => Promise<unknown> }).withContext({ headers }, async () => {
+        const user = await (users as NileUsersClient).getSelf();
+        return user instanceof Response ? null : (user as NileClientUser);
+      }) as Promise<NileClientUser | null>;
+    }
     const user = await (users as NileUsersClient).getSelf();
-    return user instanceof Response ? null : user as NileClientUser;
+    return user instanceof Response ? null : (user as NileClientUser);
   } catch (error) {
     productionLogger.error('[NileDB] getCurrentUser failed:', error);
     return null;
@@ -152,13 +164,21 @@ export const getCurrentUser = async () => {
 };
 
 // Get current session
-export const getCurrentSession = async () => {
+export const getCurrentSession = async (req?: NextRequest) => {
   const auth = await nile.getAuth();
   if (!auth) return null;
   
   try {
+    if (req) {
+      const headers: Record<string, string> = {};
+      req.headers.forEach((value: string, key: string) => { headers[key] = value; });
+      return await (auth as NileAuthClient & { withContext: (ctx: unknown, fn: () => Promise<unknown>) => Promise<unknown> }).withContext({ headers }, async () => {
+        const session = await (auth as NileAuthClient).getSession();
+        return session instanceof Response ? null : (session as NileClientSession);
+      });
+    }
     const session = await (auth as NileAuthClient).getSession();
-    return session instanceof Response ? null : session as NileClientSession;
+    return session instanceof Response ? null : (session as NileClientSession);
   } catch (error) {
     productionLogger.error('[NileDB] getCurrentSession failed:', error);
     return null;
@@ -166,13 +186,26 @@ export const getCurrentSession = async () => {
 };
 
 // Get user's tenants
-export const getUserTenants = async () => {
+export const getUserTenants = async (req?: NextRequest) => {
   const tenants = await nile.getTenants();
   if (!tenants) return [];
   
   try {
+    if (req) {
+      const headers: Record<string, string> = {};
+      req.headers.forEach((value: string, key: string) => { headers[key] = value; });
+      
+      // Get session for userId
+      const session = await getCachedSession(req.headers);
+      const userId = session?.user?.id;
+
+      return await (tenants as NileTenantsClient & { withContext: (ctx: unknown, fn: () => Promise<unknown>) => Promise<unknown> }).withContext({ headers, userId }, async () => {
+        const tenantList = await (tenants as NileTenantsClient).list();
+        return tenantList instanceof Response ? [] : (tenantList as NileClientTenant[]);
+      });
+    }
     const tenantList = await (tenants as NileTenantsClient).list();
-    return tenantList instanceof Response ? [] : tenantList as NileClientTenant[];
+    return tenantList instanceof Response ? [] : (tenantList as NileClientTenant[]);
   } catch (error) {
     productionLogger.error('[NileDB] getUserTenants failed:', error);
     return [];

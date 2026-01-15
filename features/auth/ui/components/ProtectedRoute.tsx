@@ -10,20 +10,19 @@ interface ProtectedRouteProps {
   redirectTo?: string;
 }
 
-export const ProtectedRoute = ({ 
-  children, 
-  redirectTo = "/" 
+export const ProtectedRoute = ({
+  children,
+  redirectTo = "/",
 }: ProtectedRouteProps) => {
-  const { user, loading, sessionExpired } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     // Wait for loading to complete before redirecting
     if (!loading && !user) {
-      // Session expired toast is handled in AuthContext
       router.push(redirectTo);
     }
-  }, [loading, user, router, redirectTo, sessionExpired]);
+  }, [loading, user, router, redirectTo]);
 
   // Show loading state while checking authentication
   if (loading) {
