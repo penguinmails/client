@@ -26,11 +26,7 @@
     "storybook-docs": "storybook docs",
     "check-size": "node scripts/check-file-sizes.js",
     "fsd:validate": "tsx scripts/fsd-import-path-validator.ts",
-    "validate:fsd-linting": "tsx scripts/validate-fsd-linting.ts",
-    "test:architecture": "tsx scripts/run-architectural-tests.ts",
-    "test:architecture:ci": "tsx scripts/run-architectural-tests.ts --env ci --skip-optional",
-    "validate:architecture": "npm run test:architecture -- --dry-run",
-    "architecture:report": "npm run test:architecture -- --output architectural-compliance-report.json"
+    "validate:fsd-linting": "tsx scripts/validate-fsd-linting.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

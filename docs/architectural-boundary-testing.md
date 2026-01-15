@@ -72,37 +72,32 @@ it("should validate semantic color usage");
 
 ## Test Runner
 
-### Comprehensive Test Orchestration (`scripts/run-architectural-tests.ts`)
+### Jest-Based Test Execution
 
-The test runner orchestrates all architectural boundary tests and generates comprehensive reports.
+All architectural boundary tests are executed via Jest as standard test suites.
 
 **Usage**:
 
 ```bash
 # Run all architectural tests
-npm run test:architecture
+npm test -- --testPathPatterns="app-layer-integration|cross-feature-integration|design-token-compliance"
 
-# Run in CI mode (skip optional tests)
-npm run test:architecture:ci
+# Run all tests including architectural
+npm test
 
-# Run specific test suites
-npm run test:architecture -- --suites "FSD Layer Compliance,Design Token Compliance"
+# Run specific architectural test
+npm test -- __tests__/app-layer-integration.test.ts
 
-# Generate detailed report
-npm run architecture:report
-
-# Dry run (show what would be tested)
-npm run test:architecture -- --dry-run
+# Run with verbose output
+npm test -- --verbose --testPathPatterns="app-layer-integration"
 ```
 
-**Available Options**:
+**Available Test Suites**:
 
-- `--env <environment>`: Set environment (development, staging, production)
-- `--suites <suite1,suite2>`: Run specific test suites only
-- `--skip-optional`: Skip optional test suites
-- `--dry-run`: Show what would be tested without running
-- `--verbose`: Show detailed output
-- `--output <filename>`: Output report filename
+- `app-layer-integration.test.ts`: Validates app layer integration and FSD compliance
+- `cross-feature-integration.test.ts`: Ensures proper feature isolation and import boundaries
+- `design-token-compliance.test.ts`: Validates design token usage and prevents hardcoded styles
+- `i18n-messages.test.ts`: Ensures all translation keys exist in en.json
 
 ## NPM Scripts
 
@@ -110,12 +105,11 @@ npm run test:architecture -- --dry-run
 
 ```json
 {
-  "test:architecture": "tsx scripts/run-architectural-tests.ts",
-  "test:architecture:ci": "tsx scripts/run-architectural-tests.ts --env ci --skip-optional",
-  "test:boundaries": "jest __tests__/architectural-boundary-tests.test.ts --verbose",
-  "test:design-tokens": "jest __tests__/design-token-compliance.test.ts --verbose",
-  "validate:architecture": "npm run test:architecture -- --dry-run",
-  "architecture:report": "npm run test:architecture -- --output architectural-compliance-report.json"
+  "test": "jest",
+  "test:watch": "jest --watch",
+  "fsd:validate": "tsx scripts/fsd-import-path-validator.ts",
+  "validate:fsd-linting": "tsx scripts/validate-fsd-linting.ts",
+  "check-size": "node scripts/check-file-sizes.js"
 }
 ```
 
@@ -124,8 +118,7 @@ npm run test:architecture -- --dry-run
 ```json
 {
   "fsd:validate": "tsx scripts/fsd-import-path-validator.ts",
-  "check:fsd": "tsx scripts/fsd-compliance-checker.ts",
-  "validate:feature-apis": "tsx scripts/validate-feature-api-boundaries.ts"
+  "validate:fsd-linting": "tsx scripts/validate-fsd-linting.ts"
 }
 ```
 
@@ -311,13 +304,13 @@ npm run test:design-tokens
 ### Debug Commands
 
 ```bash
-# Verbose architectural test output
-npm run test:architecture -- --verbose
-
-# Dry run to see what would be tested
-npm run test:architecture -- --dry-run
+# Verbose test output
+npm test -- --verbose --testPathPatterns="app-layer-integration"
 
 # Test specific files
+npm test -- __tests__/app-layer-integration.test.ts
+
+# Run FSD validation
 npm run fsd:validate path/to/file.tsx
 
 # Generate detailed FSD report
@@ -346,14 +339,14 @@ As the codebase improves, update compliance thresholds in:
 
 ### Monitoring Compliance Trends
 
-Use the generated reports to track compliance trends over time:
+Use Jest test results to track compliance trends over time:
 
 ```bash
-# Generate historical compliance report
-npm run architecture:report -- --output "reports/compliance-$(date +%Y%m%d).json"
+# Run architectural tests with coverage
+npm test -- --testPathPatterns="app-layer-integration|cross-feature-integration|design-token-compliance" --coverage
 
-# Compare compliance scores
-# Implement trend analysis scripts
+# Generate compliance report
+npm test -- --testPathPatterns="app-layer-integration|cross-feature-integration|design-token-compliance" --json --outputFile=compliance-report.json
 ```
 
 ## Best Practices
