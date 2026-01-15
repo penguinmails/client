@@ -143,21 +143,57 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // ============================================================================
   // Session Check with Retry (for post-login cookie propagation)
   // ============================================================================
+  // ============================================================================
+  // Session Check with Retry
+  // ============================================================================
+
+  /**
+   * Strictly wait for a valid session for a specific user after login.
+   * Returns null if session is not found after retries.
+   */
   const waitForSession = useCallback(async (email: string): Promise<BaseUser | null> => {
     for (let attempt = 0; attempt < SESSION_CHECK_MAX_ATTEMPTS; attempt++) {
-      await new Promise((resolve) => setTimeout(resolve, SESSION_CHECK_DELAY_MS));
       const session = await checkSession();
-      if (session) {
+      if (session && session.email?.toLowerCase() === email.toLowerCase()) {
         return {
           id: session.id,
           email: session.email,
           emailVerified: session.emailVerified,
         };
       }
+      await new Promise((resolve) => setTimeout(resolve, SESSION_CHECK_DELAY_MS));
     }
-    // Fallback: return user with email but no ID (session not yet available)
-    developmentLogger.warn("Session not found after login, using email only");
-    return { id: "", email, emailVerified: null };
+    
+    developmentLogger.warn("Session not found after login - strict check failed");
+    return null;
+  }, []);
+
+  /**
+   * Retry session check on init to handle potential race conditions or sluggish loading.
+   */
+  const checkSessionWithRetry = useCallback(async (): Promise<BaseUser | null> => {
+    // Try immediate first
+    const immediate = await checkSession();
+    if (immediate) return {
+      id: immediate.id,
+      email: immediate.email,
+      emailVerified: immediate.emailVerified,
+    };
+
+    // If not found immediately, try a few more times with delays
+    // This helps if the cookie is just appearing
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      const session = await checkSession();
+      if (session) {
+         return {
+          id: session.id,
+          email: session.email,
+          emailVerified: session.emailVerified,
+        };
+      }
+    }
+    return null;
   }, []);
 
   // ============================================================================
@@ -174,6 +210,11 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
         // Wait for session to be available before redirecting
         const sessionUser = await waitForSession(email);
+        
+        if (!sessionUser) {
+           throw new Error("Login successful, but session could not be verified. Please try refreshing.");
+        }
+
         setUser(sessionUser);
         setAuthState("authenticated");
 
@@ -181,6 +222,7 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const next = searchParams.get("next") || "/dashboard";
         await safePush(next);
       } catch (err) {
+        console.error("Login Error:", err);
         const loginError =
           err instanceof Error ? err : new Error("Login failed");
         setError(loginError);
@@ -230,13 +272,9 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const init = async () => {
       // Already in "authenticating" state from initial useState
       try {
-        const session = await checkSession();
-        if (session) {
-          setUser({
-            id: session.id,
-            email: session.email,
-            emailVerified: session.emailVerified,
-          });
+        const sessionUser = await checkSessionWithRetry();
+        if (sessionUser) {
+          setUser(sessionUser);
           setAuthState("authenticated");
 
           // Redirect if on public page
@@ -263,7 +301,7 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     init();
-  }, [searchParams, safePush]);
+  }, [searchParams, safePush, checkSessionWithRetry]);
 
   // ============================================================================
   // Context Value
