@@ -14,7 +14,7 @@ export const ProtectedRoute = ({
   children,
   redirectTo = "/",
 }: ProtectedRouteProps) => {
-  const { user, loading, sessionExpired } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const ProtectedRoute = ({
     if (!loading && !user) {
       router.push(redirectTo);
     }
-  }, [loading, user, router, redirectTo, sessionExpired]);
+  }, [loading, user, router, redirectTo]);
 
   // Show loading state while checking authentication
   if (loading) {

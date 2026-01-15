@@ -73,8 +73,10 @@ describe("i18n: translation keys are present in en.json", () => {
     if (missing.length > 0) {
       // Helpful error message for debugging
       const sample = missing.slice(0, 10).map((k) => `  - ${k}`).join("\n");
+      const remaining = missing.length - 10;
+      const moreMessage = remaining > 0 ? `\n...and ${remaining} more` : '';
       throw new Error(
-        `Missing translation keys in messages/en.json:\n${sample}\n...and ${missing.length - 10} more` 
+        `Missing translation keys in messages/en.json:\n${sample}${moreMessage}`
       );
     }
   });

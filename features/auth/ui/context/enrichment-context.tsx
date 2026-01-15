@@ -7,6 +7,7 @@ import React, {
   useState,
   useCallback,
   useMemo,
+  useRef,
 } from "react";
 import { useBaseAuth, BaseUser } from "./base-auth-context";
 import { useSystemHealth } from "@/shared/hooks";
@@ -81,14 +82,14 @@ export const UserEnrichmentProvider: React.FC<{
   const [enrichmentError, setEnrichmentError] = useState<Error | null>(null);
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
-  const [retryCount, setRetryCount] = useState(0);
+  const retryCountRef = useRef(0);
 
   // ============================================================================
-  // Enrichment Logic - Simplified single async function
+  // Enrichment Logic - Stable function with ref-based retry
   // ============================================================================
   const enrichUser = useCallback(
     async (userId: string): Promise<void> => {
-      if (!isHealthy && retryCount > 0) return;
+      if (!isHealthy && retryCountRef.current > 0) return;
 
       setIsLoadingEnrichment(true);
       setEnrichmentError(null);
@@ -108,14 +109,15 @@ export const UserEnrichmentProvider: React.FC<{
           setSelectedTenantId(data.tenantMembership.tenantId);
         }
 
-        setRetryCount(0);
+        retryCountRef.current = 0;
       } catch (err) {
         productionLogger.warn("[Enrichment] Failed:", err);
 
-        if (retryCount < MAX_RETRIES) {
-          setRetryCount((prev) => prev + 1);
-          // Schedule retry
-          setTimeout(() => enrichUser(userId), RETRY_DELAY_MS);
+        if (retryCountRef.current < MAX_RETRIES) {
+          retryCountRef.current += 1;
+          // Schedule retry with stable reference
+          const retry = () => enrichUser(userId);
+          setTimeout(retry, RETRY_DELAY_MS);
         } else {
           setEnrichmentError(
             err instanceof Error ? err : new Error("Failed to load user profile")
@@ -125,12 +127,12 @@ export const UserEnrichmentProvider: React.FC<{
         setIsLoadingEnrichment(false);
       }
     },
-    [isHealthy, retryCount, baseUser?.email]
+    [isHealthy, baseUser?.email]
   );
 
   const refreshEnrichment = useCallback(async () => {
     if (baseUser?.id) {
-      setRetryCount(0);
+      retryCountRef.current = 0;
       await enrichUser(baseUser.id);
     }
   }, [baseUser?.id, enrichUser]);
@@ -156,7 +158,7 @@ export const UserEnrichmentProvider: React.FC<{
       setSelectedCompanyId(null);
       setEnrichmentError(null);
       setIsLoadingEnrichment(false);
-      setRetryCount(0);
+      retryCountRef.current = 0;
     }
   }, [isAuthenticated, baseUser?.id, baseUser?.email, baseUser?.emailVerified, enrichUser]);
 
@@ -215,11 +217,11 @@ export const UserEnrichmentProvider: React.FC<{
   );
 
   // Show error page if enrichment failed after retries (but user IS authenticated)
-  if (isAuthenticated && enrichmentError && !isLoadingEnrichment && retryCount >= MAX_RETRIES) {
+  if (isAuthenticated && enrichmentError && !isLoadingEnrichment && retryCountRef.current >= MAX_RETRIES) {
     return (
       <DatabaseErrorPage
         onRetry={() => {
-          setRetryCount(0);
+          retryCountRef.current = 0;
           if (baseUser?.id) enrichUser(baseUser.id);
         }}
         error={enrichmentError}

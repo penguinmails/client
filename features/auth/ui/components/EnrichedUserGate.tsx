@@ -71,9 +71,9 @@ function EmailVerificationAlert({ email }: { email: string }) {
           token: "temp-token",
         }),
       });
-    } catch {
-      // TODO: Implement proper error logging
-      // console.error("Failed to resend verification email", error);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to resend verification email", error);
     }
   };
 
