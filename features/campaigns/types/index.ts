@@ -8,6 +8,10 @@ import { z } from 'zod';
 import type { LucideIcon } from 'lucide-react';
 import { RefObject } from 'react';
 
+// Re-export related types
+export * from './templates';
+export * from './toolbar';
+
 // ============================================================
 // Enums & Constants
 // ============================================================
