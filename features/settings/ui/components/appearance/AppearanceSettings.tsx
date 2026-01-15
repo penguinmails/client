@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { SettingsLoadingSkeleton } from "@/shared/ui/components/settings-loading-skeleton";
-import { SettingsErrorState } from "@/shared/ui/components/settings-error-state";
-import { showAppearanceUpdateSuccess } from "@/shared/ui/components/settings-success-notification";
+import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
+import { SettingsErrorState } from "@/components/settings-error-state";
+import { showAppearanceUpdateSuccess } from "@/components/settings-success-notification";
 import { useClientPreferences } from "@features/settings/ui/context/client-preferences-context";
 import { usePreferenceSync } from "@features/settings/lib/hooks/use-preference-sync";
 import { Sun, Moon, Monitor, Loader2 } from "lucide-react";
 import React, { useState } from "react";
-import type { TableDensity } from "@/shared/utils/browser";
+import type { TableDensity } from "@/lib/utils/browser";
 import { productionLogger } from "@/lib/logger";
 
 const themeOptions = [

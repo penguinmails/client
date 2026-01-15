@@ -19,7 +19,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { addStorage, getStorageOptions } from "../integration/billing-api";
 import { type StorageOption } from "@features/billing/types";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { HardDrive, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";

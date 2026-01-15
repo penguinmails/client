@@ -27,7 +27,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 // Mock the back hook
-jest.mock("@/shared/hooks/use-back", () => ({
+jest.mock("@/hooks/use-back", () => ({
   __esModule: true,
   default: () => mockBack,
 }));

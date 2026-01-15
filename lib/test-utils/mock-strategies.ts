@@ -276,12 +276,12 @@ export const analyticsContextMock: ContextMock = {
 export const customHookMocks: HookMock[] = [
   {
     hookName: 'useMobile',
-    module: '@/shared/hooks/use-mobile',
+    module: '@/hooks/use-mobile',
     implementation: () => false,
   },
   {
     hookName: 'useToast',
-    module: '@/shared/hooks/use-toast',
+    module: '@/hooks/use-toast',
     implementation: () => ({
       toast: jest.fn(),
       dismiss: jest.fn(),
@@ -290,7 +290,7 @@ export const customHookMocks: HookMock[] = [
   },
   {
     hookName: 'useOnlineStatus',
-    module: '@/shared/hooks/use-online-status',
+    module: '@/hooks/use-online-status',
     implementation: () => true,
   },
 ];

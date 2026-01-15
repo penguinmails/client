@@ -1,12 +1,11 @@
 'use server';
 
 import { NextRequest } from 'next/server';
-import { ActionResult } from '@/types';
+import { ActionResult, FormHandlerParams } from '@/types/api';
 import { productionLogger } from '@/lib/logger';
 import { getUserProfile, updateUserProfile, uploadAvatar, updateProfile } from './profile';
-import { FormHandlerParams } from '@/types';
 import type { UserProfile } from './profile';
-import type { ProfileFormValues } from '@/types';
+import type { ProfileFormValues } from '@/features/settings/types/user';
 
 interface NotificationData {
   emailNotifications?: boolean;
@@ -39,50 +38,23 @@ export async function updateProfileData(params: FormHandlerParams<Partial<UserPr
 export async function uploadUserAvatar(file: File, req?: NextRequest) { return uploadAvatar(file, req); }
 export async function updateFullProfile(data: ProfileFormValues, req?: NextRequest) { return updateProfile(data, req); }
 
+import { 
+  getUserSettings as originalGetUserSettings, 
+  updateCompanyInfo as originalUpdateCompanyInfo 
+} from '@/lib/actions/settings';
+
 /**
  * Fetches general user and company settings
  */
-export async function getUserSettings(_req?: NextRequest): Promise<ActionResult<{companyInfo: {name: string; industry: string; size: string}; preferences: {timezone: string; language: string}}>> {
-  try {
-    return {
-      success: true,
-      data: {
-        companyInfo: {
-          name: 'Acme Corp',
-          industry: 'Technology',
-          size: '51-200'
-        },
-        preferences: {
-          timezone: 'UTC',
-          language: 'en'
-        }
-      }
-    };
-  } catch (error) {
-    productionLogger.error("Error fetching user settings:", error);
-    return {
-      success: false,
-      error: "Failed to fetch user settings"
-    };
-  }
+export async function getUserSettings(req?: NextRequest) {
+  return originalGetUserSettings(req);
 }
 
 /**
  * Updates company information
  */
-export async function updateCompanyInfo(data: Record<string, unknown>, _req?: NextRequest): Promise<ActionResult<Record<string, unknown>>> {
-  try {
-    return {
-      success: true,
-      data: { ...data, updatedAt: new Date() }
-    };
-  } catch (error) {
-    productionLogger.error("Error updating company info:", error);
-    return {
-      success: false,
-      error: "Failed to update company information"
-    };
-  }
+export async function updateCompanyInfo(data: Record<string, unknown>, req?: NextRequest) {
+  return originalUpdateCompanyInfo(data, req);
 }
 
 /**

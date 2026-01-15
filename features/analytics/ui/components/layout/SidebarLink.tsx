@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { NavLinkItem } from "@/types/nav-link";
 import { usePathname, useRouter } from "next/navigation";
 import { SidebarMenuButton } from "@/components/ui/sidebar";

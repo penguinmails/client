@@ -34,7 +34,7 @@ export {
 export {
   SettingsErrorBoundary,
   SettingsErrorFallback,
-} from './common/SettingsErrorBoundary';
+} from "@/components/settings/SettingsErrorBoundary";
 export { SettingsErrorState } from './common/SettingsErrorState';
 export { SettingsLoadingSkeleton } from './common/SettingsLoadingSkeleton';
 export { SettingsPageWrapper } from './common/SettingsPageWrapper';

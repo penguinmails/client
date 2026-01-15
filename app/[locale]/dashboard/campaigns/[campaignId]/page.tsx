@@ -6,7 +6,7 @@ import StatsTab from "@features/campaigns/ui/components/campaignData/StatsTab";
 import CampaignSKeleton from "@features/campaigns/ui/components/steps/CampaignSKeleton";
 import { TabsContent } from "@/components/ui/tabs";
 import { getCampaign } from "@features/campaigns/actions";
-import { CampaignStatusEnum } from "@/types";
+import { CampaignsStatusEnum } from "@/types";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -35,12 +35,12 @@ async function CampaignContent({ campaignId }: { campaignId: string }) {
   const campaignDisplay = {
     id: parseInt(campaign.id.toString()),
     name: campaign.name,
-    status: (campaign.status || "active") as CampaignStatusEnum,
+    status: (campaign.status || "active") as CampaignsStatusEnum,
     mailboxes: 1, // Default value since not in Campaign type
     leadsSent: campaign.metrics?.recipients?.sent || 0,
     replies: campaign.metrics?.replies?.total || 0,
-    lastSent: new Date(campaign.lastUpdated).toLocaleDateString(),
-    createdDate: campaign.lastUpdated,
+    lastSent: campaign.lastUpdated ? new Date(campaign.lastUpdated).toLocaleDateString() : 'N/A',
+    createdDate: campaign.lastUpdated || '',
     assignedMailboxes: [campaign.fromEmail],
     openRate: campaign.metrics?.opens?.rate || 0,
     replyRate: campaign.metrics?.replies?.rate || 0,

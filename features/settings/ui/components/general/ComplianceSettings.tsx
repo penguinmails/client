@@ -18,9 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SettingsLoadingSkeleton } from "@/shared/ui/components/settings-loading-skeleton";
-import { SettingsErrorState } from "@/shared/ui/components/settings-error-state";
-import { showSaveSuccess } from "@/shared/ui/components/settings-success-notification";
+import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
+import { SettingsErrorState } from "@/components/settings-error-state";
+import { showSaveSuccess } from "@/components/settings-success-notification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -33,7 +33,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useServerAction } from "@/shared/hooks/use-server-action";
+import { useServerAction } from "@/hooks/use-server-action";
 import {
   getComplianceSettings,
   updateComplianceSettings,

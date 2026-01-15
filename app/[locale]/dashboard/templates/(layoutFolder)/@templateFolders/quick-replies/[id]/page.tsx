@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { listQuickReplies } from "@features/campaigns/actions";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Template } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

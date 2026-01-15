@@ -38,7 +38,7 @@ export {
 export {
   useAuthState,
   useTwoFactorAuth,
-} from '@/shared/hooks';
+} from '@/hooks';
 
 // Operations - Public auth operations
 export {

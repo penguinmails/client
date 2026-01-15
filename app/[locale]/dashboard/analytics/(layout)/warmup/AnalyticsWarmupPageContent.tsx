@@ -1,8 +1,8 @@
 "use client";
 
 import { AnalyticsNavLinks, EmailMailboxesTable, WarmupAnalyticsFilter, WarmUpLineChart } from "@/features/analytics/ui/components";
-import { spacing } from "@/shared/config/design-tokens";
-import { cn } from "@/shared/utils";
+import { spacing } from "@/lib/config/design-tokens";
+import { cn } from "@/lib/utils";
 
 /**
  * Analytics Warmup Page Content

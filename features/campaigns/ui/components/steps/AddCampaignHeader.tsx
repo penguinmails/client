@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button/button";
 import { useAddCampaignContext } from "@features/campaigns/ui/context/add-campaign-context";
-import useBack from "@/shared/hooks/use-back";
+import useBack from "@/hooks/use-back";
 import { ArrowLeft } from "lucide-react";
 function AddCampaignHeader({ children }: { children?: React.ReactNode }) {
   const { currentStep, steps, currentStepData } = useAddCampaignContext();

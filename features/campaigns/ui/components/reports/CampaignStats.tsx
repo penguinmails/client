@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UnifiedStatsCard } from "@/shared/design-system/components";
+import { UnifiedStatsCard } from "@/components/design-system";
 import { 
   AlertTriangle,
   Eye,
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useCampaignStats } from "@features/campaigns/lib/hooks/use-campaign-stats";
 import { AnalyticsCalculator } from "@features/analytics/lib/calculator";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 
 // ============================================================
 // Types

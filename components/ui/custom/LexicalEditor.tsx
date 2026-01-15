@@ -33,7 +33,7 @@ import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListNode, ListItemNode } from "@lexical/list";
 import { LinkNode, AutoLinkNode } from "@lexical/link";
 import LexicalToolbar from "./lexical-toolbar";
-import lexicalEditorTheme from "@/shared/theme/lexicalEditorTheme";
+import lexicalEditorTheme from "@/lib/theme/lexicalEditorTheme";
 import LexicalLinkClickHandler from "./lexical-link-handler";
 import { productionLogger } from "@/lib/logger";
 

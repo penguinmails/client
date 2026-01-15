@@ -72,7 +72,7 @@ function EditLeadListButton({ list }: { list: LeadListData }) {
           <Pencil className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-lg">
         <DialogClose />
         <DialogHeader>
           <DialogTitle>Edit Lead List</DialogTitle>

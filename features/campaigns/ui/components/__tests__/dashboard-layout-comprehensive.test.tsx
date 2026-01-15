@@ -13,7 +13,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
 // Import the REAL component to test
-import { DashboardLayout } from '@/shared/design-system/components/dashboard-layout';
+import { DashboardLayout } from '@/components/design-system/dashboard-layout';
 import { setupDashboardTest } from '@/lib/test-utils/setup-helpers';
 
 // Import REAL UI components that are used by the component
@@ -69,7 +69,7 @@ jest.mock('@niledatabase/react', () => ({
 }));
 
 // Mock the child components that are imported by DashboardHeader
-jest.mock('@/shared/layout/components/DashboardHeader', () => {
+jest.mock('@/components/layout/DashboardHeader', () => {
   return function MockDashboardHeader() {
     return (
       <header data-testid="dashboard-header">

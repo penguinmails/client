@@ -1,6 +1,6 @@
 
 import { AuthProvider } from "@features/auth/ui/context/auth-context";
-import { AppProviders } from "@/shared/components/providers";
+import { AppProviders } from "@/components/providers";
 
 export default function LocaleLayout({
   children,

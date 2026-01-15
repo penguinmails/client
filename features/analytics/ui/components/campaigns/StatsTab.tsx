@@ -1,5 +1,5 @@
 "use client";
-import { StatsCard as KpiCard } from "@/shared/ui/components/stats-card";
+import { StatsCard as KpiCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {

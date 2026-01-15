@@ -2,7 +2,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { ArrowRight, CheckCircle, Mail } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useFormContext } from "react-hook-form";

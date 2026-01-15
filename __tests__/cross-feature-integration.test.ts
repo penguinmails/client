@@ -27,9 +27,9 @@ describe('Cross-Feature Integration Tests', () => {
       
       // Test that features can import from shared paths
       const sharedComponentPaths = [
-        '@/shared/components',
+        '@/components',
         '@/shared/layout',
-        '@/shared/theme',
+        '@/lib/theme',
         '@/shared/design-system',
         '@/shared/ui'
       ];

@@ -19,8 +19,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Calendar, CheckIcon, Search, Server, X } from "lucide-react";
 import DatePicker from "@/components/ui/custom/DatePicker";
-import { availableMailboxes } from "@/shared/mocks/providers";
-import { cn } from "@/shared/utils";
+import { availableMailboxes } from "@/lib/mocks/providers";
+import { cn } from "@/lib/utils";
 
 // ============================================================
 // Types (Matching Legacy)

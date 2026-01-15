@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button/button";
 import { ArrowUp } from "lucide-react";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 
 export default function GoToTopButton() {
   const [isVisible, setIsVisible] = useState(false);

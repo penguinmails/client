@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { logError } from '@/lib/nile/errors';
 
 import createMiddleware from 'next-intl/middleware';
-import {routing} from '@/shared/config/i18n/routing';
+import {routing} from '@/lib/config/i18n/routing';
 
 // Security headers configuration
 const SECURITY_HEADERS = {

@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { defaultAvatars, fallbackImageUrl, avatarUtils } from "@/shared/config/avatar-options";
+import { defaultAvatars, fallbackImageUrl, avatarUtils } from "@/lib/config/avatar-options";
 
 interface AvatarSelectorProps {
   currentAvatarUrl?: string;

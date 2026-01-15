@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSignIn, useSignUp } from "@niledatabase/react";
-import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
+import { useSafeNavigation } from "@/hooks/use-safe-navigation";
 import { developmentLogger } from "@/lib/logger";
 import { toast } from "sonner";
 import { checkSession, performLogout } from "../../lib/auth-operations";

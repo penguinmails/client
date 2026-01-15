@@ -5,7 +5,7 @@ import { Input as CustomInput } from "../../../components/ui/input/input";
 
 
 // Mock cn utility (if it's complex)
-jest.mock("@/shared/utils", () => ({
+jest.mock("@/lib/utils", () => ({
   cn: (...classes: string[]) => classes.filter(Boolean).join(" "),
 }));
 

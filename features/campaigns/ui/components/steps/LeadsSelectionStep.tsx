@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAddCampaignContext } from "@features/campaigns/ui/context/add-campaign-context";
 
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Users } from "lucide-react";
 
 // Lead List Interface

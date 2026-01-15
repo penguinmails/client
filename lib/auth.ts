@@ -9,7 +9,7 @@ import { getCachedSession, getCurrentUser as getUncachedCurrentUser } from '@/li
 import { productionLogger } from '@/lib/logger';
 import {
   NileClientUser
-} from '@/features/auth/types/nile-client';
+} from '@/lib/nile/types';
 
 /**
  * Get current authenticated user with request context

@@ -1,5 +1,6 @@
 import { ActiveSession, auth } from "@niledatabase/client";
 import { AuthUser, TenantMembership } from "../types/auth-user";
+import { CompanyInfo } from "@/types";
 import { productionLogger } from "@/lib/logger";
 import { 
   fetchUserProfile, 
@@ -87,7 +88,7 @@ export async function fetchUserEnrichment(userId: string): Promise<Partial<AuthU
       tenant: {
         id: primaryTenant.id,
         name: primaryTenant.name,
-        companies: companiesData.companies as any[], // TODO: strictly type this against CompanyInfo
+        companies: (companiesData.companies || []) as CompanyInfo[],
       }
     } : undefined;
 

@@ -12,7 +12,7 @@ jest.mock("next-intl", () => ({
 // Create a file-scoped mock for safe navigation to avoid global pollution
 const mockSafePush = jest.fn();
 
-jest.mock("@/shared/hooks/use-safe-navigation", () => ({
+jest.mock("@/hooks/use-safe-navigation", () => ({
   useSafeNavigation: () => ({
     safePush: mockSafePush,
   }),

@@ -85,7 +85,7 @@ const tableMeta: Meta<typeof CampaignsTable> = {
   },
   decorators: [
     (Story, context) => {
-      const isDark = context.globals?.backgrounds?.value === "#1a1a2e";
+      const isDark = context.globals?.backgrounds?.value === 'dark';
       return (
         <div className={isDark ? "dark" : ""}>
           <div className="bg-background text-foreground min-h-screen p-4">

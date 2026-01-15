@@ -1,4 +1,4 @@
-import { AuthUser } from "../types/auth-user";
+
 
 export interface UserProfileResponse {
   data: {

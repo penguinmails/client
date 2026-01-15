@@ -19,7 +19,7 @@ import {
   LogOutIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { useIsMobile } from "@/shared/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@features/auth/ui/context/auth-context";
 import { productionLogger } from "@/lib/logger";
 

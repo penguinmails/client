@@ -11,7 +11,7 @@ import {
 import {
   SettingsLoadingSkeleton,
   SettingsErrorState,
-} from "@/shared/ui/components";
+} from "@/components";
 import { useState, useCallback } from "react";
 
 // Local ActionResult type to avoid import issues
@@ -55,8 +55,9 @@ function useServerAction<T = unknown, P = void>(
 import { getUserProfile } from "@features/settings/actions/profile";
 // Removed mapNileUserToFormData import as we're handling the mapping inline
 import PasswordSettingsForm from "../profile/PasswordSettingsForm";
+
 import { ProfileSettingsForm } from "../profile/ProfileSettingsForm";
-import { ProfileFormValues } from "@/types";
+import { ProfileFormValues } from "@/features/settings/types/user";
 
 
 interface AccountSettingsProps extends React.HTMLAttributes<HTMLDivElement> {

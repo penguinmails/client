@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getTemplates } from "@features/campaigns/actions/templates";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Template } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

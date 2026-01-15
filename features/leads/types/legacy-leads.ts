@@ -20,9 +20,12 @@ export interface DbLeadListRow {
 // Client types - keeping here as they're separate from leads
 import { z } from 'zod';
 
+import { Client as SharedClient } from '@/types/common';
+
 export const ClientSchema = z.object({
   id: z.number(),
   email: z.string().email(),
+  name: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   notes: z.string().optional(),
@@ -33,7 +36,7 @@ export const ClientSchema = z.object({
   updatedAt: z.date().optional(),
 });
 
-export type Client = z.infer<typeof ClientSchema>;
+export type Client = SharedClient;
 
 export enum ClientStatus {
   ACTIVE = 'active',

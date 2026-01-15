@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Settings, Shield, Zap } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 

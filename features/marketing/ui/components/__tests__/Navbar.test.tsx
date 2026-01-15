@@ -4,11 +4,11 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import Navbar from "../Navbar";
 import { useAuth } from "@features/auth/ui/context/auth-context";
-import { useIsMobile } from "@/shared/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Mock dependencies
 jest.mock("@features/auth/ui/context/auth-context");
-jest.mock("@/shared/hooks/use-mobile");
+jest.mock("@/hooks/use-mobile");
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {

@@ -4,7 +4,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { TextFormField, SelectFormField } from "@/shared/design-system/components";
+import { TextFormField, SelectFormField } from "@/components/design-system";
 import { copyText as t } from "../data/copy";
 import { ScheduleSettingsProps } from "@features/campaigns/types";
 

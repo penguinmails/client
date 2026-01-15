@@ -12,7 +12,7 @@ import { StatsCardData } from "@features/campaigns/types";
 import KpiCards from "../KpiCards";
 
 // Mock the KpiCard component
-jest.mock("@/shared/ui/components/stats-card", () => ({
+jest.mock("@/components/stats-card", () => ({
   __esModule: true,
   StatsCard: ({
     title,

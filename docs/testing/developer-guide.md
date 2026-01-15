@@ -125,7 +125,7 @@ describe('Button Component', () => {
 
 ```typescript
 import { setupDashboardTest } from '@/lib/test-utils';
-import { DashboardLayout } from '@/shared/layout/components/DashboardLayout';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 
 describe('Dashboard Component', () => {
   const dashboardTest = setupDashboardTest(DashboardLayout);
@@ -170,7 +170,7 @@ For dashboard and layout components that need sidebar context:
 
 ```typescript
 import { setupDashboardTest } from '@/lib/test-utils';
-import { DashboardLayout } from '@/shared/layout/components/DashboardLayout';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 
 const dashboardTest = setupDashboardTest(DashboardLayout);
 

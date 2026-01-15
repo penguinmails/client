@@ -25,7 +25,7 @@ This error occurred during the navigation from login page to dashboard, but even
 **Added Safe Navigation Hook:**
 
 ```typescript
-import { useSafeNavigation } from "@/shared/hooks/use-safe-navigation";
+import { useSafeNavigation } from "@/hooks/use-safe-navigation";
 const { safePush } = useSafeNavigation();
 ```
 

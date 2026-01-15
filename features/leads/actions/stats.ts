@@ -2,7 +2,7 @@
 
 import { leadsStats, leadLists } from "@/features/leads/data/mock";
 import { LeadStats } from "@/types/clients-leads";
-import { nile } from "@/app/api/[...nile]/nile";
+import { query } from "@/lib/nile/nile";
 import { getCurrentUser } from "@/lib/auth";
 import { DbLeadList, DbLeadListRow } from "@/types/clients-leads";
 import { developmentLogger, productionLogger } from "@/lib/logger";
@@ -37,13 +37,14 @@ export async function getLeadsStats(): Promise<LeadStats> {
         FROM campaign_leads c
       `;
 
+      // Use lib/nile query function which returns rows directly
       const [leadsResult, campaignResult] = await Promise.all([
-        nile.db.query(leadsQuery),
-        nile.db.query(campaignQuery)
+        query<{ total_contacts: number | string }>(leadsQuery),
+        query<{ contacts_in_campaigns: number | string }>(campaignQuery)
       ]);
 
-      const totalContacts = (leadsResult as { rows?: Array<{ total_contacts: number }> })?.rows?.[0]?.total_contacts || 0;
-      const inCampaignContacts = (campaignResult as { rows?: Array<{ contacts_in_campaigns: number }> })?.rows?.[0]?.contacts_in_campaigns || 0;
+      const totalContacts = leadsResult?.[0]?.total_contacts ? Number(leadsResult[0].total_contacts) : 0;
+      const inCampaignContacts = campaignResult?.[0]?.contacts_in_campaigns ? Number(campaignResult[0].contacts_in_campaigns) : 0;
 
       // Return calculated stats in the expected format
       return [
@@ -102,7 +103,7 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
 
     // Fetch lead lists from database
     try {
-      const result = await nile.db.query(`
+      const dbLeadLists = await query<DbLeadListRow>(`
         SELECT
           id,
           name,
@@ -110,15 +111,12 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
           description
         FROM lead_lists
         ORDER BY name
-      `);
-
-      // Map database results to expected format
-      const dbLeadLists: DbLeadList[] = (result as unknown as DbLeadListRow[]).map((row) => ({
+      `).then(rows => rows.map((row) => ({
         id: row.id,
         name: row.name,
         contacts: parseInt(String(row.contacts)) || 0,
         description: row.description || "",
-      }));
+      })));
 
       return dbLeadLists;
     } catch (dbError) {

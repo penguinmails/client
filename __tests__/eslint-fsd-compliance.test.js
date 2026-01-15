@@ -53,7 +53,7 @@ describe('FSD Compliance ESLint Rules', () => {
         // File: app/dashboard/page.tsx
         import { Button } from '@/components/ui/button';
         import { useAuth } from '@/features/auth/model/auth';
-        import { formatDate } from '@/shared/utils/date';
+        import { formatDate } from '@/lib/utils/date';
         
         export default function Dashboard() {
           return <div><Button /></div>;

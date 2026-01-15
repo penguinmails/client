@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 
 interface ChartTooltipPayloadItem {
   dataKey?: string;

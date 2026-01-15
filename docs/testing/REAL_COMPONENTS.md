@@ -53,7 +53,7 @@ jest.mock('@/lib/actions/notificationsActions', () => ({
 }));
 
 // ✅ GOOD: Mock child components but use real UI components inside
-jest.mock('@/shared/layout/components/DashboardHeader', () => {
+jest.mock('@/components/layout/DashboardHeader', () => {
   return function MockDashboardHeader() {
     return (
       <header data-testid="dashboard-header">

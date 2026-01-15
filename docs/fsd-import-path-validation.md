@@ -105,7 +105,7 @@ These break the fundamental FSD architecture and must be fixed immediately:
 import { AnalyticsData } from '@/features/analytics/types';
 
 // ✅ Solution: Move shared types to shared layer
-import { AnalyticsData } from '@/shared/types/analytics';
+import { AnalyticsData } from '@/types/analytics';
 ```
 
 #### Upward Dependencies
@@ -115,7 +115,7 @@ import { AnalyticsData } from '@/shared/types/analytics';
 import { AppConfig } from '@/app/config';
 
 // ✅ Solution: Move config to shared layer
-import { AppConfig } from '@/shared/config/app';
+import { AppConfig } from '@/lib/config/app';
 ```
 
 ### Error Violations (❌)
@@ -128,7 +128,7 @@ These violate FSD principles and should be fixed:
 import { CampaignData } from '@/features/campaigns/types';
 
 // ✅ Solution: Move shared types to shared layer
-import { CampaignData } from '@/shared/types/campaigns';
+import { CampaignData } from '@/types/campaigns';
 ```
 
 #### Old Import Paths (Auto-fixable)
@@ -157,7 +157,7 @@ import { AnalyticsChart } from '@/features/analytics';
 import { useAnalytics } from '@/features/analytics/hooks/useAnalytics';
 
 // ✅ Solution: Move hook to shared layer
-import { useAnalytics } from '@/shared/hooks/use-analytics';
+import { useAnalytics } from '@/hooks/use-analytics';
 ```
 
 ### Warning Violations (⚠️)

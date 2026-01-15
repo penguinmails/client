@@ -10,7 +10,7 @@ import React, {
   useRef,
 } from "react";
 import { useBaseAuth, BaseUser } from "./base-auth-context";
-import { useSystemHealth } from "@/shared/hooks";
+import { useSystemHealth } from "@/hooks";
 import { productionLogger } from "@/lib/logger";
 import { fetchUserEnrichment } from "../../lib/auth-operations";
 import { TenantMembership } from "../../types/auth-user";

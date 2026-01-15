@@ -14,6 +14,7 @@ export type ConversationStatus = "read" | "unread" | "archived" | "spam";
 export const ClientSchema = z.object({
   id: z.number(),
   email: z.string().email(),
+  name: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   notes: z.string().optional(),
@@ -125,15 +126,12 @@ export const EmailsTypeSchema = z
 // ============================================================
 
 // Import shared types instead of redefining
-import type { 
-  Campaign as SharedCampaign,
-  Client as SharedClient 
-} from "@/types";
+import type { Campaign, Client } from "@/types/common";
+
 
 export type Message = z.infer<typeof MessageSchema>;
 export type Conversation = z.infer<typeof ConversationSchema>;
-export type Client = SharedClient;
-export type Campaign = SharedCampaign;
+export type { Client, Campaign };
 export type Email = z.infer<typeof EmailSchema>;
 export type EmailsType = z.infer<typeof EmailsTypeSchema>;
 

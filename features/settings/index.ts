@@ -52,14 +52,14 @@ export {
 } from './ui';
 
 // Shared UI Components - Re-exported for convenience
-export { SettingsLoadingSkeleton } from '@/shared/ui/components/settings-loading-skeleton';
+export { SettingsLoadingSkeleton } from '@/components/settings-loading-skeleton';
 export {
   SettingsErrorState,
   NetworkErrorState,
   AuthErrorState,
   ValidationErrorState,
   ServerErrorState,
-} from '@/shared/ui/components/settings-error-state';
+} from '@/components/settings-error-state';
 export {
   showSuccessNotification,
   showSaveSuccess,
@@ -74,7 +74,7 @@ export {
   showSecurityUpdateSuccess,
   showAppearanceUpdateSuccess,
   showTeamMemberSuccess,
-} from '@/shared/ui/components/settings-success-notification';
+} from '@/components/settings-success-notification';
 
 // Context - Public context providers
 export {

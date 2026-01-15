@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { type MockLead as LeadList } from "@/shared/mocks/providers";
+import { type MockLead as LeadList } from "@/lib/mocks/providers";
 import { Eye } from "lucide-react";
 
 const mockListData = {

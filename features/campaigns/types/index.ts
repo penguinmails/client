@@ -78,6 +78,8 @@ export const CampaignMetricsSchema = z.object({
 
 export type CampaignMetrics = z.infer<typeof CampaignMetricsSchema>;
 
+import { Campaign as SharedCampaign } from '@/types/common';
+
 export const CampaignSchema = z.object({
   id: z.string().or(z.number()),
   name: z.string(),
@@ -86,7 +88,7 @@ export const CampaignSchema = z.object({
   fromName: z.string(),
   fromEmail: z.string().email(),
   metrics: CampaignMetricsSchema,
-  lastUpdated: z.string(),
+  lastUpdated: z.string().optional(),
   // Additional fields for compatibility
   totalRecipients: z.number().optional(),
   sent: z.number().optional(),
@@ -105,7 +107,7 @@ export const CampaignSchema = z.object({
   settings: z.record(z.string(), z.unknown()).optional(),
 });
 
-export type Campaign = z.infer<typeof CampaignSchema>;
+export type Campaign = SharedCampaign;
 
 // ============================================================
 // UI / Component Types

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UnifiedStatsCard } from "@/shared/design-system/components";
+import { UnifiedStatsCard } from "@/components/design-system";
 import { LucideIcon } from "lucide-react";
 
 // ============================================================

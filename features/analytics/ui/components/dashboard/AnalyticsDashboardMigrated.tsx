@@ -22,8 +22,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useDomainAnalyticsSummary } from "@/shared/hooks/use-domain-analytics";
-import { DomainAnalyticsData } from "@/shared/types";
+import { useDomainAnalyticsSummary } from "@/hooks/use-domain-analytics";
+import { DomainAnalyticsData } from "@/types";
 import { DomainAnalytics } from "@features/analytics/types/domain-specific";
 
 // Import migrated components

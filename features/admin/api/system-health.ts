@@ -5,7 +5,7 @@
  */
 
 import { productionLogger } from '@/lib/logger';
-import { SystemHealthStatus } from '@/shared/types';
+import { SystemHealthStatus } from '@/types';
 
 export interface AdminSystemHealthData {
   status: "healthy" | "degraded" | "unhealthy" | "unknown";

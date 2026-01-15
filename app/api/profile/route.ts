@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getUserProfile, updateUserProfile, getUserTenants } from "@/features/auth/queries";
-import { withQueryErrorCatch, withMutationErrorCatch, manualErrorResponse } from "@/shared/utils/api";
+import { withQueryErrorCatch, withMutationErrorCatch, manualErrorResponse } from "@/lib/utils/api";
 import {
   EnhancedApiResponse
 } from '@/types';

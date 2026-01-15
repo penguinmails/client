@@ -16,7 +16,7 @@ import type { LeadList } from "@features/leads/actions";
 import { ArrowUpDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import ListTableRow from "./ListTableRow";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 const listTableColumn = [
   { id: "name", label: "List Name", canSort: true },
   { id: "contacts", label: "Contacts", canSort: true },

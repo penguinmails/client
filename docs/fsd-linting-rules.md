@@ -25,7 +25,7 @@ import { useAuth } from '@/features/auth/model/auth'; // Error!
 
 // ✅ Good - Components layer importing from Shared layer
 // File: components/ui/button.tsx
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/lib/utils/cn';
 ```
 
 **Layer Hierarchy** (lower levels can import from higher levels):
@@ -49,7 +49,7 @@ import { CampaignStats } from '@/features/campaigns/ui/stats'; // Error!
 
 // ✅ Good - Using shared layer for common functionality
 // File: features/auth/ui/login-form.tsx
-import { useSharedHook } from '@/shared/hooks/use-shared-hook';
+import { useSharedHook } from '@/hooks/use-shared-hook';
 ```
 
 #### `fsd-compliance/no-business-logic-in-components`
@@ -280,7 +280,7 @@ import { LegacyUtil } from '@/features/other/legacy';
    }
    
    // components/ui/form.tsx
-   import { useAuthState } from '@/shared/hooks/use-auth-state';
+   import { useAuthState } from '@/hooks/use-auth-state';
    ```
 
 ### Fixing Cross-Feature Imports
@@ -299,7 +299,7 @@ import { LegacyUtil } from '@/features/other/legacy';
    }
    
    // features/auth/ui/login.tsx
-   import { formatDate } from '@/shared/utils/date';
+   import { formatDate } from '@/lib/utils/date';
    ```
 
 ### Fixing Style Violations
@@ -335,7 +335,7 @@ import { LegacyUtil } from '@/features/other/legacy';
 // ✅ Good import patterns
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/features/auth/model/auth';
-import { formatDate } from '@/shared/utils/date';
+import { formatDate } from '@/lib/utils/date';
 
 // ❌ Bad import patterns
 import { AuthButton } from '@/features/auth/ui/auth-button'; // from different feature

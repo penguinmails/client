@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useOnlineStatus } from '@/shared/hooks/use-online-status';
-import { profileFormSchema, ProfileFormValues } from '@/types';
+import { useOnlineStatus } from '@/hooks/use-online-status';
+import { profileFormSchema, ProfileFormValues } from '@/features/settings/types/user';
 import { ProfileError } from '@features/settings/actions/profile';
 import { productionLogger, developmentLogger } from '@/lib/logger';
 

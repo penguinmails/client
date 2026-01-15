@@ -5,7 +5,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { DashboardLayout } from '@/shared/design-system/components/dashboard-layout';
+import { DashboardLayout } from '@/components/design-system/dashboard-layout';
 import { setupDashboardTest } from '@/lib/test-utils/setup-helpers';
 
 // Mock the sidebar components to avoid provider requirements
