@@ -27,8 +27,12 @@ export interface BaseUser {
   emailVerified?: Date | null;
 }
 
+/** Authentication state machine */
+export type AuthState = "idle" | "authenticating" | "authenticated" | "failed";
+
 export interface BaseAuthContextValue {
   user: BaseUser | null;
+  authState: AuthState;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: Error | null;
@@ -44,8 +48,8 @@ const BaseAuthContext = createContext<BaseAuthContextValue | null>(null);
 // Constants
 // ============================================================================
 
-const SESSION_CHECK_RETRIES = 3;
-const SESSION_CHECK_DELAY_MS = 200;
+const SESSION_CHECK_DELAY_MS = 300;
+const SESSION_CHECK_MAX_ATTEMPTS = 5;
 
 // ============================================================================
 // Provider
@@ -58,7 +62,24 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const searchParams = useSearchParams();
   const { safePush } = useSafeNavigation();
 
+  // ============================================================================
+  // State - MUST be declared before callbacks that use them
+  // Start with "authenticating" to prevent race condition where
+  // ProtectedRoute redirects before init() completes
+  // ============================================================================
+  const [user, setUser] = useState<BaseUser | null>(null);
+  const [authState, setAuthState] = useState<AuthState>("authenticating");
+  const [error, setError] = useState<Error | null>(null);
+
+  const isInitialized = useRef(false);
+
+  // Derived state
+  const isLoading = authState === "authenticating";
+  const isAuthenticated = authState === "authenticated" && user !== null;
+
+  // ============================================================================
   // NileDB Hooks
+  // ============================================================================
   const signInHook = useSignIn() as unknown as {
     (credentials: {
       provider: string;
@@ -94,7 +115,7 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } catch {
         toast.success("Account created successfully!", { duration: 4000 });
       }
-      setIsLoading(false);
+      setAuthState("idle");
     },
     []
   );
@@ -111,7 +132,7 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       setError(error);
     }
-    setIsLoading(false);
+    setAuthState("failed");
   }, []);
 
   const signUpHook = useSignUp({
@@ -119,34 +140,24 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     onError: signUpErrorCallback,
   });
 
-  // State
-  const [user, setUser] = useState<BaseUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const isInitialized = useRef(false);
-
   // ============================================================================
-  // Session Check with Retry (fixes timing issue)
+  // Session Check with Retry (for post-login cookie propagation)
   // ============================================================================
-  const checkSessionWithRetry = useCallback(async (): Promise<{
-    id: string;
-    email: string;
-    emailVerified: Date | null;
-  } | null> => {
-    for (let attempt = 0; attempt < SESSION_CHECK_RETRIES; attempt++) {
+  const waitForSession = useCallback(async (email: string): Promise<BaseUser | null> => {
+    for (let attempt = 0; attempt < SESSION_CHECK_MAX_ATTEMPTS; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, SESSION_CHECK_DELAY_MS));
       const session = await checkSession();
       if (session) {
-        return session;
-      }
-      // Wait before next attempt (except on last try)
-      if (attempt < SESSION_CHECK_RETRIES - 1) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, SESSION_CHECK_DELAY_MS)
-        );
+        return {
+          id: session.id,
+          email: session.email,
+          emailVerified: session.emailVerified,
+        };
       }
     }
-    return null;
+    // Fallback: return user with email but no ID (session not yet available)
+    developmentLogger.warn("Session not found after login, using email only");
+    return { id: "", email, emailVerified: null };
   }, []);
 
   // ============================================================================
@@ -155,56 +166,37 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = useCallback(
     async (email: string, password: string) => {
-      setIsLoading(true);
+      setAuthState("authenticating");
       setError(null);
 
       try {
         await signInHook({ provider: "credentials", email, password });
 
-        // signInHook succeeded - set a temporary user state
-        // The actual session will be verified on dashboard load
-        setUser({
-          id: "pending", // Will be updated when session is fully ready
-          email: email,
-          emailVerified: null,
-        });
+        // Wait for session to be available before redirecting
+        const sessionUser = await waitForSession(email);
+        setUser(sessionUser);
+        setAuthState("authenticated");
 
-        // Add a small delay to allow session cookie to propagate
-        await new Promise((resolve) => setTimeout(resolve, 300));
-
-        // Redirect to dashboard - the ProtectedRoute will handle session verification
+        // Now redirect
         const next = searchParams.get("next") || "/dashboard";
         await safePush(next);
-
-        // Try to get the actual session in background (non-blocking)
-        checkSessionWithRetry().then((session) => {
-          if (session) {
-            setUser({
-              id: session.id,
-              email: session.email,
-              emailVerified: session.emailVerified,
-            });
-          }
-        });
       } catch (err) {
         const loginError =
           err instanceof Error ? err : new Error("Login failed");
         setError(loginError);
+        setAuthState("failed");
         setUser(null);
         throw loginError;
-      } finally {
-        setIsLoading(false);
       }
     },
-    [signInHook, searchParams, safePush, checkSessionWithRetry]
+    [signInHook, searchParams, safePush, waitForSession]
   );
 
   const signup = useCallback(
     async (email: string, password: string, name: string) => {
-      setIsLoading(true);
+      setAuthState("authenticating");
       setError(null);
       try {
-        // NileDB types don't include 'name', but the API accepts it
         await signUpHook({ email, password, name } as Parameters<typeof signUpHook>[0] & { name: string });
       } catch (err) {
         throw err;
@@ -215,21 +207,28 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = useCallback(async () => {
     setUser(null);
+    setAuthState("idle");
     await performLogout();
     await new Promise((resolve) => setTimeout(resolve, 50));
     router.push("/");
   }, [router]);
 
-  const clearError = useCallback(() => setError(null), []);
+  const clearError = useCallback(() => {
+    setError(null);
+    if (authState === "failed") {
+      setAuthState("idle");
+    }
+  }, [authState]);
 
   // ============================================================================
-  // Initial Session Load
+  // Initial Session Load (on app mount)
   // ============================================================================
   useEffect(() => {
     if (isInitialized.current) return;
     isInitialized.current = true;
 
     const init = async () => {
+      // Already in "authenticating" state from initial useState
       try {
         const session = await checkSession();
         if (session) {
@@ -238,6 +237,7 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
             email: session.email,
             emailVerified: session.emailVerified,
           });
+          setAuthState("authenticated");
 
           // Redirect if on public page
           const currentPath = window.location.pathname;
@@ -253,11 +253,12 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
             const next = searchParams.get("next") || "/dashboard";
             await safePush(next);
           }
+        } else {
+          setAuthState("idle");
         }
       } catch (err) {
         developmentLogger.error("Failed to initialize session", err);
-      } finally {
-        setIsLoading(false);
+        setAuthState("idle");
       }
     };
 
@@ -265,51 +266,13 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [searchParams, safePush]);
 
   // ============================================================================
-  // Background Session Polling (when user.id is "pending")
-  // ============================================================================
-  useEffect(() => {
-    if (user?.id !== "pending") return;
-
-    let attempts = 0;
-    const maxAttempts = 10;
-    const pollInterval = 500; // ms
-
-    const pollSession = async () => {
-      attempts++;
-      const session = await checkSession();
-      
-      if (session) {
-        setUser({
-          id: session.id,
-          email: session.email,
-          emailVerified: session.emailVerified,
-        });
-        return true; // Stop polling
-      }
-      
-      return attempts >= maxAttempts; // Stop if max attempts reached
-    };
-
-    const poll = async () => {
-      const shouldStop = await pollSession();
-      if (!shouldStop) {
-        setTimeout(poll, pollInterval);
-      }
-    };
-
-    // Start polling after a short delay
-    const timeoutId = setTimeout(poll, pollInterval);
-
-    return () => clearTimeout(timeoutId);
-  }, [user?.id]);
-
-  // ============================================================================
   // Context Value
   // ============================================================================
   const contextValue = useMemo<BaseAuthContextValue>(
     () => ({
       user,
-      isAuthenticated: !!user,
+      authState,
+      isAuthenticated,
       isLoading,
       error,
       login,
@@ -317,7 +280,7 @@ export const BaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       logout,
       clearError,
     }),
-    [user, isLoading, error, login, signup, logout, clearError]
+    [user, authState, isAuthenticated, isLoading, error, login, signup, logout, clearError]
   );
 
   return (

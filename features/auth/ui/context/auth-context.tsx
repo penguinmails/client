@@ -11,7 +11,7 @@
  * - `useEnrichment()` for enriched user data (profile, roles, tenant)
  */
 
-import React, { useMemo, useEffect, useCallback } from "react";
+import React, { useMemo, useCallback } from "react";
 import {
   BaseAuthProvider,
   useBaseAuth,
@@ -24,7 +24,7 @@ import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types";
 import { SessionProvider } from "@niledatabase/react";
 
 // ============================================================================
-// Composition Provider
+// Composition Provider (simplified - no GlobalFetchInterceptor)
 // ============================================================================
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -34,72 +34,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     <SessionProvider>
       <BaseAuthProvider>
         <UserEnrichmentProvider>
-          <GlobalFetchInterceptor>{children}</GlobalFetchInterceptor>
+          {children}
         </UserEnrichmentProvider>
       </BaseAuthProvider>
     </SessionProvider>
   );
-};
-
-// ============================================================================
-// Global 401 Interceptor (moved from old auth-context)
-// ============================================================================
-
-const GlobalFetchInterceptor: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const { logout } = useBaseAuth();
-
-  const handleAuthError = useCallback(
-    (error: { status?: number; code?: string; message?: string }) => {
-      if (
-        error?.status === 401 ||
-        error?.code === "AUTH_REQUIRED" ||
-        error?.message?.includes("Authentication required")
-      ) {
-        logout();
-        return true;
-      }
-      return false;
-    },
-    [logout]
-  );
-
-  useEffect(() => {
-    const originalFetch = window.fetch;
-
-    window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-      try {
-        const response = await originalFetch(input, init);
-
-        const url = typeof input === "string" ? input : input.toString();
-        const isAuthCallback =
-          url.includes("/api/auth/callback/") || url.includes("/api/auth/csrf");
-
-        if (isAuthCallback) {
-          return response;
-        }
-
-        const isAuthError =
-          response.status === 401 ||
-          response.headers.get("X-Auth-Error") === "true";
-
-        if (isAuthError) {
-          handleAuthError({ status: 401, message: "Authentication required" });
-        }
-
-        return response;
-      } catch (error) {
-        throw error;
-      }
-    };
-
-    return () => {
-      window.fetch = originalFetch;
-    };
-  }, [handleAuthError]);
-
-  return <>{children}</>;
 };
 
 // ============================================================================
@@ -210,4 +149,3 @@ export const useAuth = (): AuthContextValue => {
 
 export { useBaseAuth } from "./base-auth-context";
 export { useEnrichment } from "./enrichment-context";
-
