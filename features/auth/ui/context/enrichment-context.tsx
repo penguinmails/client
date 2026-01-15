@@ -81,7 +81,9 @@ export const UserEnrichmentProvider: React.FC<{
   const [isLoadingEnrichment, setIsLoadingEnrichment] = useState(false);
   const [enrichmentError, setEnrichmentError] = useState<Error | null>(null);
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
+    null
+  );
   const retryCountRef = useRef(0);
 
   // ============================================================================
@@ -101,7 +103,7 @@ export const UserEnrichmentProvider: React.FC<{
         setEnrichedUser({
           id: userId,
           email: baseUser?.email || "",
-          ...data as Partial<EnrichedUser>,
+          ...(data as Partial<EnrichedUser>),
         });
 
         // Auto-select tenant
@@ -120,7 +122,9 @@ export const UserEnrichmentProvider: React.FC<{
           setTimeout(retry, RETRY_DELAY_MS);
         } else {
           setEnrichmentError(
-            err instanceof Error ? err : new Error("Failed to load user profile")
+            err instanceof Error
+              ? err
+              : new Error("Failed to load user profile")
           );
         }
       } finally {
@@ -160,7 +164,13 @@ export const UserEnrichmentProvider: React.FC<{
       setIsLoadingEnrichment(false);
       retryCountRef.current = 0;
     }
-  }, [isAuthenticated, baseUser?.id, baseUser?.email, baseUser?.emailVerified, enrichUser]);
+  }, [
+    isAuthenticated,
+    baseUser?.id,
+    baseUser?.email,
+    baseUser?.emailVerified,
+    enrichUser,
+  ]);
 
   // ============================================================================
   // Derived Values
@@ -217,7 +227,12 @@ export const UserEnrichmentProvider: React.FC<{
   );
 
   // Show error page if enrichment failed after retries (but user IS authenticated)
-  if (isAuthenticated && enrichmentError && !isLoadingEnrichment && retryCountRef.current >= MAX_RETRIES) {
+  if (
+    isAuthenticated &&
+    enrichmentError &&
+    !isLoadingEnrichment &&
+    retryCountRef.current >= MAX_RETRIES
+  ) {
     return (
       <DatabaseErrorPage
         onRetry={() => {
