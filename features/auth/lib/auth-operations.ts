@@ -1,6 +1,14 @@
 import { ActiveSession, auth } from "@niledatabase/client";
 import { AuthUser, TenantMembership } from "../types/auth-user";
 import { productionLogger } from "@/lib/logger";
+import { 
+  fetchUserProfile, 
+  fetchUserTenants, 
+  fetchUserCompanies,
+  UserProfileResponse,
+  UserTenantsResponse,
+  UserCompaniesResponse
+} from "../api/user";
 
 /**
  * Check NileDB session - fast, hard gate for auth
@@ -34,9 +42,9 @@ export async function fetchUserEnrichment(userId: string): Promise<Partial<AuthU
   
   try {
     const [profileResponse, tenantsResponse, companiesResponse] = await Promise.all([
-      fetch("/api/profile"),
-      fetch("/api/user/tenants"),
-      fetch(`/api/users/${userId}/companies`),
+      fetchUserProfile(),
+      fetchUserTenants(),
+      fetchUserCompanies(userId),
     ]);
 
     // If any of these return 401, it means the user session is invalid
@@ -59,9 +67,9 @@ export async function fetchUserEnrichment(userId: string): Promise<Partial<AuthU
     }
 
     const [profileRes, tenantsRes, companiesRes] = await Promise.all([
-      profileResponse.json(),
-      tenantsResponse.json(),
-      companiesResponse.json(),
+      profileResponse.json() as Promise<UserProfileResponse>,
+      tenantsResponse.json() as Promise<UserTenantsResponse>,
+      companiesResponse.json() as Promise<UserCompaniesResponse>,
     ]);
 
     const profileData = profileRes.data;
@@ -79,7 +87,7 @@ export async function fetchUserEnrichment(userId: string): Promise<Partial<AuthU
       tenant: {
         id: primaryTenant.id,
         name: primaryTenant.name,
-        companies: companiesData.companies,
+        companies: companiesData.companies as any[], // TODO: strictly type this against CompanyInfo
       }
     } : undefined;
 
