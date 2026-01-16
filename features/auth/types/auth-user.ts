@@ -33,10 +33,10 @@ export interface AuthUser extends BaseUser {
   isStaff?: boolean;
   role?: string;
   profile?: UserProfile; 
-  tenants: Tenant[];
-  companies: CompanyInfo[];
-  roles: string[];
-  permissions: string[];
+  tenants?: Tenant[];
+  companies?: CompanyInfo[];
+  roles?: string[];
+  permissions?: string[];
 
   // === Alias for backward compatibility (Deprecated) ===
   displayName?: string;

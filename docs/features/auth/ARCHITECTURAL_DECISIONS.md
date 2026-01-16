@@ -59,11 +59,17 @@ The previous login flow caused error flashes. The new architecture solves this b
 await signInHook();
 redirect(); ❌ // Failed if cookies weren't ready
 
-// New Strategy (Implemented in BaseAuthProvider)
-await signInHook();
-await checkSessionWithRetry(3); // ✅ Waits for NileDB session
-await enrichUser();             // ✅ Fetches business data
-safeRedirect();
+// Refined Strategy (Implemented in SessionProvider)
+const signInMutation = useSignIn({
+  onSuccess: async () => {
+    await wait(400);                    // 1. Wait for cookie propagation
+    const user = await recoverSessionWithRetry(6, 600, true); // 2. Verify session
+    if (user) {
+      setSession(user);
+      safePush("/dashboard");           // 3. SPA Navigation
+    }
+  }
+});
 ```
 
 ### Original Implementation Checklist
