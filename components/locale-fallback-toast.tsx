@@ -11,13 +11,19 @@ interface LocaleFallbackToastProps {
  * Client component that shows a toast when an invalid locale was requested.
  * Must be rendered inside the provider tree (after Toaster is available).
  */
+import { useTranslations } from "next-intl";
+
+// ... existing code ...
+
 export function LocaleFallbackToast({ requestedLocale }: LocaleFallbackToastProps) {
+    const t = useTranslations("Components.LocaleFallbackToast");
+
     useEffect(() => {
-        toast.info("Language not available", {
-            description: `"${requestedLocale}" is not supported. Using English instead.`,
+        toast.info(t("title"), {
+            description: t("description", { locale: requestedLocale }),
             duration: 5000,
         });
-    }, [requestedLocale]);
+    }, [requestedLocale, t]);
 
     return null;
 }

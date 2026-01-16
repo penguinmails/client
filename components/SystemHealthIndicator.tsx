@@ -25,14 +25,27 @@ interface SystemHealthIndicatorProps {
  * SystemHealthIndicator component that displays the current system health status
  * and allows manual health checks.
  */
+import { useTranslations } from "next-intl";
+
+// ... existing code ...
+
 export function SystemHealthIndicator({ 
   showDetails = false, 
   className = "" 
 }: SystemHealthIndicatorProps) {
+  const t = useTranslations("Components.SystemHealth");
   const { systemHealth, checkSystemHealth, isChecking, retryInfo, manualReset } = useSystemHealthContext();
   const [showRetryModal, setShowRetryModal] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
 
+  // ... useEffect and handlers ...
+
+  // Keep logic handlers same...
+  // Just replacing rendered output
+
+  // This part needs careful replacement to keep handlers
+  // Logic remains same, only JSX changes
+  
   // Show retry modal when retry limit is reached
   useEffect(() => {
     if (retryInfo?.isAtRetryLimit && systemHealth.status === "unhealthy") {
@@ -57,6 +70,10 @@ export function SystemHealthIndicator({
   const handleManualReset = () => {
     manualReset();
     setShowRetryModal(false);
+  };
+  
+  const handleManualCheck = () => {
+    checkSystemHealth();
   };
 
   const getStatusIcon = () => {
@@ -97,7 +114,7 @@ export function SystemHealthIndicator({
       return (
         <div className="flex items-center gap-1 text-xs text-red-600">
           <AlertCircle className="h-3 w-3" />
-          <span>Retry limit reached</span>
+          <span>{t("retryLimit")}</span>
         </div>
       );
     }
@@ -105,7 +122,7 @@ export function SystemHealthIndicator({
     return (
       <div className="flex items-center gap-1 text-xs text-yellow-600">
         <Clock className="h-3 w-3" />
-        <span>{attempts}/{maxAttempts} attempts</span>
+        <span>{t("attempts", { current: attempts, max: maxAttempts })}</span>
       </div>
     );
   };
@@ -130,13 +147,13 @@ export function SystemHealthIndicator({
     }
   };
 
-  const handleManualCheck = () => {
-    checkSystemHealth();
-  };
-
   if (!showDetails && systemHealth.status === "healthy") {
     return null; // Don't show anything when healthy and details not requested
   }
+
+  const statusLabel = systemHealth.status === "healthy" ? t("healthy") :
+                      systemHealth.status === "degraded" ? t("degraded") :
+                      systemHealth.status === "unhealthy" ? t("unhealthy") : systemHealth.status;
 
   return (
     <div className={`space-y-2 ${className}`}>
@@ -147,21 +164,21 @@ export function SystemHealthIndicator({
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
                 <span className="font-medium capitalize">
-                  System {systemHealth.status}
+                  {t("system", { status: statusLabel })}
                 </span>
                 <Badge variant={getStatusVariant()}>
-                  {systemHealth.status}
+                  {statusLabel}
                 </Badge>
                 {getRetryStatusDisplay()}
               </div>
               {systemHealth.lastCheck && (
                 <span className="text-xs opacity-75">
-                  Last checked: {systemHealth.lastCheck.toLocaleTimeString()}
+                  {t("lastChecked", { time: systemHealth.lastCheck.toLocaleTimeString() })}
                 </span>
               )}
               {retryInfo?.isAtRetryLimit && retryInfo.timeUntilNextRetry > 0 && (
                 <span className="text-xs text-red-600">
-                  Next retry in: {formatBackoffTime(retryInfo.timeUntilNextRetry)}
+                  {t("nextRetry", { time: formatBackoffTime(retryInfo.timeUntilNextRetry) })}
                 </span>
               )}
             </div>
@@ -175,7 +192,7 @@ export function SystemHealthIndicator({
               className="text-xs"
             >
               <RefreshCw className={`h-3 w-3 ${isChecking ? "animate-spin" : ""}`} />
-              {isChecking ? "Checking..." : "Check Now"}
+              {isChecking ? t("checking") : t("checkNow")}
             </Button>
             {retryInfo?.isAtRetryLimit && (
               <Button
@@ -184,7 +201,7 @@ export function SystemHealthIndicator({
                 onClick={handleManualReset}
                 disabled={isRetrying}
                 className="text-xs px-2"
-                title="Manual reset - bypass retry limit"
+                title={t("manualReset")}
               >
                 <AlertCircle className="h-3 w-3" />
               </Button>

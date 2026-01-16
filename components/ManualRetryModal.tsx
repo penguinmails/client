@@ -24,6 +24,9 @@ interface ManualRetryModalProps {
   isRetrying?: boolean;
 }
 
+import { useTranslations } from "next-intl";
+// ... existing imports
+
 export function ManualRetryModal({
   isOpen,
   onClose,
@@ -31,10 +34,12 @@ export function ManualRetryModal({
   retryInfo,
   isRetrying = false
 }: ManualRetryModalProps) {
+  const t = useTranslations("Components.ManualRetryModal");
+
   const formatTime = (milliseconds: number): string => {
     const seconds = Math.ceil(milliseconds / 1000);
     if (seconds < 60) {
-      return `${seconds} second${seconds !== 1 ? 's' : ''}`;
+      return `${seconds} ${seconds !== 1 ? t("seconds") : t("second")}`;
     }
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -43,18 +48,18 @@ export function ManualRetryModal({
 
   const getRetryDelayDescription = (): string => {
     if (retryInfo.timeUntilNextRetry > 0) {
-      return `Please wait ${formatTime(retryInfo.timeUntilNextRetry)} before trying again.`;
+      return t("wait", { time: formatTime(retryInfo.timeUntilNextRetry) });
     }
-    return 'You can try again manually or wait for automatic retry.';
+    return t("manualOrWait");
   };
 
   return (
     <UnifiedModal open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <UnifiedModalContent>
         <UnifiedModalHeader>
-          <UnifiedModalTitle>Connection Issue Detected</UnifiedModalTitle>
+          <UnifiedModalTitle>{t("title")}</UnifiedModalTitle>
           <UnifiedModalDescription>
-            The system health check has encountered repeated failures.
+            {t("description")}
           </UnifiedModalDescription>
         </UnifiedModalHeader>
         
@@ -65,10 +70,10 @@ export function ManualRetryModal({
               <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5" />
               <div className="flex-1">
                 <h4 className="text-sm font-medium text-red-800">
-                  Server Connection Failed
+                  {t("serverFailed")}
                 </h4>
                 <p className="text-sm text-red-700 mt-1">
-                  Unable to connect to the server after {retryInfo.attempts} attempts.
+                  {t("serverFailedDesc", { attempts: retryInfo.attempts })}
                 </p>
               </div>
             </div>
@@ -80,14 +85,14 @@ export function ManualRetryModal({
               <Clock className="h-5 w-5 text-gray-500 mt-0.5" />
               <div className="flex-1">
                 <h4 className="text-sm font-medium text-gray-800">
-                  Automatic Retry Protection
+                  {t("retryProtection")}
                 </h4>
                 <p className="text-sm text-gray-700 mt-1">
                   {getRetryDelayDescription()}
                 </p>
                 {retryInfo.timeUntilNextRetry > 0 && (
                   <p className="text-sm text-gray-600 mt-2">
-                    Next automatic retry available in: {formatTime(retryInfo.timeUntilNextRetry)}
+                    {t("nextRetry", { time: formatTime(retryInfo.timeUntilNextRetry) })}
                   </p>
                 )}
               </div>
@@ -102,7 +107,7 @@ export function ManualRetryModal({
               disabled={isRetrying}
               className="flex-1"
             >
-              Close
+              {t("close")}
             </UnifiedButton>
             <UnifiedButton
               onClick={onRetry}
@@ -112,12 +117,12 @@ export function ManualRetryModal({
               {isRetrying ? (
                 <>
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Checking...
+                  {t("checking")}
                 </>
               ) : (
                 <>
                   <RefreshCw className="h-4 w-4 mr-2" />
-                  Manual Retry
+                  {t("manualRetry")}
                 </>
               )}
             </UnifiedButton>
@@ -126,8 +131,7 @@ export function ManualRetryModal({
           {/* Help Text */}
           <div className="text-xs text-gray-500 border-t border-gray-200 pt-3">
             <p>
-              This modal appears when the system detects repeated connection issues.
-              You can manually retry or wait for automatic retry attempts.
+              {t("help")}
             </p>
           </div>
         </div>

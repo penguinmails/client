@@ -6,7 +6,11 @@ import LinkIcon from "./IconLink";
 import { NotificationsPopover } from "@/components/notifications-popover";
 import { UserMenu } from "@/components/user-menu";
 
+import { useTranslations } from "next-intl";
+
 function Header() {
+  const t = useTranslations("Components.DashboardHeader");
+
   return (
     <header className="flex items-center justify-between p-4.5  ">
       <div className="flex items-center ">
@@ -22,20 +26,20 @@ function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
-                <a href="https://help.penguinmails.com/" target="_blank" rel="noopener noreferrer">Knowledge Base</a>
+                <a href="https://help.penguinmails.com/" target="_blank" rel="noopener noreferrer">{t("knowledgeBase")}</a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <a href="https://penguinmails.com/contact-us/" target="_blank" rel="noopener noreferrer">Support</a>
+                <a href="https://penguinmails.com/contact-us/" target="_blank" rel="noopener noreferrer">{t("support")}</a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <a href="https://help.penguinmails.com/video-tutorials" target="_blank" rel="noopener noreferrer">Video Tutorials</a>
+                <a href="https://help.penguinmails.com/video-tutorials" target="_blank" rel="noopener noreferrer">{t("videoTutorials")}</a>
               </DropdownMenuItem>
             </DropdownMenuContent>
+            <NotificationsPopover />
+            <LinkIcon href="/dashboard/settings">
+              <Settings className="w-5 h-5 font-bold group-hover:scale-110 transition-transform" />
+            </LinkIcon>
           </DropdownMenu>
-          <NotificationsPopover />
-          <LinkIcon href="/dashboard/settings">
-            <Settings className="w-5 h-5 font-bold group-hover:scale-110 transition-transform" />
-          </LinkIcon>
         </div>
         <Separator orientation="vertical" className="mx-2 -ml-1.5" />
         <UserMenu />
