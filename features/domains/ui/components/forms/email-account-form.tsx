@@ -22,7 +22,7 @@ import { EmailProvider } from "../constants";
 import {
   SelectFormField,
   TextFormField,
-} from "@/shared/design-system/components/unified-form-field";
+} from "@/components/design-system/unified-form-field";
 
 // Imported Sections
 import { PerformanceMetrics } from "./sections/performance-metrics";

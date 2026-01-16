@@ -1,5 +1,5 @@
 import React from "react";
-import { StatsCard as KpiCard } from "@/shared/ui/components/stats-card";
+import { StatsCard as KpiCard } from "@/components/stats-card";
 import { StatsCardData } from "@features/campaigns/types";
 
 interface KpiCardsProps {

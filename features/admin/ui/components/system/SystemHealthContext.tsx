@@ -11,7 +11,7 @@
 export { 
   SystemHealthProvider,
   useSystemHealthContext as useSystemHealth
-} from "@/shared/context/system-health-context";
+} from "@/context/system-health-context";
 
 // Re-export types for backward compatibility
-export type { SystemHealthStatus } from "@/shared/types";
+export type { SystemHealthStatus } from "@/types";

@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getTemplateFolders } from "@features/campaigns/actions/templates";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Copy, Edit, FolderX, MoreHorizontal, Star, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState, useEffect } from "react";

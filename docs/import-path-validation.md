@@ -132,7 +132,7 @@ The following violations require manual intervention:
 import { CampaignData } from '@/features/campaigns/types';
 
 // ✅ Solution: Move shared types to shared layer
-import { CampaignData } from '@/shared/types/campaigns';
+import { CampaignData } from '@/types/campaigns';
 ```
 
 ### Upward Dependencies
@@ -142,7 +142,7 @@ import { CampaignData } from '@/shared/types/campaigns';
 import { useAnalytics } from '@/features/analytics/hooks/useAnalytics';
 
 // ✅ Solution: Move hook to shared layer
-import { useAnalytics } from '@/shared/hooks/use-analytics';
+import { useAnalytics } from '@/hooks/use-analytics';
 ```
 
 ## Integration with CI/CD

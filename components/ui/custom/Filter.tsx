@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,

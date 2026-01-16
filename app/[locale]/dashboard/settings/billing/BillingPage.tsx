@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { appConfig as config } from "@/shared/config";
+import { appConfig as config } from "@/lib/config";
 import { getBillingDataForSettings } from "@features/billing/actions";
-import { useServerAction } from "@/shared/hooks/use-server-action";
+import { useServerAction } from "@/hooks/use-server-action";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";

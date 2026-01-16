@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./[locale]/globals.css";
-import { cn } from "@/shared/utils";
-import { CoreProviders } from "@/shared/components/core-providers";
+import { cn } from "@/lib/utils";
+import { CoreProviders } from "@/components/core-providers";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { Toaster } from "sonner";
-import { routing } from "@/shared/config/i18n/routing";
-import { LocaleFallbackToast } from "@/shared/components/locale-fallback-toast";
-import { ChunkErrorHandler } from "@/shared/components";
+import { routing } from "@/lib/config/i18n/routing";
+import { LocaleFallbackToast } from "@/components/locale-fallback-toast";
+import { ChunkErrorHandler } from "@/components";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

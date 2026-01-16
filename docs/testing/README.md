@@ -189,7 +189,7 @@ describe('Contact Form', () => {
 
 ```typescript
 import { setupDashboardTest } from '@/lib/test-utils';
-import { DashboardLayout } from '@/shared/layout/components/DashboardLayout';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 
 describe('Dashboard Layout', () => {
   const dashboardTest = setupDashboardTest(DashboardLayout);

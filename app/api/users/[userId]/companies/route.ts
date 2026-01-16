@@ -7,7 +7,7 @@
 import { NextRequest } from "next/server";
 import { getUserCompanies } from "@/features/auth/lib/companies";
 import { requireAuth } from "@/features/auth/queries";
-import { withQueryErrorCatch } from "@/shared/utils/api";
+import { withQueryErrorCatch } from "@/lib/utils/api";
 import { developmentLogger } from "@/lib/logger";
 
 export async function GET(

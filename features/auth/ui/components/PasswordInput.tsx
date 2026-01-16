@@ -2,11 +2,11 @@
 
 import * as React from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { cn, debounce } from "@/shared/utils";
+import { cn, debounce } from "@/lib/utils";
 import {
   calculatePasswordStrength,
   type PasswordStrength,
-} from "@/shared/validation";
+} from "@/lib/validation";
 import { Input } from "@/components/ui/input/input";
 import { Button } from "@/components/ui/button/button";
 import { Label } from "@/components/ui/label";

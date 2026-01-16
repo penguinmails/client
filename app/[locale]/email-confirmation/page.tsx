@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { User } from "lucide-react";
 import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
 import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate";
-import { EmailConfirmationView } from "./EmailConfirmationView";
+import { EmailConfirmationView } from "@/features/auth/ui/email-confirmation-view";
 import { useTranslations } from "next-intl";
 
 export default function EmailConfirmationPage() {

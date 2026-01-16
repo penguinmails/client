@@ -1,4 +1,4 @@
-import { notificationStyles } from "@/shared/ui/theme";
+import { notificationStyles } from "@/lib/theme/ui";
 import { Notification } from "@/types/notification";
 import { Clock, CheckCircle, XCircle, AlertTriangle, Info } from "lucide-react";
 

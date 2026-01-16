@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button/button";
 import { useAddDomainContext } from "@features/domains/ui/context/add-domain-context";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight, Loader2, Server } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";

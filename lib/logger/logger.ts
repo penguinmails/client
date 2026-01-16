@@ -6,13 +6,13 @@
  * Part of the FSD shared layer.
  */
 
-import { getEnvironment } from '@/shared/config/env';
+import { getEnvironment } from '@/lib/config/env';
 import type { Logger, LoggerConfig, LogLevel } from './types';
 
 /**
  * Get environment helper for test compatibility
  */
-export { getEnvironment } from '@/shared/config/env';
+export { getEnvironment } from '@/lib/config/env';
 
 /**
  * Safe logger implementation with graceful fallbacks

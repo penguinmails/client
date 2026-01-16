@@ -9,7 +9,7 @@ jest.mock('next-intl/routing', () => ({
 }));
 
 // Mock the actual routing module that LanguageSwitcher imports
-jest.mock('@/shared/config/i18n/routing', () => ({
+jest.mock('@/lib/config/i18n/routing', () => ({
   routing: {
     locales: ['en', 'es']
   }

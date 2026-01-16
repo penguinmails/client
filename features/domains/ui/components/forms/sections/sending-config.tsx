@@ -3,7 +3,7 @@
 import { useFormContext } from "react-hook-form";
 import {
     SelectFormField,
-} from "@/shared/design-system/components/unified-form-field";
+} from "@/components/design-system/unified-form-field";
 import { WarmupStatus } from "@/types";
 import { emailAccountCopy } from "../../copy";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";

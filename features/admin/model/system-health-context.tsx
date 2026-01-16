@@ -9,7 +9,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { productionLogger, developmentLogger } from "@/lib/logger";
-import { SystemHealthStatus } from "@/shared/types";
+import { SystemHealthStatus } from "@/types";
 import { fetchAdminSystemHealth, AdminSystemHealthData } from "../api/system-health";
 
 export interface AdminSystemHealthContextType {

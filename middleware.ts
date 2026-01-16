@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { logError } from '@/lib/nile/errors';
 
 import createMiddleware from 'next-intl/middleware';
-import {routing} from '@/shared/config/i18n/routing';
+import {routing} from '@/lib/config/i18n/routing';
 
 // Security headers configuration
 const SECURITY_HEADERS = {
@@ -20,8 +20,9 @@ const SECURITY_HEADERS = {
 };
 
 // Rate limiting configuration
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const RATE_LIMIT_MAX_REQUESTS = 100; // Max requests per window
+const IS_DEV = process.env.NODE_ENV !== 'production';
+const RATE_LIMIT_WINDOW_MS = IS_DEV ? 1 * 60 * 1000 : 15 * 60 * 1000; // 1 min in dev, 15 min in prod
+const RATE_LIMIT_MAX_REQUESTS = IS_DEV ? 1000 : 100; // 1000 in dev, 100 in prod
 
 // Rate limiting storage (in-memory for development)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();

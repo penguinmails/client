@@ -6,7 +6,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { testConnection } from "@/shared/queries/server";
+import { testConnection } from "@/lib/queries/server";
 import { getRedisClient } from "@/lib/cache";
 import { productionLogger } from "@/lib/logger";
 import { getCachedSession } from "@/lib/nile/nile";

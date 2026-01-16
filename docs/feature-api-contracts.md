@@ -258,7 +258,7 @@ export type { TeamMember, TeamRole, TeamInvitation } from './types';
 3. **From shared layers**:
    ```typescript
    import { Button } from '@/components/ui/button';
-   import { useSystemHealth } from '@/shared/hooks/use-system-health';
+   import { useSystemHealth } from '@/hooks/use-system-health';
    ```
 
 ### ❌ Forbidden Imports

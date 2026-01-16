@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Client } from 'pg';
-import { createNileConfig } from '@/shared/config';
+import { createNileConfig } from '@/lib/config';
 import {
     generateAnalyticsCacheKey,
     getAnalyticsCache,
     setAnalyticsCache,
     CACHE_TTL
-} from '@/shared/utils/analytics/cache';
+} from '@/lib/utils/analytics/cache';
 import { DomainAnalytics } from '@features/analytics/types/domain-specific';
 import { productionLogger } from '@/lib/logger';
 import {

@@ -2,14 +2,14 @@
 import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button/button";
-import { SettingsLoadingSkeleton } from "@/shared/ui/components/settings-loading-skeleton";
-import { SettingsErrorState } from "@/shared/ui/components/settings-error-state";
-import { showSecurityUpdateSuccess } from "@/shared/ui/components/settings-success-notification";
+import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
+import { SettingsErrorState } from "@/components/settings-error-state";
+import { showSecurityUpdateSuccess } from "@/components/settings-success-notification";
 import { useTwoAuthContext } from "./TwoFactorAuthSwitch";
 import { AlertTriangle, Check, Shield, Loader2, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/shared/utils";
-import { useServerAction } from "@/shared/hooks/use-server-action";
+import { cn } from "@/lib/utils";
+import { useServerAction } from "@/hooks/use-server-action";
 import { getSecurityRecommendations } from "@features/settings/actions";
 import { productionLogger } from "@/lib/logger";
 

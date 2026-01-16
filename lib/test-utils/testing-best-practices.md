@@ -130,7 +130,7 @@ import { Button } from '@/components/ui/button/button';
 jest.mock('@/components/layout/DashboardHeader', () => 'div');
 
 // ✅ CORRECT - Use real layout components
-import { DashboardHeader } from '@/shared/layout/components/DashboardHeader';
+import { DashboardHeader } from '@/components/layout/DashboardHeader';
 ```
 
 ## Testing Patterns - Updated with Learnings
@@ -161,7 +161,7 @@ describe('Button Component', () => {
 
 ```typescript
 import { setupDashboardTest, screen } from '@/lib/test-utils';
-import { DashboardLayout } from '@/shared/layout/components/DashboardLayout';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 
 describe('DashboardLayout', () => {
   const dashboardTest = setupDashboardTest(DashboardLayout);

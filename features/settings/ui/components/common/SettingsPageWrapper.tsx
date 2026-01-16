@@ -1,11 +1,13 @@
 "use client";
 
 import { ReactNode, Suspense } from "react";
-import { SettingsErrorBoundary } from "./SettingsErrorBoundary";
+import {
+  SettingsErrorBoundary,
+} from "@/components/settings/SettingsErrorBoundary";
 import { SettingsLoadingSkeleton } from "./SettingsLoadingSkeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { WifiOff } from "lucide-react";
-import { useOnlineStatus } from "@/shared/hooks/use-online-status";
+import { useOnlineStatus } from "@/hooks/use-online-status";
 
 interface SettingsPageWrapperProps {
   children: ReactNode;

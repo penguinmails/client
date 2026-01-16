@@ -1,4 +1,4 @@
-import { StatsCard } from "@/shared/ui/components/stats-card";
+import { StatsCard } from "@/components/stats-card";
 import { LucideIcon } from "lucide-react";
 
 interface StatsItem {

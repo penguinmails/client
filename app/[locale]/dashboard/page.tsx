@@ -13,7 +13,7 @@ import { Mail, Send, TrendingUp, Users } from "lucide-react";
 import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/KpiCardSkeleton";
 import RecentReplySkeleton from "@features/inbox/ui/components/RecentReply/RecentReplySkeleton";
 import WarmupSummarySkeleton from "@/features/analytics/ui/components/dashboard/summaries/WarmupSummarySkeleton";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 
 // Import existing KPI cards component
 import KpiCards from "@/features/analytics/ui/components/dashboard/cards/KpiCards";
@@ -25,7 +25,7 @@ import {
 } from "@features/campaigns/actions/dashboard";
 
 // Import auth hook
-import { useAuth } from "@features/auth/ui/context/auth-context";
+import { useAuth } from "@features/auth/hooks/use-auth";
 
 // Helper function to format time ago
 function formatTimeAgo(date: Date): string {

@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { getMessages } from "@features/inbox/actions";
 import { type Message } from "@features/inbox/types";
-import { getRelativeTime } from "@/shared/utils/date";
-import { cn } from "@/shared/utils";
+import { getRelativeTime } from "@/lib/utils/date";
+import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

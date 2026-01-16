@@ -72,20 +72,20 @@ import { SettingsForm } from '@/features/settings/ui/components/general/Settings
 #### Shared Components
 ```typescript
 // Common utilities
-import { ThemeSwitcher } from '@/shared/components/ThemeSwitcher';
-import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 // Email utilities
-import { PersonalizationTags } from '@/shared/components/email/PersonalizationTags';
+import { PersonalizationTags } from '@/components/email/PersonalizationTags';
 
 // Layout components
-import { DashboardLayout } from '@/shared/layout/components/DashboardLayout';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 
 // Design system
-import { UnifiedButton } from '@/shared/ui/unified/UnifiedButton';
+import { UnifiedButton } from '@/components/unified/UnifiedButton';
 
 // Theme utilities
-import { lexicalEditorTheme } from '@/shared/theme/lexicalEditorTheme';
+import { lexicalEditorTheme } from '@/lib/theme/lexicalEditorTheme';
 ```
 
 #### UI Primitives (Unchanged)
@@ -161,7 +161,7 @@ When reviewing code, check for:
    import { AdminComponent } from '@/features/admin/ui/components/AdminComponent';
    
    // ✅ Move shared logic to shared/ or use proper communication patterns
-   import { SharedUtility } from '@/shared/components/SharedUtility';
+   import { SharedUtility } from '@/components/SharedUtility';
    ```
 
 3. **Old Import Paths**:

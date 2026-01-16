@@ -14,7 +14,7 @@ import {
   NileClientTenant,
   NileQueryResult,
   NileContextOptions
-} from '@/features/auth/types/nile-client';
+} from '@/lib/nile/types';
 
 // NileDB Client Interfaces for proper typing
 interface NileUsersClient {
@@ -133,7 +133,12 @@ export const getUserTenants = async (req?: NextRequest): Promise<NileClientTenan
       req.headers.forEach((value, key) => {
         headers[key] = value;
       });
-      return await (tenants as NileTenantsClient).withContext({ headers }, async () => {
+      
+      // Get current user to provide userId to Nile context
+      const user = await getCurrentUser(req);
+      const userId = user?.id;
+
+      return await (tenants as NileTenantsClient).withContext({ headers, userId }, async () => {
         const tenantList = await (tenants as NileTenantsClient).list();
         return tenantList instanceof Response ? [] : tenantList;
       });
@@ -164,7 +169,12 @@ export const queryWithContext = async <T = unknown>(
       req.headers.forEach((value, key) => {
         headers[key] = value;
       });
-      return await (db as NileDBClient<T>).withContext({ headers }, async () => {
+      
+      // Get current user to provide userId to Nile context
+      const user = await getCurrentUser(req);
+      const userId = user?.id;
+
+      return await (db as NileDBClient<T>).withContext({ headers, userId }, async () => {
         const result = await (db as NileDBClient<T>).query(sql, params);
         return result;
       }).then(result => result.rows);

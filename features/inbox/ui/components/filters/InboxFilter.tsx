@@ -9,8 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getMockCampaigns, getMockMailboxes } from "@/shared/mocks/providers";
-import { cn } from "@/shared/utils";
+import { getMockCampaigns, getMockMailboxes } from "@/lib/mocks/providers";
+import { cn } from "@/lib/utils";
 import {
   Archive,
   AtSign,

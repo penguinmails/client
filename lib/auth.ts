@@ -9,7 +9,7 @@ import { getCachedSession, getCurrentUser as getUncachedCurrentUser } from '@/li
 import { productionLogger } from '@/lib/logger';
 import {
   NileClientUser
-} from '@/features/auth/types/nile-client';
+} from '@/lib/nile/types';
 
 /**
  * Get current authenticated user with request context
@@ -26,7 +26,7 @@ export const getCurrentUser = async (req?: NextRequest): Promise<NileClientUser 
     }
 
     // Fallback for requests without context - use existing function to avoid duplication
-    return getUncachedCurrentUser();
+    return getUncachedCurrentUser(req);
   } catch (error) {
     productionLogger.error('[Auth] Failed to get current user:', error);
 

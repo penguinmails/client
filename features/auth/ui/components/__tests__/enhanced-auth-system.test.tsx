@@ -119,7 +119,7 @@ const mockAuthContext = {
   restoreSession: jest.fn().mockResolvedValue(true),
 };
 
-jest.mock('@features/auth/ui/context/auth-context', () => ({
+jest.mock('@features/auth/hooks/use-auth', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="auth-provider">{children}</div>
   ),
@@ -170,7 +170,7 @@ import {
   useStaffAccess,
   useErrorRecovery,
 } from "@features/auth/lib/hooks/use-enhanced-auth";
-import { useAuth } from "@features/auth/ui/context/auth-context";
+import { useAuth } from "@features/auth/hooks/use-auth";
 import { TenantCompanySelector } from "../TenantCompanySelector";
 // import EnhancedErrorBoundary from "@/features/auth/ui/components/EnhancedErrorBoundary"; // Component doesn't exist yet
 // import StaffDashboard from "@/features/auth/ui/components/StaffDashboard"; // Component doesn't exist yet
@@ -426,22 +426,22 @@ describe("Enhanced Authentication System", () => {
       });
 
       it("should show staff badge for staff users", () => {
-        // Mock staff context for this test
-        const staffMockContext = { ...mockAuthContext, isStaff: true };
-        jest.doMock('@features/auth/ui/context/auth-context', () => ({
-          useAuth: () => staffMockContext,
-          AuthProvider: ({ children }: { children: React.ReactNode }) => (
-            <div data-testid="auth-provider">{children}</div>
-          ),
-        }));
+        // Temporarily set staff flag on mock context
+        const originalIsStaff = mockAuthContext.isStaff;
+        mockAuthContext.isStaff = true;
 
-        render(
-          <TestWrapper>
-            <TenantCompanySelector />
-          </TestWrapper>
-        );
+        try {
+          render(
+            <TestWrapper>
+              <TenantCompanySelector />
+            </TestWrapper>
+          );
 
-        expect(screen.getByText("Context Selection")).toBeInTheDocument();
+          expect(screen.getByText("Context Selection")).toBeInTheDocument();
+        } finally {
+          // Restore original state
+          mockAuthContext.isStaff = originalIsStaff;
+        }
       });
     });
 

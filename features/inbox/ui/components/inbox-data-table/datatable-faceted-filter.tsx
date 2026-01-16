@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { PlusCircleIcon } from "lucide-react";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;

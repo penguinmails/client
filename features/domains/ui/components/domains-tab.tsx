@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { getStatusColor } from "@features/domains/lib/utils";
 import { AlertTriangle, Check, Copy, Plus, Trash2, X } from "lucide-react";
 import Link from "next/link";

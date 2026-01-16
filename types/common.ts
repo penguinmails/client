@@ -3,8 +3,24 @@
  * Part of the FSD shared layer
  */
 
-import type { NextRequest } from 'next/server';
 import type { ComponentType } from 'react';
+
+export interface BaseUser {
+  id: string;
+  email: string;
+  emailVerified?: boolean;
+  role?: string;
+}
+
+export const UserRole = {
+  ADMIN: "admin",
+  SUPER_ADMIN: "super_admin",
+  MANAGER: "manager",
+  USER: "user",
+} as const;
+
+export type UserRole = typeof UserRole[keyof typeof UserRole];
+
 
 // Custom component type constraint to avoid 'any' in linter
 export type AnyComponentType = ComponentType<Record<string, unknown>>;
@@ -21,6 +37,52 @@ export type DisplayStatus =
   | "Draft"
   | "Completed"
   | "Archived";
+
+export interface Client {
+  id: number;
+  email: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  notes?: string;
+  maskPII?: boolean;
+  status?: string;
+  companyId?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface Campaign {
+  id: string | number;
+  name: string;
+  subject?: string;
+  status?: string;
+  fromName: string;
+  fromEmail: string;
+  metrics?: {
+    recipients?: { sent: number; total: number };
+    opens?: { total: number; rate: number };
+    clicks?: { total: number; rate: number };
+    replies?: { total: number; rate: number };
+    bounces?: { total: number; rate: number };
+  };
+  lastUpdated?: string;
+  totalRecipients?: number;
+  sent?: number;
+  delivered?: number;
+  opened?: number;
+  clicked?: number;
+  replied?: number;
+  bounced?: number;
+  unsubscribed?: number;
+  createdAt?: Date;
+  scheduledAt?: Date;
+  completedAt?: Date;
+  leadListId?: string;
+  mailboxIds?: string[];
+  description?: string;
+  settings?: Record<string, unknown>;
+}
 
 export interface BaseEntity {
   id: ID;
@@ -53,32 +115,7 @@ export interface MetricData {
   trend?: "up" | "down" | "stable";
 }
 
-// Billing Address (Shared across Billing and Settings)
-export interface BillingAddress {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string; // ISO country code
-}
 
-// Team Member (Shared across Team and Settings)
-export interface TeamMember {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  status: "active" | "invited" | "disabled" | "inactive" | "pending";
-  joinedAt?: string;
-  lastActive?: string;
-}
-
-// Company (Shared across multiple features)
-export interface Company {
-  id: string | number;
-  tenantId: string;
-  name: string;
-}
 
 
 // Analytics shared types
@@ -101,47 +138,19 @@ export interface WarmupChartData {
   replies: number;
 }
 
-// Export additional types for test compatibility
-export type ComponentProps<T extends AnyComponentType = AnyComponentType> = React.ComponentProps<T>;
-export type FormHandlerParams<T = Record<string, unknown>> = {
-  data: T;
-  req: NextRequest;
-};
-export type FormHandlerResult<T = Record<string, unknown>> = {
-  success: boolean;
-  data?: T;
-  message?: string;
-  error?: string;
-  errors?: FormValidationError[];
-  validationErrors?: FormValidationError[];
-};
-export interface FormValidationError {
-  code?: string;
-  message: string;
-  field?: string;
-}
-export interface EnhancedApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  error?: string;
-  errors?: string[];
-  timestamp?: string;
-  details?: Record<string, unknown>;
-  code?: string;
-}
-export interface ApiSuccessResponse<T> {
-  success: true;
-  data: T;
-  message?: string;
-  timestamp?: string;
-  [key: string]: unknown;
-}
-export interface ApiErrorResponse {
-  success: false;
-  error: string;
-  code?: string;
-  timestamp?: string;
-  details?: Record<string, unknown>;
-  [key: string]: unknown;
-}
+// Re-export common types from sub-modules for backward compatibility and central access
+export type { 
+  ComponentBaseProps, 
+  ComponentProps 
+} from './ui';
+
+export type {
+  ApiResponse,
+  ApiSuccessResponse,
+  ApiErrorResponse,
+  EnhancedApiResponse,
+  FormValidationError,
+  FormHandlerResult,
+  FormHandlerParams,
+  ActionResult
+} from './api';

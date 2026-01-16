@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
       "i18n",
       "src",
       "features",
-      "shared",
     ],
     // Only run ESLint during builds in local development
     ignoreDuringBuilds: !isLocalDev,
@@ -83,6 +82,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withNextIntl = createNextIntlPlugin('./shared/config/i18n/request.ts');
+const withNextIntl = createNextIntlPlugin('./lib/config/i18n/request.ts');
 
 export default withNextIntl(nextConfig);

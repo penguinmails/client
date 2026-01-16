@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import SignUpFormView from "@/app/[locale]/signup/SignUpFormView";
+import SignUpFormView from "@/features/auth/ui/signup-form";
 import { useFeature } from "@/lib/features";
 
 // Mock the next-intl module
@@ -9,7 +9,7 @@ jest.mock("next-intl", () => ({
 }));
 
 // Mock the auth context
-jest.mock("@features/auth/ui/context/auth-context", () => ({
+jest.mock("@features/auth/hooks/use-auth", () => ({
   useAuth: jest.fn(() => ({
     error: null,
     authLoading: { session: false, enrichment: false },
@@ -89,7 +89,7 @@ jest.mock("next-turnstile", () => ({
   },
 }));
 
-jest.mock("@/app/[locale]/signup/verifyToken", () => ({
+jest.mock("@/features/auth/lib/verify-token", () => ({
   verifyTurnstileToken: jest.fn().mockResolvedValue(true),
 }));
 

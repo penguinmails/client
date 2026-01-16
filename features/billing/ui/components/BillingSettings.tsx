@@ -9,10 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SettingsLoadingSkeleton } from "@/shared/ui/components/settings-loading-skeleton";
-import { SettingsErrorState } from "@/shared/ui/components/settings-error-state";
-import { showBillingUpdateSuccess } from "@/shared/ui/components/settings-success-notification";
-import { useServerAction } from "@/shared/hooks/use-server-action";
+import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
+import { SettingsErrorState } from "@/components/settings-error-state";
+import { showBillingUpdateSuccess } from "@/components/settings-success-notification";
+import { useServerAction } from "@/hooks/use-server-action";
 import { productionLogger } from "@/lib/logger";
 import {
   getBillingInfo,

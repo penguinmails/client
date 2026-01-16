@@ -8,7 +8,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
 import postgres from 'postgres';
-import { createNileConfig } from '@/shared/config/nile-config';
+import { createNileConfig } from '@/lib/config/nile-config';
 
 // Database connection result interface
 export interface DatabaseConnectionResult {

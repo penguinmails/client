@@ -5,7 +5,7 @@ import { FormLabel, FormItem } from "@/components/ui/form";
 import {
     SelectFormField,
     TextFormField,
-} from "@/shared/design-system/components/unified-form-field";
+} from "@/components/design-system/unified-form-field";
 import { RelayType, VerificationStatus } from "@/types";
 import { emailAccountCopy } from "../../copy";
 

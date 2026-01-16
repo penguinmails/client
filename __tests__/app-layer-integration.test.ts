@@ -43,12 +43,13 @@ describe('App Layer Integration Tests', () => {
                   'types',  // Allow both types/ and @/types
                   'hooks/',
                   'context/',
-                  'app/' // Allow app-internal imports
+                  'app/', // Allow app-internal imports
                 ];
                 
+                // Also allow direct component imports like @/components
                 const isAllowed = allowedPrefixes.some(prefix => 
                   normalizedPath.startsWith(prefix)
-                );
+                ) || normalizedPath === 'components';
                 
                 if (!isAllowed) {
                   violations.push({

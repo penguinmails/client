@@ -378,7 +378,7 @@ describe('DashboardLayout', () => {
 
 // AFTER: Fixed with proper provider setup
 import { setupDashboardTest } from '@/lib/test-utils';
-import { DashboardLayout } from '@/shared/layout/components/DashboardLayout';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 
 describe('DashboardLayout', () => {
   const dashboardTest = setupDashboardTest(DashboardLayout);

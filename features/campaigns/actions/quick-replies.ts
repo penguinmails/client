@@ -6,7 +6,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { createActionError as _createActionError } from "@/shared/utils/errors";
+import { createActionError as _createActionError } from "@/lib/utils/errors";
 import { productionLogger, developmentLogger } from "@/lib/logger";
 import type { Template, TemplateCategoryType } from "@/types/templates";
 

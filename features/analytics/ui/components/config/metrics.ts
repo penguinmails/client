@@ -1,5 +1,5 @@
 import { AnalyticsMetricConfig } from "@features/analytics/types/ui";
-import { getMetricColor } from "@/shared/config/chart-colors";
+import { getMetricColor } from "@/lib/config/chart-colors";
 
 /**
  * Standardized metrics configuration using new field names.

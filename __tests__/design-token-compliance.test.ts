@@ -385,7 +385,7 @@ describe('Design Token Compliance Tests', () => {
 
   describe('Design Token Configuration Validation', () => {
     it('should validate design token configuration exists', () => {
-      const designTokensPath = join(process.cwd(), 'shared/config/design-tokens.ts');
+      const designTokensPath = join(process.cwd(), 'lib/config/design-tokens.ts');
       
       expect(() => {
         const content = readFileSync(designTokensPath, 'utf-8');
@@ -395,7 +395,7 @@ describe('Design Token Compliance Tests', () => {
 
     it('should validate comprehensive token coverage', () => {
       try {
-        const designTokensPath = join(process.cwd(), 'shared/config/design-tokens.ts');
+        const designTokensPath = join(process.cwd(), 'lib/config/design-tokens.ts');
         const content = readFileSync(designTokensPath, 'utf-8');
         
         // Check for required token categories

@@ -17,7 +17,7 @@ import {
   Moon,
   Monitor,
 } from "lucide-react";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { isFeatureEnabled } from "@/lib/features";
 import { useTranslations } from "next-intl";

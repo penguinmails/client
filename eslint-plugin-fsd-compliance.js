@@ -18,6 +18,9 @@ const FSD_LAYERS = {
   'app': { level: 5, name: 'app', allowedImports: ['shared', 'ui', 'components', 'features'] }
 };
 
+// Map root directories to shared layer
+const SHARED_DIRS = ['lib', 'hooks', 'context', 'types', 'utils', 'config'];
+
 // Hardcoded style patterns to detect
 const HARDCODED_STYLE_PATTERNS = {
   hexColors: /#[0-9a-fA-F]{3,8}/g,
@@ -59,10 +62,11 @@ const SEMANTIC_TOKEN_SUGGESTIONS = {
 function getFileLayer(filePath) {
   if (filePath.includes('/app/')) return 'app';
   if (filePath.includes('/features/')) return 'features';
-  if (filePath.includes('/shared/')) return 'shared';
+  
+  // Check for shared root directories
+  if (SHARED_DIRS.some(dir => filePath.includes(`/${dir}/`))) return 'shared';
   
   // Distinguish between components/ui (ui layer) and components (business logic layer)
-  // Only return 'ui' if it's specifically in components/ui directory (not shared/ui)
   if (filePath.includes('/components/ui/')) return 'ui';
   if (filePath.includes('/components/') && !filePath.includes('/features/')) return 'components';
   
@@ -75,10 +79,11 @@ function getFileLayer(filePath) {
 function getImportLayer(importPath) {
   if (importPath.startsWith('@/app/')) return 'app';
   if (importPath.startsWith('@/features/')) return 'features';
-  if (importPath.startsWith('@/shared/')) return 'shared';
+  
+  // Check for shared root directories imports
+  if (SHARED_DIRS.some(dir => importPath.startsWith(`@/${dir}/`) || importPath === `@/${dir}`)) return 'shared';
   
   // Distinguish between components/ui (ui layer) and components (business logic layer)
-  // Only return 'ui' if it's specifically from components/ui (not shared/ui)
   if (importPath.startsWith('@/components/ui/')) return 'ui';
   if (importPath.startsWith('@/components/')) return 'components';
   
@@ -100,7 +105,6 @@ function isOldImportPath(importPath) {
   const oldPaths = [
     '@/components/analytics/',
     '@/components/campaigns/', 
-    '@/components/settings/',
     '@/components/auth/',
     '@/components/ui/custom/password-input'
   ];
@@ -550,8 +554,6 @@ module.exports = {
         'fsd-compliance/no-hex-colors': 'error',
         'fsd-compliance/no-arbitrary-spacing': 'error',
         'fsd-compliance/require-semantic-tokens': 'warn',
-        'fsd-compliance/no-arbitrary-spacing': 'warn',
-        'fsd-compliance/no-arbitrary-spacing': 'warn',
         'fsd-compliance/no-old-import-paths': 'error',
         'fsd-compliance/no-business-logic-in-components': 'warn'
       }

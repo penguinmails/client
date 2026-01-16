@@ -1,11 +1,11 @@
 "use client";
 import { getDomainsData } from "@features/domains/actions";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { CheckCircle, Clock, Globe, Mail } from "lucide-react";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 import { useState, useEffect } from "react";
 import type { MailboxWarmupData, Domain } from "@/types";
-import { StatsCard } from "@/shared/ui/components/stats-card";
+import { StatsCard } from "@/components/stats-card";
 import { productionLogger } from "@/lib/logger";
 
 function OverviewCards() {
