@@ -71,7 +71,9 @@ describe('Cross-Feature Integration Tests', () => {
         });
       });
 
-      // Allow some violations for existing code patterns
+      // TODO: Reduce FSD violations to zero
+      // Current violation count is temporary and should be addressed to fully realize FSD architecture benefits
+      // Target: expect(sharedImportViolations.length).toBe(0);
       expect(sharedImportViolations.length).toBeLessThanOrEqual(153); // TEMPORARY: Current violation count matches actual usage
     });
 

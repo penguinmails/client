@@ -186,6 +186,9 @@ export function EnrichedUserGate({
       return skeleton ? <>{skeleton}</> : <DashboardSkeleton />;
     }
     return (
+      // Using Tailwind spacing scale (min-h-96 = 24rem = 384px)
+      // If this loading container height pattern becomes common across the app,
+      // consider abstracting it into a design token (e.g., --loading-container-min-height)
       <div className="flex items-center justify-center min-h-96">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
