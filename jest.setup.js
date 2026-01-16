@@ -51,20 +51,6 @@ global.console = {
   // error: jest.fn(),
 };
 
-// Mock Next.js router for tests
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    prefetch: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-    refresh: jest.fn(),
-  }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
-}));
-
 // Mock PostHog for tests
 jest.mock('posthog-js', () => ({
   init: jest.fn(() => ({
