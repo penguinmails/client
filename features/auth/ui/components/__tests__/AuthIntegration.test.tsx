@@ -76,12 +76,14 @@ const mockAuthContext = {
   restoreSession: jest.fn().mockResolvedValue(true),
 };
 
-jest.mock("@features/auth/ui/context/auth-context", () => ({
+jest.mock("@features/auth/ui/context/auth-provider", () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
   ),
   useAuth: () => mockAuthContext,
 }));
+
+import { AuthProvider } from "@features/auth/ui/context/auth-provider";
 
 // Simple test component
 const TestComponent = () => {
@@ -105,9 +107,6 @@ describe("Enhanced Auth Integration", () => {
         mutations: { retry: false },
       },
     });
-
-    // Import the mocked components after the jest.mock
-    const { AuthProvider } = await import("@features/auth/ui/context/auth-context");
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -133,9 +132,6 @@ describe("Enhanced Auth Integration", () => {
         mutations: { retry: false },
       },
     });
-
-    // Import the mocked components after the jest.mock
-    const { AuthProvider } = await import("@features/auth/ui/context/auth-context");
 
     render(
       <QueryClientProvider client={queryClient}>
