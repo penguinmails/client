@@ -2,21 +2,8 @@
 export { ChunkErrorHandler } from "./chunk-error-handler";
 export { SettingsLoadingSkeleton } from "./settings-loading-skeleton";
 export { SettingsErrorState, NetworkErrorState, AuthErrorState, ValidationErrorState, ServerErrorState } from "./settings-error-state";
-export { 
-  showSuccessNotification,
-  showSaveSuccess,
-  showUpdateSuccess,
-  showCreateSuccess,
-  showDeleteSuccess,
-  showInviteSuccess,
-  showUploadSuccess,
-  showProfileUpdateSuccess,
-  showNotificationPreferencesSuccess,
-  showBillingUpdateSuccess,
-  showSecurityUpdateSuccess,
-  showAppearanceUpdateSuccess,
-  showTeamMemberSuccess
-} from "./settings-success-notification";
+// Export hook directly instead of individual functions
+export { useSettingsNotifications } from "./settings-success-notification";
 
 // Re-export existing components
 export * from "./form";
