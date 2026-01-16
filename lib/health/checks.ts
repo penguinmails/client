@@ -5,7 +5,7 @@
  */
 
 import { ServiceCheck, ServiceStatus } from './types';
-import { Redis } from '@upstash/redis';
+import { getRedisClient } from '@/lib/cache/redis-client';
 import { testConnection } from '@/lib/nile/nile';
 
 const startTime = Date.now();
@@ -46,20 +46,14 @@ export async function checkDatabaseHealth(): Promise<ServiceCheck> {
 }
 
 /**
- * Check Upstash Redis connection health
+ * Check Redis connection health
  */
-// Initialize Redis client once (module-singleton)
-const redis = (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
-  ? new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    })
-  : null;
-
 export async function checkRedisHealth(): Promise<ServiceCheck> {
   const start = Date.now();
   
   try {
+    const redis = getRedisClient();
+    
     if (!redis) {
       return {
         name: 'redis',

@@ -5,7 +5,7 @@
  * 
  * Checks:
  * - Database (NileDB/Postgres)
- * - Redis (Upstash)
+ * - Redis
  * - Convex
  * - System resources
  */
