@@ -2,7 +2,7 @@
 
 import { NextRequest } from 'next/server';
 import { ActionResult } from '@/types';
-import { campaignsData, availableMailboxes } from '@/shared/mocks/providers';
+import { campaignsData, availableMailboxes } from '@/lib/mocks/providers';
 import { productionLogger } from '@/lib/logger';
 import { Campaign } from '../types';
 import { FormHandlerParams } from '@/types';

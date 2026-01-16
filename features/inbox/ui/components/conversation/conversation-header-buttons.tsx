@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useConversation } from "@features/inbox/ui/context/conversation-context";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Archive, Pin, Star, Tag, X } from "lucide-react";
 import Link from "next/link";
 import ShowNotesButton from "./show-notes-button";

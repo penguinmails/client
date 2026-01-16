@@ -16,7 +16,7 @@ import {
   getUsageWithCalculations,
   getStorageOptions,
 } from "@features/billing/actions";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Globe, HardDrive, Mail, Plus, Server, Users } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";

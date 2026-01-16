@@ -15,7 +15,7 @@ import {
   NileClientUser, 
   NileClientTenant, 
   NileQueryResult
-} from '@/features/auth/types/nile-client';
+} from '@/lib/nile/types';
 
 // NileDB Client Interfaces for proper typing
 interface NileUsersClient {

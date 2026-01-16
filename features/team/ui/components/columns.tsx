@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button/button";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Edit, Trash2, RefreshCw } from "lucide-react";
 import type { TeamMember, TeamInvite, TeamRole } from "@features/team/types";
 

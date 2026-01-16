@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAddDomainContext } from "@features/domains/ui/context/add-domain-context";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { productionLogger } from "@/lib/logger";
 import {
   AlertTriangle,

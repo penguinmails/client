@@ -169,8 +169,8 @@ const company = await createCompany({ name: "Acme Inc" }, req);
 ### 1. API Route Authentication
 
 ```typescript
-import { requireAuth, getUserProfile } from "@/shared/queries/auth";
-import { createErrorResponse } from "@/shared/queries/utils";
+import { requireAuth, getUserProfile } from "@/lib/queries/auth";
+import { createErrorResponse } from "@/lib/queries/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -191,14 +191,14 @@ export async function GET(req: NextRequest) {
 ### 2. Server Component Authentication
 
 ```typescript
-import { getCurrentUser, getUserTenants } from '@/shared/queries/auth';
+import { getCurrentUser, getUserTenants } from '@/lib/queries/auth';
 import { redirect } from 'next/navigation';
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
 
   if (!user) {
-    redirect('/login');
+    redirect('/');
   }
 
   const tenants = await getUserTenants();
@@ -416,7 +416,7 @@ This shows all SQL queries and API calls for debugging.
    import { getUser } from "@/shared/auth";
 
    // New
-   import { getCurrentUser } from "@/shared/queries/auth";
+   import { getCurrentUser } from "@/lib/queries/auth";
    ```
 
 2. **Update database queries**:

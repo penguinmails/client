@@ -9,7 +9,7 @@ import {
   createLogger,
   type LoggerConfig,
 } from '../logger';
-import { getEnvironment } from '@/shared/config/env';
+import { getEnvironment } from '@/lib/config/env';
 
 // Access createLoggerConfig through createLogger since it's used internally
 const createLoggerConfig = () => {

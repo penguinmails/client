@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/features/auth/ui/components";
 import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
-import type { PasswordStrength } from "@/shared/validation";
-import { useAuth } from "@features/auth/ui/context/auth-context";
+import type { PasswordStrength } from "@/lib/validation";
+import { useAuth } from "@features/auth/hooks/use-auth";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 

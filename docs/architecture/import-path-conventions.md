@@ -83,10 +83,10 @@ import { SettingsForm } from '@/components/settings/general/SettingsForm';
 #### Common Shared Components
 ```typescript
 // ✅ Correct
-import { ThemeSwitcher } from '@/shared/components/ThemeSwitcher';
-import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher';
-import { SystemHealthIndicator } from '@/shared/components/SystemHealthIndicator';
-import { CoreProviders } from '@/shared/components/core-providers';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { SystemHealthIndicator } from '@/components/SystemHealthIndicator';
+import { CoreProviders } from '@/components/core-providers';
 
 // ❌ Old (deprecated)
 import { ThemeSwitcher } from '@/components/common/ThemeSwitcher';
@@ -95,7 +95,7 @@ import { ThemeSwitcher } from '@/components/common/ThemeSwitcher';
 #### Email Utilities
 ```typescript
 // ✅ Correct
-import { PersonalizationTags } from '@/shared/components/email/PersonalizationTags';
+import { PersonalizationTags } from '@/components/email/PersonalizationTags';
 
 // ❌ Old (deprecated)
 import { PersonalizationTags } from '@/components/email/PersonalizationTags';
@@ -104,9 +104,9 @@ import { PersonalizationTags } from '@/components/email/PersonalizationTags';
 #### Layout Components
 ```typescript
 // ✅ Correct
-import { DashboardLayout } from '@/shared/layout/components/DashboardLayout';
-import { DashboardHeader } from '@/shared/layout/components/DashboardHeader';
-import { DashboardSidebar } from '@/shared/layout/components/DashboardSidebar';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { DashboardHeader } from '@/components/layout/DashboardHeader';
+import { DashboardSidebar } from '@/components/layout/DashboardSidebar';
 
 // ❌ Old (deprecated)
 import { DashboardLayout } from '@/components/layout/components/DashboardLayout';
@@ -115,7 +115,7 @@ import { DashboardLayout } from '@/components/layout/components/DashboardLayout'
 #### Design System Components
 ```typescript
 // ✅ Correct
-import { DesignSystemComponent } from '@/shared/design-system/components/DesignSystemComponent';
+import { DesignSystemComponent } from '@/components/design-system/DesignSystemComponent';
 
 // ❌ Old (deprecated)
 import { DesignSystemComponent } from '@/components/design-system/components/DesignSystemComponent';
@@ -124,7 +124,7 @@ import { DesignSystemComponent } from '@/components/design-system/components/Des
 #### Theme Components
 ```typescript
 // ✅ Correct
-import { lexicalEditorTheme } from '@/shared/theme/lexicalEditorTheme';
+import { lexicalEditorTheme } from '@/lib/theme/lexicalEditorTheme';
 
 // ❌ Old (deprecated)
 import { lexicalEditorTheme } from '@/components/theme/lexicalEditorTheme';
@@ -133,9 +133,9 @@ import { lexicalEditorTheme } from '@/components/theme/lexicalEditorTheme';
 #### Unified Design Components
 ```typescript
 // ✅ Correct
-import { UnifiedButton } from '@/shared/ui/unified/UnifiedButton';
-import { UnifiedCard } from '@/shared/ui/unified/UnifiedCard';
-import { UnifiedModal } from '@/shared/ui/unified/UnifiedModal';
+import { UnifiedButton } from '@/components/unified/UnifiedButton';
+import { UnifiedCard } from '@/components/unified/UnifiedCard';
+import { UnifiedModal } from '@/components/unified/UnifiedModal';
 
 // ❌ Old (deprecated)
 import { UnifiedButton } from '@/components/unified/UnifiedButton';
@@ -201,7 +201,7 @@ export type { ComponentAProps, ComponentBProps } from './types';
 ### 4. Cross-Feature Dependencies
 ```typescript
 // ✅ Features can import from shared
-import { ThemeSwitcher } from '@/shared/components/ThemeSwitcher';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 
 // ✅ Features can import UI primitives
 import { Button } from '@/components/ui/button';

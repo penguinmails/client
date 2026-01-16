@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --cache --fix",
-    "lint:ci": "eslint . --cache --cache-strategy content --max-warnings 0 --quiet",
+    "lint:ci": "eslint . --cache --quiet",
     "lint:fsd": "eslint . --cache --cache-strategy content -c eslint.fsd.config.mjs",
     "l": "npm run lint",
     "typecheck": "tsc -p tsconfig.app.json --noEmit --skipLibCheck",

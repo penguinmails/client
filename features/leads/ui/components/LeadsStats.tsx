@@ -1,7 +1,7 @@
 "use client";
 
 import { Mail, Users } from "lucide-react";
-import StatsCard from "@/shared/components/MigratedStatsCard";
+import StatsCard from "@/components/MigratedStatsCard";
 import { LeadStats } from "@/types/clients-leads";
 
 interface LeadsStatsProps {

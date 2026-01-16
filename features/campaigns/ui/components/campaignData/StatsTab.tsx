@@ -1,5 +1,5 @@
 "use client";
-import { StatsCard as KpiCard } from "@/shared/ui/components/stats-card";
+import { StatsCard as KpiCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChartData, MetricToggle } from "@features/campaigns/types";
 import { AnalyticsCalculator } from "@features/analytics/lib/calculator"; // MIGRATED: Added for rate calculations
-import { CAMPAIGN_COLORS } from "@/shared/config/chart-colors";
+import { CAMPAIGN_COLORS } from "@/lib/config/chart-colors";
 
 interface DayMetrics {
   sent?: number;

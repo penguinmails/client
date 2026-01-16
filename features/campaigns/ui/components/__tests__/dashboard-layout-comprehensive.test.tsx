@@ -13,7 +13,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
 // Import the REAL component to test
-import { DashboardLayout } from '@/shared/design-system/components/dashboard-layout';
+import { DashboardLayout } from '@/components/design-system/dashboard-layout';
 import { setupDashboardTest } from '@/lib/test-utils/setup-helpers';
 
 // Import REAL UI components that are used by the component
@@ -25,7 +25,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 // Mock ONLY external dependencies
-jest.mock('@features/auth/ui/context/auth-context', () => ({
+jest.mock('@features/auth/hooks/use-auth', () => ({
   useAuth: jest.fn(() => ({
     user: {
       id: '1',
@@ -69,7 +69,7 @@ jest.mock('@niledatabase/react', () => ({
 }));
 
 // Mock the child components that are imported by DashboardHeader
-jest.mock('@/shared/layout/components/DashboardHeader', () => {
+jest.mock('@/components/layout/DashboardHeader', () => {
   return function MockDashboardHeader() {
     return (
       <header data-testid="dashboard-header">

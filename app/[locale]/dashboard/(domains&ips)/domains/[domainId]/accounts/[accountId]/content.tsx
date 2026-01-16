@@ -33,7 +33,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { DOMAIN_COLORS } from "@/shared/config/chart-colors";
+import { DOMAIN_COLORS } from "@/lib/config/chart-colors";
 
 interface AccountWarmupDetailsContentProps {
   accountDetails: AccountDetails;

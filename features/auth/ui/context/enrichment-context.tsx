@@ -2,48 +2,27 @@
 
 import React, {
   createContext,
-  useContext,
   useEffect,
   useState,
   useCallback,
   useMemo,
   useRef,
 } from "react";
-import { useBaseAuth, BaseUser } from "./base-auth-context";
-import { useSystemHealth } from "@/shared/hooks";
+import { useSession } from "../../hooks/use-session";
+import { useSystemHealth } from "@/hooks";
 import { productionLogger } from "@/lib/logger";
-import { fetchUserEnrichment } from "../../lib/auth-operations";
-import { TenantMembership } from "../../types/auth-user";
+import { fetchEnrichedUser } from "../../lib/enrichment-operations";
+import { AuthUser } from "../../types/auth-user";
 import { CompanyInfo } from "@/types/company";
 import { Tenant } from "../../types/base";
-import { DatabaseErrorPage } from "../components/db-error-page";
+import { EnrichmentError } from "../../types/auth-errors";
 
 // ============================================================================
 // Types
 // ============================================================================
 
-/** Enriched user data from backend APIs */
-export interface EnrichedUser extends BaseUser {
-  name?: string;
-  displayName?: string;
-  givenName?: string;
-  familyName?: string;
-  picture?: string;
-  photoURL?: string;
-  isStaff?: boolean;
-  role?: string;
-  claims?: {
-    role: string;
-    permissions: string[];
-    tenantId: string;
-    companyId?: string;
-  };
-  tenantMembership?: TenantMembership;
-  preferences?: Record<string, unknown>;
-}
-
 export interface EnrichmentContextValue {
-  enrichedUser: EnrichedUser | null;
+  enrichedUser: AuthUser | null;
   isLoadingEnrichment: boolean;
   enrichmentError: Error | null;
   userTenants: Tenant[];
@@ -56,7 +35,7 @@ export interface EnrichmentContextValue {
   refreshEnrichment: () => Promise<void>;
 }
 
-const EnrichmentContext = createContext<EnrichmentContextValue | null>(null);
+export const EnrichmentContext = createContext<EnrichmentContextValue | null>(null);
 
 // ============================================================================
 // Constants
@@ -72,41 +51,48 @@ const RETRY_DELAY_MS = 2000;
 export const UserEnrichmentProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { user: baseUser, isAuthenticated } = useBaseAuth();
+  const { session, isLoading: isSessionLoading } = useSession(); 
   const { systemHealth } = useSystemHealth();
   const isHealthy = systemHealth.status === "healthy";
 
   // State
-  const [enrichedUser, setEnrichedUser] = useState<EnrichedUser | null>(null);
+  const [enrichedUser, setEnrichedUser] = useState<AuthUser | null>(null);
   const [isLoadingEnrichment, setIsLoadingEnrichment] = useState(false);
   const [enrichmentError, setEnrichmentError] = useState<Error | null>(null);
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
+    null
+  );
   const retryCountRef = useRef(0);
 
   // ============================================================================
-  // Enrichment Logic - Stable function with ref-based retry
+  // Enrichment Logic
   // ============================================================================
   const enrichUser = useCallback(
     async (userId: string): Promise<void> => {
+      // Don't enrich if unhealthy and already retried enough
       if (!isHealthy && retryCountRef.current > 0) return;
 
       setIsLoadingEnrichment(true);
       setEnrichmentError(null);
 
       try {
-        const data = await fetchUserEnrichment(userId);
+        const data = await fetchEnrichedUser(userId);
 
         // Merge base user with enrichment
-        setEnrichedUser({
-          id: userId,
-          email: baseUser?.email || "",
-          ...data as Partial<EnrichedUser>,
-        });
+        if (session) {
+            setEnrichedUser({
+                ...session,
+                // data is Partial<AuthUser>.
+                ...(data as Record<string, unknown>),
+                id: userId,
+                email: session.email,
+            } as AuthUser);
+        }
 
         // Auto-select tenant
         if (data.tenantMembership?.tenantId) {
-          setSelectedTenantId(data.tenantMembership.tenantId);
+            setSelectedTenantId(data.tenantMembership.tenantId);
         }
 
         retryCountRef.current = 0;
@@ -115,44 +101,46 @@ export const UserEnrichmentProvider: React.FC<{
 
         if (retryCountRef.current < MAX_RETRIES) {
           retryCountRef.current += 1;
-          // Schedule retry with stable reference
           const retry = () => enrichUser(userId);
           setTimeout(retry, RETRY_DELAY_MS);
         } else {
           setEnrichmentError(
-            err instanceof Error ? err : new Error("Failed to load user profile")
+            err instanceof EnrichmentError
+              ? err
+              : new EnrichmentError(userId, "UserProfile")
           );
         }
       } finally {
         setIsLoadingEnrichment(false);
       }
     },
-    [isHealthy, baseUser?.email]
+    [isHealthy, session]
   );
 
   const refreshEnrichment = useCallback(async () => {
-    if (baseUser?.id) {
+    if (session?.id) {
       retryCountRef.current = 0;
-      await enrichUser(baseUser.id);
+      await enrichUser(session.id);
     }
-  }, [baseUser?.id, enrichUser]);
+  }, [session?.id, enrichUser]);
 
   // ============================================================================
-  // Effect: Trigger enrichment when base user changes
+  // Effect: Trigger enrichment when session user changes
   // ============================================================================
   useEffect(() => {
-    // Only enrich when we have a real user ID (not empty string from login)
-    if (isAuthenticated && baseUser?.id && baseUser.id !== "") {
-      // Initialize with base data immediately
-      setEnrichedUser({
-        id: baseUser.id,
-        email: baseUser.email,
-        emailVerified: baseUser.emailVerified,
-      });
-      setIsLoadingEnrichment(true);
-      enrichUser(baseUser.id);
-    } else if (!isAuthenticated) {
-      // Clear on logout
+    if (session?.id) {
+       // Only enrich if we have a session
+       // Initialize with base data
+       setEnrichedUser(prev => ({
+           id: session.id,
+           email: session.email,
+           emailVerified: session.emailVerified,
+           ...prev
+       } as AuthUser));
+       
+       enrichUser(session.id);
+    } else if (!isSessionLoading && !session) {
+      // Clear if no session
       setEnrichedUser(null);
       setSelectedTenantId(null);
       setSelectedCompanyId(null);
@@ -160,7 +148,7 @@ export const UserEnrichmentProvider: React.FC<{
       setIsLoadingEnrichment(false);
       retryCountRef.current = 0;
     }
-  }, [isAuthenticated, baseUser?.id, baseUser?.email, baseUser?.emailVerified, enrichUser]);
+  }, [session, isSessionLoading, enrichUser]); 
 
   // ============================================================================
   // Derived Values
@@ -216,35 +204,9 @@ export const UserEnrichmentProvider: React.FC<{
     ]
   );
 
-  // Show error page if enrichment failed after retries (but user IS authenticated)
-  if (isAuthenticated && enrichmentError && !isLoadingEnrichment && retryCountRef.current >= MAX_RETRIES) {
-    return (
-      <DatabaseErrorPage
-        onRetry={() => {
-          retryCountRef.current = 0;
-          if (baseUser?.id) enrichUser(baseUser.id);
-        }}
-        error={enrichmentError}
-      />
-    );
-  }
-
   return (
     <EnrichmentContext.Provider value={contextValue}>
       {children}
     </EnrichmentContext.Provider>
   );
-};
-
-// ============================================================================
-// Hook
-// ============================================================================
-export const useEnrichment = () => {
-  const context = useContext(EnrichmentContext);
-  if (!context) {
-    throw new Error(
-      "useEnrichment must be used within a UserEnrichmentProvider"
-    );
-  }
-  return context;
 };

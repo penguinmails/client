@@ -2,7 +2,7 @@
 
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { TextFormField, SelectFormField } from "@/shared/design-system/components";
+import { TextFormField, SelectFormField } from "@/components/design-system";
 import { copyText as t } from "../data/copy";
 import { CampaignFormValues } from "@features/campaigns/types";
 

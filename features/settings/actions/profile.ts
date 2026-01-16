@@ -1,10 +1,12 @@
 'use server';
 
 import { NextRequest } from 'next/server';
-import { FormHandlerParams, FormHandlerResult } from '@/types';
-import { ProfileFormValues } from '@/types';
-import { UserRole } from '@/types';
-import { BaseUser } from "@/shared/types";
+import { FormHandlerParams, FormHandlerResult } from '@/types/api';
+import { ProfileFormValues } from '@/features/settings/types/user';
+import { UserRole, BaseUser } from '@/types/index';
+// Note: We use index here but it's risky if index re-exports features.
+// Better: import from @/types/common if they are there.
+
 
 // Extend BaseUser for profile-specific data
 export interface AuthUser extends BaseUser {

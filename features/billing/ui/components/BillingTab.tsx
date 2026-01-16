@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import {
   CreditCard,
   Crown,
@@ -25,21 +25,21 @@ import {
   getBillingDataForSettings,
   updateBillingInfo,
 } from "@features/billing/actions";
-import { updateCompanyInfo, getUserSettings } from "@features/settings/actions";
+import { updateCompanyInfo, getUserSettings } from "@/lib/actions/settings";
 import {
   useServerAction,
   useServerActionWithParams,
-} from "@/shared/hooks/use-server-action";
+} from "@/hooks/use-server-action";
 import { BillingLoadingSkeleton } from "@features/billing/ui/components/BillingLoadingSkeleton";
 import {
   SettingsErrorBoundary,
   SettingsErrorFallback,
-} from "@/features/settings";
+} from "@/components/settings/SettingsErrorBoundary";
 import { Button } from "@/components/ui/button/button";
 import { toast } from "sonner";
 import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checkout";
 import { useSearchParams } from "next/navigation";
-import { usePathname, useRouter } from "@/shared/config/i18n/navigation";
+import { usePathname, useRouter } from "@/lib/config/i18n/navigation";
 import CheckoutDialog from "@features/billing/ui/components/checkout-dialog";
 import { useTranslations } from "next-intl";
 

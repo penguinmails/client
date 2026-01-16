@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { AlertTriangle, Eye, EyeOff, Mail } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";

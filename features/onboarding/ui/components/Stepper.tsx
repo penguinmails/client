@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 import { Fragment } from "react";
 import { OnboardingStep } from "@/types/onboarding";

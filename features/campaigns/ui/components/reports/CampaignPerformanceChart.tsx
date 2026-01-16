@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CAMPAIGN_COLORS, CHART_BACKGROUNDS } from "@/shared/config/chart-colors";
+import { CAMPAIGN_COLORS, CHART_BACKGROUNDS } from "@/lib/config/chart-colors";
 
 // ============================================================
 // Types

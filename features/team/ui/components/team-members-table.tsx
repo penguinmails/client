@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/shared/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Plus, RefreshCw, AlertCircle } from "lucide-react";
 import {
   getTeamMembers,
@@ -16,10 +16,10 @@ import {
 import {
   useServerAction,
   useServerActionWithParams,
-} from "@/shared/hooks/use-server-action";
+} from "@/hooks/use-server-action";
 import type { TeamMember, TeamInvite, TeamRole } from "@features/team/types";
 import { NextRequest } from "next/server";
-import { UnifiedDataTable } from "@/shared/design-system/components/unified-data-table";
+import { UnifiedDataTable } from "@/components/design-system/unified-data-table";
 import { EditMemberDialog } from "./dialogs/edit-member-dialog";
 import { AddMemberDialog } from "./dialogs/add-member-dialog";
 import { DeleteMemberDialog } from "./dialogs/delete-member-dialog";

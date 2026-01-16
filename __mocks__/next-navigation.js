@@ -4,6 +4,7 @@ module.exports = {
     replace: jest.fn(),
     back: jest.fn(),
   }),
+  usePathname: () => '/',
   useSearchParams: () => ({
     get: jest.fn(),
   }),

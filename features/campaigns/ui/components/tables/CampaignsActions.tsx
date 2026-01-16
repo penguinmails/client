@@ -1,5 +1,5 @@
 "use client";
-import { getMockCampaigns } from "@/shared/mocks/providers";
+import { getMockCampaigns } from "@/lib/mocks/providers";
 import { Copy, Edit, Eye, Pause, Play } from "lucide-react";
 import Link from "next/link";
 import AlertDialogDelete from "@/components/ui/custom/AlertDialogDelete";

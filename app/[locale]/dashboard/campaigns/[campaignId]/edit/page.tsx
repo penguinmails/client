@@ -45,8 +45,8 @@ export default async function CampaignCreatePage({
     emailsPerDay: 0,
     selectedMailboxes: [],
     metrics: campaign.metrics,
-    createdAt: new Date(campaign.lastUpdated),
-    updatedAt: new Date(campaign.lastUpdated),
+    createdAt: campaign.lastUpdated ? new Date(campaign.lastUpdated) : new Date(),
+    updatedAt: campaign.lastUpdated ? new Date(campaign.lastUpdated) : new Date(),
   };
   
   return (

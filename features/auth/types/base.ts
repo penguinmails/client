@@ -36,7 +36,7 @@ export enum Permission {
 export interface Tenant {
   id: string;
   name: string;
-  created: string;
+  created?: string; // Optional: may not be available from getUserTenants
   updated?: string;
 }
 

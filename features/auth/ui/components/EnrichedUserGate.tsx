@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useEnrichment } from "../context/enrichment-context";
+import { useEnrichment } from "../../hooks/use-enrichment";
 
 import { AlertCircle, Mail, CreditCard, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button/button";
@@ -186,7 +186,10 @@ export function EnrichedUserGate({
       return skeleton ? <>{skeleton}</> : <DashboardSkeleton />;
     }
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      // Using Tailwind spacing scale (min-h-96 = 24rem = 384px)
+      // If this loading container height pattern becomes common across the app,
+      // consider abstracting it into a design token (e.g., --loading-container-min-height)
+      <div className="flex items-center justify-center min-h-96">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
@@ -202,8 +205,7 @@ export function EnrichedUserGate({
   }
 
   // Check email verification (soft pester per AUTH_FLOW.md)
-  const emailNotVerified =
-    enrichedUser && !enrichedUser.emailVerified;
+  const emailNotVerified = enrichedUser && !enrichedUser.emailVerified;
 
   // Check payment status (would need to be added to enrichment)
   // For now, this is a placeholder that checks if the user has a subscription claim

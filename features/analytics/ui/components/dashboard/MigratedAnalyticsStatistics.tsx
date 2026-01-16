@@ -2,7 +2,7 @@
 
 import { Eye, Mail, MousePointer, Reply, CheckCircle } from "lucide-react";
 import { KPIDisplayConfig } from "@features/analytics/types/ui";
-import MigratedStatsCard from "@/shared/components/MigratedStatsCard";
+import MigratedStatsCard from "@/components/MigratedStatsCard";
 
 interface MigratedAnalyticsStatisticsProps {
   // New individual prop interface

@@ -27,7 +27,12 @@ This document describes the canonical authentication flow, current behavior, and
 
 4. Login
    - Page: `app/[locale]/page.tsx` (login, uses `features/auth/ui/login-form.tsx`) - shows Turnstile when rate-limit requires it (via `features/auth/lib/rate-limit.ts`).
-   - Successful login → `AuthProvider` sets session/user in `features/auth/ui/context/auth-context.tsx` and normally navigates to `/dashboard`.
+   - Successful login → `SessionProvider` (in `session-context.tsx`) triggers the `useSignIn` mutation.
+   - Upon `onSuccess` callback:
+     - The provider waits for cookie propagation (400ms delay).
+     - It performs a session verification retry loop via `recoverSessionWithRetry(6, 600, true)`.
+     - Once verified, it sets the session state and navigates to the dashboard via SPA navigation.
+   - This ensures we never navigate until the client-side session is confirmed and cookies are reliably set.
 
 5. Payments & gating
    - Billing and subscription state are updated by Stripe webhooks: `app/api/webhooks/stripe/route.ts` and handlers in `lib/stripe/webhook-handlers.ts`.

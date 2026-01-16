@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getStatusColor } from "@features/domains/lib/utils";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import {
   AlertTriangle,
   BarChart3,

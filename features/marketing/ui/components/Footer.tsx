@@ -2,8 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher";
-import { LanguageSwitcher } from "@/shared/components/LanguageSwitcher";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function Footer() {
   return (

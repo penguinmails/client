@@ -1,9 +1,9 @@
 import React from "react";
 import { getAllConversations } from "@features/inbox/actions";
 import ConversationsListHeader from "./ConversationsListHeader";
-import { cn } from "@/shared/utils";
-import { getRelativeTime } from "@/shared/utils/date";
-import { getTagColor } from "@/shared/ui/theme";
+import { cn } from "@/lib/utils";
+import { getRelativeTime } from "@/lib/utils/date";
+import { getTagColor } from "@/lib/theme/ui";
 import { ArrowRight, Pin, Star } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";

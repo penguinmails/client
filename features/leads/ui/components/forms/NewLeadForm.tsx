@@ -18,8 +18,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { UnifiedForm, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/shared/ui/unified";
-import { useFeatureForm } from "@/shared/hooks/use-feature-form";
+import { UnifiedForm, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/unified";
+import { useFeatureForm } from "@/hooks/use-feature-form";
 import { developmentLogger } from "@/lib/logger";
 import {
   createClient,

@@ -5,5 +5,5 @@
  */
 
 // Re-export shared auth hooks from shared layer
-export { useAuthState } from '@/shared/hooks/use-auth-state';
-export { useTwoFactorAuth } from '@/shared/hooks/use-two-factor-auth';
+export { useAuthState } from '@/hooks/use-auth-state';
+export { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';

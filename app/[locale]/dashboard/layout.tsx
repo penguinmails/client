@@ -4,7 +4,7 @@ import { ProtectedRoute } from "@/features/auth/ui/components/ProtectedRoute";
 import AnalyticsProviderClient from "@/features/analytics/ui/components/AnalyticsProviderClient";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import AppSideBar from "@/features/analytics/ui/components/layout/Sidebar";
-import Header from "@/shared/layout/components/DashboardHeader";
+import Header from "@/components/layout/DashboardHeader";
 import { useEffect, useState } from "react";
 import { productionLogger } from "@/lib/logger";
 

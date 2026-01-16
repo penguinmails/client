@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
 // NOTE: Migration change: prefer core PerformanceMetrics from the new core types.
 // This component accepts either the legacy display shape (temporary) or the

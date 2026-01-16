@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import DownloadButton from "./download-button";
 

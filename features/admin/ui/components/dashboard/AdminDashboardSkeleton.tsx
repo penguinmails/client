@@ -1,4 +1,4 @@
-import { UnifiedSkeleton } from "@/shared/ui/unified";
+import { UnifiedSkeleton } from "@/components/unified";
 
 export function AdminDashboardSkeleton() {
   return (

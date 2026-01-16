@@ -179,8 +179,8 @@ export function AnalyticsComponent() {
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { UnifiedCard } from '@/components/UnifiedCard';
-import { useAnalytics } from '@/shared/hooks/useAnalytics';
-import { formatDate } from '@/shared/utils/date';
+import { useAnalytics } from '@/hooks/useAnalytics';
+import { formatDate } from '@/lib/utils/date';
 
 export function ProperAnalyticsComponent() {
   return <div>Proper Analytics</div>;
@@ -201,7 +201,7 @@ export function ProperAnalyticsComponent() {
       
       const content = `
 import React from 'react';
-import { useAnalytics } from '@/shared/hooks/useAnalytics';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 export function AnalyticsComponent() {
   const analytics = useAnalytics();
@@ -413,7 +413,7 @@ export default function Page() {
       writeFileSync(featureFile, `
 import React from 'react';
 import { UnifiedCard } from '@/components/UnifiedCard';
-import { formatDate } from '@/shared/utils/format';
+import { formatDate } from '@/lib/utils/format';
 
 export function AnalyticsPage() {
   return <UnifiedCard>Analytics</UnifiedCard>;

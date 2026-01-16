@@ -12,7 +12,7 @@ import {
 import { AnalyticsCalculator } from "@features/analytics/lib/calculator";
 import { KPIDisplayConfig } from "@features/analytics/types/ui";
 import { CampaignAnalytics } from "@features/analytics/types/domain-specific";
-import MigratedStatsCard from "@/shared/components/MigratedStatsCard";
+import MigratedStatsCard from "@/components/MigratedStatsCard";
 import { KPISummaryCardSkeleton } from "../SkeletonLoaders";
 
 interface MigratedKpiCardsProps {

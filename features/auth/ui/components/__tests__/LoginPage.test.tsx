@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import LoginPage from "@/app/[locale]/page";
-import { useAuth } from "@/features/auth/ui/context/auth-context";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import * as rateLimitModule from "@/features/auth/lib/rate-limit";
 
 // Mock all external dependencies
@@ -12,13 +12,13 @@ jest.mock("next-intl", () => ({
 // Create a file-scoped mock for safe navigation to avoid global pollution
 const mockSafePush = jest.fn();
 
-jest.mock("@/shared/hooks/use-safe-navigation", () => ({
+jest.mock("@/hooks/use-safe-navigation", () => ({
   useSafeNavigation: () => ({
     safePush: mockSafePush,
   }),
 }));
 
-jest.mock("@/features/auth/ui/context/auth-context", () => ({
+jest.mock("@/features/auth/hooks/use-auth", () => ({
   useAuth: jest.fn(),
 }));
 

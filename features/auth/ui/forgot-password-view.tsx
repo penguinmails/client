@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { KeyRound, MailCheck, User } from "lucide-react";
 import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate";
-import { useAuth } from "@features/auth/ui/context/auth-context";
+import { useAuth } from "@features/auth/hooks/use-auth";
 import { useTranslations } from "next-intl";
 import { productionLogger } from "@/lib/logger";
 

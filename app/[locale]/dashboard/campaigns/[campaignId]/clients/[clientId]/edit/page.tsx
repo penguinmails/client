@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getClient } from "@/shared/queries/clients";
+import { getClient } from "@/lib/queries/clients";
 import ClientForm from "@/features/leads/ui/components/forms/LeadForm";
 import { LeadHeader } from "@/features/leads/ui/components/forms/LeadHeader";
 

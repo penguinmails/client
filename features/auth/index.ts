@@ -29,18 +29,23 @@ export {
 } from './ui/components';
 
 // Context - Public context providers
+// Context - Public context providers
 export {
   AuthProvider,
-  useAuth,
-} from './ui/context/auth-context';
+} from './ui/context/auth-provider';
+
+export { useAuth } from './hooks/use-auth';
+export { useSession } from './hooks/use-session';
+export { useEnrichment } from './hooks/use-enrichment';
+
 
 // Hooks - Public custom hooks
 export {
   useAuthState,
   useTwoFactorAuth,
-} from '@/shared/hooks';
+} from '@/hooks';
 
 // Operations - Public auth operations
 export {
   checkSession,
-} from './lib/auth-operations';
+} from './lib/session-operations';

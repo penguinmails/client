@@ -8,7 +8,7 @@ jest.mock("next-intl", () => ({
 }));
 
 // Mock the auth context
-jest.mock("@features/auth/ui/context/auth-context", () => ({
+jest.mock("@features/auth/hooks/use-auth", () => ({
   useAuth: jest.fn(() => ({ user: null })),
 }));
 
