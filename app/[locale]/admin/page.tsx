@@ -1,17 +1,22 @@
 import { Suspense } from "react";
 import { AdminDashboard } from "@/features/admin/ui/components/dashboard/AdminDashboard";
 import { AdminDashboardSkeleton } from "@/features/admin/ui/components/dashboard/AdminDashboardSkeleton";
+import { getTranslations } from "next-intl/server";
 
-export default function AdminPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function AdminPage() {
+  const t = await getTranslations("Admin");
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">
-            Admin Dashboard
+            {t("title")}
           </h1>
           <p className="text-muted-foreground mt-2">
-            Cross-tenant user management and analytics
+            {t("description")}
           </p>
         </div>
 

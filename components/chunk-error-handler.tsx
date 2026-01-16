@@ -17,7 +17,12 @@ interface ChunkErrorHandlerProps {
  * - Network issues during chunk loading
  * - Rapid navigation after authentication
  */
+import { useTranslations } from "next-intl";
+
+// ... existing code ...
+
 export function ChunkErrorHandler({ children }: ChunkErrorHandlerProps) {
+  const t = useTranslations("Components.ChunkErrorHandler");
   const [hasChunkError, setHasChunkError] = useState(false);
   const [errorDetails, setErrorDetails] = useState<string>("");
 
@@ -111,18 +116,17 @@ export function ChunkErrorHandler({ children }: ChunkErrorHandlerProps) {
             </div>
 
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Loading Error Detected
+              {t("title")}
             </h2>
 
             <p className="text-gray-600 mb-4 text-sm">
-              A critical chunk failed to load. This typically happens after a
-              deployment or due to cached files.
+              {t("description")}
             </p>
 
             {errorDetails && (
               <details className="mb-4 text-left">
                 <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-700">
-                  Technical Details
+                  {t("techDetails")}
                 </summary>
                 <code className="block mt-2 p-2 bg-gray-100 rounded text-xs overflow-x-auto">
                   {errorDetails}
@@ -133,7 +137,7 @@ export function ChunkErrorHandler({ children }: ChunkErrorHandlerProps) {
             <div className="space-y-3">
               <Button onClick={handleRecovery} className="w-full" size="lg">
                 <RefreshCw className="mr-2 h-4 w-4" />
-                Reload Application
+                {t("reload")}
               </Button>
 
               <Button
@@ -141,13 +145,12 @@ export function ChunkErrorHandler({ children }: ChunkErrorHandlerProps) {
                 variant="outline"
                 className="w-full"
               >
-                Hard Refresh (Clear Cache)
+                {t("hardRefresh")}
               </Button>
             </div>
 
             <p className="text-xs text-gray-500 mt-4">
-              If this persists, try clearing your browser cache or contact
-              support.
+              {t("help")}
             </p>
           </div>
         </div>

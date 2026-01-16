@@ -60,16 +60,16 @@ export default async function RootLayout({
           `${geistSans.variable} ${geistMono.variable} antialiased`
         )}
       >
-        <ChunkErrorHandler>
-          <CoreProviders>
-            <NextIntlClientProvider locale={locale}>
+        <CoreProviders>
+          <NextIntlClientProvider locale={locale}>
+            <ChunkErrorHandler>
               {!isValidLocale && (
                 <LocaleFallbackToast requestedLocale={requestedLocale} />
               )}
               {children}
-            </NextIntlClientProvider>
-          </CoreProviders>
-        </ChunkErrorHandler>
+            </ChunkErrorHandler>
+          </NextIntlClientProvider>
+        </CoreProviders>
         <Toaster />
       </body>
     </html>
