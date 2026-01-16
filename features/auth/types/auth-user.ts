@@ -16,13 +16,10 @@ export interface BaseUser {
  */
 export interface AuthUser extends BaseUser {
   // === From users table (Session provides id/email) ===
-  // === From users table (Session provides id/email) ===
-  // Inherited from BaseUser
   name?: string;
   givenName?: string;
   familyName?: string;
   picture?: string;
-  emailVerified?: Date;
   created?: Date;
   updated?: Date;
   
@@ -35,6 +32,11 @@ export interface AuthUser extends BaseUser {
   // === Derived / Auth Flags ===
   isStaff?: boolean;
   role?: string;
+  profile?: UserProfile; 
+  tenants: Tenant[];
+  companies: CompanyInfo[];
+  roles: string[];
+  permissions: string[];
 
   // === Alias for backward compatibility (Deprecated) ===
   displayName?: string;
@@ -45,6 +47,12 @@ export interface AuthUser extends BaseUser {
     tenantId: string;
     companyId?: string;
   };
+}
+
+export interface UserProfile {
+    bio?: string;
+    avatar?: string;
+    preferences?: UserPreferences;
 }
 
 /**

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useEnrichment } from "../context/enrichment-context";
+import { useEnrichment } from "../../hooks/use-enrichment";
 import { UserRole } from "../../types/base"; // Importing UserRole enum
 import { AlertCircle } from "lucide-react";
 
@@ -28,8 +28,11 @@ export const RoleGuard = ({
   }
   
   // Check if user has any of the allowed roles
-  // enrichedUser.role is "user" | "admin" etc.
-  const hasAccess = allowedRoles.some(role => role === enrichedUser.role);
+  // support both legacy 'role' string and new 'roles' array
+  const userRoles = enrichedUser.roles || [];
+  if (enrichedUser.role) userRoles.push(enrichedUser.role);
+
+  const hasAccess = allowedRoles.some(role => userRoles.includes(role));
   
   if (!hasAccess) {
     if (fallback) return <>{fallback}</>;

@@ -2,7 +2,6 @@
 
 import React, {
   createContext,
-  useContext,
   useEffect,
   useState,
   useCallback,
@@ -10,16 +9,13 @@ import React, {
   useRef,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSignIn, useSignUp } from "@niledatabase/react";
+import { useSignIn } from "@niledatabase/react";
 import { useSafeNavigation } from "@/hooks/use-safe-navigation";
 import { developmentLogger } from "@/lib/logger";
-import { checkSession, recoverSessionWithRetry, performLogout } from "../../lib/session-operations";
+import { recoverSessionWithRetry, performLogout } from "../../lib/session-operations";
 import { signupWithVerification } from "../../lib/signup-operations";
-import { BaseUser } from "../../types/auth-user"; // Assuming BaseUser is in types/auth-user or define it here if needed.
-// Actually BaseUser was defined in base-auth-context. I should probably move it to types/auth-user.ts or define it here.
-// Let's define it here for now if permitted, or in a types file.
-// The plan didn't specify moving types, but good practice.
-// I'll check if BaseUser is available in types/auth-user
+import { BaseUser } from "../../types/auth-user";
+import { SessionRecoveryError } from "../../types/auth-errors";
 
 export interface SessionContextValue {
   session: BaseUser | null;
@@ -32,7 +28,7 @@ export interface SessionContextValue {
   logout: () => Promise<void>;
 }
 
-const SessionContext = createContext<SessionContextValue | null>(null);
+export const SessionContext = createContext<SessionContextValue | null>(null);
 
 export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -50,16 +46,12 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
   const isInitialized = useRef(false);
 
   // NileDB Hooks
-  // We explicitly type this to avoid 'unknown' issues if necessary, usually it works fine.
   const signInHook = useSignIn() as unknown as {
     (credentials: {
       provider: string;
       email: string;
       password: string;
     }): Promise<void>;
-  };
-  const signUpHook = useSignUp({}) as unknown as {
-      (credentials: { email: string; password: string; name?: string }): Promise<any>;
   };
 
   // Session Recovery
@@ -73,12 +65,15 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
         setRetryCount(0);
       } else {
         setSession(null);
-        // If recovery returns null, it just means not logged in (or failed to recover).
-        // we don't necessarily set error unless we expected a session.
       }
     } catch (err) {
       developmentLogger.error("Session recovery failed", err);
-      setError(err instanceof Error ? err : new Error("Session recovery failed"));
+      // Use custom error if possible, but keep original if needed
+      if (err instanceof SessionRecoveryError) {
+          setError(err);
+      } else {
+          setError(err instanceof Error ? err : new Error("Session recovery failed"));
+      }
       setSession(null);
     } finally {
       setIsLoading(false);
@@ -93,8 +88,8 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
     const init = async () => {
       try {
         await recoverSession();
-      } catch (e) {
-        console.error("Init session failed", e);
+      } catch (_e) {
+        developmentLogger.error("Init session failed", _e);
       }
     };
     init();
@@ -108,7 +103,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
       await signInHook({ provider: "credentials", email, password });
       
       // After login, we must verify session
-      const user = await recoverSessionWithRetry(5, 500); // More aggressive retry after explicit login
+      const user = await recoverSessionWithRetry(5, 500); 
       if (!user) {
         throw new Error("Login succeeded but session could not be established.");
       }
@@ -124,24 +119,13 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [signInHook, recoverSession, searchParams, safePush]);
+  }, [signInHook, searchParams, safePush]);
 
-  // Signup - delegated to separate operations effectively, but context exposes the wrapper
-  // Note: Detailed signup logic (email sending etc) is in signup-operations.ts as per plan.
-  // We need to implement it there.
-  // For now, I'll keep the signature simple and maybe call a placeholder or inline it if simple.
-  // The plan says "Implement Signup Flow in features/auth/lib/signup-operations.ts".
-  // So I'll import it.
-  
   const signup = useCallback(async (email: string, password: string, name: string) => {
     setIsLoading(true);
     setError(null);
     try {
         await signupWithVerification({ email, password }, name);
-        // If auto-login is expected, we might try to recover session, 
-        // but usually specific check is needed or user must verify email.
-        // We'll try to recover just in case generic signup logs them in.
-        // await recoverSession(); 
     } catch (err) {
         setError(err instanceof Error ? err : new Error("Signup failed"));
         throw err;
@@ -157,7 +141,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
       setSession(null);
       router.push("/");
     } catch (err) {
-      console.error("Logout error", err);
+      developmentLogger.error("Logout error", err);
     } finally {
       setIsLoading(false);
     }
@@ -179,10 +163,4 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </SessionContext.Provider>
   );
-};
-
-export const useSession = () => {
-  const context = useContext(SessionContext);
-  if (!context) throw new Error("useSession must be used within SessionProvider");
-  return context;
 };

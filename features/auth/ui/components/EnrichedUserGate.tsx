@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useEnrichment } from "../context/enrichment-context";
+import { useEnrichment } from "../../hooks/use-enrichment";
 
 import { AlertCircle, Mail, CreditCard, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button/button";

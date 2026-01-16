@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "../context/session-context";
-import { useEnrichment } from "../context/enrichment-context";
+import { useSession } from "../../hooks/use-session";
+import { useEnrichment } from "../../hooks/use-enrichment";
 import { Loader2 } from "lucide-react";
 import { SessionErrorView, EnrichmentErrorView } from "./ErrorViews";
 import { UserRole } from "../../types/base";
@@ -78,8 +78,10 @@ export const ProtectedRoute = ({
 
   // 6. Role Check (if required)
   if (requiredRole && enrichedUser) {
-      const hasRole = enrichedUser.role === requiredRole || 
-                      (Array.isArray(enrichedUser.claims?.role) && enrichedUser.claims.role.includes(requiredRole));
+      const userRoles = enrichedUser.roles || [];
+      if (enrichedUser.role) userRoles.push(enrichedUser.role);
+      
+      const hasRole = userRoles.includes(requiredRole);
       
       if (!hasRole) {
           return fallback ? <>{fallback}</> : (

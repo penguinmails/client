@@ -1,4 +1,4 @@
-import { useAuth } from "../ui/context/auth-context";
+import { useAuth } from "../hooks/use-auth";
 
 /**
  * Hook to get current user ID

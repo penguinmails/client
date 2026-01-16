@@ -54,7 +54,7 @@ export async function recoverSessionWithRetry(
       
       await new Promise(resolve => setTimeout(resolve, delayMs));
       attempt++;
-    } catch (error) {
+    } catch {
        // If checkSession threw, it was logged. 
        // If we change checkSession to throw on network error, we could catch it here.
        // For now, let's assume checkSession catches internally. 

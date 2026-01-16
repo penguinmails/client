@@ -2,21 +2,20 @@
 
 import React, {
   createContext,
-  useContext,
   useEffect,
   useState,
   useCallback,
   useMemo,
   useRef,
 } from "react";
-import { useSession } from "./session-context";
+import { useSession } from "../../hooks/use-session";
 import { useSystemHealth } from "@/hooks";
 import { productionLogger } from "@/lib/logger";
 import { fetchEnrichedUser } from "../../lib/enrichment-operations";
-import { BaseUser, AuthUser } from "../../types/auth-user";
+import { AuthUser } from "../../types/auth-user";
 import { CompanyInfo } from "@/types/company";
 import { Tenant } from "../../types/base";
-import { DatabaseErrorPage } from "../components/db-error-page";
+import { EnrichmentError } from "../../types/auth-errors";
 
 // ============================================================================
 // Types
@@ -36,7 +35,7 @@ export interface EnrichmentContextValue {
   refreshEnrichment: () => Promise<void>;
 }
 
-const EnrichmentContext = createContext<EnrichmentContextValue | null>(null);
+export const EnrichmentContext = createContext<EnrichmentContextValue | null>(null);
 
 // ============================================================================
 // Constants
@@ -52,7 +51,7 @@ const RETRY_DELAY_MS = 2000;
 export const UserEnrichmentProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { session, isLoading: isSessionLoading } = useSession(); // Use new SessionContext
+  const { session, isLoading: isSessionLoading } = useSession(); 
   const { systemHealth } = useSystemHealth();
   const isHealthy = systemHealth.status === "healthy";
 
@@ -71,7 +70,7 @@ export const UserEnrichmentProvider: React.FC<{
   // ============================================================================
   const enrichUser = useCallback(
     async (userId: string): Promise<void> => {
-      // Don't enrich if unhealthy and already retried enough? Or just retry?
+      // Don't enrich if unhealthy and already retried enough
       if (!isHealthy && retryCountRef.current > 0) return;
 
       setIsLoadingEnrichment(true);
@@ -85,10 +84,10 @@ export const UserEnrichmentProvider: React.FC<{
             setEnrichedUser({
                 ...session,
                 // data is Partial<AuthUser>.
-                ...(data as any),
+                ...(data as Record<string, unknown>),
                 id: userId,
                 email: session.email,
-            });
+            } as AuthUser);
         }
 
         // Auto-select tenant
@@ -106,9 +105,9 @@ export const UserEnrichmentProvider: React.FC<{
           setTimeout(retry, RETRY_DELAY_MS);
         } else {
           setEnrichmentError(
-            err instanceof Error
+            err instanceof EnrichmentError
               ? err
-              : new Error("Failed to load user profile")
+              : new EnrichmentError(userId, "UserProfile")
           );
         }
       } finally {
@@ -205,21 +204,9 @@ export const UserEnrichmentProvider: React.FC<{
     ]
   );
 
-  // We expose error via context
-  
   return (
     <EnrichmentContext.Provider value={contextValue}>
       {children}
     </EnrichmentContext.Provider>
   );
-};
-
-export const useEnrichment = () => {
-  const context = useContext(EnrichmentContext);
-  if (!context) {
-    throw new Error(
-      "useEnrichment must be used within a UserEnrichmentProvider"
-    );
-  }
-  return context;
 };

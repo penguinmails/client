@@ -1,4 +1,4 @@
-import { useAuth } from '@features/auth/ui/context/auth-context';
+import { useAuth } from '@features/auth/hooks/use-auth';
 import { useSystemHealth } from "@/hooks";
 import { UserRole } from '@features/auth/types';
 import { developmentLogger } from '@/lib/logger';

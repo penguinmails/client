@@ -7,7 +7,7 @@ import { PasswordInput } from "@/features/auth/ui/components";
 import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, User } from "lucide-react";
-import { useAuth } from "@features/auth/ui/context/auth-context";
+import { useAuth } from "@features/auth/hooks/use-auth";
 import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate";
 import { Turnstile } from "next-turnstile";
 import { verifyTurnstileToken } from "@/features/auth/lib/verify-token";

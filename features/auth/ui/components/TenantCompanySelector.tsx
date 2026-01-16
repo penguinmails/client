@@ -8,7 +8,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@features/auth/ui/context/auth-context";
+import { useAuth } from "@features/auth/hooks/use-auth";
 import { useTenantAccess, useCompanyAccess } from "@features/auth/lib/hooks/use-enhanced-auth";
 import { productionLogger } from "@/lib/logger";
 import {

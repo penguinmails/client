@@ -1,49 +1,7 @@
-"use client";
-
-/**
- * Auth Context - Composition Layer
- *
- * This module composes SessionProvider + UserEnrichmentProvider for backward
- * compatibility. It re-exports a unified `useAuth` hook that combines both contexts.
- *
- * For new code, prefer using:
- * - `useSession()` for session-level auth (fast, minimal data)
- * - `useEnrichment()` for enriched user data (profile, roles, tenant)
- */
-
-import React, { useMemo, useCallback } from "react";
-import {
-  SessionProvider as AppSessionProvider, // Alias to avoid conflict with NileDB SessionProvider if used, though here we might explicitly use ours.
-  useSession,
-} from "./session-context";
-import {
-  UserEnrichmentProvider,
-  useEnrichment,
-} from "./enrichment-context";
-import { AuthUser, AuthLoadingState, AuthContextValue } from "../../types/auth-user";
-import { SessionProvider as NileSessionProvider } from "@niledatabase/react";
-
-// ============================================================================
-// Composition Provider
-// ============================================================================
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  return (
-    <NileSessionProvider>
-      <AppSessionProvider>
-        <UserEnrichmentProvider>
-          {children}
-        </UserEnrichmentProvider>
-      </AppSessionProvider>
-    </NileSessionProvider>
-  );
-};
-
-// ============================================================================
-// Unified useAuth Hook (Backward Compatible)
-// ============================================================================
+import { useMemo, useCallback } from "react";
+import { useSession } from "./use-session";
+import { useEnrichment } from "./use-enrichment";
+import { AuthUser, AuthLoadingState, AuthContextValue } from "../types/auth-user";
 
 /**
  * Unified auth hook that combines Session + Enrichment contexts.
@@ -66,8 +24,12 @@ export const useAuth = (): AuthContextValue => {
             id: sessionAuth.session.id,
             email: sessionAuth.session.email,
             emailVerified: sessionAuth.session.emailVerified ? new Date(sessionAuth.session.emailVerified) : undefined,
-            // other fields undefined
-        };
+            // Fallbacks for mandatory arrays
+            tenants: [],
+            companies: [],
+            roles: [],
+            permissions: [],
+        } as AuthUser;
     }
     
     return null;
@@ -87,7 +49,6 @@ export const useAuth = (): AuthContextValue => {
 
   // Refresh all user data
   const refreshUser = useCallback(async () => {
-    // check session first? session check is fast.
     await sessionAuth.recoverSession(); // verify session
     await enrichment.refreshEnrichment();
   }, [sessionAuth, enrichment]);
@@ -95,8 +56,8 @@ export const useAuth = (): AuthContextValue => {
   return useMemo<AuthContextValue>(
     () => ({
       user,
-      isAuthenticated: !!sessionAuth.session, // or !sessionAuth.isLoading && !!sessionAuth.session
-      loading: sessionAuth.isLoading, // Legacy simple loading legacy
+      isAuthenticated: !!sessionAuth.session,
+      loading: sessionAuth.isLoading, // Legacy simple loading
       authLoading,
       error,
       userTenants: enrichment.userTenants,
@@ -104,14 +65,14 @@ export const useAuth = (): AuthContextValue => {
       isStaff: enrichment.isStaff,
       selectedTenantId: enrichment.selectedTenantId,
       selectedCompanyId: enrichment.selectedCompanyId,
-      sessionExpired: sessionAuth.retryCount > 3, // rough estimate or expose explicit expired state
+      sessionExpired: sessionAuth.retryCount > 3,
       setSelectedTenant: enrichment.setSelectedTenant,
       setSelectedCompany: enrichment.setSelectedCompany,
       refreshUserData: refreshUser,
       refreshProfile: refreshUser,
       refreshTenants: refreshUser,
       refreshCompanies: refreshUser,
-      clearError: () => { /* No explicit clear error in session context exposed yet? sessionAuth.recoverSession() usually resets. */ }, 
+      clearError: () => { /* No explicit clear error exposed yet */ }, 
       login: sessionAuth.login,
       signup: sessionAuth.signup,
       logout: sessionAuth.logout,
@@ -138,10 +99,3 @@ export const useAuth = (): AuthContextValue => {
     ]
   );
 };
-
-// ============================================================================
-// Re-exports for convenience
-// ============================================================================
-
-export { useSession } from "./session-context";
-export { useEnrichment } from "./enrichment-context";
