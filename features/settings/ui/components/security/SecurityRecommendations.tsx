@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button/button";
 import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
 import { SettingsErrorState } from "@/components/settings-error-state";
-import { showSecurityUpdateSuccess } from "@/components/settings-success-notification";
+import { useSettingsNotifications } from "@/components/settings-success-notification";
 import { useTwoAuthContext } from "./TwoFactorAuthSwitch";
 import { AlertTriangle, Check, Shield, Loader2, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +24,7 @@ interface SecurityRecommendationUI {
 function SecurityRecommendations() {
   const { isEnabled } = useTwoAuthContext();
   const [refreshing, setRefreshing] = useState(false);
+  const { showSecurityUpdateSuccess } = useSettingsNotifications();
 
   // Server action for fetching security recommendations
   const securityAction = useServerAction(() => getSecurityRecommendations(), {

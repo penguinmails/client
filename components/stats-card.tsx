@@ -39,6 +39,10 @@ interface StatsCardProps {
   };
 }
 
+import { useTranslations } from "next-intl";
+
+// ... existing code ...
+
 export function StatsCard({
   title,
   value,
@@ -48,6 +52,8 @@ export function StatsCard({
   description,
   trend
 }: StatsCardProps) {
+  const t = useTranslations("Components.StatsCard");
+  
   return (
     <SimpleCard className={cn("", className)}>
       <SimpleCardContent className="p-4">
@@ -66,7 +72,7 @@ export function StatsCard({
                 )}>
                   {trend.isPositive ? "+" : ""}{trend.value}%
                 </span>
-                <span className="text-xs text-muted-foreground ml-1">vs last period</span>
+                <span className="text-xs text-muted-foreground ml-1">{t("vsLastPeriod")}</span>
               </div>
             )}
           </div>

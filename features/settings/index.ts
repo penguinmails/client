@@ -61,19 +61,7 @@ export {
   ServerErrorState,
 } from '@/components/settings-error-state';
 export {
-  showSuccessNotification,
-  showSaveSuccess,
-  showUpdateSuccess,
-  showCreateSuccess,
-  showDeleteSuccess,
-  showInviteSuccess,
-  showUploadSuccess,
-  showProfileUpdateSuccess,
-  showNotificationPreferencesSuccess,
-  showBillingUpdateSuccess,
-  showSecurityUpdateSuccess,
-  showAppearanceUpdateSuccess,
-  showTeamMemberSuccess,
+  useSettingsNotifications,
 } from '@/components/settings-success-notification';
 
 // Context - Public context providers
