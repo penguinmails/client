@@ -4,6 +4,7 @@ import { VERSION } from '@/lib/health/constants';
 import { getUptime } from '@/lib/health/checks';
 import { logHealthCheck } from '@/lib/health/monitoring';
 import { HealthCheckResponse } from '@/lib/health/types';
+import { productionLogger } from '@/lib/logger';
 
 export async function GET() {
   const timestamp = new Date().toISOString();
@@ -18,8 +19,8 @@ export async function GET() {
     };
 
     // Log to PostHog (non-blocking)
-    logHealthCheck(healthData).catch(err => 
-      console.error('Failed to log health check:', err)
+    logHealthCheck(healthData).catch(err =>
+      productionLogger.error('Failed to log health check:', err)
     );
 
     return NextResponse.json(healthData, { 
@@ -31,8 +32,8 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Health check failed:', error);
-    
+    productionLogger.error('Health check failed:', error);
+
     return NextResponse.json(
       {
         status: 'unhealthy',
