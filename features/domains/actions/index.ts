@@ -67,10 +67,10 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
     const domains: Domain[] = [
       {
         id: 1,
-        domain: 'example.com',
+        domain: 'mycompany.com',
         status: 'VERIFIED',
-        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-        emailAccounts: 3,
+        createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // Added 2 weeks ago
+        emailAccounts: 5,
         records: {
           spf: 'verified',
           dkim: 'verified',
@@ -80,15 +80,15 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
       },
       {
         id: 2,
-        domain: 'testdomain.io',
+        domain: 'outreach.mycompany.com',
         status: 'PENDING',
-        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        emailAccounts: 1,
+        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // Added 1 day ago
+        emailAccounts: 0,
         records: {
-          spf: 'pending',
+          spf: 'verified',
           dkim: 'pending',
           dmarc: 'pending',
-          mx: 'pending'
+          mx: 'verified'
         }
       }
     ];
@@ -129,10 +129,10 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
 
     // Default DNS records for the component
     const defaultDnsRecords = [
-      { name: 'TXT', value: 'v=spf1 include:_spf.google.com ~all' },
-      { name: 'TXT', value: 'v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain.com' },
-      { name: 'CNAME', value: 'selector1._domainkey.yourdomain.com' },
-      { name: 'MX', value: '10 mail.yourdomain.com' }
+      { name: 'SPF Record', value: 'v=spf1 include:_spf.google.com ~all' },
+      { name: 'DKIM Record', value: 'v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3...' },
+      { name: 'DMARC Record', value: 'v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain.com' },
+      { name: 'MX Record', value: '10 mail.yourdomain.com' }
     ];
 
     return {

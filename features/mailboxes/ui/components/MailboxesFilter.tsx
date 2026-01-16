@@ -23,8 +23,8 @@ function MailboxesFilter() {
           placeholder="All Status"
           options={[
             { value: "all", label: "All Status" },
-            { value: "active", label: "Active" },
-            { value: "paused", label: "Paused" },
+            { value: "active", label: "active" },
+            { value: "paused", label: "paused" },
           ]}
         />
 

@@ -9,13 +9,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Mail, Plus, AlertCircle } from "lucide-react";
+import { Loader2, Mail, Plus, AlertCircle, Trash2, Settings } from "lucide-react";
 import Link from "next/link";
 import { MailboxWarmupData } from "@/types";
 import { mapRawToLegacyMailboxData } from "@features/analytics/lib/mappers";
-// Migration note: Using local alias for mailbox analytics state, all mailbox analytics set via mapper.
 import MailboxesFilter from "./MailboxesFilter";
+import { formatDistanceToNow } from "date-fns";
 
+// ... type definitions
 type LocalProgressiveAnalyticsState = Record<
   string,
   {
@@ -94,33 +95,20 @@ function MailboxesTab({
   }
 
   return (
-    <Card>
-      <CardHeader className="flex justify-between items-center">
-        <CardTitle>
-          <div className="flex items-center space-x-2">
-            <Mail className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-foreground">
-              All Mailboxes
-            </h2>
-            <Badge className="bg-primary/20 text-primary">
-              {mailboxes.length} total
-            </Badge>
-          </div>
-        </CardTitle>
-        <div className="flex justify-end">
-          <Button asChild>
-            <Link
-              href="/dashboard/domains/mailboxes/new"
-              className="flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4 " />
-              Add Mailbox
-            </Link>
-          </Button>
+    <Card className="border rounded-xl bg-card shadow-sm">
+      <div className="p-6 space-y-6">
+        <div className="flex items-center justify-between">
+           <h2 className="text-lg font-semibold text-foreground">All Mailboxes</h2>
+           <Button asChild className="bg-[rgb(43,128,255)] hover:bg-[rgb(43,128,255)]/90 text-white rounded-md font-medium h-9 px-4 text-sm shadow-sm">
+              <Link href="/dashboard/mailboxes/new" className="flex items-center gap-2">
+                 <Plus className="w-4 h-4" /> Add Mailbox
+              </Link>
+           </Button>
         </div>
-      </CardHeader>
-      <MailboxesFilter />
-      <CardContent className="p-0">
+
+        <MailboxesFilter />
+      </div>
+      <div className="p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader className="bg-gray-100 dark:bg-muted">
@@ -130,11 +118,6 @@ function MailboxesTab({
                 <TableHead>Daily Limit</TableHead>
                 <TableHead>Sent</TableHead>
                 <TableHead>Last Activity</TableHead>
-                <TableHead>Progress</TableHead>
-                <TableHead>Total Warmups</TableHead>
-                <TableHead>Spam Flags</TableHead>
-                <TableHead>Replies</TableHead>
-                <TableHead>Health Score</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -172,9 +155,12 @@ function MailboxesTab({
                               ? "secondary"
                               : "outline"
                         }
-                        className="capitalize"
+                        className={
+                             mailbox.status === "active" ? "bg-green-100 text-green-700 hover:bg-green-100" : 
+                             mailbox.status === "paused" ? "bg-red-100 text-red-700 hover:bg-red-100" : ""
+                        }
                       >
-                        {mailbox.status}
+                        {mailbox.status.charAt(0).toUpperCase() + mailbox.status.slice(1)}
                       </Badge>
                     </TableCell>
                     <TableCell className="px-6 py-6">
@@ -191,7 +177,7 @@ function MailboxesTab({
                     <TableCell className="px-6 py-6">
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-gray-900 dark:text-foreground">
+                          <span className="text-sm font-bold text-gray-900 dark:text-foreground">
                             {(
                               analytics?.data?.[0]?.totalWarmups || 0
                             ).toLocaleString()}
@@ -204,137 +190,18 @@ function MailboxesTab({
                     </TableCell>
                     <TableCell className="px-6 py-6 text-sm text-gray-500">
                       {analytics?.data?.[0]?.lastUpdated
-                        ? analytics.data[0].lastUpdated.toLocaleString()
+                        ? formatDistanceToNow(new Date(analytics.data[0].lastUpdated), { addSuffix: true }).replace("about ", "")
                         : "N/A"}
                     </TableCell>
-                    <TableCell>
-                      {analytics?.loading ? (
-                        <div className="flex items-center space-x-2">
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span className="text-sm text-muted-foreground">
-                            Loading...
-                          </span>
-                        </div>
-                      ) : analytics?.error ? (
-                        <div className="flex items-center space-x-2 text-red-500">
-                          <AlertCircle className="w-4 h-4" />
-                          <span className="text-sm">Error</span>
-                        </div>
-                      ) : analytics?.data ? (
-                        <>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-16 bg-gray-200 rounded-full h-2">
-                              <div
-                                className="bg-primary h-2 rounded-full transition-all duration-300"
-                                style={{
-                                  width: `${analytics.data?.[0]?.warmupProgress || 0}%`,
-                                }}
-                              />
-                            </div>
-                            <span className="text-sm font-medium">
-                              {analytics.data?.[0]?.warmupProgress || 0}%
-                            </span>
-                          </div>
-                        </>
-                      ) : (
-                        <span className="text-sm text-muted-foreground">
-                          N/A
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {analytics?.loading ? (
-                        <div className="flex items-center space-x-2">
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span className="text-sm text-muted-foreground">
-                            Loading...
-                          </span>
-                        </div>
-                      ) : analytics?.error ? (
-                        <div className="flex items-center space-x-2 text-red-500">
-                          <AlertCircle className="w-4 h-4" />
-                          <span className="text-sm">Error</span>
-                        </div>
-                      ) : (
-                        <span className="text-sm font-medium">
-                          {analytics?.data?.[0]?.totalWarmups || "N/A"}
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {analytics?.loading ? (
-                        <div className="flex items-center space-x-2">
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span className="text-sm text-muted-foreground">
-                            Loading...
-                          </span>
-                        </div>
-                      ) : analytics?.error ? (
-                        <div className="flex items-center space-x-2 text-red-500">
-                          <AlertCircle className="w-4 h-4" />
-                          <span className="text-sm">Error</span>
-                        </div>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="text-red-600 border-red-300"
-                        >
-                          {analytics?.data?.[0]?.spamFlags || "N/A"}
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {analytics?.loading ? (
-                        <div className="flex items-center space-x-2">
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span className="text-sm text-muted-foreground">
-                            Loading...
-                          </span>
-                        </div>
-                      ) : analytics?.error ? (
-                        <div className="flex items-center space-x-2 text-red-500">
-                          <AlertCircle className="w-4 h-4" />
-                          <span className="text-sm">Error</span>
-                        </div>
-                      ) : (
-                        <span className="text-sm font-medium">
-                          {analytics?.data?.[0]?.replies || "N/A"}
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {analytics?.loading ? (
-                        <div className="flex items-center space-x-2">
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span className="text-sm text-muted-foreground">
-                            Loading...
-                          </span>
-                        </div>
-                      ) : analytics?.error ? (
-                        <div className="flex items-center space-x-2 text-red-500">
-                          <AlertCircle className="w-4 h-4" />
-                          <span className="text-sm">Error</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium">
-                            {analytics?.data?.[0]?.healthScore || "N/A"}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            %
-                          </span>
-                        </div>
-                      )}
-                    </TableCell>
                     <TableCell className="px-6 py-6 text-right">
-                      {/* <MailboxActions mailbox={mailbox} /> */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-primary"
-                      >
-                        View Details
-                      </Button>
+                        <div className="flex items-center justify-end gap-2">
+                             <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-gray-900">
+                                <Settings className="h-4 w-4" />
+                             </Button>
+                             <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-red-600">
+                                <Trash2 className="h-4 w-4" />
+                             </Button>
+                        </div>
                     </TableCell>
                   </TableRow>
                 );
@@ -342,7 +209,7 @@ function MailboxesTab({
             </TableBody>
           </Table>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

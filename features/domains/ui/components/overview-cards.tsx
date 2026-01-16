@@ -42,6 +42,7 @@ function OverviewCards() {
     getDomains();
   }, []);
 
+  const activeMailboxesCount = mailboxes.filter((m) => m.status === "active" || m.status === "warming").length;
   const readyMailboxes = mailboxes.filter((m) => m.status === "active").length; // Active means ready to send
   const warmingMailboxes = mailboxes.filter((m) => m.status === "warming").length;
 
@@ -55,7 +56,7 @@ function OverviewCards() {
     },
     {
       title: "Active Mailboxes",
-      value: mailboxes.length,
+      value: activeMailboxesCount,
       icon: Mail,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
@@ -85,7 +86,7 @@ function OverviewCards() {
           value={card.value.toString()}
           icon={card.icon}
           color={cn(card.iconBg, card.iconColor)}
-          className="flex-row-reverse gap-5 justify-end"
+          iconPosition="left"
         />
       ))}
     </div>

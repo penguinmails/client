@@ -21,6 +21,7 @@ import {
   Tag,
   Trash2,
   TrendingUp,
+  Users,
   X,
 } from "lucide-react";
 import { useEffect, useReducer } from "react";
@@ -61,6 +62,7 @@ function InboxFilter() {
     { id: "sent", label: "Sent", count: 89, icon: Send },
     { id: "archived", label: "Archived", count: 43, icon: Archive },
     { id: "trash", label: "Trash", count: 12, icon: Trash2 },
+    { id: "team", label: "Team", count: 8, icon: Users },
   ];
   useEffect(() => {
     const params = new URLSearchParams();
@@ -198,8 +200,8 @@ function InboxFilter() {
                   className={cn(
                     "w-full justify-between h-auto py-2.5 px-3",
                     filterState.selectedFilter === filter.id
-                      ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                      : "text-gray-700 dark:text-muted-foreground",
+                      ? "bg-[#eff6ff] text-blue-600 hover:bg-[#eff6ff]"
+                      : "text-gray-600 dark:text-muted-foreground hover:bg-gray-100",
                   )}
                 >
                   <div className="flex items-center space-x-3">

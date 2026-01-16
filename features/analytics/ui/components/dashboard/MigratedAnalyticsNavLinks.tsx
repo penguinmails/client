@@ -5,17 +5,14 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/shared/utils";
 import {
   BarChart3,
-  Mail,
-  Globe,
-  Users,
-  FileText,
-  CreditCard,
   TrendingUp,
+  Mail,
+  Zap,
 } from "lucide-react";
 
 /**
- * Migrated Analytics Navigation Links with updated routes and icons.
- * Provides navigation to different analytics domains.
+ * Analytics Navigation Links matching reference design.
+ * Only 4 tabs: Overview, By Campaigns, By Mailbox, By Warmup
  */
 function MigratedAnalyticsNavLinks() {
   const pathname = usePathname();
@@ -25,43 +22,21 @@ function MigratedAnalyticsNavLinks() {
       href: "/dashboard/analytics",
       label: "Overview",
       icon: BarChart3,
-      description: "Overall performance metrics",
     },
     {
       href: "/dashboard/analytics/campaigns",
-      label: "Campaigns",
+      label: "By Campaign",
       icon: TrendingUp,
-      description: "Campaign performance analytics",
     },
     {
       href: "/dashboard/analytics/mailboxes",
-      label: "Mailboxes",
+      label: "By Mailbox",
       icon: Mail,
-      description: "Mailbox health and warmup",
     },
     {
-      href: "/dashboard/analytics/domains",
-      label: "Domains",
-      icon: Globe,
-      description: "Domain reputation and authentication",
-    },
-    {
-      href: "/dashboard/analytics/leads",
-      label: "Leads",
-      icon: Users,
-      description: "Lead engagement analytics",
-    },
-    {
-      href: "/dashboard/analytics/templates",
-      label: "Templates",
-      icon: FileText,
-      description: "Template performance metrics",
-    },
-    {
-      href: "/dashboard/analytics/billing",
-      label: "Usage & Billing",
-      icon: CreditCard,
-      description: "Usage analytics and billing",
+      href: "/dashboard/analytics/warmup",
+      label: "By Warmup",
+      icon: Zap,
     },
   ];
 

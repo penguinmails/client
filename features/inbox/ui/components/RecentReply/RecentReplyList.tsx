@@ -20,13 +20,13 @@ const RecentRepliesList = ({
   }
   return (
     <>
-      {recentReplies.map((reply, _index) => (
+      {recentReplies.map((reply) => (
         <div
           key={reply.email}
-          className="p-6 hover:bg-accent transition-colors rounded-2xl"
+          className="p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="flex items-start space-x-4">
-            <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-sm font-medium text-muted-foreground">
                 {reply.name
                   .split(" ")
@@ -34,18 +34,18 @@ const RecentRepliesList = ({
                   .join("")}
               </span>
             </div>
-            <div className="flex-1">
-              <div className="flex items-center space-x-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center flex-wrap gap-2">
                 <h3 className="font-medium text-foreground">{reply.name}</h3>
                 <span className="text-sm text-muted-foreground">•</span>
                 <span className="text-sm text-muted-foreground">
                   {reply.company}
                 </span>
                 <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  className={`px-2 py-0.5 rounded text-xs font-medium ${
                     reply.type === "positive"
-                      ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400"
-                      : "bg-muted text-muted-foreground"
+                      ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                      : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
                   }`}
                 >
                   {reply.type === "positive" ? "Interested" : "Not Interested"}
@@ -62,3 +62,4 @@ const RecentRepliesList = ({
 };
 
 export default RecentRepliesList;
+

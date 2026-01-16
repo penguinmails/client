@@ -15,6 +15,12 @@ import {
   Send,
   X,
   LogOut,
+  LayoutDashboard,
+  BookOpen,
+  Users,
+  Server,
+  Mail,
+  BarChart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/button";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
@@ -32,17 +38,60 @@ type NavItem = {
   };
 };
 
-const mainNavItems: NavItem[] = [
-  { title: "Dashboard", href: "/dashboard", icon: BarChart3 },
-  { title: "Campaigns", href: "/dashboard/campaigns", icon: Send },
-  { title: "Templates", href: "/dashboard/templates", icon: FileText },
+type NavSection = {
+  title: string;
+  items: NavItem[];
+};
+
+const navigation: NavSection[] = [
   {
-    title: "Inbox",
-    href: "/dashboard/inbox",
-    icon: Inbox,
-    badge: { text: "8", variant: "default" },
+    title: "Overview",
+    items: [
+      { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    ],
   },
-  { title: "Domains", href: "/dashboard/domains", icon: Zap },
+  {
+    title: "Getting Started",
+    items: [
+      { title: "Setup Guide", href: "/dashboard/onboarding", icon: BookOpen },
+    ],
+  },
+  {
+    title: "Outreach Hub",
+    items: [
+      { title: "Campaigns", href: "/dashboard/campaigns", icon: Send },
+      { title: "Templates", href: "/dashboard/templates", icon: FileText },
+    ],
+  },
+  {
+    title: "Lead Hub",
+    items: [
+      { title: "Lead Lists", href: "/dashboard/leads", icon: Users },
+    ],
+  },
+  {
+    title: "Communication",
+    items: [
+      {
+        title: "Inbox",
+        href: "/dashboard/inbox",
+        icon: Inbox,
+        badge: { text: "8", variant: "default" },
+      },
+    ],
+  },
+  {
+    title: "Infrastructure",
+    items: [
+      { title: "Domains & Mailboxes", href: "/dashboard/domains", icon: Server },
+    ],
+  },
+  {
+    title: "Analytics",
+    items: [
+      { title: "Analytics Hub", href: "/dashboard/analytics", icon: BarChart },
+    ],
+  },
 ];
 
 export function DashboardSidebar() {
@@ -82,42 +131,57 @@ export function DashboardSidebar() {
 
       {/* Navigation */}
       <div className="flex-1 overflow-auto py-4 px-3">
-        <nav className="grid gap-1">
-          {mainNavItems.map((item, index) => (
-            <Link
-              key={index}
-              href={item.href}
-              className={cn(
-                "flex items-center transition-all",
-                collapsed ? "justify-center px-0" : "gap-3 px-3",
-                "rounded-md py-2 text-sm",
-                pathname === item.href ||
-                  (item.href !== "/dashboard" && pathname.startsWith(item.href))
-                  ? "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100",
+        <nav className="space-y-6">
+          {navigation.map((section, idx) => (
+            <div key={idx} className="space-y-1">
+              {!collapsed && (
+                <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                  {section.title}
+                </h3>
               )}
-              onClick={() => isMobile && setMobileOpen(false)}
-            >
-              <item.icon
-                className={cn(
-                  "transition-all",
-                  collapsed ? "size-6 p-1" : "h-4 w-4",
-                )}
-              />
-              {!collapsed && <span>{item.title}</span>}
-              {!collapsed && item.badge && (
-                <span
-                  className={cn(
-                    "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
-                    item.badge.variant === "default" && "bg-primary text-primary-foreground",
-                    item.badge.variant === "success" && "bg-green-600 text-white dark:bg-green-500",
-                    item.badge.variant === "destructive" && "bg-destructive text-destructive-foreground",
-                  )}
-                >
-                  {item.badge.text}
-                </span>
-              )}
-            </Link>
+              <div className="space-y-1">
+                {section.items.map((item, index) => (
+                  <Link
+                    key={index}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center transition-all",
+                      collapsed ? "justify-center px-0" : "gap-3 px-3",
+                      "rounded-md py-2 text-sm",
+                      pathname === item.href ||
+                        (item.href !== "/dashboard" && pathname.startsWith(item.href))
+                        ? "bg-blue-50 text-blue-700 font-medium"
+                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-gray-100",
+                    )}
+                    onClick={() => isMobile && setMobileOpen(false)}
+                  >
+                    <item.icon
+                      className={cn(
+                        "transition-all",
+                        collapsed ? "size-6 p-1" : "h-4 w-4",
+                        (pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))) && "text-blue-600"
+                      )}
+                    />
+                    {!collapsed && <span>{item.title}</span>}
+                    {!collapsed && item.badge && (
+                      <span
+                        className={cn(
+                          "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
+                          item.badge.variant === "default" && "bg-blue-600 text-white",
+                          item.badge.variant === "success" && "bg-green-600 text-white dark:bg-green-500",
+                          item.badge.variant === "destructive" && "bg-destructive text-destructive-foreground",
+                        )}
+                      >
+                        {item.badge.text}
+                      </span>
+                    )}
+                    {!collapsed && (pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))) && (
+                      <div className="ml-auto w-1 h-5 bg-blue-600 rounded-full" />
+                    )}
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
       </div>

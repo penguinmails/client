@@ -24,6 +24,9 @@ export interface LeadList {
   tags?: string[];
   status?: 'active' | 'inactive' | 'used' | 'being-used';
   campaign?: string;
+  bounced?: number;
+  performance?: { openRate: number; replyRate: number };
+  uploadDate?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -119,16 +122,19 @@ export async function maskClientPII(_clientId: string, _req?: NextRequest) {
 import { leadLists } from '../data/mock';
 
 export async function getLeadLists(_req?: NextRequest): Promise<ActionResult<LeadList[]>> {
-  // Map mock data to expected interface
+  // Map mock data to expected interface, including all fields
   const data: LeadList[] = leadLists.map(list => ({
     id: list.id.toString(),
     name: list.name,
-    description: list.campaign || '', // Mapping campaign to description for now as fallback
+    description: list.description || list.campaign || '',
     leadCount: list.contacts,
     contacts: list.contacts,
     tags: list.tags,
     status: list.status as 'active' | 'inactive' | 'used' | 'being-used',
     campaign: list.campaign || undefined,
+    bounced: list.bounced,
+    performance: list.performance,
+    uploadDate: list.uploadDate,
     createdAt: new Date(list.uploadDate),
     updatedAt: new Date(list.uploadDate)
   }));

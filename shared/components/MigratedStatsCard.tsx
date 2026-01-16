@@ -73,7 +73,11 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
     <Card
       className={cn("shadow-sm hover:shadow-md transition-shadow", className)}
     >
-      <CardContent className="flex items-center justify-between p-6">
+      <CardContent className="px-6 flex items-center justify-between">
+        <div className={cn("p-3 rounded-lg mr-4", color)}>
+          <Icon className="size-6" />
+        </div>
+
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1">
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
@@ -113,10 +117,6 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
               <p className={cn("text-xs", getChangeColor())}>{change}</p>
             </div>
           )}
-        </div>
-
-        <div className={cn("p-3 rounded-lg ml-4", color)}>
-          <Icon className="size-6" />
         </div>
       </CardContent>
     </Card>

@@ -81,7 +81,7 @@ export default function DashboardRootLayout({
         <ChunkErrorBoundary>
           <SidebarProvider>
             <AppSideBar />
-            <SidebarInset className="md:peer-data-[variant=inset]:shadow-none gap-5 overflow-hidden">
+            <SidebarInset className="md:peer-data-[variant=inset]:shadow-none gap-5 overflow-hidden border-l border-border">
               <div className="rounded-lg shadow-sm">
                 <Header />
               </div>

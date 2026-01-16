@@ -195,10 +195,10 @@ function WarmUpLineChart(): ReactElement {
                   <Line
                     type="monotone"
                     dataKey="totalWarmups"
-                    stroke="hsl(var(--primary))"
+                    stroke="#2563eb"
                     strokeWidth={2}
-                    dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: "hsl(var(--primary))", strokeWidth: 2 }}
+                    dot={{ fill: "#2563eb", strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: "#2563eb", strokeWidth: 2 }}
                   />
                 )}
 
@@ -206,10 +206,10 @@ function WarmUpLineChart(): ReactElement {
                   <Line
                     type="monotone"
                     dataKey="spamFlags"
-                    stroke="hsl(var(--destructive))"
+                    stroke="#dc2626"
                     strokeWidth={2}
-                    dot={{ fill: "hsl(var(--destructive))", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: "hsl(var(--destructive))", strokeWidth: 2 }}
+                    dot={{ fill: "#dc2626", strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: "#dc2626", strokeWidth: 2 }}
                   />
                 )}
 
@@ -217,10 +217,10 @@ function WarmUpLineChart(): ReactElement {
                   <Line
                     type="monotone"
                     dataKey="replies"
-                    stroke="hsl(var(--chart-2))"
+                    stroke="#16a34a"
                     strokeWidth={2}
-                    dot={{ fill: "hsl(var(--chart-2))", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: "hsl(var(--chart-2))", strokeWidth: 2 }}
+                    dot={{ fill: "#16a34a", strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: "#16a34a", strokeWidth: 2 }}
                   />
                 )}
               </LineChart>

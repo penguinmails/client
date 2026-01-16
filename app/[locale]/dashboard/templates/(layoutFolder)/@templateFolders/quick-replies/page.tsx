@@ -15,8 +15,11 @@ async function TemplateFolders() {
         (folder) => folder.type === "quick-reply"
       ) as TemplateFolder[])
     : [];
-  const files = folders.flatMap((folder) => folder.children);
-  if (files.length === 0 && folders.length === 0) {
+  
+  // Calculate total templates by summing templateCount from all folders
+  const totalTemplates = folders.reduce((sum, folder) => sum + (folder.templateCount || 0), 0);
+  
+  if (folders.length === 0) {
     return null;
   }
   return (
@@ -27,12 +30,13 @@ async function TemplateFolders() {
           <FolderIcon className="w-4 h-4" />
           <span className="font-medium">All Templates</span>
           <span className="ml-auto text-xs bg-blue-100 px-2 py-1 rounded-full">
-            {files.length}
+            {totalTemplates}
           </span>
         </div>
-        <Folders folders={folders} />
+        <Folders folders={folders} showFiles={true} />
       </div>
     </div>
   );
 }
 export default TemplateFolders;
+

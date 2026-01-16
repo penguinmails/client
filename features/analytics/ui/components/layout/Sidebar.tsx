@@ -58,12 +58,7 @@ const navigationGroups: NavLink[] = [
   {
     title: "Infrastructure",
     items: [
-      { to: "/dashboard/domains", label: "Domains & IPs", icon: Server },
-      {
-        to: "/dashboard/mailboxes",
-        label: "Mailboxes & Warmups",
-        icon: Mail,
-      },
+      { to: "/dashboard/domains", label: "Domains & Mailboxes", icon: Server },
     ],
   },
   {
