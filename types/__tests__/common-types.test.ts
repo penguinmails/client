@@ -4,15 +4,15 @@
  */
 
 import { NextRequest } from 'next/server';
+import { ComponentProps } from '../ui';
 import {
-  ComponentProps,
   FormHandlerParams,
   FormHandlerResult,
   FormValidationError,
   EnhancedApiResponse,
   ApiSuccessResponse,
   ApiErrorResponse,
-} from '../common';
+} from '../api';
 
 // Test ComponentProps interface
 describe('ComponentProps Interface', () => {

@@ -138,5 +138,19 @@ export interface WarmupChartData {
   replies: number;
 }
 
+// Re-export common types from sub-modules for backward compatibility and central access
+export type { 
+  ComponentBaseProps, 
+  ComponentProps 
+} from './ui';
 
-
+export type {
+  ApiResponse,
+  ApiSuccessResponse,
+  ApiErrorResponse,
+  EnhancedApiResponse,
+  FormValidationError,
+  FormHandlerResult,
+  FormHandlerParams,
+  ActionResult
+} from './api';
