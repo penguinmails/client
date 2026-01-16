@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getUserProfile, updateUserProfile, getUserTenants } from "@/features/auth/queries";
+import { generateMockAuthData } from "@/features/auth/lib/mock-auth-data";
 import { withQueryErrorCatch, withMutationErrorCatch, manualErrorResponse } from "@/lib/utils/api";
 import {
   EnhancedApiResponse
@@ -44,6 +45,12 @@ export async function GET(req: NextRequest): Promise<NextResponse<EnhancedApiRes
     async () => {
       // Get user's tenants and add to profile
       const tenants = await getUserTenants(req);
+      const userRole = profile.profile?.role || 'user';
+      const tenantId = tenants[0]?.id;
+
+      // Generate mock data for companies, roles, and permissions
+      // TODO: Replace with real data fetching once getUserCompanies, getUserRoles, getUserPermissions are implemented
+      const mockAuthData = generateMockAuthData(profile.id, userRole, tenantId);
 
       // Transform NileDBUser to AuthUser
       const enhancedProfile: AuthUser = {
@@ -71,11 +78,14 @@ export async function GET(req: NextRequest): Promise<NextResponse<EnhancedApiRes
         tenants: tenants.map((t: NileTenant) => ({
             id: t.id, 
             name: t.name, 
-            created: new Date().toISOString() // Fallback or fetch if available
+            // Use tenant's created date if available from getUserTenants
+            created: ('created' in t && typeof t.created === 'string') ? t.created : undefined
         })),
-        companies: [],
-        roles: [],
-        permissions: [],
+        // Mock data for companies, roles, and permissions
+        // TODO: Replace with real data fetching once getUserCompanies, getUserRoles, getUserPermissions are implemented
+        companies: mockAuthData.companies,
+        roles: mockAuthData.roles,
+        permissions: mockAuthData.permissions,
       };
 
       return { profile: enhancedProfile };
@@ -105,6 +115,12 @@ export async function PUT(req: NextRequest): Promise<NextResponse<EnhancedApiRes
     async () => {
       // Get updated tenants
       const tenants = await getUserTenants(req);
+      const userRole = updatedProfile.profile?.role || 'user';
+      const tenantId = tenants[0]?.id;
+
+      // Generate mock data for companies, roles, and permissions
+      // TODO: Replace with real data fetching once getUserCompanies, getUserRoles, getUserPermissions are implemented
+      const mockAuthData = generateMockAuthData(updatedProfile.id, userRole, tenantId);
 
       // Transform NileDBUser to AuthUser
       const enhancedProfile: AuthUser = {
@@ -128,14 +144,18 @@ export async function PUT(req: NextRequest): Promise<NextResponse<EnhancedApiRes
           language: (updatedProfile.profile?.preferences?.language as string) || 'en',
           ...updatedProfile.profile?.preferences,
         },
+        // Populate required AuthUser arrays
         tenants: tenants.map((t: NileTenant) => ({
             id: t.id, 
             name: t.name, 
-            created: new Date().toISOString()
+            // Use tenant's created date if available from getUserTenants
+            created: ('created' in t && typeof t.created === 'string') ? t.created : undefined
         })),
-        companies: [],
-        roles: [],
-        permissions: [],
+        // Mock data for companies, roles, and permissions
+        // TODO: Replace with real data fetching once getUserCompanies, getUserRoles, getUserPermissions are implemented
+        companies: mockAuthData.companies,
+        roles: mockAuthData.roles,
+        permissions: mockAuthData.permissions,
       };
 
       return {
