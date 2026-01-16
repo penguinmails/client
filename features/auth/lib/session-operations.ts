@@ -1,5 +1,6 @@
 import { ActiveSession, auth } from "@niledatabase/client";
 import { productionLogger } from "@/lib/logger";
+import { isRetryableError } from "@/lib/utils/errors";
 
 export class SessionRecoveryError extends Error {
   constructor(message = "Failed to recover session after multiple attempts") {
@@ -10,6 +11,9 @@ export class SessionRecoveryError extends Error {
 
 /**
  * Check NileDB session - fast, hard gate for auth
+ * 
+ * @throws {Error} On network errors (retryable) - allows callers to distinguish network failures from "no session"
+ * @returns {Object|null} Session data if valid session exists, null if no session (not an error condition)
  */
 export async function checkSession(): Promise<{ id: string; email: string; emailVerified: Date | null } | null> {
   try {
@@ -24,48 +28,70 @@ export async function checkSession(): Promise<{ id: string; email: string; email
       emailVerified: nileUser.emailVerified ? new Date(nileUser.emailVerified) : null,
     };
   } catch (error) {
-    productionLogger.error("[AuthOps] Session check failed:", error);
+    const err = error instanceof Error ? error : new Error(String(error));
+    productionLogger.error("[AuthOps] Session check failed:", err);
+    
+    // Throw network errors to allow retry logic to handle them
+    // Return null only for non-retryable errors (e.g., invalid session)
+    if (isRetryableError(err)) {
+      throw err;
+    }
+    
     return null;
   }
 }
 
 /**
  * Recover session with retry logic
+ * 
+ * Implements retry logic for network errors while treating null (no session) as a definitive state.
+ * Only retries on network/retryable errors, not on "no session" conditions.
  */
 export async function recoverSessionWithRetry(
   maxAttempts = 3, 
   delayMs = 1000
 ): Promise<{ id: string; email: string; emailVerified: Date | null } | null> {
   let attempt = 0;
+  let lastError: Error | null = null;
+  
   while (attempt < maxAttempts) {
     try {
       const session = await checkSession();
+      
+      // If we got a session, return it immediately
       if (session) return session;
       
-      // If no session, wait and retry? 
-      // checkSession returns null on failure or no session.
-      // If it returns null, it might be just not logged in.
-      // But if we are "recovering", we imply we expect it to be there?
-      // The user prompt said: "if isNetworkError(error)". 
-      // checkSession swallows errors and returns null.
-      // We should probably allow checkSession to throw if we want to catch network errors,
-      // OR we just retry on null?
-      // Retrying on null is useful for race conditions (cookie not set yet).
+      // If checkSession returned null, it means no session exists (not a network error)
+      // This is a definitive state - don't retry
+      return null;
       
-      await new Promise(resolve => setTimeout(resolve, delayMs));
-      attempt++;
-    } catch {
-       // If checkSession threw, it was logged. 
-       // If we change checkSession to throw on network error, we could catch it here.
-       // For now, let's assume checkSession catches internally. 
-       // But to implement "retry" effectively for network issues, checkSession needs to bubble up network errors.
-       // However, the existing checkSession swallows everything.
-       // Let's rely on the loop for now.
-       await new Promise(resolve => setTimeout(resolve, delayMs));
-       attempt++;
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      lastError = err;
+      
+      // Only retry on retryable errors (network errors, server errors, etc.)
+      if (isRetryableError(err)) {
+        productionLogger.warn(`[AuthOps] Session recovery attempt ${attempt + 1}/${maxAttempts} failed (retryable):`, err);
+        
+        // Wait before retrying (exponential backoff)
+        const backoffDelay = delayMs * Math.pow(2, attempt);
+        await new Promise(resolve => setTimeout(resolve, backoffDelay));
+        attempt++;
+      } else {
+        // Non-retryable error - don't retry, just return null
+        productionLogger.error("[AuthOps] Session recovery failed (non-retryable):", err);
+        return null;
+      }
     }
   }
-  return null; // Return null instead of throwing if simply not found
+  
+  // All retries exhausted
+  if (lastError) {
+    productionLogger.error("[AuthOps] Session recovery failed after all retries:", lastError);
+    throw new SessionRecoveryError(`Failed to recover session after ${maxAttempts} attempts: ${lastError.message}`);
+  }
+  
+  return null;
 }
 
 export async function performLogout(
