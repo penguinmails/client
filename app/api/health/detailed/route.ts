@@ -5,7 +5,7 @@
  * 
  * Checks:
  * - Database (NileDB/Postgres)
- * - Redis (Upstash)
+ * - Redis
  * - Convex
  * - System resources
  */
@@ -20,6 +20,7 @@ import {
 } from '@/lib/health/checks';
 import { logHealthCheck, logServiceAlert } from '@/lib/health/monitoring';
 import { DetailedHealthCheckResponse } from '@/lib/health/types';
+import { productionLogger } from '@/lib/logger';
 
 import { VERSION } from '@/lib/health/constants';
 import { PostHogClient, shutdownPostHog } from '@/lib/health/monitoring';
@@ -63,7 +64,7 @@ export async function GET() {
         }
       }
     } catch (err) {
-      console.error('Logging failed:', err);
+      productionLogger.error('Logging failed:', err);
     } finally {
       // Ensure we shut down the client
       await shutdownPostHog(posthog);
@@ -85,7 +86,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Detailed health check failed:', error);
+    productionLogger.error('Detailed health check failed:', error);
 
     return NextResponse.json(
       {
