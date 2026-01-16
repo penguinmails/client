@@ -6,6 +6,8 @@ import { Tabs, TabsList } from "@/components/ui/tabs";
 import { mailboxTabs as tabs } from "@/features/settings/data/mailboxes.mock";
 import { Suspense } from "react";
 
+export const dynamic = 'force-dynamic';
+
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <AnalyticsProviderClient>

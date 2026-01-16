@@ -10,6 +10,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 
+export const dynamic = 'force-dynamic';
+
 interface CampaignsPageProps {
   searchParams: Promise<{
     page?: string;

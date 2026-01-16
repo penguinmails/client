@@ -12,6 +12,7 @@ import { AddCampaignProvider } from "@features/campaigns/ui/context/add-campaign
 import { getCampaign } from "@features/campaigns/actions";
 import { CampaignStatus } from "@features/campaigns/types";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 export default async function CampaignCreatePage({
   params,
@@ -19,6 +20,7 @@ export default async function CampaignCreatePage({
   params: Promise<{ campaignId: string }>;
 }) {
   const { campaignId } = await params;
+  const t = await getTranslations("Campaigns");
   const campaignResult = await getCampaign(campaignId);
   if (!campaignResult.success || !campaignResult.data) {
     notFound();
@@ -55,7 +57,7 @@ export default async function CampaignCreatePage({
         <CardHeader>
           <AddCampaignHeader>
             <h1 className="text-2xl font-bold text-foreground">
-              Edit Campaign {campaign.name || "New Campaign"}
+              {t("editTitle", { name: campaign.name || t("newCampaignFallback") })}
             </h1>
           </AddCampaignHeader>
         </CardHeader>

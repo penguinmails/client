@@ -3,6 +3,8 @@ import { AddTemplateProvider } from "@features/campaigns/ui/context/add-template
 import NewTemplateStepper from "@/features/campaigns/ui/components/templates/new/NewTemplateStepper";
 import AddTemplateForm from "@/features/campaigns/ui/components/templates/new/AddTemplateForm";
 
+export const dynamic = 'force-dynamic';
+
 function NewTemplatePage() {
   return (
     <AddTemplateProvider>
