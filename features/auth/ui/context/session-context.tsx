@@ -104,14 +104,20 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
       
       // After login, we must verify session
       const user = await recoverSessionWithRetry(5, 500); 
-      if (!user) {
-        throw new Error("Login succeeded but session could not be established.");
-      }
-      setSession(user);
       
-      // Redirect
-      const next = searchParams.get("next") || "/dashboard";
-      await safePush(next);
+      if (user) {
+        setSession(user);
+        // Standard SPA navigation
+        const next = searchParams.get("next") || "/dashboard";
+        await safePush(next);
+      } else {
+        // Fallback: Login appeared successful (no error from signInHook), 
+        // but session wasn't immediately visible in this context.
+        // Force a hard navigation to ensure fresh session check on the dashboard.
+        // This addresses "Login succeeded but session could not be established" by trusting the success.
+        const next = searchParams.get("next") || "/dashboard";
+        window.location.href = next;
+      }
     } catch (err) {
       setError(err instanceof Error ? err : new Error("Login failed"));
       setSession(null);
