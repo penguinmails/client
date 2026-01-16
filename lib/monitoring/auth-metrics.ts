@@ -11,7 +11,7 @@ export const authMetrics = {
   recordLoginAttempt: (email: string) => {
     try {
         ph().capture("login_attempt_start", { email });
-    } catch (e) {
+    } catch {
         // ignore client side analytics errors in lib
     }
   },
@@ -21,8 +21,8 @@ export const authMetrics = {
         productionLogger.info("Login success", { userId });
         ph().identify(userId, { email });
         ph().capture("login_success", { userId, email });
-    } catch (e) {
-        console.error("Metrics error", e);
+    } catch (_e) {
+        productionLogger.error("Metrics error", _e);
     }
   },
 
@@ -30,8 +30,8 @@ export const authMetrics = {
     try {
         productionLogger.warn("Login failure", { email, error });
         ph().capture("login_failure", { email, error });
-    } catch (e) {
-        console.error("Metrics error", e);
+    } catch (_e) {
+        productionLogger.error("Metrics error", _e);
     }
   },
 
@@ -40,8 +40,8 @@ export const authMetrics = {
         productionLogger.info("Signup success", { userId });
         ph().identify(userId, { email });
         ph().capture("signup_success", { userId, email });
-    } catch (e) {
-        console.error("Metrics error", e);
+    } catch (_e) {
+        productionLogger.error("Metrics error", _e);
     }
   },
 
@@ -52,6 +52,8 @@ export const authMetrics = {
       }
       try {
           ph().capture("session_recovery", { success, durationMs });
-      } catch (e) {}
+      } catch {
+        // ignore
+      }
   }
 };

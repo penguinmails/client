@@ -37,7 +37,7 @@ jest.mock('@/components/ui/sidebar', () => ({
 }));
 
 // Mock the auth context to provide a mock implementation
-jest.mock('@features/auth/ui/context/auth-context', () => ({
+jest.mock('@features/auth/hooks/use-auth', () => ({
   useAuth: () => ({
     user: {
       id: 'test-user-1',

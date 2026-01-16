@@ -24,7 +24,7 @@ import {
   Users,
 } from "lucide-react";
 import SidebarLink from "./SidebarLink";
-import { useEnrichment } from "@features/auth/ui/context/enrichment-context";
+import { useEnrichment } from "@features/auth/hooks/use-enrichment";
 
 
 // Navigation groups that are always visible (public)

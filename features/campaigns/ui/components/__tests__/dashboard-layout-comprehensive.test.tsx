@@ -25,7 +25,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 // Mock ONLY external dependencies
-jest.mock('@features/auth/ui/context/auth-context', () => ({
+jest.mock('@features/auth/hooks/use-auth', () => ({
   useAuth: jest.fn(() => ({
     user: {
       id: '1',

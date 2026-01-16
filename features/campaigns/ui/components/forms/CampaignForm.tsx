@@ -37,7 +37,7 @@ import { EmailSecuenceSettings } from "../settings/EmailSecuenceSettings";
 // Default steps moved from const-mock as internal default data
 import Loader from "../steps/compositions/loader";
 import { CampaignEventCondition } from "@features/campaigns/types";
-import { useAuth } from "@features/auth/ui/context/auth-context";
+import { useAuth } from "@features/auth/hooks/use-auth";
 
 export function CampaignForm({
   initialData,

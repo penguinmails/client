@@ -12,11 +12,7 @@ import {
 } from '@/types';
 import { AuthUser } from "@/features/auth/types";
 
-// Enhanced profile type that includes tenant information
-interface EnhancedProfile extends AuthUser {
-  tenants: string[];
-}
-
+// Enhanced profile type - using AuthUser directly instead of extending
 // Nile tenant interface to replace 'any' types
 interface NileTenant {
   id: string;
@@ -26,11 +22,11 @@ interface NileTenant {
 
 // Profile API response types
 interface ProfileGetResponse {
-  profile: EnhancedProfile;
+  profile: AuthUser;
 }
 
 interface ProfileUpdateResponse {
-  profile: EnhancedProfile;
+  profile: AuthUser;
   message: string;
 }
 
@@ -49,8 +45,8 @@ export async function GET(req: NextRequest): Promise<NextResponse<EnhancedApiRes
       // Get user's tenants and add to profile
       const tenants = await getUserTenants(req);
 
-      // Transform NileDBUser to EnhancedProfile
-      const enhancedProfile: EnhancedProfile = {
+      // Transform NileDBUser to AuthUser
+      const enhancedProfile: AuthUser = {
         id: profile.id,
         email: profile.email,
         name: profile.name || profile.email.split('@')[0],
@@ -71,7 +67,15 @@ export async function GET(req: NextRequest): Promise<NextResponse<EnhancedApiRes
           language: (profile.profile?.preferences?.language as string) || 'en',
           ...profile.profile?.preferences,
         },
-        tenants: tenants.map((t: NileTenant) => t.id),
+        // Populate required AuthUser arrays
+        tenants: tenants.map((t: NileTenant) => ({
+            id: t.id, 
+            name: t.name, 
+            created: new Date().toISOString() // Fallback or fetch if available
+        })),
+        companies: [],
+        roles: [],
+        permissions: [],
       };
 
       return { profile: enhancedProfile };
@@ -102,8 +106,8 @@ export async function PUT(req: NextRequest): Promise<NextResponse<EnhancedApiRes
       // Get updated tenants
       const tenants = await getUserTenants(req);
 
-      // Transform NileDBUser to EnhancedProfile
-      const enhancedProfile: EnhancedProfile = {
+      // Transform NileDBUser to AuthUser
+      const enhancedProfile: AuthUser = {
         id: updatedProfile.id,
         email: updatedProfile.email,
         name: updatedProfile.name || updatedProfile.email.split('@')[0],
@@ -124,7 +128,14 @@ export async function PUT(req: NextRequest): Promise<NextResponse<EnhancedApiRes
           language: (updatedProfile.profile?.preferences?.language as string) || 'en',
           ...updatedProfile.profile?.preferences,
         },
-        tenants: tenants.map((t: NileTenant) => t.id),
+        tenants: tenants.map((t: NileTenant) => ({
+            id: t.id, 
+            name: t.name, 
+            created: new Date().toISOString()
+        })),
+        companies: [],
+        roles: [],
+        permissions: [],
       };
 
       return {

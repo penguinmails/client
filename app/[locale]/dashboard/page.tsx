@@ -25,7 +25,7 @@ import {
 } from "@features/campaigns/actions/dashboard";
 
 // Import auth hook
-import { useAuth } from "@features/auth/ui/context/auth-context";
+import { useAuth } from "@features/auth/hooks/use-auth";
 
 /**
  * Migrated Dashboard Content with real-time analytics KPIs.

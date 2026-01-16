@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useAuth } from "@features/auth/ui/context/auth-context";
+import { useAuth } from "@features/auth/hooks/use-auth";
 import Image from "next/image";
 import { productionLogger } from "@/lib/logger";
 
