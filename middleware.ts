@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { logError } from '@/lib/nile/errors';
 
 import createMiddleware from 'next-intl/middleware';
+import { hasLocale } from 'next-intl';
 import {routing} from '@/lib/config/i18n/routing';
+
+const LOCALE_FALLBACK_COOKIE = 'pm_locale_fallback';
 
 // Security headers configuration
 const SECURITY_HEADERS = {
@@ -113,6 +116,27 @@ const intlMiddleware = createMiddleware({
 export async function middleware(request: NextRequest) {
   const startTime = Date.now();
 
+  const pathname = request.nextUrl.pathname;
+  const [, maybeLocale, ...restSegments] = pathname.split('/');
+  const looksLikeLocale =
+    typeof maybeLocale === 'string' && /^[a-z]{2,3}(-[a-z]{2})?$/i.test(maybeLocale);
+
+  if (looksLikeLocale && !hasLocale(routing.locales, maybeLocale)) {
+    const url = request.nextUrl.clone();
+    const restPath = restSegments.join('/');
+    url.pathname = restPath ? `/${restPath}` : '/';
+
+    const response = NextResponse.redirect(url);
+    if (maybeLocale.trim().length > 0) {
+      response.cookies.set(LOCALE_FALLBACK_COOKIE, maybeLocale, {
+        path: '/',
+        maxAge: 30,
+        sameSite: 'lax',
+      });
+    }
+    return response;
+  }
+
   // 1. Rate limiting
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
              request.headers.get('x-real-ip') || 
@@ -159,6 +183,16 @@ export async function middleware(request: NextRequest) {
     // Continue with the request
     // Chain the request through the next-intl middleware instance.
     const response = intlMiddleware(request);
+
+    // If a fallback toast cookie is present on this request, clear it in the response.
+    // This makes the toast truly one-time even on full reloads (before client JS runs).
+    if (request.cookies.get(LOCALE_FALLBACK_COOKIE)?.value?.trim()) {
+      response.cookies.set(LOCALE_FALLBACK_COOKIE, '', {
+        path: '/',
+        maxAge: 0,
+        sameSite: 'lax',
+      });
+    }
 
     // Add security headers
     // NOTE: Headers are now applied to the response returned by next-intl.

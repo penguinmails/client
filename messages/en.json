@@ -735,8 +735,8 @@
       "help": "If this persists, try clearing your browser cache or contact support."
     },
     "LocaleFallbackToast": {
-      "title": "Language not available",
-      "description": "\"{locale}\" is not supported. Using English instead."
+      "title": "Language not supported",
+      "description": "\"{locale}\" isn't supported. Showing English instead."
     }
   }
 }

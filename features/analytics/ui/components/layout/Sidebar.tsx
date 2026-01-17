@@ -18,7 +18,6 @@ import {
   FileText,
   Inbox,
   LayoutDashboard,
-  Mail,
   Send,
   Server,
   Users,

@@ -733,8 +733,8 @@
       "help": "Si esto persiste, intenta borrar la caché de tu navegador o contacta soporte."
     },
     "LocaleFallbackToast": {
-      "title": "Idioma no disponible",
-      "description": "\"{locale}\" no es compatible. Usando inglés en su lugar."
+      "title": "Idioma no compatible",
+      "description": "\"{locale}\" no es compatible. Mostrando inglés en su lugar."
     }
   }
 }

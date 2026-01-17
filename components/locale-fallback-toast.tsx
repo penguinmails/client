@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 interface LocaleFallbackToastProps {
-    requestedLocale: string;
+  requestedLocale: string;
 }
 
 /**
@@ -15,15 +15,24 @@ import { useTranslations } from "next-intl";
 
 // ... existing code ...
 
-export function LocaleFallbackToast({ requestedLocale }: LocaleFallbackToastProps) {
-    const t = useTranslations("Components.LocaleFallbackToast");
+export function LocaleFallbackToast({
+  requestedLocale,
+}: LocaleFallbackToastProps) {
+  const t = useTranslations("Components.LocaleFallbackToast");
+  const hasToastedRef = useRef(false);
 
-    useEffect(() => {
-        toast.info(t("title"), {
-            description: t("description", { locale: requestedLocale }),
-            duration: 5000,
-        });
-    }, [requestedLocale, t]);
+  useEffect(() => {
+    if (requestedLocale.trim().length === 0) return;
+    if (hasToastedRef.current) return;
+    hasToastedRef.current = true;
 
-    return null;
+    toast.info(t("title"), {
+      description: t("description", { locale: requestedLocale }),
+      duration: 5000,
+    });
+
+    document.cookie = "pm_locale_fallback=; Max-Age=0; path=/";
+  }, [requestedLocale, t]);
+
+  return null;
 }
