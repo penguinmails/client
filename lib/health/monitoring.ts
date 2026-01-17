@@ -14,7 +14,7 @@ export function PostHogClient() {
   const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com';
 
   if (!key) {
-    console.warn('PostHog key missing, logging disabled');
+    // console.warn('PostHog key missing, logging disabled');
     // Return a dummy object or handle gracefully. 
     // For now, posthog-node might throw if key is empty, so we check.
   }
@@ -76,7 +76,7 @@ export async function logHealthCheck(
       await shutdownPostHog(posthog);
     }
   } catch (error) {
-    console.error('Failed to log health check to PostHog:', error);
+    // console.error('Failed to log health check to PostHog:', error);
     // Don't throw - health check should succeed even if logging fails
     // Be safe and try to shutdown even on error if we own the client
     if (shouldShutdown) {
@@ -114,7 +114,7 @@ export async function logServiceAlert(
       await shutdownPostHog(posthog);
     }
   } catch (error) {
-    console.error('Failed to log service alert to PostHog:', error);
+    // console.error('Failed to log service alert to PostHog:', error);
     if (shouldShutdown) {
       try { await shutdownPostHog(posthog); } catch {}
     }

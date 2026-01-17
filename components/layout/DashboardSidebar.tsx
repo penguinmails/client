@@ -5,12 +5,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
-  BarChart3,
   Settings,
   Inbox,
   Layers,
   FileText,
-  Zap,
   Menu,
   Send,
   X,
@@ -19,7 +17,6 @@ import {
   BookOpen,
   Users,
   Server,
-  Mail,
   BarChart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/button";

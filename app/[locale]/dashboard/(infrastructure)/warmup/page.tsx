@@ -111,8 +111,12 @@ function Page() {
 
   useEffect(() => {
     // Simulate loading with mock data
-    setDomainsData(MOCK_WARMUP_DATA);
-    setLoading(false);
+    const timer = setTimeout(() => {
+      setDomainsData(MOCK_WARMUP_DATA);
+      setLoading(false);
+    }, 0);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return <WarmupTab domainsData={domainsData} loading={loading} error={error} />;

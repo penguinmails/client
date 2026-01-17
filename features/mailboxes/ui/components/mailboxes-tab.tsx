@@ -99,7 +99,7 @@ function MailboxesTab({
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between">
            <h2 className="text-lg font-semibold text-foreground">All Mailboxes</h2>
-           <Button asChild className="bg-[rgb(43,128,255)] hover:bg-[rgb(43,128,255)]/90 text-white rounded-md font-medium h-9 px-4 text-sm shadow-sm">
+           <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md font-medium h-9 px-4 text-sm shadow-sm">
               <Link href="/dashboard/mailboxes/new" className="flex items-center gap-2">
                  <Plus className="w-4 h-4" /> Add Mailbox
               </Link>

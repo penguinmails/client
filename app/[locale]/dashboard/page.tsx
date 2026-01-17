@@ -27,6 +27,106 @@ import {
 // Import auth hook
 import { useAuth } from "@features/auth/hooks/use-auth";
 
+// Module-level mock data with static timestamps (avoids Date.now() during render)
+const MOCK_TIMESTAMP = 1705420800000; // Static timestamp for mock data
+const MOCK_CAMPAIGN_ANALYTICS: CampaignAnalytics[] = [
+  {
+    id: "1",
+    name: "Q1 Outreach",
+    campaignId: "1",
+    campaignName: "Q1 Outreach",
+    status: "ACTIVE",
+    sent: 850,
+    delivered: 820,
+    opened_tracked: 280,
+    clicked_tracked: 95,
+    replied: 72,
+    bounced: 30,
+    unsubscribed: 5,
+    spamComplaints: 2,
+    activeLeads: 654,
+    completedLeads: 196,
+    leadCount: 620,
+    updatedAt: MOCK_TIMESTAMP,
+  },
+  {
+    id: "2",
+    name: "Product Launch",
+    campaignId: "2",
+    campaignName: "Product Launch",
+    status: "ACTIVE",
+    sent: 720,
+    delivered: 700,
+    opened_tracked: 245,
+    clicked_tracked: 82,
+    replied: 58,
+    bounced: 20,
+    unsubscribed: 3,
+    spamComplaints: 1,
+    activeLeads: 512,
+    completedLeads: 188,
+    leadCount: 580,
+    updatedAt: MOCK_TIMESTAMP,
+  },
+  {
+    id: "3",
+    name: "Follow-up Series",
+    campaignId: "3",
+    campaignName: "Follow-up Series",
+    status: "ACTIVE",
+    sent: 650,
+    delivered: 630,
+    opened_tracked: 210,
+    clicked_tracked: 68,
+    replied: 45,
+    bounced: 20,
+    unsubscribed: 4,
+    spamComplaints: 1,
+    activeLeads: 445,
+    completedLeads: 185,
+    leadCount: 520,
+    updatedAt: MOCK_TIMESTAMP,
+  },
+  {
+    id: "4",
+    name: "Newsletter Campaign",
+    campaignId: "4",
+    campaignName: "Newsletter Campaign",
+    status: "ACTIVE",
+    sent: 480,
+    delivered: 460,
+    opened_tracked: 165,
+    clicked_tracked: 48,
+    replied: 32,
+    bounced: 20,
+    unsubscribed: 2,
+    spamComplaints: 0,
+    activeLeads: 348,
+    completedLeads: 112,
+    leadCount: 390,
+    updatedAt: MOCK_TIMESTAMP,
+  },
+  {
+    id: "5",
+    name: "Partnership Outreach",
+    campaignId: "5",
+    campaignName: "Partnership Outreach",
+    status: "ACTIVE",
+    sent: 280,
+    delivered: 270,
+    opened_tracked: 95,
+    clicked_tracked: 32,
+    replied: 22,
+    bounced: 10,
+    unsubscribed: 1,
+    spamComplaints: 0,
+    activeLeads: 188,
+    completedLeads: 82,
+    leadCount: 237,
+    updatedAt: MOCK_TIMESTAMP,
+  },
+];
+
 // Helper function to format time ago
 function formatTimeAgo(date: Date): string {
   const now = new Date();
@@ -56,103 +156,7 @@ export default function DashboardPage() {
 
   // Demo data matching the approved dashboard baseline
   // TODO: Replace with actual analytics hook when backend is ready
-  const campaignAnalytics: CampaignAnalytics[] = [
-    {
-      id: "1",
-      name: "Q1 Outreach",
-      campaignId: "1",
-      campaignName: "Q1 Outreach",
-      status: "ACTIVE",
-      sent: 850,
-      delivered: 820,
-      opened_tracked: 280,
-      clicked_tracked: 95,
-      replied: 72,
-      bounced: 30,
-      unsubscribed: 5,
-      spamComplaints: 2,
-      activeLeads: 654,
-      completedLeads: 196,
-      leadCount: 620,
-      updatedAt: Date.now(),
-    },
-    {
-      id: "2",
-      name: "Product Launch",
-      campaignId: "2",
-      campaignName: "Product Launch",
-      status: "ACTIVE",
-      sent: 720,
-      delivered: 700,
-      opened_tracked: 245,
-      clicked_tracked: 82,
-      replied: 58,
-      bounced: 20,
-      unsubscribed: 3,
-      spamComplaints: 1,
-      activeLeads: 512,
-      completedLeads: 188,
-      leadCount: 580,
-      updatedAt: Date.now(),
-    },
-    {
-      id: "3",
-      name: "Follow-up Series",
-      campaignId: "3",
-      campaignName: "Follow-up Series",
-      status: "ACTIVE",
-      sent: 650,
-      delivered: 630,
-      opened_tracked: 210,
-      clicked_tracked: 68,
-      replied: 45,
-      bounced: 20,
-      unsubscribed: 4,
-      spamComplaints: 1,
-      activeLeads: 445,
-      completedLeads: 185,
-      leadCount: 520,
-      updatedAt: Date.now(),
-    },
-    {
-      id: "4",
-      name: "Newsletter Campaign",
-      campaignId: "4",
-      campaignName: "Newsletter Campaign",
-      status: "ACTIVE",
-      sent: 480,
-      delivered: 460,
-      opened_tracked: 165,
-      clicked_tracked: 48,
-      replied: 32,
-      bounced: 20,
-      unsubscribed: 2,
-      spamComplaints: 0,
-      activeLeads: 348,
-      completedLeads: 112,
-      leadCount: 390,
-      updatedAt: Date.now(),
-    },
-    {
-      id: "5",
-      name: "Partnership Outreach",
-      campaignId: "5",
-      campaignName: "Partnership Outreach",
-      status: "ACTIVE",
-      sent: 280,
-      delivered: 270,
-      opened_tracked: 95,
-      clicked_tracked: 32,
-      replied: 22,
-      bounced: 10,
-      unsubscribed: 1,
-      spamComplaints: 0,
-      activeLeads: 188,
-      completedLeads: 82,
-      leadCount: 237,
-      updatedAt: Date.now(),
-    },
-  ];
+  const campaignAnalytics = MOCK_CAMPAIGN_ANALYTICS;
   const analyticsLoading = false;
   const analyticsError = null;
 
@@ -302,6 +306,18 @@ function DashboardKpiCards({
   return <KpiCards cards={kpiData} />;
 }
 
+interface RawReply {
+  id: string;
+  subject: string;
+  from: string;
+  name: string;
+  company: string;
+  message: string;
+  date: string | Date; // API seems to return Date object but serialization might make it string
+  campaignId: string;
+  type: string;
+}
+
 /**
  * Wrapper component for Recent Replies to handle async data fetching
  */
@@ -319,8 +335,7 @@ function RecentRepliesWrapper() {
   useEffect(() => {
     getRecentReplies().then((data) => {
       // Transform the data to match the expected format
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const transformedReplies = (data.data || []).map((reply: any) => ({
+      const transformedReplies = (data.data || []).map((reply: RawReply) => ({
         name: reply.name || reply.from.split('@')[0],
         email: reply.from,
         company: reply.company || 'Unknown Company',

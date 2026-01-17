@@ -81,6 +81,19 @@ function WarmupMailboxesTable({
   loading: boolean;
   error: string | null;
 }) {
+  // Define type for flattened mailbox data
+  interface ExtendedMailboxData {
+    id: string | number;
+    email: string;
+    domainName: string;
+    createdAt?: string | Date;
+    warmupStatus: string;
+    dailyVolume: number;
+    totalWarmups: number;
+    replies: number;
+    daysActive: number;
+  }
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "WARMED":
@@ -149,7 +162,7 @@ function WarmupMailboxesTable({
 
   // Flatten all mailboxes from all domains
   const allMailboxes = domainsData.flatMap((domainData) =>
-    domainData.mailboxes.map((mailbox: any) => ({
+    domainData.mailboxes.map((mailbox) => ({
       ...mailbox,
       domainName: domainData.domain.domain,
     }))
@@ -200,40 +213,41 @@ function WarmupMailboxesTable({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {allMailboxes.map((mailbox: any) => {
-                const replyRate = mailbox.totalWarmups > 0
-                  ? ((mailbox.replies / mailbox.totalWarmups) * 100).toFixed(1)
+              {allMailboxes.map((mailbox) => {
+                const m = mailbox as unknown as ExtendedMailboxData;
+                const replyRate = m.totalWarmups > 0
+                  ? ((m.replies / m.totalWarmups) * 100).toFixed(1)
                   : 0;
 
                 return (
                   <TableRow
-                    key={mailbox.id}
+                    key={m.id}
                     className="hover:bg-gray-50 dark:hover:bg-muted/30 transition-colors group"
                   >
                     <TableCell className="px-8 py-6">
                       <div>
                         <h3 className="font-semibold text-gray-900 dark:text-foreground cursor-pointer hover:text-blue-600 transition-colors text-lg">
-                          {mailbox.email}
+                          {m.email}
                         </h3>
                         <p className="text-sm text-gray-500 mt-1">
                           Date Created :{" "}
                           {Intl.DateTimeFormat("en-US").format(
-                            new Date(mailbox.createdAt || "")
+                            new Date(m.createdAt || "")
                           )}
                         </p>
                         <p className="text-xs text-gray-400 mt-1">
-                          Domain: {mailbox.domainName}
+                          Domain: {m.domainName}
                         </p>
                       </div>
                     </TableCell>
                     <TableCell className="px-6 py-6">
-                      {getStatusBadge(mailbox.warmupStatus)}
+                      {getStatusBadge(m.warmupStatus)}
                     </TableCell>
                     <TableCell className="px-6 py-6">
                       <div className="flex items-center space-x-2">
                         <Mail className="w-4 h-4 text-gray-400" />
                         <span className="text-sm font-medium text-gray-900 dark:text-foreground">
-                          {mailbox.dailyVolume} emails
+                          {m.dailyVolume} emails
                         </span>
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
@@ -244,26 +258,26 @@ function WarmupMailboxesTable({
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
                           <span className="text-sm font-bold text-gray-900 dark:text-foreground">
-                            {mailbox.totalWarmups?.toLocaleString() || 0}
+                            {m.totalWarmups?.toLocaleString() || 0}
                           </span>
                           <span className="text-xs text-gray-500">
                             total sent
                           </span>
                         </div>
                         <div className="text-xs text-green-600">
-                          {mailbox.replies} replies ({replyRate}%)
+                          {m.replies} replies ({replyRate}%)
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="px-6 py-6">
                       <div className="text-sm font-medium text-gray-900 dark:text-foreground">
-                        {mailbox.daysActive} days
+                        {m.daysActive} days
                       </div>
                       <div className="text-xs text-gray-500">Active period</div>
                     </TableCell>
                     <TableCell className="px-6 py-6 text-right">
                       <div className="flex items-center justify-end space-x-2">
-                        {mailbox.warmupStatus === "PAUSED" ? (
+                        {m.warmupStatus === "PAUSED" ? (
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-green-600">
                             <Play className="h-4 w-4" />
                           </Button>

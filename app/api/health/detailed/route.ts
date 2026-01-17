@@ -63,7 +63,7 @@ export async function GET() {
         }
       }
     } catch (err) {
-      console.error('Logging failed:', err);
+      // console.error('Logging failed:', err);
     } finally {
       // Ensure we shut down the client
       await shutdownPostHog(posthog);
@@ -85,7 +85,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Detailed health check failed:', error);
+    // console.error('Detailed health check failed:', error);
 
     return NextResponse.json(
       {

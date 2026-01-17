@@ -7,12 +7,10 @@
  * - Horizontal stacked bar chart by week
  */
 
-import React, { Suspense } from "react";
+import React from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -25,7 +23,6 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  Legend,
 } from "recharts";
 import { Mail, Eye, MousePointer, Reply } from "lucide-react";
 

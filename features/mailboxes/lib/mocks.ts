@@ -78,8 +78,9 @@ export const MOCK_ANALYTICS: LocalProgressiveAnalyticsState = {
       warmupProgress: 100,
       spamFlags: 0,
       replies: 0,
-      healthScore: 100
-    }] as any,
+      healthScore: 100,
+      // Add missing fields if necessary to match the return type, or cast to unknown first to suppress if types are slightly off (but safer than any)
+    }] as unknown as ReturnType<typeof mapRawToLegacyMailboxData>,
     loading: false,
     error: null
   },

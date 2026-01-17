@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils/cn";
 import { Eye, Mail, MousePointer, Reply } from "lucide-react";
 
 interface SimpleStatsCardProps {

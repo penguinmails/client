@@ -309,9 +309,9 @@ export async function getTemplateById(
 
 export async function getTabCounts(_req?: NextRequest): Promise<Record<string, number>> {
   return {
-    templates: 3, // Reference shows My Templates (3)
-    'quick-replies': 2, // Reference shows Quick Replies (2)
-    gallery: 0, // Reference shows Gallery (0)
+    templates: mockTemplates.filter(t => t.type === 'template').length,
+    'quick-replies': mockTemplates.filter(t => t.type === 'quick-reply').length,
+    gallery: 0, // Assuming gallery is always 0 for now
     folders: mockFolders.length
   };
 }

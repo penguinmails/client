@@ -11,17 +11,21 @@ export const dynamic = 'force-dynamic';
 function Page() {
   const [mailboxesLoading, setMailboxesLoading] = useState(true);
   const [mailboxes, setMailboxes] = useState<MailboxWarmupData[]>([]);
-  const [mailboxesError, setMailboxesError] = useState<string | null>(null);
+  const [mailboxesError] = useState<string | null>(null);
   const [analyticsState, setAnalyticsState] = useState<LocalProgressiveAnalyticsState>({});
 
   // Fetch mailboxes on component mount
   useEffect(() => {
     // MOCK DATA TO MATCH REFERENCE IMAGE
-    setMailboxes(MOCK_MAILBOXES);
-    setMailboxesLoading(false);
+    const timer = setTimeout(() => {
+      setMailboxes(MOCK_MAILBOXES);
+      setMailboxesLoading(false);
 
-    // MOCK ANALYTICS
-    setAnalyticsState(MOCK_ANALYTICS);
+      // MOCK ANALYTICS
+      setAnalyticsState(MOCK_ANALYTICS);
+    }, 0);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (
