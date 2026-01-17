@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
 import { SettingsErrorState } from "@/components/settings-error-state";
-import { showAppearanceUpdateSuccess } from "@/components/settings-success-notification";
+import { useSettingsNotifications } from "@/components/settings-success-notification";
 import { useClientPreferences } from "@features/settings/ui/context/client-preferences-context";
 import { usePreferenceSync } from "@features/settings/lib/hooks/use-preference-sync";
 import { Sun, Moon, Monitor, Loader2 } from "lucide-react";
@@ -37,6 +37,7 @@ const AppearanceSettings: React.FC = () => {
     useClientPreferences();
 
   const { syncToServer } = usePreferenceSync();
+  const { showAppearanceUpdateSuccess } = useSettingsNotifications();
 
   // Local state for campaign previews and loading states
   const [showCampaignPreviews, setShowCampaignPreviews] = useState(true);

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
 import { SettingsErrorState } from "@/components/settings-error-state";
-import { showBillingUpdateSuccess } from "@/components/settings-success-notification";
+import { useSettingsNotifications } from "@/components/settings-success-notification";
 import { useServerAction } from "@/hooks/use-server-action";
 import { productionLogger } from "@/lib/logger";
 import {
@@ -85,6 +85,7 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
 }) => {
   const [updateLoading, setUpdateLoading] = useState(false);
   const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
+  const { showBillingUpdateSuccess } = useSettingsNotifications();
 
   // Server action for fetching billing data
   const billingAction = useServerAction(() => getBillingInfo(), {

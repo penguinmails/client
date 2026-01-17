@@ -6,28 +6,27 @@
 
 import { PostHog } from 'posthog-node';
 import { ServiceStatus, HealthCheckResponse } from './types';
+import { developmentLogger, productionLogger } from '@/lib/logger';
 
 import { DOWNTIME_THRESHOLD_MS } from './constants';
 
-export function PostHogClient() {
+export function PostHogClient(): PostHog | null {
   const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
   const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com';
 
   if (!key) {
-    // console.warn('PostHog key missing, logging disabled');
-    // Return a dummy object or handle gracefully. 
-    // For now, posthog-node might throw if key is empty, so we check.
+    developmentLogger.warn('PostHog key missing, logging disabled');
+    return null;
   }
 
-  return new PostHog(
-    key || 'phc_dummy_key', 
-    { host }
-  );
+  return new PostHog(key, { host });
 }
 
 // Allow external shutdown if managed externally
-export async function shutdownPostHog(client: PostHog) {
-  await client.shutdown();
+export async function shutdownPostHog(client: PostHog | null) {
+  if (client) {
+    await client.shutdown();
+  }
 }
 
 /**
@@ -35,11 +34,16 @@ export async function shutdownPostHog(client: PostHog) {
  */
 export async function logHealthCheck(
   healthData: HealthCheckResponse, 
-  existingClient?: PostHog
+  existingClient?: PostHog | null
 ): Promise<void> {
   // Use existing client or create new one (and mark for shutdown)
   const posthog = existingClient || PostHogClient();
   const shouldShutdown = !existingClient;
+
+  // If PostHog is disabled (no key), skip logging
+  if (!posthog) {
+    return;
+  }
 
   try {
     // Capture health check event
@@ -76,11 +80,11 @@ export async function logHealthCheck(
       await shutdownPostHog(posthog);
     }
   } catch (error) {
-    // console.error('Failed to log health check to PostHog:', error);
+    productionLogger.error('Failed to log health check to PostHog:', error);
     // Don't throw - health check should succeed even if logging fails
     // Be safe and try to shutdown even on error if we own the client
     if (shouldShutdown) {
-      try { await shutdownPostHog(posthog); } catch {}
+      try { await shutdownPostHog(posthog); } catch { /* ignore */ }
     }
   }
 }
@@ -92,10 +96,15 @@ export async function logServiceAlert(
   serviceName: string,
   status: ServiceStatus,
   error?: string,
-  existingClient?: PostHog
+  existingClient?: PostHog | null
 ): Promise<void> {
   const posthog = existingClient || PostHogClient();
   const shouldShutdown = !existingClient;
+
+  // If PostHog is disabled (no key), skip logging
+  if (!posthog) {
+    return;
+  }
 
   try {
     posthog.capture({
@@ -114,9 +123,9 @@ export async function logServiceAlert(
       await shutdownPostHog(posthog);
     }
   } catch (error) {
-    // console.error('Failed to log service alert to PostHog:', error);
+    productionLogger.error('Failed to log service alert to PostHog:', error);
     if (shouldShutdown) {
-      try { await shutdownPostHog(posthog); } catch {}
+      try { await shutdownPostHog(posthog); } catch { /* ignore */ }
     }
   }
 }

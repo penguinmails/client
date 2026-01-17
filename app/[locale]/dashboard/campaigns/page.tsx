@@ -10,6 +10,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { CampaignDisplay, CampaignStatusEnum } from "@features/campaigns/types";
 
+export const dynamic = 'force-dynamic';
+
 interface CampaignsPageProps {
   searchParams: Promise<{
     page?: string;

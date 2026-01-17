@@ -112,47 +112,54 @@ interface HelpSectionProps {
 }
 
 // Default help items based on onboarding steps
-const getDefaultHelpItems = (): HelpItem[] => {
-  return [
+// Moved inside component to use translations
+import { useTranslations } from "next-intl";
+
+export function HelpSection({ 
+  title, 
+  items,
+  className = ""
+}: HelpSectionProps) {
+  const t = useTranslations("Components.HelpSection");
+  const [openItems, setOpenItems] = useState<Set<string>>(new Set());
+
+  const defaultTitle = t("title");
+  
+  const defaultItems: HelpItem[] = [
     {
       id: "getting-started",
-      question: "How do I get started?",
-      answer: "Follow the onboarding steps to set up your account and start using the platform. Complete each step in order for the best experience.",
+      question: t("questions.gettingStarted"),
+      answer: t("questions.gettingStartedAns"),
       category: "setup"
     },
     {
       id: "email-setup",
-      question: "How do I connect my email account?",
-      answer: "Go to the email settings and follow the connection wizard. We support Gmail, Outlook, and custom SMTP configurations.",
+      question: t("questions.emailSetup"),
+      answer: t("questions.emailSetupAns"),
       category: "setup"
     },
     {
       id: "domain-verification",
-      question: "Why do I need to verify my domain?",
-      answer: "Domain verification improves email deliverability and helps establish trust with email providers. It's essential for successful email campaigns.",
+      question: t("questions.domainVerification"),
+      answer: t("questions.domainVerificationAns"),
       category: "verification"
     },
     {
       id: "contact-import",
-      question: "How do I import my contacts?",
-      answer: "You can import contacts via CSV upload or connect your CRM. Make sure your contact list complies with anti-spam regulations.",
+      question: t("questions.contactImport"),
+      answer: t("questions.contactImportAns"),
       category: "setup"
     },
     {
       id: "troubleshooting",
-      question: "What if I encounter issues?",
-      answer: "Check our documentation first, then contact support if you need additional help. We're here to ensure your success.",
+      question: t("questions.troubleshooting"),
+      answer: t("questions.troubleshootingAns"),
       category: "support"
     }
   ];
-};
 
-export function HelpSection({ 
-  title = "Need Help?", 
-  items = getDefaultHelpItems(),
-  className = ""
-}: HelpSectionProps) {
-  const [openItems, setOpenItems] = useState<Set<string>>(new Set());
+  const displayTitle = title || defaultTitle;
+  const displayItems = items || defaultItems;
 
   const toggleItem = useCallback((itemId: string) => {
     setOpenItems(prev => {
@@ -166,7 +173,7 @@ export function HelpSection({
     });
   }, []);
 
-  if (!items || items.length === 0) {
+  if (!displayItems || displayItems.length === 0) {
     return null;
   }
 
@@ -176,12 +183,12 @@ export function HelpSection({
         <SimpleCardTitle>
           <div className="flex items-center gap-2">
             <HelpCircle className="h-5 w-5" />
-            {title}
+            {displayTitle}
           </div>
         </SimpleCardTitle>
       </SimpleCardHeader>
       <SimpleCardContent className="space-y-4">
-        {items.map((item, index) => (
+        {displayItems.map((item, index) => (
           <div key={item.id}>
             <SimpleCollapsible
               open={openItems.has(item.id)}
@@ -209,7 +216,7 @@ export function HelpSection({
                 </div>
               </SimpleCollapsibleContent>
             </SimpleCollapsible>
-            {index < items.length - 1 && <SimpleSeparator />}
+            {index < displayItems.length - 1 && <SimpleSeparator />}
           </div>
         ))}
       </SimpleCardContent>

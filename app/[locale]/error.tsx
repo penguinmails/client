@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { productionLogger } from "@/lib/logger";
+import { useTranslations } from "next-intl";
 
 export default function Error({
   error,
@@ -10,6 +11,8 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("Error");
+
   useEffect(() => {
     // Log the error to an error reporting service
     productionLogger.error('Error boundary caught an error:', error);
@@ -35,24 +38,24 @@ export default function Error({
         </div>
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            Something went wrong!
+            {t("title")}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            An unexpected error occurred. Please try refreshing the page.
+            {t("description")}
           </p>
           <div className="mt-6">
             <button
               onClick={reset}
               className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600"
             >
-              Try again
+              {t("tryAgain")}
             </button>
           </div>
         </div>
         <div className="rounded-md bg-muted/50 p-4 text-left">
           <details className="text-sm">
             <summary className="cursor-pointer font-medium text-foreground">
-              Error details
+              {t("details")}
             </summary>
             <pre className="mt-2 whitespace-pre-wrap text-xs text-muted-foreground">
               {error.message}

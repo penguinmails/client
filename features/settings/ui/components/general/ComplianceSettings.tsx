@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
 import { SettingsErrorState } from "@/components/settings-error-state";
-import { showSaveSuccess } from "@/components/settings-success-notification";
+import { useSettingsNotifications } from "@/components/settings-success-notification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -68,8 +68,9 @@ interface ComplianceSettingsProps {
 export function ComplianceSettings({
   complianceData: initialData,
 }: ComplianceSettingsProps) {
+  const { showSaveSuccess } = useSettingsNotifications();
   const [submitLoading, setSubmitLoading] = useState(false);
-
+  
   // Server action for fetching compliance settings
   const complianceAction = useServerAction(() => getComplianceSettings(), {
     onError: (error) => {
@@ -135,7 +136,7 @@ export function ComplianceSettings({
       const result = await updateComplianceSettings({ data: serverData, req: undefined as unknown as NextRequest });
 
       if (result.success) {
-        showSaveSuccess("Compliance settings have been updated successfully.");
+        showSaveSuccess("Compliance settings have been updated successfully."); // Use hook function
       } else {
         // Handle validation errors
         productionLogger.error(

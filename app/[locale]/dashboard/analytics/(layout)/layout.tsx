@@ -1,16 +1,18 @@
 "use client";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 
 // Dynamically import all analytics components to prevent SSR issues
-const AnalyticsHeaderActions = dynamic(
+const AnalyticsHeaderActions = nextDynamic(
   () => import("@/features/analytics/ui/components/actions/AnalyticsHeaderActions"),
   { ssr: false, loading: () => null }
 );
 
-const ClientAnalyticsProvider = dynamic(
+const ClientAnalyticsProvider = nextDynamic(
   () => import("@/features/analytics/ui/components/AnalyticsProviderClient").then(mod => ({ default: mod.ClientAnalyticsProvider })),
   { ssr: false, loading: () => <div>Loading...</div> }
 );
+
+export const dynamic = 'force-dynamic';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (

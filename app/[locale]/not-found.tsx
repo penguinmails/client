@@ -1,8 +1,11 @@
 import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
 import Link from "next/link";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 
-const NotFound = () => {
+const NotFound = async () => {
+  const t = await getTranslations("NotFound");
+
   return (
     <LandingLayout>
       <div
@@ -16,20 +19,19 @@ const NotFound = () => {
             height={100}
             className="mb-6 bounce-animation"
           />
-          <h1 className="text-6xl font-extrabold text-primary-600 mb-4">404</h1>
+          <h1 className="text-6xl font-extrabold text-primary-600 mb-4">{t("title")}</h1>
           <p className="text-2xl text-primary-700 mb-6">
-            Oops! The page you&apos;re looking for doesn&apos;t exist.
+            {t("description")}
           </p>
           <div className="text-lg text-primary-600 mb-8">
-            You tried to enter an incorrect route. Please check if there is a
-            typo, or try one of these common routes:
+            {t("explanation")}
             <ul className="mt-2 list-none">
               <li>
                 <Link
                   href="/"
                   className="text-primary-600 underline hover:no-underline"
                 >
-                  Login
+                  {t("login")}
                 </Link>
               </li>
               <li>
@@ -37,7 +39,7 @@ const NotFound = () => {
                   href="/signup"
                   className="text-primary-600 underline hover:no-underline"
                 >
-                  Sign Up
+                  {t("signup")}
                 </Link>
               </li>
               <li>
@@ -45,17 +47,17 @@ const NotFound = () => {
                   href="/dashboard"
                   className="text-primary-600 underline hover:no-underline"
                 >
-                  Dashboard
+                  {t("dashboard")}
                 </Link>
               </li>
             </ul>
-            or
+            {t("or")}
           </div>
           <Link
             href="https://penguinmails.com/"
             className="px-6 py-3 font-semibold rounded-md transition-colors duration-300 ease-in-out"
           >
-            Go back home
+            {t("homeButton")}
           </Link>
         </div>
       </div>

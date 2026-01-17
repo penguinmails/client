@@ -18,6 +18,8 @@ import { cn } from "@/lib/utils";
 // Import existing KPI cards component
 import KpiCards from "@/features/analytics/ui/components/dashboard/cards/KpiCards";
 
+export const dynamic = 'force-dynamic';
+
 // Import server actions (keeping existing ones for non-analytics data)
 import {
   getRecentReplies,

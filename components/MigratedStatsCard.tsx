@@ -23,6 +23,10 @@ interface MigratedStatsCardProps {
  * Migrated Stats Card component with enhanced KPI display features.
  * Supports benchmarks, trends, and standardized color coding.
  */
+import { useTranslations } from "next-intl";
+
+// ... existing code ...
+
 const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
   title,
   value,
@@ -36,6 +40,7 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
   change,
   changeType,
 }) => {
+  const t = useTranslations("Components.MigratedStatsCard");
   const Icon = icon;
 
   // Determine if value meets target benchmark
@@ -90,7 +95,7 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
                     : "bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400"
                 )}
               >
-                {meetsTarget ? "On Target" : "Below Target"}
+                {meetsTarget ? t("onTarget") : t("belowTarget")}
               </div>
             )}
           </div>
@@ -107,7 +112,7 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
           {/* Target benchmark display */}
           {target && unit === "%" && (
             <p className="text-xs text-gray-500 mt-1">
-              Target: {(target * 100).toFixed(1)}%
+              {t("target", { value: (target * 100).toFixed(1) + "%" })}
             </p>
           )}
 

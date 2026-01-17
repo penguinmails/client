@@ -593,5 +593,148 @@
         "buttonText": "Ir al creador de campañas"
       }
     }
+  },
+  "NotFound": {
+    "title": "404",
+    "description": "¡Ups! La página que buscas no existe.",
+    "explanation": "Intentaste ingresar a una ruta incorrecta. Por favor verifica si hay un error tipográfico, o prueba una de estas rutas comunes:",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "dashboard": "Tablero",
+    "or": "o",
+    "homeButton": "Volver al inicio"
+  },
+  "Error": {
+    "title": "¡Algo salió mal!",
+    "description": "Ocurrió un error inesperado. Por favor intenta recargar la página.",
+    "tryAgain": "Intentar de nuevo",
+    "details": "Detalles del error"
+  },
+  "Admin": {
+    "title": "Panel de Administración",
+    "description": "Gestión de usuarios y análisis entre inquilinos"
+  },
+  "Campaigns": {
+    "createTitle": "Crear Nueva Campaña",
+    "editTitle": "Editar Campaña {name}",
+    "newCampaignFallback": "Nueva Campaña"
+  },
+  "Components": {
+    "SettingsErrorState": {
+      "connectionError": "Error de conexión",
+      "authRequired": "Autenticación requerida",
+      "invalidInput": "Entrada inválida",
+      "serverError": "Error del servidor",
+      "permissionDenied": "Permiso denegado",
+      "requestTimeout": "Tiempo de espera agotado",
+      "error": "Error",
+      "networkHelp": "Por favor, comprueba tu conexión a internet e inténtalo de nuevo.",
+      "authHelp": "Por favor, inicia sesión de nuevo para continuar.",
+      "validationHelp": "Por favor, comprueba tu entrada e inténtalo de nuevo.",
+      "serverHelp": "Nuestros servidores están experimentando problemas. Por favor, inténtalo de nuevo más tarde.",
+      "permissionHelp": "No tienes permiso para realizar esta acción.",
+      "timeoutHelp": "La solicitud tardó demasiado. Por favor, inténtalo de nuevo.",
+      "genericHelp": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.",
+      "retry": "Intentar de nuevo",
+      "retryCount": "Reintentar ({count}/{max})",
+      "retrying": "Reintentando...",
+      "reloadPage": "Recargar página",
+      "maxRetries": "Se alcanzó el número máximo de intentos. Por favor comprueba tu conexión o recarga la página."
+    },
+    "HelpSection": {
+      "title": "¿Necesitas ayuda?",
+      "questions": {
+        "gettingStarted": "¿Cómo empiezo?",
+        "gettingStartedAns": "Sigue los pasos de incorporación para configurar tu cuenta y comenzar a usar la plataforma. Completa cada paso en orden para obtener la mejor experiencia.",
+        "emailSetup": "¿Cómo conecto mi cuenta de correo electrónico?",
+        "emailSetupAns": "Ve a la configuración de correo electrónico y sigue el asistente de conexión. Admitimos Gmail, Outlook y configuraciones SMTP personalizadas.",
+        "domainVerification": "¿Por qué necesito verificar mi dominio?",
+        "domainVerificationAns": "La verificación del dominio mejora la capacidad de entrega del correo electrónico y ayuda a establecer confianza con los proveedores de correo electrónico. Es esencial para campañas de correo electrónico exitosas.",
+        "contactImport": "¿Cómo importo mis contactos?",
+        "contactImportAns": "Puedes importar contactos mediante carga CSV o conectar tu CRM. Asegúrate de que tu lista de contactos cumpla con las regulaciones antispam.",
+        "troubleshooting": "¿Qué pasa si encuentro problemas?",
+        "troubleshootingAns": "Consulta nuestra documentación primero, luego contacta con soporte si necesitas ayuda adicional. Estamos aquí para asegurar tu éxito."
+      }
+    },
+    "SuccessNotification": {
+      "save": "Configuración guardada",
+      "saveDesc": "Tu configuración se ha guardado correctamente.",
+      "update": "Actualizado correctamente",
+      "updateDesc": "Tus cambios se han aplicado.",
+      "create": "Creado correctamente",
+      "createDesc": "El elemento se ha creado correctamente.",
+      "delete": "Eliminado correctamente",
+      "deleteDesc": "El elemento se ha eliminado.",
+      "upload": "Carga completa",
+      "uploadDesc": "Tu archivo se ha cargado correctamente.",
+      "invite": "Invitación enviada",
+      "inviteDesc": "La invitación se ha enviado correctamente.",
+      "generic": "Éxito",
+      "genericDesc": "La operación se completó correctamente.",
+      "profileUpdated": "Perfil actualizado",
+      "profileUpdatedDesc": "Tu información de perfil se ha guardado correctamente.",
+      "notificationSaved": "Preferencias de notificación guardadas",
+      "notificationSavedDesc": "Tu configuración de notificaciones se ha actualizado.",
+      "billingUpdated": "Información de facturación actualizada",
+      "billingUpdatedDesc": "Tus detalles de facturación se han guardado correctamente.",
+      "securityUpdated": "Configuración de seguridad actualizada",
+      "securityUpdatedDesc": "Tus preferencias de seguridad se han guardado.",
+      "appearanceSaved": "Configuración de apariencia guardada",
+      "appearanceSavedDesc": "Tus preferencias de interfaz se han aplicado."
+    },
+    "DashboardHeader": {
+      "knowledgeBase": "Base de Conocimientos",
+      "support": "Soporte",
+      "videoTutorials": "Tutoriales en Vídeo"
+    },
+    "StatsCard": {
+      "vsLastPeriod": "vs periodo anterior"
+    },
+    "SystemHealth": {
+      "system": "Sistema {status}",
+      "healthy": "Saludable",
+      "degraded": "Degradado",
+      "unhealthy": "No saludable",
+      "lastChecked": "Última comprobación: {time}",
+      "nextRetry": "Próximo intento en: {time}",
+      "checking": "Comprobando...",
+      "checkNow": "Comprobar Ahora",
+      "retryLimit": "Límite de intentos alcanzado",
+      "attempts": "{current}/{max} intentos",
+      "manualReset": "Reinicio manual"
+    },
+    "MigratedStatsCard": {
+      "onTarget": "En Objetivo",
+      "belowTarget": "Por Debajo del Objetivo",
+      "target": "Objetivo: {value}"
+    },
+    "ManualRetryModal": {
+      "title": "Problema de Conexión Detectado",
+      "description": "La comprobación del sistema ha encontrado fallos repetidos.",
+      "serverFailed": "Conexión al Servidor Fallida",
+      "serverFailedDesc": "No se pudo conectar al servidor después de {attempts} intentos.",
+      "retryProtection": "Protección de Reintento Automático",
+      "wait": "Por favor espera {time} antes de intentar de nuevo.",
+      "manualOrWait": "Puedes intentar de nuevo manualmente o esperar al reintento automático.",
+      "nextRetry": "Próximo reintento automático disponible en: {time}",
+      "close": "Cerrar",
+      "manualRetry": "Reintento Manual",
+      "checking": "Comprobando...",
+      "help": "Este modal aparece cuando el sistema detecta problemas de conexión repetidos. Puedes reintentar manualmente o esperar a los reintentos automáticos.",
+      "second": "segundo",
+      "seconds": "segundos"
+    },
+    "ChunkErrorHandler": {
+      "title": "Error de Carga Detectado",
+      "description": "Falló la carga de un fragmento crítico. Esto suele ocurrir después de un despliegue o debido a archivos en caché.",
+      "techDetails": "Detalles Técnicos",
+      "reload": "Recargar Aplicación",
+      "hardRefresh": "Recarga Completa (Borrar Caché)",
+      "help": "Si esto persiste, intenta borrar la caché de tu navegador o contacta soporte."
+    },
+    "LocaleFallbackToast": {
+      "title": "Idioma no disponible",
+      "description": "\"{locale}\" no es compatible. Usando inglés en su lugar."
+    }
   }
 }

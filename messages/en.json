@@ -595,5 +595,148 @@
         "buttonText": "Go to Campaign Builder"
       }
     }
+  },
+  "NotFound": {
+    "title": "404",
+    "description": "Oops! The page you're looking for doesn't exist.",
+    "explanation": "You tried to enter an incorrect route. Please check if there is a typo, or try one of these common routes:",
+    "login": "Login",
+    "signup": "Sign Up",
+    "dashboard": "Dashboard",
+    "or": "or",
+    "homeButton": "Go back home"
+  },
+  "Error": {
+    "title": "Something went wrong!",
+    "description": "An unexpected error occurred. Please try refreshing the page.",
+    "tryAgain": "Try again",
+    "details": "Error details"
+  },
+  "Admin": {
+    "title": "Admin Dashboard",
+    "description": "Cross-tenant user management and analytics"
+  },
+  "Campaigns": {
+    "createTitle": "Create New Campaign",
+    "editTitle": "Edit Campaign {name}",
+    "newCampaignFallback": "New Campaign"
+  },
+  "Components": {
+    "SettingsErrorState": {
+      "connectionError": "Connection Error",
+      "authRequired": "Authentication Required",
+      "invalidInput": "Invalid Input",
+      "serverError": "Server Error",
+      "permissionDenied": "Permission Denied",
+      "requestTimeout": "Request Timeout",
+      "error": "Error",
+      "networkHelp": "Please check your internet connection and try again.",
+      "authHelp": "Please log in again to continue.",
+      "validationHelp": "Please check your input and try again.",
+      "serverHelp": "Our servers are experiencing issues. Please try again later.",
+      "permissionHelp": "You don't have permission to perform this action.",
+      "timeoutHelp": "The request took too long. Please try again.",
+      "genericHelp": "An unexpected error occurred. Please try again.",
+      "retry": "Try Again",
+      "retryCount": "Retry ({count}/{max})",
+      "retrying": "Retrying...",
+      "reloadPage": "Reload Page",
+      "maxRetries": "Maximum retry attempts reached. Please check your connection or refresh the page."
+    },
+    "HelpSection": {
+      "title": "Need Help?",
+      "questions": {
+        "gettingStarted": "How do I get started?",
+        "gettingStartedAns": "Follow the onboarding steps to set up your account and start using the platform. Complete each step in order for the best experience.",
+        "emailSetup": "How do I connect my email account?",
+        "emailSetupAns": "Go to the email settings and follow the connection wizard. We support Gmail, Outlook, and custom SMTP configurations.",
+        "domainVerification": "Why do I need to verify my domain?",
+        "domainVerificationAns": "Domain verification improves email deliverability and helps establish trust with email providers. It's essential for successful email campaigns.",
+        "contactImport": "How do I import my contacts?",
+        "contactImportAns": "You can import contacts via CSV upload or connect your CRM. Make sure your contact list complies with anti-spam regulations.",
+        "troubleshooting": "What if I encounter issues?",
+        "troubleshootingAns": "Check our documentation first, then contact support if you need additional help. We're here to ensure your success."
+      }
+    },
+    "SuccessNotification": {
+      "save": "Settings saved",
+      "saveDesc": "Your settings have been saved successfully.",
+      "update": "Updated successfully",
+      "updateDesc": "Your changes have been applied.",
+      "create": "Created successfully",
+      "createDesc": "The item has been created successfully.",
+      "delete": "Deleted successfully",
+      "deleteDesc": "The item has been removed.",
+      "upload": "Upload complete",
+      "uploadDesc": "Your file has been uploaded successfully.",
+      "invite": "Invitation sent",
+      "inviteDesc": "The invitation has been sent successfully.",
+      "generic": "Success",
+      "genericDesc": "The operation completed successfully.",
+      "profileUpdated": "Profile updated",
+      "profileUpdatedDesc": "Your profile information has been saved successfully.",
+      "notificationSaved": "Notification preferences saved",
+      "notificationSavedDesc": "Your notification settings have been updated.",
+      "billingUpdated": "Billing information updated",
+      "billingUpdatedDesc": "Your billing details have been saved successfully.",
+      "securityUpdated": "Security settings updated",
+      "securityUpdatedDesc": "Your security preferences have been saved.",
+      "appearanceSaved": "Appearance settings saved",
+      "appearanceSavedDesc": "Your interface preferences have been applied."
+    },
+    "DashboardHeader": {
+      "knowledgeBase": "Knowledge Base",
+      "support": "Support",
+      "videoTutorials": "Video Tutorials"
+    },
+    "StatsCard": {
+      "vsLastPeriod": "vs last period"
+    },
+    "SystemHealth": {
+      "system": "System {status}",
+      "healthy": "Healthy",
+      "degraded": "Degraded",
+      "unhealthy": "Unhealthy",
+      "lastChecked": "Last checked: {time}",
+      "nextRetry": "Next retry in: {time}",
+      "checking": "Checking...",
+      "checkNow": "Check Now",
+      "retryLimit": "Retry limit reached",
+      "attempts": "{current}/{max} attempts",
+      "manualReset": "Manual reset"
+    },
+    "MigratedStatsCard": {
+      "onTarget": "On Target",
+      "belowTarget": "Below Target",
+      "target": "Target: {value}"
+    },
+    "ManualRetryModal": {
+      "title": "Connection Issue Detected",
+      "description": "The system health check has encountered repeated failures.",
+      "serverFailed": "Server Connection Failed",
+      "serverFailedDesc": "Unable to connect to the server after {attempts} attempts.",
+      "retryProtection": "Automatic Retry Protection",
+      "wait": "Please wait {time} before trying again.",
+      "manualOrWait": "You can try again manually or wait for automatic retry.",
+      "nextRetry": "Next automatic retry available in: {time}",
+      "close": "Close",
+      "manualRetry": "Manual Retry",
+      "checking": "Checking...",
+      "help": "This modal appears when the system detects repeated connection issues. You can manually retry or wait for automatic retry attempts.",
+      "second": "second",
+      "seconds": "seconds"
+    },
+    "ChunkErrorHandler": {
+      "title": "Loading Error Detected",
+      "description": "A critical chunk failed to load. This typically happens after a deployment or due to cached files.",
+      "techDetails": "Technical Details",
+      "reload": "Reload Application",
+      "hardRefresh": "Hard Refresh (Clear Cache)",
+      "help": "If this persists, try clearing your browser cache or contact support."
+    },
+    "LocaleFallbackToast": {
+      "title": "Language not available",
+      "description": "\"{locale}\" is not supported. Using English instead."
+    }
   }
 }

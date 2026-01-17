@@ -8,7 +8,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { jest } from "@jest/globals";
-import CampaignCreatePage from "../page";
+import CreateCampaignContent from "../create-campaign-content";
 import {
   AddCampaignProvider,
   useAddCampaignContext,
@@ -47,7 +47,7 @@ describe("CampaignCreatePage", () => {
 
   describe("Initial Rendering", () => {
     it("should render the page with all main components", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       // Check main heading
       expect(screen.getByText("Create New Campaign")).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe("CampaignCreatePage", () => {
     });
 
     it("should render all 6 step buttons", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       const stepTitles = [
         "Campaign Details",
@@ -79,7 +79,7 @@ describe("CampaignCreatePage", () => {
     });
 
     it("should display navigation buttons", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       expect(screen.getByText("Previous")).toBeInTheDocument();
       expect(screen.getByText("Continue")).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe("CampaignCreatePage", () => {
     });
 
     it("should have Previous button disabled on step 1", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       const previousButton = screen.getByText("Previous").closest("button");
       expect(previousButton).toBeDisabled();
@@ -96,7 +96,7 @@ describe("CampaignCreatePage", () => {
 
   describe("Step Navigation", () => {
     it("should navigate to next step when Continue is clicked", async () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       // Check if button is present but don't expect it to be enabled initially
       const continueButton = screen.getByText("Continue").closest("button");
@@ -115,7 +115,7 @@ describe("CampaignCreatePage", () => {
     });
 
     it("should navigate to previous step when Previous is clicked", async () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       // Check if Previous button is present and initially disabled (first step)
       const previousButton = screen.getByText("Previous").closest("button");
@@ -129,7 +129,7 @@ describe("CampaignCreatePage", () => {
     });
 
     it("should disable Continue button when required fields are empty", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       const continueButton = screen.getByText("Continue").closest("button");
       expect(continueButton).toBeDisabled();
@@ -180,7 +180,7 @@ describe("CampaignCreatePage", () => {
 
   describe("Step Indicators", () => {
     it("should highlight the current step", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       const stepButtons = screen.getAllByRole("button");
       const step1Buttons = stepButtons.filter((btn) =>
@@ -192,7 +192,7 @@ describe("CampaignCreatePage", () => {
     });
 
     it("should mark completed steps with check icon", async () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       // Verify the step indicators are present
       const stepButtons = screen.getAllByRole("button");
@@ -211,7 +211,7 @@ describe("CampaignCreatePage", () => {
     });
 
     it("should disable steps that haven't been reached yet", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       const allButtons = screen.getAllByRole("button");
 
@@ -385,7 +385,7 @@ describe("CampaignCreatePage", () => {
 
   describe("Back Navigation", () => {
     it("should call back function when back button is clicked", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       const backButtons = screen.getAllByRole("button");
       const backButton = backButtons.find((btn) => {
@@ -402,14 +402,14 @@ describe("CampaignCreatePage", () => {
 
   describe("Accessibility", () => {
     it("should have proper heading hierarchy", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       const heading = screen.getByText("Create New Campaign");
       expect(heading.tagName).toBe("H1");
     });
 
     it("should have accessible buttons", () => {
-      render(<CampaignCreatePage />);
+      render(<CreateCampaignContent title="Create New Campaign" />);
 
       const buttons = screen.getAllByRole("button");
       expect(buttons.length).toBeGreaterThan(0);
@@ -480,7 +480,7 @@ describe("CampaignCreatePage", () => {
       render(
         <AddCampaignProvider>
           <TestWrapper />
-          <CampaignCreatePage />
+          <CreateCampaignContent title="Create New Campaign" />
         </AddCampaignProvider>
       );
 
@@ -501,7 +501,7 @@ describe("CampaignCreatePage", () => {
 
   describe("Card Structure", () => {
     it("should render within a card structure", () => {
-      const { container } = render(<CampaignCreatePage />);
+      const { container } = render(<CreateCampaignContent title="Create New Campaign" />);
 
       // Check for card elements (using class names or test ids if available)
       expect(container.querySelector(".border-none")).toBeInTheDocument();
