@@ -86,49 +86,73 @@ export const MOCK_ANALYTICS: LocalProgressiveAnalyticsState = {
   },
   "2": {
     data: [{
+      id: "2",
+      email: "sarah@mycompany.com",
+      status: "active",
+      dailyVolume: 30,
+      domain: "mycompany.com",
+      createdAt: new Date(now.getTime() - 4 * 60 * 60 * 1000).toISOString(),
       totalWarmups: 432,
-      lastUpdated: new Date(now.getTime() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
+      lastUpdated: new Date(now.getTime() - 4 * 60 * 60 * 1000),
       warmupProgress: 80,
       spamFlags: 0,
       replies: 0,
       healthScore: 90
-    }] as any,
+    }],
     loading: false,
     error: null
   },
   "3": {
     data: [{
+      id: "3",
+      email: "mike@mycompany.com",
+      status: "paused",
+      dailyVolume: 0,
+      domain: "mycompany.com",
+      createdAt: new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(),
       totalWarmups: 298,
-      lastUpdated: new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+      lastUpdated: new Date(now.getTime() - 24 * 60 * 60 * 1000),
       warmupProgress: 40,
       spamFlags: 0,
       replies: 0,
       healthScore: 60
-    }] as any,
+    }],
     loading: false,
     error: null
   },
   "4": {
     data: [{
+      id: "4",
+      email: "lisa@mycompany.com",
+      status: "warming",
+      dailyVolume: 14,
+      domain: "mycompany.com",
+      createdAt: new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString(),
       totalWarmups: 523,
-      lastUpdated: new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
+      lastUpdated: new Date(now.getTime() - 6 * 60 * 60 * 1000),
       warmupProgress: 95,
       spamFlags: 0,
       replies: 0,
       healthScore: 98
-    }] as any,
+    }],
     loading: false,
     error: null
   },
   "5": {
     data: [{
+      id: "5",
+      email: "david@mycompany.com",
+      status: "active",
+      dailyVolume: 40,
+      domain: "mycompany.com",
+      createdAt: new Date(now.getTime() - 1 * 60 * 60 * 1000).toISOString(),
       totalWarmups: 689,
-      lastUpdated: new Date(now.getTime() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
+      lastUpdated: new Date(now.getTime() - 1 * 60 * 60 * 1000),
       warmupProgress: 88,
       spamFlags: 0,
       replies: 0,
       healthScore: 92
-    }] as any,
+    }],
     loading: false,
     error: null
   }

@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { routing } from "@/lib/config/i18n/routing";
 import { LocaleFallbackToast } from "@/components/locale-fallback-toast";
 import { ChunkErrorHandler } from "@/components";
+import { cookies } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,6 +53,9 @@ export default async function RootLayout({
   const isValidLocale = hasLocale(routing.locales, requestedLocale);
   const locale = isValidLocale ? requestedLocale : routing.defaultLocale;
 
+  const cookieStore = await cookies();
+  const localeFallbackCookie = cookieStore.get("pm_locale_fallback")?.value;
+
   return (
     <html lang={locale} suppressHydrationWarning={true}>
       <body
@@ -63,8 +67,8 @@ export default async function RootLayout({
         <CoreProviders>
           <NextIntlClientProvider locale={locale}>
             <ChunkErrorHandler>
-              {!isValidLocale && (
-                <LocaleFallbackToast requestedLocale={requestedLocale} />
+              {!!localeFallbackCookie?.trim() && (
+                <LocaleFallbackToast requestedLocale={localeFallbackCookie} />
               )}
               {children}
             </ChunkErrorHandler>

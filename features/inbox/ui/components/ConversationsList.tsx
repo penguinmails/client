@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getRelativeTime } from "@/lib/utils/date";
 import { getTagColor } from "@/lib/theme/ui";
-import { Eye, Pin, Star } from "lucide-react";
+import { Eye, Star } from "lucide-react";
 import Link from "next/link";
 import ConversationsListHeader from "./ConversationsListHeader";
 

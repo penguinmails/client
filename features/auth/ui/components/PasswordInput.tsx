@@ -117,7 +117,10 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
       [onValueChange],
     );
 
-    const inputProps = {
+    // Build input props without custom props that shouldn't be passed to DOM element
+    const inputProps: React.InputHTMLAttributes<HTMLInputElement> & {
+      "data-testid"?: string;
+    } = {
       type: showPassword ? "text" : "password",
       id: name,
       name,
@@ -128,8 +131,6 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
       "data-testid": testId,
       onChange: handleChange,
       ...props,
-    } as React.InputHTMLAttributes<HTMLInputElement> & {
-      "data-testid"?: string;
     };
 
     if (value !== undefined) {
