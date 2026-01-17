@@ -41,14 +41,34 @@ Object.defineProperty(process.env, 'NILEDB_POSTGRES_URL', { value: 'postgres://t
 Object.defineProperty(process.env, 'NEXT_PUBLIC_APP_URL', { value: 'http://localhost:3000' });
 
 // Mock console methods to reduce noise in tests
+// Suppress logs, debug, info, and warnings
+// Keep errors visible for actual test failures
+// Suppress React warnings that are logged as console.error
+const originalError = console.error;
 global.console = {
   ...console,
-  // Uncomment to ignore specific console methods during tests
-  // log: jest.fn(),
-  // debug: jest.fn(),
-  // info: jest.fn(),
-  // warn: jest.fn(),
-  // error: jest.fn(),
+  log: jest.fn(),
+  debug: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: (...args) => {
+    // Suppress React warnings that are logged as console.error
+    const message = args[0];
+    if (
+      typeof message === 'string' &&
+      (message.includes('React does not recognize') ||
+       message.includes('Unknown event handler property') ||
+       message.includes('Invalid prop') ||
+       message.includes('Warning:') ||
+       message.includes('When testing, code that causes React state updates should be wrapped into act(...)') ||
+       message.includes('Missing `Description`') ||
+       message.includes('aria-describedby'))
+    ) {
+      return;
+    }
+    // Keep actual errors visible
+    originalError(...args);
+  },
 };
 
 // Mock PostHog for tests

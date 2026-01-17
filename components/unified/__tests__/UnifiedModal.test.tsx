@@ -157,6 +157,7 @@ describe('UnifiedModal', () => {
       <UnifiedModal open>
         <UnifiedModalContent size="full" data-testid="modal-content">
           <UnifiedModalTitle>Full Size Modal</UnifiedModalTitle>
+          <UnifiedModalDescription>Full size modal description</UnifiedModalDescription>
         </UnifiedModalContent>
       </UnifiedModal>
     );
@@ -170,6 +171,7 @@ describe('UnifiedModal', () => {
       <UnifiedModal open>
         <UnifiedModalContent size="xl" data-testid="modal-content">
           <UnifiedModalTitle>XL Modal</UnifiedModalTitle>
+          <UnifiedModalDescription>XL modal description</UnifiedModalDescription>
         </UnifiedModalContent>
       </UnifiedModal>
     );
