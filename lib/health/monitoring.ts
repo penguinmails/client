@@ -84,7 +84,7 @@ export async function logHealthCheck(
     // Don't throw - health check should succeed even if logging fails
     // Be safe and try to shutdown even on error if we own the client
     if (shouldShutdown) {
-      try { await shutdownPostHog(posthog); } catch {}
+      try { await shutdownPostHog(posthog); } catch { /* ignore */ }
     }
   }
 }
@@ -125,7 +125,7 @@ export async function logServiceAlert(
   } catch (error) {
     productionLogger.error('Failed to log service alert to PostHog:', error);
     if (shouldShutdown) {
-      try { await shutdownPostHog(posthog); } catch {}
+      try { await shutdownPostHog(posthog); } catch { /* ignore */ }
     }
   }
 }

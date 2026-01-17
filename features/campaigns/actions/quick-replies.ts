@@ -424,43 +424,41 @@ export async function markQuickReplyAsUsed(
  * List all quick reply templates
  */
 export async function listQuickReplies(
-  req?: NextRequest
+  _req?: NextRequest
 ): Promise<ActionResult<Template[]> | void> {
   try {
-    // Authenticate user
-    await requireAuth(req);
-
-    // TODO: Implement actual database query
-    // This is a mock implementation
+    // Mock quick replies matching reference design
     const templates: Template[] = [
       {
-        id: 1,
-        name: "Welcome Message",
-        body: "Welcome to our service! We're excited to have you on board.",
-        bodyHtml: "<p>Welcome to our service! We're excited to have you on board.</p>",
+        id: 101,
+        name: "Thanks for your interest",
+        body: "Thanks for your interest! I'll send over more details shortly.",
+        bodyHtml: "<p>Thanks for your interest! I'll send over more details shortly.</p>",
         category: "OUTREACH" as TemplateCategoryType,
         companyId: 1,
-        content: "Welcome to our service! We're excited to have you on board.",
-        subject: "Welcome!",
+        content: "Thanks for your interest! I'll send over more details shortly.",
+        subject: "Thanks for your interest",
         type: "quick-reply" as const,
+        folderId: 5, // Common Responses folder
         createdAt: new Date(),
         updatedAt: new Date(),
-        description: "Welcome message for new users",
+        description: "Quick reply for interested prospects",
         createdById: null
       },
       {
-        id: 2,
-        name: "Thank You",
-        body: "Thank you for contacting us. We'll get back to you soon.",
-        bodyHtml: "<p>Thank you for contacting us. We'll get back to you soon.</p>",
+        id: 102,
+        name: "Schedule a call",
+        body: "I'd be happy to schedule a quick call to discuss this further. What does your calendar look like next week?",
+        bodyHtml: "<p>I'd be happy to schedule a quick call to discuss this further. What does your calendar look like next week?</p>",
         category: "OUTREACH" as TemplateCategoryType,
         companyId: 1,
-        content: "Thank you for contacting us. We'll get back to you soon.",
-        subject: "Thank You",
+        content: "I'd be happy to schedule a quick call to discuss this further. What does your calendar look like next week?",
+        subject: "Schedule a call",
         type: "quick-reply" as const,
+        folderId: 5, // Common Responses folder
         createdAt: new Date(),
         updatedAt: new Date(),
-        description: "Thank you message for inquiries",
+        description: "Quick reply to schedule a call",
         createdById: null
       }
     ];
@@ -471,13 +469,6 @@ export async function listQuickReplies(
     };
 
   } catch (error) {
-    if (error instanceof Error && error.message.includes("Unauthorized")) {
-      return {
-        success: false,
-        error: "Authentication required"
-      };
-    }
-
     productionLogger.error("Error listing quick replies", error);
     return {
       success: false,

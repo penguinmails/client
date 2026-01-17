@@ -8,13 +8,14 @@ import { Template as TemplateType, TemplateFolder as TemplateFolderType } from '
 export type Template = TemplateType;
 export type TemplateFolder = TemplateFolderType;
 
-// Mock data
+// Mock data matching the reference design
 const mockFolders: TemplateFolder[] = [
+  // Template folders (for My Templates tab)
   {
     id: 1,
-    name: 'Sales Templates',
+    name: 'Cold Outreach',
     type: 'template',
-    templateCount: 5,
+    templateCount: 2,
     isExpanded: false,
     children: [],
     parentId: undefined,
@@ -22,9 +23,50 @@ const mockFolders: TemplateFolder[] = [
   },
   {
     id: 2,
-    name: 'Marketing Templates',
+    name: 'Follow-ups',
     type: 'template',
-    templateCount: 8,
+    templateCount: 1,
+    isExpanded: false,
+    children: [],
+    parentId: undefined,
+    order: 2
+  },
+  {
+    id: 3,
+    name: 'Product Demo',
+    type: 'template',
+    templateCount: 0,
+    isExpanded: false,
+    children: [],
+    parentId: undefined,
+    order: 3
+  },
+  {
+    id: 4,
+    name: 'Partnerships',
+    type: 'template',
+    templateCount: 0,
+    isExpanded: false,
+    children: [],
+    parentId: undefined,
+    order: 4
+  },
+  // Quick Reply folders (for Quick Replies tab)
+  {
+    id: 5,
+    name: 'Common Responses',
+    type: 'quick-reply',
+    templateCount: 2,
+    isExpanded: false,
+    children: [],
+    parentId: undefined,
+    order: 1
+  },
+  {
+    id: 6,
+    name: 'Objection Handling',
+    type: 'quick-reply',
+    templateCount: 0,
     isExpanded: false,
     children: [],
     parentId: undefined,
@@ -35,30 +77,117 @@ const mockFolders: TemplateFolder[] = [
 const mockTemplates: Template[] = [
   {
     id: 1,
-    name: 'Welcome Email',
-    body: 'Hello {{first_name}}, welcome to our platform!',
-    bodyHtml: '<p>Hello {{first_name}}, welcome to our platform!</p>',
-    subject: 'Welcome to {{company_name}}!',
+    name: 'Cold Outreach - SaaS',
+    body: 'Hi {{first_name}}, I noticed {{company}} is growing fast. Quick question about your current workflow...',
+    bodyHtml: '<p>Hi {{first_name}}, I noticed {{company}} is growing fast. Quick question about your current workflow...</p>',
+    subject: 'Quick question about {{company}} workflow',
     category: 'OUTREACH',
-    folderId: 2,
-    usage: 10,
-    openRate: '45.2%',
-    replyRate: '12.8%',
-    lastUsed: '2024-01-15',
+    folderId: 1,
+    usage: 847,
+    openRate: '34.2%',
+    replyRate: '8.6%',
+    lastUsed: '2 hours ago',
     isStarred: false,
     type: 'template',
     companyId: 1,
-    description: 'Welcome email template for new users',
+    description: 'Cold outreach template for SaaS companies',
     createdById: 'user1',
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01')
+  },
+  {
+    id: 6,
+    name: 'Cold Outreach - E-commerce',
+    body: 'Hi {{first_name}}, I saw that {{company}} has been expanding. Our solution could help boost your sales...',
+    bodyHtml: '<p>Hi {{first_name}}, I saw that {{company}} has been expanding. Our solution could help boost your sales...</p>',
+    subject: 'Boost {{company}} sales with our solution',
+    category: 'OUTREACH',
+    folderId: 1,
+    usage: 425,
+    openRate: '31.8%',
+    replyRate: '7.2%',
+    lastUsed: '1 day ago',
+    isStarred: false,
+    type: 'template',
+    companyId: 1,
+    description: 'Cold outreach template for e-commerce companies',
+    createdById: 'user1',
+    createdAt: new Date('2024-01-10'),
+    updatedAt: new Date('2024-01-10')
+  },
+  {
+    id: 2,
+    name: 'Follow-up #1',
+    body: 'Hi {{first_name}}, I wanted to follow up on my previous email about {{company}}...',
+    bodyHtml: '<p>Hi {{first_name}}, I wanted to follow up on my previous email about {{company}}...</p>',
+    subject: 'Following up on my previous email',
+    category: 'FOLLOW_UP',
+    folderId: 2,
+    usage: 523,
+    openRate: '28.9%',
+    replyRate: '12.3%',
+    lastUsed: '1 day ago',
+    isStarred: false,
+    type: 'template',
+    companyId: 1,
+    description: 'First follow-up email template',
+    createdById: 'user1',
+    createdAt: new Date('2024-01-05'),
+    updatedAt: new Date('2024-01-05')
+  },
+  // Quick replies (for Quick Replies tab folders)
+  {
+    id: 101,
+    name: 'Thanks for your interest',
+    body: "Thanks for your interest! I'll send over more details shortly.",
+    bodyHtml: "<p>Thanks for your interest! I'll send over more details shortly.</p>",
+    subject: 'Thanks for your interest',
+    category: 'OUTREACH',
+    folderId: 5, // Common Responses folder
+    usage: 156,
+    openRate: '42.1%',
+    replyRate: '18.5%',
+    lastUsed: '3 hours ago',
+    isStarred: false,
+    type: 'quick-reply',
+    companyId: 1,
+    description: 'Quick reply for interested prospects',
+    createdById: 'user1',
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01')
+  },
+  {
+    id: 102,
+    name: 'Schedule a call',
+    body: "I'd be happy to schedule a quick call to discuss this further. What does your calendar look like next week?",
+    bodyHtml: "<p>I'd be happy to schedule a quick call to discuss this further. What does your calendar look like next week?</p>",
+    subject: 'Schedule a call',
+    category: 'OUTREACH',
+    folderId: 5, // Common Responses folder
+    usage: 89,
+    openRate: '38.7%',
+    replyRate: '22.3%',
+    lastUsed: '1 day ago',
+    isStarred: false,
+    type: 'quick-reply',
+    companyId: 1,
+    description: 'Quick reply to schedule a call',
+    createdById: 'user1',
+    createdAt: new Date('2024-01-05'),
+    updatedAt: new Date('2024-01-05')
   }
 ];
 
 export async function getTemplateFolders(_req?: NextRequest): Promise<FormHandlerResult<TemplateFolder[]>> {
+  // Populate children with templates that belong to each folder
+  const foldersWithChildren = mockFolders.map(folder => ({
+    ...folder,
+    children: mockTemplates.filter(template => template.folderId === folder.id)
+  }));
+  
   return {
     success: true,
-    data: mockFolders
+    data: foldersWithChildren
   };
 }
 
@@ -181,7 +310,8 @@ export async function getTemplateById(
 export async function getTabCounts(_req?: NextRequest): Promise<Record<string, number>> {
   return {
     templates: mockTemplates.filter(t => t.type === 'template').length,
-    quickReplies: mockTemplates.filter(t => t.type === 'quick-reply').length,
+    'quick-replies': mockTemplates.filter(t => t.type === 'quick-reply').length,
+    gallery: 0, // Assuming gallery is always 0 for now
     folders: mockFolders.length
   };
 }

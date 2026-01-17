@@ -195,10 +195,10 @@ function WarmUpLineChart(): ReactElement {
                   <Line
                     type="monotone"
                     dataKey="totalWarmups"
-                    stroke="hsl(var(--primary))"
+                    stroke="#2563eb"
                     strokeWidth={2}
-                    dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: "hsl(var(--primary))", strokeWidth: 2 }}
+                    dot={{ fill: "#2563eb", strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: "#2563eb", strokeWidth: 2 }}
                   />
                 )}
 

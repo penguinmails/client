@@ -60,7 +60,7 @@ function ConversationsList({
             >
               <Card
                 className={cn(
-                  "cursor-pointer hover:shadow-md transition-all duration-200 group p-0"
+                  "cursor-pointer transition-all duration-200 group p-0"
                 )}
               >
                 <CardContent className="p-6">
@@ -78,15 +78,12 @@ function ConversationsList({
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-2">
                           <h3 className="text-lg font-semibold text-foreground">
                             {conversation.name}
                           </h3>
                           {conversation.isStarred && (
                             <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                          )}
-                          {conversation.isPinned && (
-                            <Pin className="w-4 h-4 text-blue-600" />
                           )}
                         </div>
                         <span className="text-sm text-muted-foreground">
@@ -116,7 +113,7 @@ function ConversationsList({
                             {conversation.campaign}
                           </Badge>
                         </div>
-                        <div className="flex items-center space-x-2 opacity-100 transition-opacity">
+                        <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button
                             variant="ghost"
                             size="sm"

@@ -47,7 +47,6 @@ function MigratedPerformanceFilter({
   ];
 
   const granularityOptions: { value: string; label: string }[] = [
-    { value: "day", label: "Daily" },
     { value: "week", label: "Weekly" },
     { value: "month", label: "Monthly" },
   ];
@@ -161,11 +160,11 @@ function MigratedPerformanceFilter({
           onChange={handleGranularityChange}
         />
 
-        {/* Domain Filter */}
+        {/* Campaign Filter */}
         <FilterPopover
           icon={<Target className="size-4" />}
-          label="Domains"
-          title="Filter by Domain"
+          label="Campaigns"
+          title="Filter by Campaign"
           items={campaignData?.map((domain) => domain.domainName) || []}
           selectedItems={filters.selectedCampaigns}
           onItemsChange={handleCampaignSelectionChange}
@@ -242,11 +241,6 @@ function FilterPopover({
         >
           {icon}
           <span>{label}</span>
-          {selectedItems.length > 0 && (
-            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-              {selectedItems.length}
-            </span>
-          )}
           <ChevronDown className="size-4" />
         </Button>
       </PopoverTrigger>

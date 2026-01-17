@@ -37,6 +37,7 @@ interface StatsCardProps {
     value: number;
     isPositive: boolean;
   };
+  iconPosition?: "left" | "right";
 }
 
 import { useTranslations } from "next-intl";
@@ -50,14 +51,21 @@ export function StatsCard({
   color = "bg-blue-500 text-white",
   className,
   description,
-  trend
+  trend,
+  iconPosition = "right"
 }: StatsCardProps) {
   const t = useTranslations("Components.StatsCard");
   
   return (
     <SimpleCard className={cn("", className)}>
       <SimpleCardContent className="p-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
+          {iconPosition === "left" && Icon && (
+            <div className={cn("p-3 rounded-lg", color)}>
+              <Icon className="h-6 w-6" />
+            </div>
+          )}
+          
           <div className="flex-1">
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
             <p className="text-2xl font-bold text-foreground">{value}</p>
@@ -76,7 +84,8 @@ export function StatsCard({
               </div>
             )}
           </div>
-          {Icon && (
+          
+          {iconPosition === "right" && Icon && (
             <div className={cn("p-3 rounded-lg", color)}>
               <Icon className="h-6 w-6" />
             </div>

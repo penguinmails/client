@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { Mail, TrendingUp, Clock, X } from "lucide-react";
 import { MailboxWarmupData } from "@/types";
 import { DomainAnalytics, MailboxAnalytics as DomainMailboxAnalytics } from "@features/analytics/types/domain-specific";
 import { WarmupChartData } from "@/types";
@@ -135,12 +136,51 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const [domains, setDomains] = useState<DomainAnalytics[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [smartInsightsList] = useState<unknown[]>([]);
-  const [dateRange, setDateRange] = useState<DateRangePreset>("7d");
-  const [granularity, setGranularity] = useState<DataGranularity>("day");
+  
+  // Smart Insights data matching reference design
+  const [smartInsightsList] = useState([
+    {
+      id: "unread",
+      icon: Mail,
+      borderColor: "border-blue-200",
+      iconBackground: "bg-blue-100",
+      iconColor: "text-blue-600",
+      count: 24,
+      label: "Unread"
+    },
+    {
+      id: "interested",
+      icon: TrendingUp,
+      borderColor: "border-green-200",
+      iconBackground: "bg-green-100",
+      iconColor: "text-green-600",
+      count: 12,
+      label: "Interested"
+    },
+    {
+      id: "avg-response",
+      icon: Clock,
+      borderColor: "border-purple-200",
+      iconBackground: "bg-purple-100",
+      iconColor: "text-purple-600",
+      count: "2.3h",
+      label: "Avg Response"
+    },
+    {
+      id: "not-interested",
+      icon: X,
+      borderColor: "border-red-200",
+      iconBackground: "bg-red-100",
+      iconColor: "text-red-600",
+      count: 8,
+      label: "Not Interested"
+    }
+  ]);
+  const [dateRange, setDateRange] = useState<DateRangePreset>("30d");
+  const [granularity, setGranularity] = useState<DataGranularity>("week");
   const [visibleWarmupMetrics, setVisibleWarmupMetrics] = useState({
     totalWarmups: true,
-    spamFlags: false,
+    spamFlags: true,
     replies: true,
   });
 
@@ -151,8 +191,8 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 
   const [filters, setFilters] = useState<AnalyticsFilters>({
     visibleMetrics: ["sent", "delivered", "opened_tracked", "clicked_tracked"],
-    dateRange: "7d",
-    granularity: "day",
+    dateRange: "30d",
+    granularity: "week",
     selectedCampaigns: [],
     selectedMailboxes: [],
     selectedDomains: [],
@@ -160,44 +200,108 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     setVisibleMetrics,
   });
 
-  // Mock data
+  // Mock data matching reference: 5 mailboxes total (2 active, 2 warming, 1 inactive)
+  // Resulting counts: Active (2+2=4), Ready (2), Warming (2)
   const mockMailboxData: MailboxWarmupData[] = [
     {
       id: "1",
       name: "Sales Team",
-      email: "sales@example.com",
+      email: "sales@mycompany.com",
       status: "active",
-      warmupProgress: 85,
+      warmupProgress: 100,
       dailyVolume: 50,
-      healthScore: 92,
-      domain: "example.com",
-      createdAt: new Date().toISOString(),
+      healthScore: 98,
+      domain: "mycompany.com",
+      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
     },
     {
       id: "2",
-      name: "Marketing Team",
-      email: "marketing@example.com",
+      name: "Growth Team",
+      email: "growth@mycompany.com",
       status: "warming",
-      warmupProgress: 65,
-      dailyVolume: 30,
-      healthScore: 78,
-      domain: "example.com",
-      createdAt: new Date().toISOString(),
+      warmupProgress: 45,
+      dailyVolume: 20,
+      healthScore: 82,
+      domain: "mycompany.com",
+      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "3",
+      name: "Marketing Team",
+      email: "marketing@mycompany.com",
+      status: "active",
+      warmupProgress: 100,
+      dailyVolume: 40,
+      healthScore: 95,
+      domain: "mycompany.com",
+      createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "4",
+      name: "Support Team",
+      email: "support@mycompany.com",
+      status: "warming",
+      warmupProgress: 60,
+      dailyVolume: 25,
+      healthScore: 88,
+      domain: "mycompany.com",
+      createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "5",
+      name: "Operations Team",
+      email: "ops@mycompany.com",
+      status: "inactive",
+      warmupProgress: 0,
+      dailyVolume: 0,
+      healthScore: 0,
+      domain: "mycompany.com",
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     },
   ];
 
   const mockWarmupChartData: WarmupChartData[] = [
     {
-      date: "Jan 1",
-      totalWarmups: 45,
-      spamFlags: 2,
-      replies: 3,
+      date: "Aug 5",
+      totalWarmups: 250,
+      spamFlags: 4,
+      replies: 12,
     },
     {
-      date: "Jan 2",
-      totalWarmups: 52,
-      spamFlags: 1,
-      replies: 5,
+      date: "Aug 6",
+      totalWarmups: 265,
+      spamFlags: 3,
+      replies: 14,
+    },
+    {
+      date: "Aug 7",
+      totalWarmups: 290,
+      spamFlags: 6,
+      replies: 18,
+    },
+    {
+      date: "Aug 8",
+      totalWarmups: 315,
+      spamFlags: 8,
+      replies: 25,
+    },
+    {
+      date: "Aug 9",
+      totalWarmups: 305,
+      spamFlags: 5,
+      replies: 22,
+    },
+    {
+      date: "Aug 10",
+      totalWarmups: 340,
+      spamFlags: 9,
+      replies: 28,
+    },
+    {
+      date: "Aug 11",
+      totalWarmups: 360,
+      spamFlags: 7,
+      replies: 20,
     },
   ];
 
@@ -344,22 +448,22 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 
   const getAccountMetrics = (): TypesAccountMetrics => {
     return {
-      sent: 1000,
-      delivered: 980,
-      opened_tracked: 248,
-      clicked_tracked: 120,
-      replied: 83,
-      bounced: 25,
-      unsubscribed: 5,
-      spamComplaints: 1,
-      totalMailboxes: 10,
-      activeMailboxes: 8,
-      healthScore: 92,
-      dailyVolume: 150,
-      bounceRate: 0.025, // 2.5% as decimal
-      openRate: 0.248, // 24.8% as decimal
-      replyRate: 0.083, // 8.3% as decimal
-      spamRate: 0.001, // 0.1% as decimal
+      sent: 2125,
+      delivered: 2050,
+      opened_tracked: 850,
+      clicked_tracked: 210,
+      replied: 139,
+      bounced: 45,
+      unsubscribed: 12,
+      spamComplaints: 20,
+      totalMailboxes: 42,
+      activeMailboxes: 35,
+      healthScore: 94,
+      dailyVolume: 350,
+      bounceRate: 0.021, // 2.1%
+      openRate: 0.415, // 41.5%
+      replyRate: 0.068, // 6.8%
+      spamRate: 0.009, // 0.9%
       maxBounceRateThreshold: 0.05, // 5% threshold
       maxSpamComplaintRateThreshold: 0.002, // 0.2% threshold
       minOpenRateThreshold: 0.15, // 15% threshold
@@ -449,12 +553,12 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     return {
       formattedData: mockWarmupChartData,
       formattedStats: {
-        totalSent: "1,500",
-        openRate: "24.8%",
-        clickRate: "8.3%",
-        replyRate: "5.2%",
-        bounceRate: "2.5%",
-        deliveryRate: "97.5%"
+        totalSent: "2,125",
+        openRate: "41.5%",
+        clickRate: "9.8%",
+        replyRate: "6.5%",
+        bounceRate: "2.1%",
+        deliveryRate: "96.5%"
       },
       metrics: {
         totalWarmups: mockWarmupChartData.reduce(
@@ -496,7 +600,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       },
       {
         key: "replies",
-        label: "Replies",
+        label: "Total Replies",
         tooltip: "Number of replies received"
       }
     ],

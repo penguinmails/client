@@ -192,23 +192,42 @@ export async function getStatsCards(_req?: NextRequest) {
  */
 export async function getRecentReplies(_req?: NextRequest) {
   try {
-    // TODO: Implement actual data fetching from NileDB
+    // Demo data matching the approved dashboard baseline
     return {
       success: true,
       data: [
         {
           id: '1',
           subject: 'Re: Partnership Opportunity',
-          from: 'john@example.com',
+          from: 'sarah.johnson@techcorp.com',
+          name: 'Sarah Johnson',
+          company: 'TechCorp',
+          message: 'Thanks for reaching out! I\'d love to schedule a call to discuss this further.',
           date: new Date(Date.now() - 2 * 60 * 60 * 1000),
-          campaignId: '1'
+          campaignId: '1',
+          type: 'positive'
         },
         {
           id: '2',
           subject: 'Re: Follow-up Meeting',
-          from: 'sarah@company.com',
+          from: 'mike.chen@startup.io',
+          name: 'Mike Chen',
+          company: 'Startup.io',
+          message: 'Not interested at this time, but please keep us in mind for the future.',
           date: new Date(Date.now() - 4 * 60 * 60 * 1000),
-          campaignId: '2'
+          campaignId: '2',
+          type: 'negative'
+        },
+        {
+          id: '3',
+          subject: 'Re: Product Demo Request',
+          from: 'lisa.rodriguez@enterprise.com',
+          name: 'Lisa Rodriguez',
+          company: 'Enterprise Inc',
+          message: 'This looks interesting. Can you send me more information about pricing?',
+          date: new Date(Date.now() - 6 * 60 * 60 * 1000),
+          campaignId: '3',
+          type: 'positive'
         }
       ]
     };

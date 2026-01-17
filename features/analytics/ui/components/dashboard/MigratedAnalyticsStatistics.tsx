@@ -34,7 +34,7 @@ function MigratedAnalyticsStatistics({
       displayValue: totalSent.toString(),
       rawValue: typeof totalSent === 'string' ? parseFloat(totalSent) || 0 : totalSent,
       unit: "emails",
-      color: "neutral",
+      color: "blue",
     },
     {
       id: "open-rate",
@@ -42,7 +42,7 @@ function MigratedAnalyticsStatistics({
       displayValue: `${openRate}%`,
       rawValue: typeof openRate === 'string' ? parseFloat(openRate) || 0 : openRate,
       unit: "%",
-      color: "positive",
+      color: "purple",
     },
     {
       id: "reply-rate",
@@ -50,7 +50,7 @@ function MigratedAnalyticsStatistics({
       displayValue: `${replyRate}%`,
       rawValue: typeof replyRate === 'string' ? parseFloat(replyRate) || 0 : replyRate,
       unit: "%",
-      color: "positive",
+      color: "green",
     },
     {
       id: "click-rate",
@@ -58,7 +58,7 @@ function MigratedAnalyticsStatistics({
       displayValue: `${clickRate}%`,
       rawValue: typeof clickRate === 'string' ? parseFloat(clickRate) || 0 : clickRate,
       unit: "%",
-      color: "positive",
+      color: "orange",
     },
   ];
   // Icon mapping for different KPI types
@@ -80,10 +80,17 @@ function MigratedAnalyticsStatistics({
   };
 
   // Color mapping for KPI cards
-  const getColorForKPI = (color?: KPIDisplayConfig["color"]) => {
+  const getColorForKPI = (color?: KPIDisplayConfig["color"] | string) => {
     switch (color) {
+      case "blue":
+        return "bg-blue-100 text-blue-600";
+      case "purple":
+        return "bg-purple-100 text-purple-600";
+      case "green":
       case "positive":
         return "bg-green-100 text-green-600";
+      case "orange":
+        return "bg-orange-100 text-orange-600";
       case "warning":
         return "bg-yellow-100 text-yellow-600";
       case "danger":

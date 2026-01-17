@@ -62,7 +62,7 @@ function Folder({
                   <span className="font-medium">{folder.name}</span>
                   {showFiles && (
                     <span className="ml-auto text-xs bg-blue-100 px-2 py-1 rounded-full">
-                      {folder.children.length}
+                      {folder.templateCount || 0}
                     </span>
                   )}
                 </div>

@@ -89,7 +89,7 @@ export interface KPIDisplayConfig {
   /** Trend direction */
   trend?: "up" | "down" | "stable";
   /** Color theme */
-  color?: "positive" | "warning" | "danger" | "neutral";
+  color?: "positive" | "warning" | "danger" | "neutral" | "blue" | "purple" | "green" | "orange";
   /** Change from previous period */
   change?: string;
   /** Change type for styling */

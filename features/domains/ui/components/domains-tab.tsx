@@ -3,8 +3,24 @@ import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getStatusColor } from "@features/domains/lib/utils";
-import { AlertTriangle, Check, Copy, X } from "lucide-react";
+import { AlertTriangle, Check, Copy, Plus, Trash2, X } from "lucide-react";
+import Link from "next/link";
+import { formatDistanceToNow, differenceInDays } from "date-fns";
 
+// ... existing imports
+
+const formatAddedDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const daysDiff = differenceInDays(now, date);
+
+  if (daysDiff >= 14 && daysDiff < 30) {
+    const weeks = Math.floor(daysDiff / 7);
+    return `${weeks} weeks ago`;
+  }
+  
+  return formatDistanceToNow(date, { addSuffix: true });
+};
 export const getRecordIcon = (status: string) => {
   switch (status) {
     case "verified":
@@ -53,9 +69,9 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
                   variant={
                     domain.status === "verified" ? "default" : "secondary"
                   }
-                  className={cn(getStatusColor(domain.status))}
+                  className={cn(getStatusColor(domain.status.toUpperCase()))}
                 >
-                  {domain.status === "verified"
+                  {domain.status.toUpperCase() === "VERIFIED"
                     ? "Verified"
                     : "Pending Verification"}
                 </Badge>
@@ -63,12 +79,14 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
                   {domain.mailboxes} mailboxes
                 </span>
                 <span className="text-sm text-muted-foreground">
-                  Added {domain.addedDate}
+                  Added {formatAddedDate(domain.addedDate)}
                 </span>
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              {/* Delete functionality can be added later */}
+              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive">
+                <Trash2 className="w-4 h-4" />
+              </Button>
             </div>
           </CardHeader>
 
@@ -81,23 +99,25 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
                 const status = domain.records[recordKey];
 
                 return (
-                  <Card key={index} className="bg-muted/50 p-0">
+                  <Card key={index} className="bg-white border shadow-sm p-0 overflow-hidden">
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-semibold text-foreground">
                           {record.name}
                         </span>
                         {getRecordIcon(status)}
                       </div>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        {record.value}
-                      </p>
+                      <div className="bg-muted/30 rounded p-2 mb-3">
+                        <p className="text-xs text-muted-foreground break-all line-clamp-2">
+                          {record.value}
+                        </p>
+                      </div>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-auto p-0 text-xs"
+                        className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5"
                       >
-                        <Copy className="w-3 h-3 mr-1" />
+                        <Copy className="w-3.5 h-3.5" />
                         Copy
                       </Button>
                     </CardContent>
@@ -106,7 +126,7 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
               })}
             </div>
 
-            {domain.status === "pending" && (
+            {domain.status.toUpperCase() === "PENDING" && (
               <Card className="mt-4 border-orange-200 bg-orange-50">
                 <CardContent className="p-4">
                   <div className="flex items-start space-x-3">
