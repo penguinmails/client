@@ -117,7 +117,10 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
       [onValueChange],
     );
 
-    const inputProps = {
+    // Build input props without custom props that shouldn't be passed to DOM element
+    const inputProps: React.InputHTMLAttributes<HTMLInputElement> & {
+      "data-testid"?: string;
+    } = {
       type: showPassword ? "text" : "password",
       id: name,
       name,
@@ -127,20 +130,8 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
       required,
       "data-testid": testId,
       onChange: handleChange,
-      // Exclude custom props that shouldn't be passed to DOM element
       ...props,
-    } as React.InputHTMLAttributes<HTMLInputElement> & {
-      "data-testid"?: string;
     };
-
-    // Remove custom props from inputProps to prevent DOM warnings
-    delete inputProps.showStrengthMeter;
-    delete inputProps.onStrengthChange;
-    delete inputProps.onValueChange;
-    delete inputProps.dataTestId;
-    delete inputProps.containerClassName;
-    delete inputProps.inputClassName;
-    delete inputProps.labelClassName;
 
     if (value !== undefined) {
       inputProps.value = value;
