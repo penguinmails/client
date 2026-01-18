@@ -2,6 +2,12 @@
 import nextDynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 
+// Loading component for ClientAnalyticsProvider
+function AnalyticsProviderLoading() {
+  const t = useTranslations("Common");
+  return <div>{t("loading")}</div>;
+}
+
 // Dynamically import all analytics components to prevent SSR issues
 const AnalyticsHeaderActions = nextDynamic(
   () =>
@@ -14,7 +20,7 @@ const ClientAnalyticsProvider = nextDynamic(
     import("@/features/analytics/ui/components/AnalyticsProviderClient").then(
       (mod) => ({ default: mod.ClientAnalyticsProvider }),
     ),
-  { ssr: false, loading: () => <div>Loading...</div> },
+  { ssr: false, loading: () => <AnalyticsProviderLoading /> },
 );
 
 export const dynamic = "force-dynamic";
