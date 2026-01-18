@@ -145,7 +145,9 @@ export default function Navbar() {
             </SheetTrigger>
             <SheetContent side="right">
               <SheetTitle className="sr-only">Menu</SheetTitle>
-              <SheetDescription className="sr-only">Mobile navigation menu</SheetDescription>
+              <SheetDescription className="sr-only">
+                Mobile navigation menu
+              </SheetDescription>
               <nav className="flex flex-col gap-4 pt-6">
                 <NavLinks isMobileMenu />
               </nav>
