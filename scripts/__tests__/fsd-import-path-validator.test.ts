@@ -253,14 +253,14 @@ export function UnifiedStatsCard() {
     });
     
     it('should suggest moving UI primitives to components/ui', () => {
-      const testFile = join(testDir, 'components/CustomButton.tsx');
+      const testFile = join(testDir, 'components/Button.tsx');
       mkdirSync(join(testDir, 'components'), { recursive: true });
       
       const content = `
 import React from 'react';
 
-export function CustomButton() {
-  return <button>Custom Button</button>;
+export function Button() {
+  return <button>Click me</button>;
 }
 `;
       writeFileSync(testFile, content);

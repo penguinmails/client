@@ -26,6 +26,7 @@ export {
 export type {
   SecuritySettings,
   SettingsNavItem,
+  ProfileFormValues,
 } from './types';
 
 // UI Components - Public components for external use
