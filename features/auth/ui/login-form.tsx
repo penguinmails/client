@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import { Link } from "@/lib/config/i18n/navigation";
 import { Button } from "@/components/ui/button/button";
 import { PasswordInput } from "@/features/auth/ui/components";
 import { Input } from "@/components/ui/input/input";

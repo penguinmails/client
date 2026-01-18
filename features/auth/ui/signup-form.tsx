@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/config/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/features/auth/ui/components";
 import { Input } from "@/components/ui/input/input";
