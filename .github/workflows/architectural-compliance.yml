@@ -27,9 +27,6 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Run FSD import path validation
-      run: npm run fsd:validate
-    
     - name: Run architectural compliance tests
       run: npm test -- --testPathPatterns="app-layer-integration|cross-feature-integration|design-token-compliance"
       env:
@@ -60,9 +57,6 @@ jobs:
     
     - name: Validate FSD import paths
       run: npm run fsd:validate -- --report=json
-    
-    - name: Check for auto-fixable violations
-      run: npm run fsd:validate -- --dry-run --fix
 
   design-token-compliance:
     runs-on: ubuntu-latest
@@ -114,22 +108,6 @@ jobs:
     
     - name: Install dependencies
       run: npm ci
-    
-    - name: Get changed files
-      id: changed-files
-      run: |
-        echo "files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -E '\.(ts|tsx)$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
-    
-    - name: Validate changed files for FSD compliance
-      if: steps.changed-files.outputs.files != ''
-      run: |
-        echo "Validating changed files: ${{ steps.changed-files.outputs.files }}"
-        for file in ${{ steps.changed-files.outputs.files }}; do
-          if [ -f "$file" ]; then
-            echo "Checking $file..."
-            npm run fsd:validate -- "$file" || echo "⚠️ Issues found in $file"
-          fi
-        done
     
     - name: Fail on critical violations
       run: |
