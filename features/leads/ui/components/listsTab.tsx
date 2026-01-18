@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getLeadsLists } from "@features/leads/actions";
+import { fetchLeadLists } from "@features/leads/actions/lists";
 import { LeadListData } from "@/types/clients-leads";
 import type { ActionResult } from "@/types";
 import type { LeadList } from "@features/leads/actions";
@@ -32,7 +32,7 @@ function ListsTab() {
   const [sortById, setSortById] = useState<string | null>(null);
 
   useEffect(() => {
-    getLeadsLists().then((result: ActionResult<LeadList[]>) => {
+    fetchLeadLists().then((result: ActionResult<LeadList[]>) => {
       if (Array.isArray(result)) {
         setFilteredLists(result as unknown as LeadListData[]);
       } else if (result && result.success && result.data) {
@@ -40,6 +40,9 @@ function ListsTab() {
       } else {
         setFilteredLists([]);
       }
+    }).catch((error: unknown) => {
+      console.error("Failed to load leads lists:", error);
+      setFilteredLists([]);
     });
   }, []);
 

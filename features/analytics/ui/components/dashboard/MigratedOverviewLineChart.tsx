@@ -149,8 +149,8 @@ function MigratedOverviewLineChart({
   }
 
   return (
-    <div className="h-96">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="h-96 min-h-[200px]">
+      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
         <LineChart
           data={chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 60 }}

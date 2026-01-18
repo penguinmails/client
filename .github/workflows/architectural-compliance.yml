@@ -11,21 +11,17 @@ on:
 jobs:
   architectural-compliance:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: '22'
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
         fetch-depth: 2  # Need previous commit for diff analysis
-    
-    - name: Setup Node.js ${{ matrix.node-version }}
+
+    - name: Setup Node.js 22
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '22'
         cache: 'npm'
     
     - name: Install dependencies

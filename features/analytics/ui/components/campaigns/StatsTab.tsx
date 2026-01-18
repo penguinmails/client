@@ -379,8 +379,8 @@ function StatsTab() {
             </div>
 
             {/* Chart */}
-            <div className="h-80 w-full">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-80 w-full min-h-[200px]">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <LineChart
                   data={data}
                   margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
