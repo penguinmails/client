@@ -8,7 +8,11 @@ import { formatDistanceToNow, differenceInDays } from "date-fns";
 
 // ... existing imports
 
-const formatAddedDate = (dateString: string) => {
+const formatAddedDate = (dateString: string | null) => {
+  if (!dateString) {
+    return "date unknown";
+  }
+  
   const date = new Date(dateString);
   const now = new Date();
   const daysDiff = differenceInDays(now, date);
@@ -45,7 +49,7 @@ interface DomainsTabProps {
       dmarc: string;
       mx: string;
     };
-    addedDate: string;
+    addedDate: string | null;
   }>;
   dnsRecords: Array<{
     name: string;
