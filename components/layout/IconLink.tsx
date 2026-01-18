@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button/button";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { Link } from "@/lib/config/i18n/navigation";
 import { usePathname } from "next/navigation";
 
 function IconLink({

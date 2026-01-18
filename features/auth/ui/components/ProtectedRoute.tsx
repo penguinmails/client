@@ -13,6 +13,7 @@ interface ProtectedRouteProps {
   requiredRole?: UserRole | string; // Allow flexible roles
   fallback?: React.ReactNode;
   redirectTo?: string;
+  requireEnrichment?: boolean;
 }
 
 export const ProtectedRoute = ({
@@ -20,6 +21,7 @@ export const ProtectedRoute = ({
   requiredRole,
   fallback,
   redirectTo = "/",
+  requireEnrichment = true,
 }: ProtectedRouteProps) => {
   const { session, isLoading: isSessionLoading, error: sessionError } = useSession();
   const { enrichedUser, isLoadingEnrichment, enrichmentError } = useEnrichment();
@@ -60,9 +62,14 @@ export const ProtectedRoute = ({
     return null; 
   }
 
+  // If enrichment is not required, we can skip the rest of the checks
+  if (!requireEnrichment) {
+    return <>{children}</>;
+  }
+
   // 4. Enrichment Loading
   if (isLoadingEnrichment) {
-      // Optional: show loading with user context ("Loading profile...")
+       // Optional: show loading with user context ("Loading profile...")
        return (
       <div className="flex items-center justify-center min-h-[50vh] flex-col gap-2">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
