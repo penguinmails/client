@@ -12,6 +12,7 @@ export const Logo = () => (
           src="/img/icon.png"
           alt="PenguinMails Logo"
           fill
+          sizes="32px"
           className="object-contain"
         />
       </div>
