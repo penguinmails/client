@@ -29,6 +29,11 @@ export type {
   ProfileFormValues,
 } from './types';
 
+// Validation Schemas - Public validation schemas
+export {
+  profileFormSchema,
+} from './types';
+
 // UI Components - Public components for external use
 export {
   AccountSettings,
