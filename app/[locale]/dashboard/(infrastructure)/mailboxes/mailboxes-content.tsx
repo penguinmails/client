@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import MailboxesTab from "@features/mailboxes/ui/components/mailboxes-tab";
 import { MailboxWarmupData } from "@/types";
-import { MOCK_ANALYTICS, MOCK_MAILBOXES, LocalProgressiveAnalyticsState } from "@features/mailboxes/lib/mocks";
+import { LocalProgressiveAnalyticsState } from "@features/mailboxes/lib/mocks";
 
 /**
  * Mailboxes Content - Client Component
@@ -12,21 +12,34 @@ import { MOCK_ANALYTICS, MOCK_MAILBOXES, LocalProgressiveAnalyticsState } from "
 export default function MailboxesContent() {
   const [mailboxesLoading, setMailboxesLoading] = useState(true);
   const [mailboxes, setMailboxes] = useState<MailboxWarmupData[]>([]);
-  const [mailboxesError] = useState<string | null>(null);
-  const [analyticsState, setAnalyticsState] = useState<LocalProgressiveAnalyticsState>({});
+  const [analyticsState, setAnalyticsState] =
+    useState<LocalProgressiveAnalyticsState>({});
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch mailboxes on component mount
   useEffect(() => {
-    // MOCK DATA TO MATCH REFERENCE IMAGE
-    const timer = setTimeout(() => {
-      setMailboxes(MOCK_MAILBOXES);
-      setMailboxesLoading(false);
+    async function fetchMailboxes() {
+      try {
+        const response = await fetch("/api/mailboxes?analytics=true");
 
-      // MOCK ANALYTICS
-      setAnalyticsState(MOCK_ANALYTICS);
-    }, 0);
-    
-    return () => clearTimeout(timer);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        setMailboxes(data.mailboxes);
+        setAnalyticsState(data.analytics);
+        setMailboxesLoading(false);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch mailboxes",
+        );
+        setMailboxesLoading(false);
+      }
+    }
+
+    fetchMailboxes();
   }, []);
 
   return (
@@ -34,7 +47,7 @@ export default function MailboxesContent() {
       mailboxes={mailboxes}
       analyticsState={analyticsState}
       loading={mailboxesLoading}
-      error={mailboxesError}
+      error={error}
     />
   );
 }

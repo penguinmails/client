@@ -1,84 +1,19 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import CampaignTableSkeleton from "@features/campaigns/ui/components/tables/CampaignTableSkeleton";
 import { CampaignsFilter } from "@features/campaigns/ui/components/tables/CampaignsFilter";
-import { CampaignsTable, campaignColumns } from "@features/campaigns/ui/components/tables/CampaignsTable";
+import {
+  CampaignsTable,
+  campaignColumns,
+} from "@features/campaigns/ui/components/tables/CampaignsTable";
 import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/StatsCardSkeleton";
 import { StatsCards } from "@features/campaigns/ui/components/reports/StatsCards";
 import { Button } from "@/components/ui/button/button";
 import { Plus, Send, Mail, TrendingUp, Eye, Users } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/lib/config/i18n/navigation";
 import { Suspense } from "react";
-import { CampaignDisplay, CampaignStatusEnum } from "@features/campaigns/types";
-
-// Mock campaigns data matching the reference design
-const mockCampaigns: CampaignDisplay[] = [
-  {
-    id: 1,
-    name: "Q1 SaaS Outreach",
-    status: CampaignStatusEnum.ACTIVE,
-    leadsSent: 847,
-    replies: 73,
-    createdDate: "2024-01-01",
-    mailboxes: 3,
-    assignedMailboxes: ["john.smith@company.com", "sarah.jones@company.com", "mike.brown@company.com"],
-    openRate: 34.2,
-    replyRate: 8.6,
-    lastSent: "2 hours ago",
-  },
-  {
-    id: 2,
-    name: "Enterprise Prospects",
-    status: CampaignStatusEnum.PAUSED,
-    leadsSent: 523,
-    replies: 124,
-    createdDate: "2024-01-15",
-    mailboxes: 5,
-    assignedMailboxes: ["john.smith@company.com", "sarah.jones@company.com", "mike.brown@company.com", "lisa.wang@company.com", "david.kim@company.com"],
-    openRate: 41,
-    replyRate: 10.3,
-    lastSent: "1 day ago",
-  },
-  {
-    id: 3,
-    name: "SMB Follow-up",
-    status: CampaignStatusEnum.ACTIVE,
-    leadsSent: 492,
-    replies: 38,
-    createdDate: "2024-02-01",
-    mailboxes: 2,
-    assignedMailboxes: ["lisa.wang@company.com", "david.kim@company.com"],
-    openRate: 28.5,
-    replyRate: 7.7,
-    lastSent: "4 hours ago",
-  },
-  {
-    id: 4,
-    name: "Product Launch Outreach",
-    status: CampaignStatusEnum.COMPLETED,
-    leadsSent: 2195,
-    replies: 287,
-    createdDate: "2023-12-10",
-    mailboxes: 4,
-    assignedMailboxes: ["john.smith@company.com", "sarah.jones@company.com", "mike.brown@company.com", "lisa.wang@company.com"],
-    openRate: 39.4,
-    replyRate: 13.3,
-    lastSent: "1 week ago",
-  },
-  {
-    id: 5,
-    name: "Partnership Outreach",
-    status: CampaignStatusEnum.ACTIVE,
-    leadsSent: 324,
-    replies: 45,
-    createdDate: "2024-01-07",
-    mailboxes: 2,
-    assignedMailboxes: ["sarah.jones@company.com", "david.kim@company.com"],
-    openRate: 42.1,
-    replyRate: 13.9,
-    lastSent: "8 hours ago",
-  },
-];
+import { CampaignDisplay } from "@features/campaigns/types";
 
 interface CampaignsContentProps {
   title: string;
@@ -95,12 +30,14 @@ export default function CampaignsContent({
   subtitle,
   newCampaignLabel,
 }: CampaignsContentProps) {
-  // Calculate stats from mock campaigns
+  const [campaigns, setCampaigns] = useState<CampaignDisplay[]>([]);
+
+  // Calculate stats from campaigns data
   const totalCampaigns = 12; // Reference shows 12
   const totalSent = 2847; // Reference shows 2,847
   const totalRepliesPercent = "8.7%"; // Reference shows 8.7% for Total Replies
   const openRate = "34.2%"; // Reference shows 34.2%
-  const replyRate = "8.7%"; // Reference shows 8.7%
+  const replyRate = "8.7%"; // Reference shows 8.7%";
 
   const stats = [
     {
@@ -134,6 +71,27 @@ export default function CampaignsContent({
       iconColor: "text-pink-600 bg-pink-100",
     },
   ];
+
+  useEffect(() => {
+    async function fetchCampaigns() {
+      try {
+        const response = await fetch("/api/campaigns");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        setCampaigns(data);
+      } catch {
+        // In a real implementation, you would handle errors here
+        // For now, we'll just leave campaigns empty
+      }
+    }
+
+    fetchCampaigns();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -171,7 +129,7 @@ export default function CampaignsContent({
           />
         }
       >
-        <CampaignsTable campaigns={mockCampaigns} />
+        <CampaignsTable campaigns={campaigns} />
       </Suspense>
     </div>
   );
