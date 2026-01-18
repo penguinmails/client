@@ -1,8 +1,5 @@
 import { MainContentSkeleton } from "@/components/skeletons/MainContentSkeleton";
 
-/**
- * Settings route loading skeleton.
- */
-export default function SettingsLoading() {
+export default function Loading() {
   return <MainContentSkeleton />;
 }
