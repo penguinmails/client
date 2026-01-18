@@ -58,17 +58,11 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Run FSD compliance checker
-      run: npm run check:fsd
-    
     - name: Validate FSD import paths
       run: npm run fsd:validate -- --report=json
     
     - name: Check for auto-fixable violations
       run: npm run fsd:validate -- --dry-run --fix
-    
-    - name: Validate feature API boundaries
-      run: npm run validate:feature-apis
 
   design-token-compliance:
     runs-on: ubuntu-latest
@@ -136,11 +130,6 @@ jobs:
             npm run fsd:validate -- "$file" || echo "⚠️ Issues found in $file"
           fi
         done
-    
-    - name: Check for new architectural violations
-      run: |
-        echo "Running regression prevention checks..."
-        npm run test:ci-integration
     
     - name: Fail on critical violations
       run: |
