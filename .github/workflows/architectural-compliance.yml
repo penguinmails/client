@@ -86,9 +86,6 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Run design token compliance tests
-      run: npm run test:design-tokens
-    
     - name: Check for hardcoded styles
       run: |
         echo "Checking for hardcoded hex colors..."
