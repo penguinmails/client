@@ -111,7 +111,7 @@ export default function CampaignsPage({
   searchParams: _searchParams,
 }: CampaignsPageProps) {
   const t = useTranslations("Campaigns");
-  
+
   // Calculate stats from mock campaigns
   const totalCampaigns = 12; // Reference shows 12
   const totalSent = 2847; // Reference shows 2,847
@@ -156,15 +156,13 @@ export default function CampaignsPage({
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Campaigns</h1>
-          <p className="text-muted-foreground mt-1">
-            Manage your email outreach campaigns like a pro
-          </p>
+          <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("description")}</p>
         </div>
         <Button asChild>
           <Link href="campaigns/create">
             <Plus className="w-5 h-5" />
-            <span className="font-semibold">New Campaign</span>
+            <span className="font-semibold">{t("newCampaignButton")}</span>
           </Link>
         </Button>
       </div>
