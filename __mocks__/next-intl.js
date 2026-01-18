@@ -2,7 +2,7 @@
 module.exports = {
   useTranslations: () => (key) => key, // returns the key as fallback
   useFormatter: () => ({ format: (value) => value }),
-  useLocale: () => 'en',
+  useLocale: () => "en",
   useMessages: () => ({}),
   NextIntlClientProvider: ({ children }) => children,
   createTranslator: () => (key) => key,
