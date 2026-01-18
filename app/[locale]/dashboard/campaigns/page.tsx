@@ -12,6 +12,7 @@ import { Plus, Send, Mail, TrendingUp, Eye, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { CampaignDisplay, CampaignStatusEnum } from "@features/campaigns/types";
+import { useTranslations } from "next-intl";
 
 export const dynamic = "force-dynamic";
 
@@ -109,6 +110,8 @@ const mockCampaigns: CampaignDisplay[] = [
 export default function CampaignsPage({
   searchParams: _searchParams,
 }: CampaignsPageProps) {
+  const t = useTranslations("Campaigns");
+  
   // Calculate stats from mock campaigns
   const totalCampaigns = 12; // Reference shows 12
   const totalSent = 2847; // Reference shows 2,847
@@ -118,31 +121,31 @@ export default function CampaignsPage({
 
   const stats = [
     {
-      title: "Total Campaigns",
+      title: t("kpi.totalCampaigns"),
       value: totalCampaigns.toString(),
       icon: Send,
       iconColor: "bg-blue-100 text-blue-600",
     },
     {
-      title: "Total Sent",
+      title: t("kpi.totalSent"),
       value: totalSent.toLocaleString(),
       icon: Mail,
       iconColor: "text-purple-600 bg-purple-100",
     },
     {
-      title: "Total Replies",
+      title: t("kpi.totalReplies"),
       value: totalRepliesPercent,
       icon: TrendingUp,
       iconColor: "text-green-500 bg-green-100",
     },
     {
-      title: "Open Rate",
+      title: t("kpi.openRate"),
       value: openRate,
       icon: Eye,
       iconColor: "text-orange-500 bg-orange-100",
     },
     {
-      title: "Reply Rate",
+      title: t("kpi.replyRate"),
       value: replyRate,
       icon: Users,
       iconColor: "text-pink-600 bg-pink-100",

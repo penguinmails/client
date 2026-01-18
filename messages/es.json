@@ -475,7 +475,17 @@
       "totalCampaigns": "Campañas Totales",
       "activeLeads": "Leads Activos",
       "completed": "Completado",
-      "totalLeads": "Leads Totales"
+      "totalLeads": "Leads Totales",
+      "leadsContacted": "Leads Contactados",
+      "openRate": "Tasa de Apertura",
+      "replyRate": "Tasa de Respuesta"
+    },
+    "timeAgo": {
+      "justNow": "Ahora mismo",
+      "oneHour": "Hace 1 hora",
+      "hours": "Hace {count} horas",
+      "oneDay": "Hace 1 día",
+      "days": "Hace {count} días"
     },
     "unknownCompany": "Compañía Desconocida"
   },
@@ -484,6 +494,17 @@
     "createCampaign": "Crear Campaña",
     "uploadLeads": "Subir Leads",
     "addDomain": "Añadir Dominio"
+  },
+  "Leads": {
+    "layout": {
+      "title": "Centro de Leads",
+      "description": "Gestiona tus listas de leads, importaciones y base de datos de contactos"
+    },
+    "tabs": {
+      "lists": "Listas de Leads",
+      "upload": "Subir CSV",
+      "contacts": "Todos los Contactos"
+    }
   },
   "AppearanceSettings": {
     "title": "Apariencia",
@@ -617,7 +638,14 @@
   "Campaigns": {
     "createTitle": "Crear Nueva Campaña",
     "editTitle": "Editar Campaña {name}",
-    "newCampaignFallback": "Nueva Campaña"
+    "newCampaignFallback": "Nueva Campaña",
+    "kpi": {
+      "totalCampaigns": "Campañas Totales",
+      "totalSent": "Total Enviado",
+      "totalReplies": "Respuestas Totales",
+      "openRate": "Tasa de Apertura",
+      "replyRate": "Tasa de Respuesta"
+    }
   },
   "Analytics": {
     "layout": {

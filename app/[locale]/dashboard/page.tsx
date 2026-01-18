@@ -130,20 +130,22 @@ const MOCK_CAMPAIGN_ANALYTICS: CampaignAnalytics[] = [
 ];
 
 // Helper function to format time ago
-function formatTimeAgo(date: Date): string {
+function formatTimeAgo(date: Date, t: ReturnType<typeof useTranslations>): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
   if (diffHours < 1) {
-    return "Just now";
+    return t("timeAgo.justNow");
   } else if (diffHours === 1) {
-    return "1 hour ago";
+    return t("timeAgo.oneHour");
   } else if (diffHours < 24) {
-    return `${diffHours} hours ago`;
+    return t("timeAgo.hours", { count: diffHours });
   } else {
     const diffDays = Math.floor(diffHours / 24);
-    return diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
+    return diffDays === 1 
+      ? t("timeAgo.oneDay") 
+      : t("timeAgo.days", { count: diffDays });
   }
 }
 
@@ -258,6 +260,8 @@ function DashboardKpiCards({
   _loading: boolean;
   _error: string | null;
 }) {
+  const t = useTranslations("Dashboard");
+  
   // Calculate aggregated metrics from campaign analytics
   const totalCampaigns = campaignAnalytics.length;
   const totalLeadsContacted = campaignAnalytics.reduce(
@@ -288,25 +292,25 @@ function DashboardKpiCards({
   // KPI cards matching the approved baseline design
   const kpiData = [
     {
-      title: "Active Campaigns",
+      title: t("kpi.activeCampaigns"),
       value: totalCampaigns.toString(),
       icon: Send,
       color: "bg-blue-500 text-blue-600",
     },
     {
-      title: "Leads Contacted",
+      title: t("kpi.leadsContacted"),
       value: totalLeadsContacted.toLocaleString(),
       icon: Users,
       color: "bg-green-500 text-green-600",
     },
     {
-      title: "Open Rate",
+      title: t("kpi.openRate"),
       value: `${avgOpenRate}%`,
       icon: Mail,
       color: "bg-purple-500 text-purple-600",
     },
     {
-      title: "Reply Rate",
+      title: t("kpi.replyRate"),
       value: `${avgReplyRate}%`,
       icon: TrendingUp,
       color: "bg-orange-500 text-orange-600",
@@ -332,6 +336,7 @@ interface RawReply {
  * Wrapper component for Recent Replies to handle async data fetching
  */
 function RecentRepliesWrapper() {
+  const t = useTranslations("Dashboard");
   const [recentReplies, setRecentReplies] = useState<
     Array<{
       name: string;
@@ -350,9 +355,9 @@ function RecentRepliesWrapper() {
       const transformedReplies = (data.data || []).map((reply: RawReply) => ({
         name: reply.name || reply.from.split("@")[0],
         email: reply.from,
-        company: reply.company || "Unknown Company",
+        company: reply.company || t("unknownCompany"),
         message: reply.message || reply.subject,
-        time: formatTimeAgo(new Date(reply.date)),
+        time: formatTimeAgo(new Date(reply.date), t),
         type: (reply.type === "positive" || reply.type === "negative"
           ? reply.type
           : "positive") as "positive" | "negative",
@@ -360,7 +365,7 @@ function RecentRepliesWrapper() {
       setRecentReplies(transformedReplies);
       setLoading(false);
     });
-  }, []);
+  }, [t]);
 
   if (loading) {
     return <RecentReplySkeleton />;

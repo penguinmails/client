@@ -477,7 +477,17 @@
       "totalCampaigns": "Total Campaigns",
       "activeLeads": "Active Leads",
       "completed": "Completed",
-      "totalLeads": "Total Leads"
+      "totalLeads": "Total Leads",
+      "leadsContacted": "Leads Contacted",
+      "openRate": "Open Rate",
+      "replyRate": "Reply Rate"
+    },
+    "timeAgo": {
+      "justNow": "Just now",
+      "oneHour": "1 hour ago",
+      "hours": "{count} hours ago",
+      "oneDay": "1 day ago",
+      "days": "{count} days ago"
     },
     "unknownCompany": "Unknown Company"
   },
@@ -486,6 +496,17 @@
     "createCampaign": "Create Campaign",
     "uploadLeads": "Upload Leads",
     "addDomain": "Add Domain"
+  },
+  "Leads": {
+    "layout": {
+      "title": "Lead Hub",
+      "description": "Manage your lead lists, imports, and contact database"
+    },
+    "tabs": {
+      "lists": "Lead Lists",
+      "upload": "Upload CSV",
+      "contacts": "All Contacts"
+    }
   },
   "AppearanceSettings": {
     "title": "Appearance",
@@ -619,7 +640,14 @@
   "Campaigns": {
     "createTitle": "Create New Campaign",
     "editTitle": "Edit Campaign {name}",
-    "newCampaignFallback": "New Campaign"
+    "newCampaignFallback": "New Campaign",
+    "kpi": {
+      "totalCampaigns": "Total Campaigns",
+      "totalSent": "Total Sent",
+      "totalReplies": "Total Replies",
+      "openRate": "Open Rate",
+      "replyRate": "Reply Rate"
+    }
   },
   "Analytics": {
     "layout": {
