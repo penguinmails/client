@@ -1,5 +1,8 @@
-import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton"
+import { MainContentSkeleton } from "@/components/skeletons/MainContentSkeleton";
 
-export default function Loading() {
-  return <SettingsLoadingSkeleton variant="form" itemCount={4} />;
+/**
+ * Settings route loading skeleton.
+ */
+export default function SettingsLoading() {
+  return <MainContentSkeleton />;
 }

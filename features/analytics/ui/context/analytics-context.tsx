@@ -10,7 +10,7 @@ import { DataGranularity } from "@features/analytics/types/core";
 import { AccountMetrics as TypesAccountMetrics } from "@features/analytics/types";
 
 // Extended mailbox analytics for mock context (includes UI-specific fields)
-interface MailboxAnalytics extends DomainMailboxAnalytics {
+export interface MailboxAnalytics extends DomainMailboxAnalytics {
   metrics: Record<string, number>;
   performance: {
     deliveryRate: number;
@@ -200,118 +200,67 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     setVisibleMetrics,
   });
 
-  // Mock data matching reference: 5 mailboxes total (2 active, 2 warming, 1 inactive)
-  // Resulting counts: Active (2+2=4), Ready (2), Warming (2)
-  const mockMailboxData: MailboxWarmupData[] = [
-    {
-      id: "1",
-      name: "Sales Team",
-      email: "sales@mycompany.com",
-      status: "active",
-      warmupProgress: 100,
-      dailyVolume: 50,
-      healthScore: 98,
-      domain: "mycompany.com",
-      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: "2",
-      name: "Growth Team",
-      email: "growth@mycompany.com",
-      status: "warming",
-      warmupProgress: 45,
-      dailyVolume: 20,
-      healthScore: 82,
-      domain: "mycompany.com",
-      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: "3",
-      name: "Marketing Team",
-      email: "marketing@mycompany.com",
-      status: "active",
-      warmupProgress: 100,
-      dailyVolume: 40,
-      healthScore: 95,
-      domain: "mycompany.com",
-      createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: "4",
-      name: "Support Team",
-      email: "support@mycompany.com",
-      status: "warming",
-      warmupProgress: 60,
-      dailyVolume: 25,
-      healthScore: 88,
-      domain: "mycompany.com",
-      createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: "5",
-      name: "Operations Team",
-      email: "ops@mycompany.com",
-      status: "inactive",
-      warmupProgress: 0,
-      dailyVolume: 0,
-      healthScore: 0,
-      domain: "mycompany.com",
-      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-  ];
+  const [accountMetrics, setAccountMetrics] = useState<TypesAccountMetrics>({
+    sent: 0,
+    delivered: 0,
+    opened_tracked: 0,
+    clicked_tracked: 0,
+    replied: 0,
+    bounced: 0,
+    unsubscribed: 0,
+    spamComplaints: 0,
+    totalMailboxes: 0,
+    activeMailboxes: 0,
+    healthScore: 0,
+    dailyVolume: 0,
+    bounceRate: 0,
+    openRate: 0,
+    replyRate: 0,
+    spamRate: 0,
+    maxBounceRateThreshold: 0,
+    maxSpamComplaintRateThreshold: 0,
+    minOpenRateThreshold: 0,
+    minReplyRateThreshold: 0,
+  });
 
-  const mockWarmupChartData: WarmupChartData[] = [
-    {
-      date: "Aug 5",
-      totalWarmups: 250,
-      spamFlags: 4,
-      replies: 12,
-    },
-    {
-      date: "Aug 6",
-      totalWarmups: 265,
-      spamFlags: 3,
-      replies: 14,
-    },
-    {
-      date: "Aug 7",
-      totalWarmups: 290,
-      spamFlags: 6,
-      replies: 18,
-    },
-    {
-      date: "Aug 8",
-      totalWarmups: 315,
-      spamFlags: 8,
-      replies: 25,
-    },
-    {
-      date: "Aug 9",
-      totalWarmups: 305,
-      spamFlags: 5,
-      replies: 22,
-    },
-    {
-      date: "Aug 10",
-      totalWarmups: 340,
-      spamFlags: 9,
-      replies: 28,
-    },
-    {
-      date: "Aug 11",
-      totalWarmups: 360,
-      spamFlags: 7,
-      replies: 20,
-    },
-  ];
+  const [warmupChartData, setWarmupChartData] = useState<WarmupChartData[]>([]);
+
+  // Fetch initial data
+  React.useEffect(() => {
+    async function fetchInitialData() {
+      try {
+        const [metricsRes, warmupRes] = await Promise.all([
+          fetch("/api/analytics/account-metrics"),
+          fetch("/api/analytics/warmup")
+        ]);
+
+        if (metricsRes.ok) {
+          setAccountMetrics(await metricsRes.json());
+        }
+        if (warmupRes.ok) {
+          setWarmupChartData(await warmupRes.json());
+        }
+      } catch (err) {
+        console.error("Failed to fetch initial analytics data", err);
+      }
+    }
+    fetchInitialData();
+  }, []);
+
+
 
   const fetchMailboxes = async (
     _userid?: string,
     _companyid?: string
   ): Promise<MailboxWarmupData[]> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return mockMailboxData;
+    try {
+      const response = await fetch("/api/analytics/mailboxes");
+      if (!response.ok) throw new Error("Failed to fetch mailboxes");
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching mailboxes:", error);
+      return [];
+    }
   };
 
   const fetchMailboxAnalytics = async (mailboxId: string): Promise<MailboxAnalytics & {
@@ -320,55 +269,14 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     replies: number;
     lastUpdated: Date;
   }> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 300));
-
-    // Return mock analytics data for the mailbox with warmup-specific properties
-    const baseData: MailboxAnalytics = {
-      id: mailboxId,
-      mailboxId,
-      name: `Mailbox ${mailboxId}`,
-      email: `mailbox${mailboxId}@example.com`,
-      domain: 'example.com',
-      provider: 'Gmail',
-      warmupStatus: 'WARMED' as const,
-      warmupProgress: 75,
-      dailyLimit: 100,
-      currentVolume: 45,
-      healthScore: 85,
-      updatedAt: Date.now(),
-      // Performance metrics (from BaseAnalytics)
-      sent: 1000,
-      delivered: 950,
-      opened_tracked: 400,
-      clicked_tracked: 80,
-      replied: 25,
-      bounced: 50,
-      unsubscribed: 5,
-      spamComplaints: 2,
-      // Local interface requirements
-      metrics: {
-        sent: 1000,
-        delivered: 950,
-        opened: 400,
-        clicked: 80,
-        replied: 25,
-        bounced: 50
-      },
-      performance: {
-        deliveryRate: 0.95,
-        openRate: 0.42,
-        clickRate: 0.08
-      }
-    };
-
-    // Add warmup-specific properties that components expect
+    const response = await fetch(`/api/analytics/mailboxes/${mailboxId}`);
+    if (!response.ok) throw new Error("Failed to fetch mailbox analytics");
+    const data = await response.json();
+    // Ensure dates are parsed correctly if needed (API returns strings from mock)
     return {
-      ...baseData,
-      totalWarmups: 150,
-      spamFlags: 2,
-      replies: 25,
-      lastUpdated: new Date()
+      ...data,
+      lastUpdated: new Date(data.lastUpdated),
+      updatedAt: typeof data.updatedAt === 'string' ? new Date(data.updatedAt).getTime() : data.updatedAt
     };
   };
 
@@ -378,97 +286,36 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     replies: number;
     lastUpdated: Date;
   }>> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 400));
-
-    const result: Record<string, MailboxAnalytics & {
+    const response = await fetch("/api/analytics/mailboxes/analytics", {
+      method: "POST",
+      body: JSON.stringify({ mailboxIds }),
+      headers: { "Content-Type": "application/json" }
+    });
+    
+    if (!response.ok) throw new Error("Failed to fetch multiple mailbox analytics");
+    
+    const data = await response.json();
+    
+    // Parse dates
+    const parsedData: Record<string, MailboxAnalytics & {
       totalWarmups: number;
       spamFlags: number;
       replies: number;
       lastUpdated: Date;
     }> = {};
-    
-    mailboxIds.forEach((id) => {
-      const sent = Math.floor(Math.random() * 1000);
-      const delivered = Math.floor(Math.random() * 950);
-      const opened = Math.floor(Math.random() * 400);
-      const clicked = Math.floor(Math.random() * 80);
-      const replied = Math.floor(Math.random() * 50);
-      const bounced = Math.floor(Math.random() * 50);
-      
-      const baseData: MailboxAnalytics = {
-        id,
-        mailboxId: id,
-        name: `Mailbox ${id}`,
-        email: `mailbox${id}@example.com`,
-        domain: 'example.com',
-        provider: 'Gmail',
-        warmupStatus: 'WARMED' as const,
-        warmupProgress: Math.floor(Math.random() * 100),
-        dailyLimit: 100,
-        currentVolume: Math.floor(Math.random() * 100),
-        healthScore: Math.floor(Math.random() * 100),
-        updatedAt: Date.now(),
-        // Performance metrics (from BaseAnalytics)
-        sent,
-        delivered,
-        opened_tracked: opened,
-        clicked_tracked: clicked,
-        replied,
-        bounced,
-        unsubscribed: Math.floor(Math.random() * 10),
-        spamComplaints: Math.floor(Math.random() * 5),
-        // Local interface requirements
-        metrics: {
-          sent,
-          delivered,
-          opened,
-          clicked,
-          replied,
-          bounced
-        },
-        performance: {
-          deliveryRate: delivered / sent,
-          openRate: opened / delivered,
-          clickRate: clicked / delivered
-        }
-      };
-
-      result[id] = {
-        ...baseData,
-        totalWarmups: Math.floor(Math.random() * 200) + 50,
-        spamFlags: Math.floor(Math.random() * 5),
-        replies: Math.floor(Math.random() * 25),
-        lastUpdated: new Date()
+    Object.keys(data).forEach(key => {
+      parsedData[key] = {
+        ...data[key],
+        lastUpdated: new Date(data[key].lastUpdated),
+        updatedAt: typeof data[key].updatedAt === 'string' ? new Date(data[key].updatedAt).getTime() : data[key].updatedAt
       };
     });
-
-    return result;
+    
+    return parsedData;
   };
 
   const getAccountMetrics = (): TypesAccountMetrics => {
-    return {
-      sent: 2125,
-      delivered: 2050,
-      opened_tracked: 850,
-      clicked_tracked: 210,
-      replied: 139,
-      bounced: 45,
-      unsubscribed: 12,
-      spamComplaints: 20,
-      totalMailboxes: 42,
-      activeMailboxes: 35,
-      healthScore: 94,
-      dailyVolume: 350,
-      bounceRate: 0.021, // 2.1%
-      openRate: 0.415, // 41.5%
-      replyRate: 0.068, // 6.8%
-      spamRate: 0.009, // 0.9%
-      maxBounceRateThreshold: 0.05, // 5% threshold
-      maxSpamComplaintRateThreshold: 0.002, // 0.2% threshold
-      minOpenRateThreshold: 0.15, // 15% threshold
-      minReplyRateThreshold: 0.05, // 5% threshold
-    };
+    return accountMetrics;
   };
 
 
@@ -551,25 +398,25 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 
   const useFormattedAnalytics = () => {
     return {
-      formattedData: mockWarmupChartData,
+      formattedData: warmupChartData,
       formattedStats: {
-        totalSent: "2,125",
-        openRate: "41.5%",
-        clickRate: "9.8%",
-        replyRate: "6.5%",
-        bounceRate: "2.1%",
-        deliveryRate: "96.5%"
+        totalSent: accountMetrics.sent.toLocaleString(),
+        openRate: `${(accountMetrics.openRate * 100).toFixed(1)}%`,
+        clickRate: `${(accountMetrics.clicked_tracked / (accountMetrics.delivered || 1) * 100).toFixed(1)}%`,
+        replyRate: `${(accountMetrics.replyRate * 100).toFixed(1)}%`,
+        bounceRate: `${(accountMetrics.bounceRate * 100).toFixed(1)}%`,
+        deliveryRate: `${((accountMetrics.delivered / (accountMetrics.sent || 1)) * 100).toFixed(1)}%`
       },
       metrics: {
-        totalWarmups: mockWarmupChartData.reduce(
+        totalWarmups: warmupChartData.reduce(
           (acc, d) => acc + d.totalWarmups,
           0
         ),
-        totalSpamFlags: mockWarmupChartData.reduce(
+        totalSpamFlags: warmupChartData.reduce(
           (acc, d) => acc + d.spamFlags,
           0
         ),
-        totalReplies: mockWarmupChartData.reduce(
+        totalReplies: warmupChartData.reduce(
           (acc, d) => acc + d.replies,
           0
         ),
@@ -586,7 +433,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     error,
     smartInsightsList,
     getAccountMetrics,
-    warmupChartData: mockWarmupChartData,
+    warmupChartData,
     warmupMetrics: [
       {
         key: "totalWarmups",

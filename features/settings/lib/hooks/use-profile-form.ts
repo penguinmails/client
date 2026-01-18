@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useOnlineStatus } from '@/hooks/use-online-status';
 import { profileFormSchema, ProfileFormValues } from '@/features/settings/types/user';
 import { ProfileError } from '@features/settings/actions/profile';
+import { updateFullProfile, getProfile } from '@/features/settings/actions';
 import { productionLogger, developmentLogger } from '@/lib/logger';
 
 // Extended ProfileError for UI-specific error handling
@@ -48,9 +49,11 @@ export function useProfileForm(initialData?: Partial<ProfileFormValues>) {
     setSubmitLoading(true);
     setIsPending(true);
     try {
-      // Mock submission - would implement actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      developmentLogger.debug('Profile updated:', data);
+      const result = await updateFullProfile(data);
+      if (!result.success) {
+        throw new Error(result.errors?.[0]?.message || 'Failed to update profile');
+      }
+      developmentLogger.debug('Profile updated:', result.data);
     } catch (error) {
       productionLogger.error('Error updating profile:', error);
       setProfileError({
@@ -72,8 +75,12 @@ export function useProfileForm(initialData?: Partial<ProfileFormValues>) {
     setRetryCount(prev => prev + 1);
     
     try {
-      // Mock retry logic
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await getProfile();
+      if (!result.success) {
+        throw new Error('Failed to fetch profile');
+      }
+      // Ideally we would update form values here, but for now we just clear the error
+      // form.reset(result.data); 
       setProfileError(null);
     } catch (error) {
       setProfileError({

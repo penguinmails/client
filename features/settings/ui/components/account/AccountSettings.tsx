@@ -57,7 +57,7 @@ import { getUserProfile } from "@features/settings/actions/profile";
 import PasswordSettingsForm from "../profile/PasswordSettingsForm";
 
 import { ProfileSettingsForm } from "../profile/ProfileSettingsForm";
-import { ProfileFormValues } from "@/features/settings/types/user";
+import { ProfileFormValues } from "@/features/settings";
 
 
 interface AccountSettingsProps extends React.HTMLAttributes<HTMLDivElement> {

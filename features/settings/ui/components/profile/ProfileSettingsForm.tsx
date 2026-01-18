@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { profileFormSchema, ProfileFormValues } from "@/features/settings/types/user";
+import { profileFormSchema, ProfileFormValues } from "@/features/settings";
 
 export function ProfileSettingsForm({
   userProfile,

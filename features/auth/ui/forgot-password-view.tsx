@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { Link } from "@/lib/config/i18n/navigation";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
@@ -14,8 +13,6 @@ import { useTranslations } from "next-intl";
 import { productionLogger } from "@/lib/logger";
 
 export function ForgotPasswordView() {
-  const params = useParams();
-  const locale = params.locale as string;
   const t = useTranslations("ForgotPassword");
 
   const [email, setEmail] = useState("");
@@ -81,9 +78,9 @@ export function ForgotPasswordView() {
           <div className="flex flex-col items-center space-y-2">
             <p className="text-xs text-muted-foreground">
               {t('footer.text')}{" "}
-              <Link href={`/${locale}/`} className="underline font-medium text-primary">
-                {t('footer.linkText')}
-              </Link>
+                <Link href="/" className="underline font-medium text-primary">
+                  {t('footer.linkText')}
+                </Link>
             </p>
           </div>
         )

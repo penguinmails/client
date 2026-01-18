@@ -35,6 +35,8 @@ module.exports = {
     '^next/navigation$': '<rootDir>/__mocks__/next-navigation.js',
     '^next/headers$': '<rootDir>/__mocks__/next-headers.js',
     '^next-intl$': '<rootDir>/__mocks__/next-intl.js',
+    '^next-intl/navigation$': '<rootDir>/__mocks__/next-intl/navigation.js',
+    '^next-intl/routing$': '<rootDir>/__mocks__/next-intl/routing.js',
     '^@niledatabase/(.*)$': '<rootDir>/__mocks__/@niledatabase.js',
     // Legacy mappings for backward compatibility during migration
     '^@niledatabase/client$': '<rootDir>/__mocks__/@niledatabase.js',
@@ -47,7 +49,7 @@ module.exports = {
     '<rootDir>/storybook-static/',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(next-intl|use-intl|@niledatabase|class-variance-authority|next-intl\\/routing)/)',
+    'node_modules/(?!(next-intl|use-intl|@niledatabase|class-variance-authority|next-intl\\/routing|next-intl\\/navigation)/)',
   ],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
 };

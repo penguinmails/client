@@ -145,17 +145,20 @@ const COMPONENT_PLACEMENT_RULES = [
   },
   {
     name: 'ui-primitive',
-    pattern: /(Button|Input|Card|Modal|Dialog|Sheet|Popover)$/,
+    // Only match simple, single-word primitives without feature-specific context
+    // Exclude common feature-specific patterns like *AnalyticsCard, *UtilizationCard, etc.
+    pattern: /^(Button|Input|Card|Modal|Dialog|Sheet|Popover)$/,
     suggestedLayer: 'components/ui',
     reason: 'UI primitives belong in components/ui'
   }
 ];
 
 function getFileLayer(filePath: string): string | null {
-  if (filePath.includes('/app/')) return 'app';
-  if (filePath.includes('/features/')) return 'features';
-  if (filePath.includes('/shared/')) return 'shared';
-  if (filePath.includes('/components/') && !filePath.includes('/features/')) return 'components';
+  if (filePath.includes('/app/') || filePath.startsWith('app/')) return 'app';
+  if (filePath.includes('/features/') || filePath.startsWith('features/')) return 'features';
+  if (filePath.includes('/shared/') || filePath.startsWith('shared/')) return 'shared';
+  if ((filePath.includes('/components/') || filePath.startsWith('components/')) && 
+      !filePath.includes('/features/') && !filePath.startsWith('features/')) return 'components';
   return null;
 }
 
@@ -168,7 +171,8 @@ function getImportLayer(importPath: string): string | null {
 }
 
 function getFeatureName(path: string): string | null {
-  const featureMatch = path.match(/\/features\/([^\/]+)/);
+  // Handle both paths with and without leading slashes
+  const featureMatch = path.match(/\/features\/([^\/]+)/) || path.match(/features\/([^\/]+)/);
   return featureMatch ? featureMatch[1] : null;
 }
 
@@ -339,7 +343,14 @@ function analyzeFSDImportCompliance(filePath: string): FSDImportViolation[] {
         }
         
         // Rule 4: Forbidden layer imports
-        if (currentLayerInfo && importLayer && (currentLayerInfo as any).forbiddenImports.includes(importLayer)) {
+        // Skip this check if importing from the same feature (features can import from themselves)
+        const currentFeature = getFeatureName(filePath);
+        const importFeature = getFeatureName(importPath);
+        const isSameFeature = currentFeature && importFeature && currentFeature === importFeature;
+        
+        if (currentLayerInfo && importLayer && 
+            (currentLayerInfo as any).forbiddenImports.includes(importLayer) &&
+            !isSameFeature) {
           violations.push({
             file: filePath,
             line: lineNumber,
@@ -424,6 +435,22 @@ function getAllTsxFiles(dir: string, files: string[] = []): string[] {
   }
   
   return files;
+}
+
+function isTestFile(filePath: string): boolean {
+  // Exclude test files from FSD validation
+  // Test files need to import from various layers for testing purposes
+  const testPatterns = [
+    /\.test\.tsx$/,
+    /\.test\.ts$/,
+    /\.spec\.tsx$/,
+    /\.spec\.ts$/,
+    /\/__tests__\//,
+    /\.test\./,
+    /\.spec\./
+  ];
+  
+  return testPatterns.some(pattern => pattern.test(filePath));
 }
 
 function generateLayerComplianceReport(files: string[], violations: FSDImportViolation[]): LayerComplianceReport {
@@ -703,10 +730,11 @@ function main() {
   
   const allFiles = getAllTsxFiles('.');
   const targetFiles = allFiles.filter(file => 
-    file.includes('/app/') || 
-    file.includes('/features/') || 
-    file.includes('/components/') ||
-    file.includes('/shared/')
+    (file.includes('/app/') || 
+     file.includes('/features/') || 
+     file.includes('/components/') ||
+     file.includes('/shared/')) &&
+    !isTestFile(file)
   );
   
   console.log(`📁 Analyzing ${targetFiles.length} files for FSD compliance...\n`);

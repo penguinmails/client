@@ -16,7 +16,7 @@ async function page() {
       dmarc: domain.records?.dmarc || "pending",
       mx: domain.records?.mx || "pending",
     },
-    addedDate: domain.createdAt || new Date().toISOString(),
+    addedDate: domain.createdAt || null,
   }));
 
   return <DomainsTab domains={transformedDomains} dnsRecords={dnsRecords} />;

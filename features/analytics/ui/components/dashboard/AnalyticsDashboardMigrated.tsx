@@ -37,23 +37,6 @@ import {
   AnalyticsChartSkeleton,
 } from "../SkeletonLoaders";
 
-// Mock data matching reference image
-const MOCK_STATS = {
-  totalSent: 4347,
-  openRate: 38.2,
-  replyRate: 6.9,
-  clickRate: 11.7,
-};
-
-// Mock chart data matching reference - varying bar heights
-const MOCK_CHART_DATA = [
-  { week: "Week of Dec 15", sent: 1000, opens: 400, clicks: 60, replies: 50 },
-  { week: "Week of Dec 22", sent: 850, opens: 350, clicks: 55, replies: 45 },
-  { week: "Week of Dec 29", sent: 780, opens: 300, clicks: 50, replies: 40 },
-  { week: "Week of Jan 5", sent: 600, opens: 280, clicks: 45, replies: 35 },
-  { week: "Week of Jan 12", sent: 720, opens: 320, clicks: 52, replies: 42 },
-];
-
 /**
  * Analytics Dashboard matching reference design.
  */
@@ -61,14 +44,40 @@ function MigratedAnalyticsDashboard() {
   return <MigratedAnalyticsContent />;
 }
 
+interface ChartData {
+  week: string;
+  sent: number;
+  opens: number;
+  clicks: number;
+  replies: number;
+}
+
 function MigratedAnalyticsContent() {
   const [loading, setLoading] = React.useState(true);
+  const [stats, setStats] = React.useState({
+    totalSent: 0,
+    openRate: 0,
+    replyRate: 0,
+    clickRate: 0,
+  });
+  const [chartData, setChartData] = React.useState<ChartData[]>([]);
 
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
+    async function fetchData() {
+      try {
+        const response = await fetch("/api/analytics/dashboard");
+        if (response.ok) {
+          const data = await response.json();
+          setStats(data.stats);
+          setChartData(data.chartData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard data", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, []);
 
   if (loading) {
@@ -84,10 +93,10 @@ function MigratedAnalyticsContent() {
     <div className="space-y-8">
       {/* 4 Simple Stats Cards */}
       <AnalyticsStatsCards
-        totalSent={MOCK_STATS.totalSent}
-        openRate={MOCK_STATS.openRate}
-        replyRate={MOCK_STATS.replyRate}
-        clickRate={MOCK_STATS.clickRate}
+        totalSent={stats.totalSent}
+        openRate={stats.openRate}
+        replyRate={stats.replyRate}
+        clickRate={stats.clickRate}
       />
 
       {/* Navigation Tabs */}
@@ -102,10 +111,10 @@ function MigratedAnalyticsContent() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[500px]">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-[500px] min-h-[300px] w-full">
+            <ResponsiveContainer width="99%" height="100%" debounce={300}>
               <BarChart
-                data={MOCK_CHART_DATA}
+                data={chartData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
                 barCategoryGap="2%"
               >
@@ -164,10 +173,10 @@ function MigratedAnalyticsContent() {
           <span className="text-sm text-muted-foreground">Same data, different visualization</span>
         </CardHeader>
         <CardContent>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-80 min-h-[200px] w-full">
+            <ResponsiveContainer width="99%" height="100%" debounce={300}>
               <LineChart
-                data={MOCK_CHART_DATA}
+                data={chartData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
               >
                 <XAxis 

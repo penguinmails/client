@@ -4,7 +4,7 @@ import { useEnhancedOnboarding } from "@/context/enhanced-onboarding-context";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { useCallback } from "react";
 import { developmentLogger } from "@/lib/logger";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/config/i18n/navigation";
 
 export function NavigationButtons() {
   const { currentStep, steps, goToNextStep, goToPreviousStep } =

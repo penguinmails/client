@@ -98,9 +98,9 @@ function OverviewLineChart() {
   ).map((m) => m.key);
 
   return (
-    <div className="h-80">
+    <div className="h-80 min-h-[200px]">
       <ChartContainer config={chartConfig} className="h-full w-full">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
           <LineChart
             data={chartData}
             margin={{

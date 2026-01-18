@@ -18,17 +18,37 @@ import {
   Monitor,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { isFeatureEnabled } from "@/lib/features";
 import { useTranslations } from "next-intl";
+import { MainContentSkeleton } from "@/components/skeletons/MainContentSkeleton";
 
-function Layout({ children }: { children: React.ReactNode }) {
+/**
+ * Skeleton for settings sidebar while preferences load
+ */
+function SettingsSidebarSkeleton() {
+  return (
+    <div className="min-w-48 space-y-4">
+      <div className="h-7 bg-muted rounded animate-pulse" />
+      <Separator orientation="horizontal" />
+      <div className="space-y-2">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="h-10 bg-muted rounded animate-pulse" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Settings Layout Content - renders sidebar and children
+ */
+function SettingsLayoutContent({ children }: { children: React.ReactNode }) {
   const t = useTranslations();
   const [mounted, setMounted] = useState(false);
 
   // Ensure component is mounted before accessing theme to prevent hydration mismatch
   useEffect(() => {
-    // Use requestAnimationFrame to ensure this runs after render
     requestAnimationFrame(() => {
       setMounted(true);
     });
@@ -37,13 +57,8 @@ function Layout({ children }: { children: React.ReactNode }) {
   const { preferences, theme, setTheme, updatePreference, isLoading } =
     useClientPreferences();
 
-  // Early return if preferences are not loaded
-  if (!preferences) {
-    return <div>{t("Common.loading")}</div>;
-  }
-
   const handleSidebarToggle = () => {
-    if (updatePreference) {
+    if (updatePreference && preferences) {
       updatePreference("sidebarCollapsed", !preferences.sidebarCollapsed);
     }
   };
@@ -54,22 +69,16 @@ function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Show loading state while preferences are loading
-  if (isLoading || !mounted) {
+  // Show skeleton sidebar while loading, but still render children area
+  if (isLoading || !mounted || !preferences) {
     return (
       <div className="flex h-full gap-5">
-        <div className="min-w-48 space-y-4">
-          <div className="h-7 bg-gray-200 rounded animate-pulse" />
-          <Separator orientation="horizontal" />
-          <div className="space-y-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-10 bg-gray-200 rounded animate-pulse" />
-            ))}
-          </div>
-        </div>
+        <SettingsSidebarSkeleton />
         <Separator orientation="vertical" />
         <div className="flex-1">
-          <div className="h-full bg-gray-100 dark:bg-muted rounded animate-pulse" />
+          <Suspense fallback={<MainContentSkeleton />}>
+            {children}
+          </Suspense>
         </div>
       </div>
     );
@@ -85,7 +94,6 @@ function Layout({ children }: { children: React.ReactNode }) {
       label: t("Settings.layout.tabs.notifications"),
       icon: Bell,
     },
-    // { id: "team", label: t("Settings.layout.tabs.team"), icon: Users },
     { id: "tracking", label: t("Settings.layout.tabs.tracking"), icon: Target },
     {
       id: "billing",
@@ -216,8 +224,15 @@ function Layout({ children }: { children: React.ReactNode }) {
       </div>
 
       <Separator orientation="vertical" />
-      <div className="flex-1">{children}</div>
+      <div className="flex-1">
+        <Suspense fallback={<MainContentSkeleton />}>
+          {children}
+        </Suspense>
+      </div>
     </div>
   );
 }
-export default Layout;
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <SettingsLayoutContent>{children}</SettingsLayoutContent>;
+}

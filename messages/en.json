@@ -617,6 +617,9 @@
     "description": "Cross-tenant user management and analytics"
   },
   "Campaigns": {
+    "title": "Campaigns",
+    "subtitle": "Manage and track your email campaigns",
+    "newCampaign": "New Campaign",
     "createTitle": "Create New Campaign",
     "editTitle": "Edit Campaign {name}",
     "newCampaignFallback": "New Campaign"

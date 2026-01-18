@@ -615,6 +615,9 @@
     "description": "Gestión de usuarios y análisis entre inquilinos"
   },
   "Campaigns": {
+    "title": "Campañas",
+    "subtitle": "Gestiona y rastrea tus campañas de correo",
+    "newCampaign": "Nueva Campaña",
     "createTitle": "Crear Nueva Campaña",
     "editTitle": "Editar Campaña {name}",
     "newCampaignFallback": "Nueva Campaña"

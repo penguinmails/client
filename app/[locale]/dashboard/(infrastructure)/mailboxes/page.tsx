@@ -1,41 +1,12 @@
-"use client";
+import MailboxesContent from "./mailboxes-content";
 
-import { useEffect, useState } from "react";
-import MailboxesTab from "@features/mailboxes/ui/components/mailboxes-tab";
-import { MailboxWarmupData } from "@/types";
-import { MOCK_ANALYTICS, MOCK_MAILBOXES, LocalProgressiveAnalyticsState } from "@features/mailboxes/lib/mocks";
-
-// Force dynamic rendering to prevent SSR issues
 export const dynamic = 'force-dynamic';
 
-function Page() {
-  const [mailboxesLoading, setMailboxesLoading] = useState(true);
-  const [mailboxes, setMailboxes] = useState<MailboxWarmupData[]>([]);
-  const [mailboxesError] = useState<string | null>(null);
-  const [analyticsState, setAnalyticsState] = useState<LocalProgressiveAnalyticsState>({});
-
-  // Fetch mailboxes on component mount
-  useEffect(() => {
-    // MOCK DATA TO MATCH REFERENCE IMAGE
-    const timer = setTimeout(() => {
-      setMailboxes(MOCK_MAILBOXES);
-      setMailboxesLoading(false);
-
-      // MOCK ANALYTICS
-      setAnalyticsState(MOCK_ANALYTICS);
-    }, 0);
-    
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <MailboxesTab
-      mailboxes={mailboxes}
-      analyticsState={analyticsState}
-      loading={mailboxesLoading}
-      error={mailboxesError}
-    />
-  );
+/**
+ * Mailboxes Page - Server Component
+ * 
+ * Delegates to MailboxesContent client component for client-side logic.
+ */
+export default function MailboxesPage() {
+  return <MailboxesContent />;
 }
-
-export default Page;

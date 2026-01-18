@@ -122,7 +122,7 @@ export default function Navbar() {
 
   if (loading) {
     return (
-      <header className="sticky top-0 z-50 flex flex-col w-full items-center border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 flex flex-col w-full items-center border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="container flex h-14 max-w-7xl items-center justify-between">
           <Logo />
           <div className="h-8 w-24 bg-muted animate-pulse rounded-md" />
@@ -132,7 +132,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 flex flex-col w-full items-center border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 flex flex-col w-full items-center border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container flex h-14 max-w-7xl items-center justify-between">
         <Logo />
         {isMobile ? (
@@ -145,7 +145,9 @@ export default function Navbar() {
             </SheetTrigger>
             <SheetContent side="right">
               <SheetTitle className="sr-only">Menu</SheetTitle>
-              <SheetDescription className="sr-only">Mobile navigation menu</SheetDescription>
+              <SheetDescription className="sr-only">
+                Mobile navigation menu
+              </SheetDescription>
               <nav className="flex flex-col gap-4 pt-6">
                 <NavLinks isMobileMenu />
               </nav>
