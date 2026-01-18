@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 // Import existing KPI cards component
 import KpiCards from "@/features/analytics/ui/components/dashboard/cards/KpiCards";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 // Import server actions (keeping existing ones for non-analytics data)
 import {
@@ -134,16 +134,16 @@ function formatTimeAgo(date: Date): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  
+
   if (diffHours < 1) {
-    return 'Just now';
+    return "Just now";
   } else if (diffHours === 1) {
-    return '1 hour ago';
+    return "1 hour ago";
   } else if (diffHours < 24) {
     return `${diffHours} hours ago`;
   } else {
     const diffDays = Math.floor(diffHours / 24);
-    return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
+    return diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
   }
 }
 
@@ -262,20 +262,28 @@ function DashboardKpiCards({
   const totalCampaigns = campaignAnalytics.length;
   const totalLeadsContacted = campaignAnalytics.reduce(
     (sum, campaign) => sum + campaign.sent,
-    0
+    0,
   );
-  
+
   // Calculate rates from raw data: opened_tracked / delivered * 100
-  const totalOpened = campaignAnalytics.reduce((sum, c) => sum + c.opened_tracked, 0);
-  const totalDelivered = campaignAnalytics.reduce((sum, c) => sum + c.delivered, 0);
+  const totalOpened = campaignAnalytics.reduce(
+    (sum, c) => sum + c.opened_tracked,
+    0,
+  );
+  const totalDelivered = campaignAnalytics.reduce(
+    (sum, c) => sum + c.delivered,
+    0,
+  );
   const totalReplied = campaignAnalytics.reduce((sum, c) => sum + c.replied, 0);
-  
-  const avgOpenRate = totalDelivered > 0 
-    ? ((totalOpened / totalDelivered) * 100).toFixed(1) 
-    : "0";
-  const avgReplyRate = totalDelivered > 0 
-    ? ((totalReplied / totalDelivered) * 100).toFixed(1) 
-    : "0";
+
+  const avgOpenRate =
+    totalDelivered > 0
+      ? ((totalOpened / totalDelivered) * 100).toFixed(1)
+      : "0";
+  const avgReplyRate =
+    totalDelivered > 0
+      ? ((totalReplied / totalDelivered) * 100).toFixed(1)
+      : "0";
 
   // KPI cards matching the approved baseline design
   const kpiData = [
@@ -324,26 +332,30 @@ interface RawReply {
  * Wrapper component for Recent Replies to handle async data fetching
  */
 function RecentRepliesWrapper() {
-  const [recentReplies, setRecentReplies] = useState<Array<{
-    name: string;
-    email: string;
-    company: string;
-    message: string;
-    time: string;
-    type: 'positive' | 'negative';
-  }>>([]);
+  const [recentReplies, setRecentReplies] = useState<
+    Array<{
+      name: string;
+      email: string;
+      company: string;
+      message: string;
+      time: string;
+      type: "positive" | "negative";
+    }>
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getRecentReplies().then((data) => {
       // Transform the data to match the expected format
       const transformedReplies = (data.data || []).map((reply: RawReply) => ({
-        name: reply.name || reply.from.split('@')[0],
+        name: reply.name || reply.from.split("@")[0],
         email: reply.from,
-        company: reply.company || 'Unknown Company',
+        company: reply.company || "Unknown Company",
         message: reply.message || reply.subject,
         time: formatTimeAgo(new Date(reply.date)),
-        type: (reply.type === 'positive' || reply.type === 'negative' ? reply.type : 'positive') as 'positive' | 'negative'
+        type: (reply.type === "positive" || reply.type === "negative"
+          ? reply.type
+          : "positive") as "positive" | "negative",
       }));
       setRecentReplies(transformedReplies);
       setLoading(false);
@@ -376,7 +388,7 @@ function WarmupSummaryWrapper() {
         activeMailboxes: data.data.totalMailboxes,
         warmingUp: data.data.warmingMailboxes,
         readyToSend: data.data.warmedMailboxes,
-        needsAttention: data.data.pausedMailboxes
+        needsAttention: data.data.pausedMailboxes,
       });
       setLoading(false);
     });

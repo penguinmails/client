@@ -2,7 +2,7 @@ import { TrackingPreferences } from "@/features/settings";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 function TrackingSettingsPage() {
   const t = useTranslations();

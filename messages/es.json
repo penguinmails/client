@@ -608,7 +608,7 @@
     "title": "¡Algo salió mal!",
     "description": "Ocurrió un error inesperado. Por favor intenta recargar la página.",
     "tryAgain": "Intentar de nuevo",
-    "details": "Detalles del error"
+    "details": "Detalles Técnicos"
   },
   "Admin": {
     "title": "Panel de Administración",
@@ -618,6 +618,18 @@
     "createTitle": "Crear Nueva Campaña",
     "editTitle": "Editar Campaña {name}",
     "newCampaignFallback": "Nueva Campaña"
+  },
+  "Analytics": {
+    "layout": {
+      "title": "Hub de Análisis",
+      "description": "Análisis integral de rendimiento e información de campañas"
+    }
+  },
+  "Infrastructure": {
+    "layout": {
+      "title": "Dominios y Buzones",
+      "description": "Gestiona la configuración de tus dominios y buzones de correo"
+    }
   },
   "Components": {
     "SettingsErrorState": {

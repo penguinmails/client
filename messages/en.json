@@ -610,7 +610,7 @@
     "title": "Something went wrong!",
     "description": "An unexpected error occurred. Please try refreshing the page.",
     "tryAgain": "Try again",
-    "details": "Error details"
+    "details": "Technical Details"
   },
   "Admin": {
     "title": "Admin Dashboard",
@@ -620,6 +620,18 @@
     "createTitle": "Create New Campaign",
     "editTitle": "Edit Campaign {name}",
     "newCampaignFallback": "New Campaign"
+  },
+  "Analytics": {
+    "layout": {
+      "title": "Analytics Hub",
+      "description": "Comprehensive performance insights and campaign analytics"
+    }
+  },
+  "Infrastructure": {
+    "layout": {
+      "title": "Domains & Mailboxes",
+      "description": "Manage your email domains and mailboxes configuration"
+    }
   },
   "Components": {
     "SettingsErrorState": {

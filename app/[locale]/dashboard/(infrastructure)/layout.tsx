@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { cva } from "class-variance-authority";
 
@@ -31,14 +32,15 @@ const tabTriggerVariants = cva(
 function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const activeTab = pathname.split("/").pop() || tabs[0].id;
+  const t = useTranslations("Infrastructure.layout");
 
   return (
     <AnalyticsProviderClient>
       <div className="space-y-8 ">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold text-foreground">Domains & Mailboxes</h1>
+          <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
           <p className="text-muted-foreground ">
-            Manage your sending domains, mailboxes, and warmup processes
+            {t("description")}
           </p>
         </div>
         <Suspense>

@@ -1,7 +1,10 @@
 "use client";
 import CampaignTableSkeleton from "@features/campaigns/ui/components/tables/CampaignTableSkeleton";
 import { CampaignsFilter } from "@features/campaigns/ui/components/tables/CampaignsFilter";
-import { CampaignsTable, campaignColumns } from "@features/campaigns/ui/components/tables/CampaignsTable";
+import {
+  CampaignsTable,
+  campaignColumns,
+} from "@features/campaigns/ui/components/tables/CampaignsTable";
 import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/StatsCardSkeleton";
 import { StatsCards } from "@features/campaigns/ui/components/reports/StatsCards";
 import { Button } from "@/components/ui/button/button";
@@ -10,7 +13,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { CampaignDisplay, CampaignStatusEnum } from "@features/campaigns/types";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface CampaignsPageProps {
   searchParams: Promise<{
@@ -29,7 +32,11 @@ const mockCampaigns: CampaignDisplay[] = [
     replies: 73,
     createdDate: "2024-01-01",
     mailboxes: 3,
-    assignedMailboxes: ["john.smith@company.com", "sarah.jones@company.com", "mike.brown@company.com"],
+    assignedMailboxes: [
+      "john.smith@company.com",
+      "sarah.jones@company.com",
+      "mike.brown@company.com",
+    ],
     openRate: 34.2,
     replyRate: 8.6,
     lastSent: "2 hours ago",
@@ -42,7 +49,13 @@ const mockCampaigns: CampaignDisplay[] = [
     replies: 124,
     createdDate: "2024-01-15",
     mailboxes: 5,
-    assignedMailboxes: ["john.smith@company.com", "sarah.jones@company.com", "mike.brown@company.com", "lisa.wang@company.com", "david.kim@company.com"],
+    assignedMailboxes: [
+      "john.smith@company.com",
+      "sarah.jones@company.com",
+      "mike.brown@company.com",
+      "lisa.wang@company.com",
+      "david.kim@company.com",
+    ],
     openRate: 41,
     replyRate: 10.3,
     lastSent: "1 day ago",
@@ -68,7 +81,12 @@ const mockCampaigns: CampaignDisplay[] = [
     replies: 287,
     createdDate: "2023-12-10",
     mailboxes: 4,
-    assignedMailboxes: ["john.smith@company.com", "sarah.jones@company.com", "mike.brown@company.com", "lisa.wang@company.com"],
+    assignedMailboxes: [
+      "john.smith@company.com",
+      "sarah.jones@company.com",
+      "mike.brown@company.com",
+      "lisa.wang@company.com",
+    ],
     openRate: 39.4,
     replyRate: 13.3,
     lastSent: "1 week ago",
@@ -174,4 +192,3 @@ export default function CampaignsPage({
     </div>
   );
 }
-

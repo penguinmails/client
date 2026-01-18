@@ -1,9 +1,12 @@
 "use client";
-import { AnalyticsNavLinks, AnalyticsStatistics } from "@/features/analytics/ui/components";
+import {
+  AnalyticsNavLinks,
+  AnalyticsStatistics,
+} from "@/features/analytics/ui/components";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 import { EmailMailboxesTable } from "@/features/analytics/ui/components";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 function AnalyticsMailboxesPageContent() {
   const { useFormattedAnalytics } = useAnalytics();

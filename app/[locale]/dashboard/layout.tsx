@@ -8,7 +8,7 @@ import Header from "@/components/layout/DashboardHeader";
 import { useEffect, useState } from "react";
 import { productionLogger } from "@/lib/logger";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
