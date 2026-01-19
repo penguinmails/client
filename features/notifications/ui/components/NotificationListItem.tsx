@@ -29,7 +29,7 @@ function NotificationListItem({
     <div
       key={notification.id}
       className={`p-4 hover:bg-gray-50 dark:hover:bg-muted/50 transition-colors cursor-pointer ${
-        !notification.isRead ? "bg-blue-50" : ""
+        !notification.isRead ? "bg-blue-50 dark:bg-blue-950/30" : ""
       }`}
       onClick={() => markAsRead(notification.id)}
     >

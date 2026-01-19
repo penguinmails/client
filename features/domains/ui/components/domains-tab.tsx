@@ -102,7 +102,7 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
                 const status = domain.records[recordKey];
 
                 return (
-                  <Card key={index} className="bg-white border shadow-sm p-0 overflow-hidden">
+                  <Card key={index} className="bg-card border shadow-sm p-0 overflow-hidden">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-sm font-semibold text-foreground">
@@ -130,15 +130,15 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
             </div>
 
             {domain.status.toUpperCase() === "PENDING" && (
-              <Card className="mt-4 border-orange-200 bg-orange-50">
+              <Card className="mt-4 border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950">
                 <CardContent className="p-4">
                   <div className="flex items-start space-x-3">
-                    <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5" />
+                    <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400 mt-0.5" />
                     <div>
-                      <h4 className="font-medium text-orange-900">
+                      <h4 className="font-medium text-orange-900 dark:text-orange-100">
                         DNS Setup Required
                       </h4>
-                      <p className="text-sm text-orange-700 mt-1">
+                      <p className="text-sm text-orange-700 dark:text-orange-300 mt-1">
                         Please add the DNS records above to your domain&apos;s
                         DNS settings. Once added, verification typically takes
                         5-15 minutes.
