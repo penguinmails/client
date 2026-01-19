@@ -8,7 +8,8 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/lib/config/i18n/navigation";
 import { useSignIn } from "@niledatabase/react";
 import { useSafeNavigation } from "@/hooks/use-safe-navigation";
 import { developmentLogger } from "@/lib/logger";

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@/lib/config/i18n/navigation";
 import { useSession } from "../../hooks/use-session";
 import { useEnrichment } from "../../hooks/use-enrichment";
 import { Loader2 } from "lucide-react";
@@ -26,13 +27,14 @@ export const ProtectedRoute = ({
   const { session, isLoading: isSessionLoading, error: sessionError } = useSession();
   const { enrichedUser, isLoadingEnrichment, enrichmentError } = useEnrichment();
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   // Redirect if no session (and not loading)
   useEffect(() => {
     if (!isSessionLoading && !session && !sessionError) {
         // preserve destination
-        const currentPath = window.location.pathname;
+        const currentPath = pathname;
         const params = new URLSearchParams(searchParams.toString());
         if (currentPath !== '/login' && currentPath !== '/') {
              params.set("next", currentPath);
@@ -41,7 +43,7 @@ export const ProtectedRoute = ({
         const nextUrl = params.toString() ? `${redirectTo}?${params.toString()}` : redirectTo;
         router.push(nextUrl);
     }
-  }, [isSessionLoading, session, sessionError, router, redirectTo, searchParams]);
+  }, [isSessionLoading, session, sessionError, router, redirectTo, searchParams, pathname]);
 
   // 1. Session Loading / Checking
   if (isSessionLoading) {

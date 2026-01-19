@@ -109,7 +109,7 @@ function handleCORS(request: NextRequest): NextResponse | null {
 
 const intlMiddleware = createMiddleware({
     ...routing,
-    localeDetection: false // <-- The new setting to stop redirection
+    localeDetection: true
 });
 
 // Main middleware function
