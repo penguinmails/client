@@ -49,28 +49,35 @@ export const calculatePasswordStrength = (
   if (!requirements.special) feedback.push("addSpecialCharacter");
 
   // Determine strength level (translation keys)
-  if (score === 0) {
-    label = "veryWeak";
-    color = "red";
-    if (password.length > 0) {
-      feedback.unshift("veryWeakPassword");
-    }
-  } else if (score <= 2) {
-    label = "weak";
-    color = "red";
-    feedback.unshift("weakPassword");
-  } else if (score <= 3) {
-    label = "fair";
-    color = "yellow";
-    feedback.unshift("fairPasswordStrength");
-  } else if (score <= 4) {
-    label = "good";
-    color = "green";
-    feedback.unshift("goodPasswordStrength");
-  } else {
-    label = "strong";
-    color = "green";
-    feedback.unshift("strongPassword");
+  switch (score) {
+    case 0:
+      label = "veryWeak";
+      color = "red";
+      if (password.length > 0) {
+        feedback.unshift("veryWeakPassword");
+      }
+      break;
+    case 1:
+    case 2:
+      label = "weak";
+      color = "red";
+      feedback.unshift("weakPassword");
+      break;
+    case 3:
+      label = "fair";
+      color = "yellow";
+      feedback.unshift("fairPasswordStrength");
+      break;
+    case 4:
+      label = "good";
+      color = "green";
+      feedback.unshift("goodPasswordStrength");
+      break;
+    default: // score is 5
+      label = "strong";
+      color = "green";
+      feedback.unshift("strongPassword");
+      break;
   }
 
   return {
