@@ -7,7 +7,7 @@ import QuickActions from "@/features/analytics/ui/components/dashboard/actions/Q
 import RecentRepliesList from "@features/inbox/ui/components/RecentReply/RecentReplyList";
 import WarmupSummary from "@/features/analytics/ui/components/dashboard/summaries/WarmupSummary";
 import { Mail, Send, TrendingUp, Users } from "lucide-react";
-
+import { useTranslations } from "next-intl";
 // Import skeleton loaders
 import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/KpiCardSkeleton";
 import RecentReplySkeleton from "@features/inbox/ui/components/RecentReply/RecentReplySkeleton";
@@ -127,20 +127,25 @@ const MOCK_CAMPAIGN_ANALYTICS: CampaignAnalytics[] = [
 ];
 
 // Helper function to format time ago
-function formatTimeAgo(date: Date): string {
+function formatTimeAgo(
+  date: Date,
+  t: ReturnType<typeof useTranslations>,
+): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  
+
   if (diffHours < 1) {
-    return 'Just now';
+    return t("timeAgo.justNow");
   } else if (diffHours === 1) {
-    return '1 hour ago';
+    return t("timeAgo.oneHour");
   } else if (diffHours < 24) {
-    return `${diffHours} hours ago`;
+    return t("timeAgo.hours", { count: diffHours });
   } else {
     const diffDays = Math.floor(diffHours / 24);
-    return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
+    return diffDays === 1
+      ? t("timeAgo.oneDay")
+      : t("timeAgo.days", { count: diffDays });
   }
 }
 
@@ -188,9 +193,7 @@ export default function DashboardContent({
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-2">
-        <h1 className={cn("text-2xl font-bold", "text-foreground")}>
-          {title}
-        </h1>
+        <h1 className={cn("text-2xl font-bold", "text-foreground")}>{title}</h1>
         <p className="text-muted-foreground">
           {user?.displayName
             ? welcomeWithName.replace("{displayName}", user.displayName)
@@ -265,47 +268,57 @@ function DashboardKpiCards({
   _loading: boolean;
   _error: string | null;
 }) {
+  const t = useTranslations("Dashboard");
+
   // Calculate aggregated metrics from campaign analytics
   const totalCampaigns = campaignAnalytics.length;
   const totalLeadsContacted = campaignAnalytics.reduce(
     (sum, campaign) => sum + campaign.sent,
-    0
+    0,
   );
-  
+
   // Calculate rates from raw data: opened_tracked / delivered * 100
-  const totalOpened = campaignAnalytics.reduce((sum, c) => sum + c.opened_tracked, 0);
-  const totalDelivered = campaignAnalytics.reduce((sum, c) => sum + c.delivered, 0);
+  const totalOpened = campaignAnalytics.reduce(
+    (sum, c) => sum + c.opened_tracked,
+    0,
+  );
+  const totalDelivered = campaignAnalytics.reduce(
+    (sum, c) => sum + c.delivered,
+    0,
+  );
   const totalReplied = campaignAnalytics.reduce((sum, c) => sum + c.replied, 0);
-  
-  const avgOpenRate = totalDelivered > 0 
-    ? ((totalOpened / totalDelivered) * 100).toFixed(1) 
-    : "0";
-  const avgReplyRate = totalDelivered > 0 
-    ? ((totalReplied / totalDelivered) * 100).toFixed(1) 
-    : "0";
+
+  const avgOpenRate =
+    totalDelivered > 0
+      ? ((totalOpened / totalDelivered) * 100).toFixed(1)
+      : "0";
+  const avgReplyRate =
+    totalDelivered > 0
+      ? ((totalReplied / totalDelivered) * 100).toFixed(1)
+      : "0";
 
   // KPI cards matching the approved baseline design
   const kpiData = [
     {
-      title: "Active Campaigns",
+      title: t("kpi.activeCampaigns"),
       value: totalCampaigns.toString(),
       icon: Send,
       color: "bg-blue-500 text-blue-600",
     },
     {
-      title: "Leads Contacted",
+      title: t("kpi.leadsContacted"),
       value: totalLeadsContacted.toLocaleString(),
       icon: Users,
       color: "bg-green-500 text-green-600",
     },
     {
-      title: "Open Rate",
+      title: t("kpi.openRate"),
       value: `${avgOpenRate}%`,
       icon: Mail,
       color: "bg-purple-500 text-purple-600",
     },
     {
-      title: "Reply Rate",
+      title: t("kpi.replyRate"),
       value: `${avgReplyRate}%`,
       icon: TrendingUp,
       color: "bg-orange-500 text-orange-600",
@@ -331,31 +344,36 @@ interface RawReply {
  * Wrapper component for Recent Replies to handle async data fetching
  */
 function RecentRepliesWrapper() {
-  const [recentReplies, setRecentReplies] = useState<Array<{
-    name: string;
-    email: string;
-    company: string;
-    message: string;
-    time: string;
-    type: 'positive' | 'negative';
-  }>>([]);
+  const t = useTranslations("Dashboard");
+  const [recentReplies, setRecentReplies] = useState<
+    Array<{
+      name: string;
+      email: string;
+      company: string;
+      message: string;
+      time: string;
+      type: "positive" | "negative";
+    }>
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getRecentReplies().then((data) => {
       // Transform the data to match the expected format
       const transformedReplies = (data.data || []).map((reply: RawReply) => ({
-        name: reply.name || reply.from.split('@')[0],
+        name: reply.name || reply.from.split("@")[0],
         email: reply.from,
-        company: reply.company || 'Unknown Company',
+        company: reply.company || t("unknownCompany"),
         message: reply.message || reply.subject,
-        time: formatTimeAgo(new Date(reply.date)),
-        type: (reply.type === 'positive' || reply.type === 'negative' ? reply.type : 'positive') as 'positive' | 'negative'
+        time: formatTimeAgo(new Date(reply.date), t),
+        type: (reply.type === "positive" || reply.type === "negative"
+          ? reply.type
+          : "positive") as "positive" | "negative",
       }));
       setRecentReplies(transformedReplies);
       setLoading(false);
     });
-  }, []);
+  }, [t]);
 
   if (loading) {
     return <RecentReplySkeleton />;
@@ -383,7 +401,7 @@ function WarmupSummaryWrapper() {
         activeMailboxes: data.data.totalMailboxes,
         warmingUp: data.data.warmingMailboxes,
         readyToSend: data.data.warmedMailboxes,
-        needsAttention: data.data.pausedMailboxes
+        needsAttention: data.data.pausedMailboxes,
       });
       setLoading(false);
     });

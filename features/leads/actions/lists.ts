@@ -27,8 +27,7 @@ export async function fetchLeadLists(): Promise<ActionResult<LeadList[]>> {
       success: true,
       data
     };
-  } catch (error) {
-    console.error("Error fetching lead lists:", error);
+  } catch {
     return {
       success: false,
       error: "Failed to fetch lead lists"

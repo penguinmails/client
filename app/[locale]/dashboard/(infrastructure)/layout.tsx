@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { cva } from "class-variance-authority";
 
@@ -25,26 +26,25 @@ const tabTriggerVariants = cva(
     "data-[state=active]:text-blue-600",
     "data-[state=active]:shadow-none",
     "data-[state=active]:border-b-blue-600",
-  ].join(" ")
+  ].join(" "),
 );
 
 function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const activeTab = pathname.split("/").pop() || tabs[0].id;
+  const t = useTranslations("Infrastructure.layout");
 
   return (
     <AnalyticsProviderClient>
       <div className="space-y-8 ">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold text-foreground">Domains & Mailboxes</h1>
-          <p className="text-muted-foreground ">
-            Manage your sending domains, mailboxes, and warmup processes
-          </p>
+          <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
+          <p className="text-muted-foreground ">{t("description")}</p>
         </div>
         <Suspense>
           <OverviewCards />
         </Suspense>
-        
+
         <Tabs value={activeTab} className="w-full">
           <div className="pb-6 border-b border-gray-200">
             <TabsList className="bg-transparent justify-start h-auto p-0 gap-8">
@@ -56,21 +56,29 @@ function Layout({ children }: { children: React.ReactNode }) {
                   className={tabTriggerVariants()}
                 >
                   <div className="flex items-center gap-2">
-                      <tab.icon className="w-4 h-4" />
-                      {tab.label}
-                      <span className="text-muted-foreground font-normal">({tab.count})</span>
+                    <tab.icon className="w-4 h-4" />
+                    {t(`tabs.${tab.id}`)}
+                    <span className="text-muted-foreground font-normal">
+                      ({tab.count})
+                    </span>
                   </div>
                 </TabTrigger>
               ))}
             </TabsList>
           </div>
-          
+
           <div className="mt-6">
             {activeTab === "domains" && (
               <div className="flex justify-end mb-4">
-                <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md font-medium h-9 px-4 text-sm shadow-sm">
-                  <Link href="/dashboard/domains/new" className="flex items-center gap-2">
-                      <Plus className="w-4 h-4" /> Add Domain
+                <Button
+                  asChild
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md font-medium h-9 px-4 text-sm shadow-sm"
+                >
+                  <Link
+                    href="/dashboard/domains/new"
+                    className="flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" /> {t("addDomainButton")}
                   </Link>
                 </Button>
               </div>

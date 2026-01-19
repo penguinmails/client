@@ -40,8 +40,7 @@ function ListsTab() {
       } else {
         setFilteredLists([]);
       }
-    }).catch((error: unknown) => {
-      console.error("Failed to load leads lists:", error);
+    }).catch(() => {
       setFilteredLists([]);
     });
   }, []);

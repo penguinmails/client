@@ -240,8 +240,8 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
         if (warmupRes.ok) {
           setWarmupChartData(await warmupRes.json());
         }
-      } catch (err) {
-        console.error("Failed to fetch initial analytics data", err);
+      } catch {
+        // Silently fail - context will handle error state
       }
     }
     fetchInitialData();
@@ -257,8 +257,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       const response = await fetch("/api/analytics/mailboxes");
       if (!response.ok) throw new Error("Failed to fetch mailboxes");
       return await response.json();
-    } catch (error) {
-      console.error("Error fetching mailboxes:", error);
+    } catch {
       return [];
     }
   };

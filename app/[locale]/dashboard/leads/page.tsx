@@ -9,31 +9,33 @@ import CSVUploadTab from "@features/leads/ui/components/CSVUploadTab";
 import ContactsTab from "@features/leads/ui/components/ContactsTab";
 import { FileText, Upload, Users } from "lucide-react";
 import LeadsStats from "@features/leads/ui/components/LeadsStats";
+import { getTranslations } from "next-intl/server";
 
 // Force dynamic rendering since this page uses authentication and headers
 export const dynamic = "force-dynamic";
 
 // Server Component
 async function LeadsPage() {
+  const t = await getTranslations("Leads");
   const leadsStatsData = await getLeadsStats();
   const leadListsData = await getLeadLists();
 
   const totalContacts = leadListsData.reduce(
     (sum, list) => sum + list.contacts,
-    0
+    0,
   );
 
   const leadsTabs = [
     {
       id: "lists",
-      label: "Lead Lists",
+      label: t("tabs.lists"),
       count: leadListsData.length,
       icon: FileText,
     },
-    { id: "upload", label: "Upload CSV", icon: Upload },
+    { id: "upload", label: t("tabs.upload"), icon: Upload },
     {
       id: "contacts",
-      label: "All Contacts",
+      label: t("tabs.contacts"),
       count: totalContacts,
       icon: Users,
     },
@@ -42,9 +44,11 @@ async function LeadsPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Lead Hub</h1>
+          <h1 className="text-3xl font-bold text-foreground">
+            {t("layout.title")}
+          </h1>
           <p className="text-muted-foreground mt-1">
-            Manage your lead lists, imports, and contact database
+            {t("layout.description")}
           </p>
         </div>
       </div>
