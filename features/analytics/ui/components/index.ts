@@ -69,7 +69,6 @@ export { useCrossDomainAnalytics } from './hooks/useCrossDomainAnalytics';
 // export { useDomainAnalytics } from './hooks/useDomainAnalytics';
 
 // Layout
-export { DashboardSidebar } from './layout/DashboardSidebar';
 export { default as Sidebar } from './layout/Sidebar';
 
 // Campaign Analytics (moved from campaigns due to analytics dependencies)

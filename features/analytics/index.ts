@@ -43,7 +43,6 @@ export {
   WarmUpLineChart,
   BillingTimeSeriesChart,
   MonitoringDashboard,
-  DashboardSidebar,
   StatsTab,
   StatsCards,
   AnalyticsProviderClient,
