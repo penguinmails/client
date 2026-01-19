@@ -22,9 +22,9 @@ const tabTriggerVariants = cva(
     "focus:ring-0 focus:outline-none",
     "!flex-none hover:text-foreground",
     "data-[state=active]:bg-transparent",
-    "data-[state=active]:text-blue-600",
+    "data-[state=active]:text-blue-600 data-[state=active]:dark:text-blue-400",
     "data-[state=active]:shadow-none",
-    "data-[state=active]:border-b-blue-600",
+    "data-[state=active]:border-b-blue-600 data-[state=active]:dark:border-b-blue-400",
   ].join(" "),
 );
 
@@ -45,7 +45,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         </Suspense>
 
         <Tabs value={activeTab} className="w-full">
-          <div className="pb-6 border-b border-gray-200">
+          <div className="pb-6">
             <TabsList className="bg-transparent justify-start h-auto p-0 gap-8">
               {tabs.map((tab) => (
                 <TabTrigger
@@ -57,7 +57,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                   <div className="flex items-center gap-2">
                     <tab.icon className="w-4 h-4" />
                     {t(`tabs.${tab.id}`)}
-                    <span className="text-muted-foreground font-normal">
+                    <span className="font-normal">
                       ({tab.count})
                     </span>
                   </div>

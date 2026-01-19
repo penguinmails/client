@@ -1,70 +1,105 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 /**
- * Hook to resolve CSS variable values at runtime.
- * Useful for libraries like Recharts that don't handle CSS variables in SVGs.
- * 
- * @param cssVariable - CSS variable name without var(), e.g., "--destructive"
- * @param fallback - Fallback color if variable can't be resolved
- * @returns The resolved color value
+ * Type for chart colors.
  */
-export function useCssVariable(cssVariable: string, fallback: string): string {
-  const [color, setColor] = useState(fallback);
+type ChartColors = {
+  chart1: string;
+  chart2: string;
+  chart3: string;
+  chart4: string;
+  chart5: string;
+  destructive: string;
+};
+
+/**
+ * Chart color constants that match the design system.
+ * These are used as fallbacks and for direct use when CSS variables
+ * cannot be resolved (e.g., in SVG contexts like Recharts).
+ */
+const CHART_COLORS: ChartColors = {
+  chart1: "#2563eb", // Blue - Total Warmups
+  chart2: "#16a34a", // Green - Replies
+  chart3: "#eab308", // Yellow
+  chart4: "#8b5cf6", // Purple
+  chart5: "#ec4899", // Pink
+  destructive: "#dc2626", // Red - Spam Flags
+};
+
+/**
+ * Hook to get chart colors that work with Recharts.
+ * Uses theme-aware colors by reading computed CSS colors.
+ */
+export function useChartColors() {
+  const [colors, setColors] = useState<ChartColors>(CHART_COLORS);
+
+  const resolveColors = useCallback(() => {
+    if (typeof window === "undefined") return;
+    
+    // Try to get actual rendered colors from a test element
+    // This works with any color format (oklch, hsl, hex, etc.)
+    const testElement = document.createElement("div");
+    testElement.style.cssText = "position:absolute;visibility:hidden;";
+    document.body.appendChild(testElement);
+    
+    try {
+      const resolveColor = (cssVar: string, fallback: string): string => {
+        testElement.style.color = `var(${cssVar})`;
+        const computed = getComputedStyle(testElement).color;
+        // If we get a valid rgb/rgba color, convert to hex
+        if (computed && computed !== "rgba(0, 0, 0, 0)" && computed.startsWith("rgb")) {
+          return rgbToHex(computed);
+        }
+        return fallback;
+      };
+      
+      const newColors = {
+        chart1: resolveColor("--chart-1", CHART_COLORS.chart1),
+        chart2: resolveColor("--chart-2", CHART_COLORS.chart2),
+        chart3: resolveColor("--chart-3", CHART_COLORS.chart3),
+        chart4: resolveColor("--chart-4", CHART_COLORS.chart4),
+        chart5: resolveColor("--chart-5", CHART_COLORS.chart5),
+        destructive: resolveColor("--destructive", CHART_COLORS.destructive),
+      };
+      
+      setColors(newColors);
+    } finally {
+      document.body.removeChild(testElement);
+    }
+  }, []);
 
   useEffect(() => {
-    const resolveColor = () => {
-      const root = document.documentElement;
-      const computedStyle = getComputedStyle(root);
-      const value = computedStyle.getPropertyValue(cssVariable).trim();
-      
-      if (value) {
-        // If the value is in oklch or hsl format, wrap it appropriately
-        if (value.includes(" ")) {
-          // Assume it's space-separated values like "0 84.2% 60.2%"
-          setColor(`hsl(${value})`);
-        } else {
-          setColor(value);
-        }
-      }
-    };
+    resolveColors();
 
-    resolveColor();
-
-    // Re-resolve when theme changes (observing class changes on html element)
-    const observer = new MutationObserver(resolveColor);
+    // Re-resolve when theme changes
+    const observer = new MutationObserver(resolveColors);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class", "data-theme"],
     });
 
     return () => observer.disconnect();
-  }, [cssVariable]);
+  }, [resolveColors]);
 
-  return color;
+  return {
+    ...colors,
+    // Semantic aliases for warmup chart
+    totalWarmups: colors.chart1,
+    spamFlags: colors.destructive,
+    replies: colors.chart2,
+  };
 }
 
 /**
- * Hook to get chart colors that work with Recharts.
- * Resolves CSS variables to actual color values.
+ * Convert rgb/rgba string to hex color.
  */
-export function useChartColors() {
-  const destructive = useCssVariable("--destructive", "#dc2626");
-  const chart1 = useCssVariable("--chart-1", "#2563eb");
-  const chart2 = useCssVariable("--chart-2", "#16a34a");
-  const chart3 = useCssVariable("--chart-3", "#eab308");
-  const chart4 = useCssVariable("--chart-4", "#8b5cf6");
-  const chart5 = useCssVariable("--chart-5", "#ec4899");
-
-  return {
-    destructive,
-    chart1,
-    chart2,
-    chart3,
-    chart4,
-    chart5,
-    // Semantic aliases for warmup chart
-    totalWarmups: chart1,
-    spamFlags: destructive,
-    replies: chart2,
-  };
+function rgbToHex(rgb: string): string {
+  const match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!match) return rgb;
+  
+  const r = parseInt(match[1], 10);
+  const g = parseInt(match[2], 10);
+  const b = parseInt(match[3], 10);
+  
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
