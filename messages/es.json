@@ -645,7 +645,13 @@
   "Infrastructure": {
     "layout": {
       "title": "Dominios y Buzones",
-      "description": "Gestiona tus dominios de envío, buzones y procesos de calentamiento"
+      "description": "Gestiona tus dominios de envío, buzones y procesos de calentamiento",
+      "tabs": {
+        "domains": "Dominios",
+        "mailboxes": "Buzones",
+        "warmup": "Centro de Calentamiento"
+      },
+      "addDomainButton": "Añadir Dominio"
     }
   },
   "Campaigns": {
