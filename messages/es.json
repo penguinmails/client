@@ -43,6 +43,9 @@
     "login": "Iniciar sesión",
     "signup": "Registrarse"
   },
+  "Auth": {
+    "logout": "Cerrar sesión"
+  },
   "Errors": {
     "401-LOGIN": "Las credenciales que proporcionaste no son válidas. Por favor, revisa tu correo electrónico y contraseña.",
     "403-CAMPAIGNS": "No tienes autorización para ver o modificar los datos de la campaña.",
