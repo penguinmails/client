@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { productionLogger } from "@/lib/logger";
 import { ExtendedMailboxAnalytics } from "@features/analytics/lib/mocks/context";
 
 /**
@@ -72,7 +73,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(result);
-  } catch (_error) {
+  } catch (error) {
+    productionLogger.error("Failed to process analytics mailboxes request:", error);
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 }

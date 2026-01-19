@@ -1,11 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import DashboardContent from "./dashboard-content";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 /**
  * Dashboard Page - Server Component
- * 
+ *
  * Fetches translations on the server and passes them to the client component.
  * This pattern enables partial rendering where the layout stays stable
  * while only the page content updates during navigation.

@@ -475,9 +475,20 @@
     "recentReplies": "Recent Replies",
     "kpi": {
       "totalCampaigns": "Total Campaigns",
+      "activeCampaigns": "Active Campaigns",
       "activeLeads": "Active Leads",
       "completed": "Completed",
-      "totalLeads": "Total Leads"
+      "totalLeads": "Total Leads",
+      "leadsContacted": "Leads Contacted",
+      "openRate": "Open Rate",
+      "replyRate": "Reply Rate"
+    },
+    "timeAgo": {
+      "justNow": "Just now",
+      "oneHour": "1 hour ago",
+      "hours": "{count} hours ago",
+      "oneDay": "1 day ago",
+      "days": "{count} days ago"
     },
     "unknownCompany": "Unknown Company"
   },
@@ -486,6 +497,17 @@
     "createCampaign": "Create Campaign",
     "uploadLeads": "Upload Leads",
     "addDomain": "Add Domain"
+  },
+  "Leads": {
+    "layout": {
+      "title": "Lead Hub",
+      "description": "Manage your lead lists, imports, and contact database"
+    },
+    "tabs": {
+      "lists": "Lead Lists",
+      "upload": "Upload CSV",
+      "contacts": "All Contacts"
+    }
   },
   "AppearanceSettings": {
     "title": "Appearance",
@@ -610,19 +632,44 @@
     "title": "Something went wrong!",
     "description": "An unexpected error occurred. Please try refreshing the page.",
     "tryAgain": "Try again",
-    "details": "Error details"
+    "details": "Technical Details"
   },
   "Admin": {
     "title": "Admin Dashboard",
     "description": "Cross-tenant user management and analytics"
   },
+  "Analytics": {
+    "layout": {
+      "title": "Analytics Hub",
+      "description": "Comprehensive performance insights and campaign analytics"
+    }
+  },
+  "Infrastructure": {
+    "layout": {
+      "title": "Domains & Mailboxes",
+      "description": "Manage your sending domains, mailboxes, and warmup processes",
+      "tabs": {
+        "domains": "Domains",
+        "mailboxes": "Mailboxes",
+        "warmup": "Warmup Hub"
+      },
+      "addDomainButton": "Add Domain"
+    }
+  },
   "Campaigns": {
-    "title": "Campaigns",
-    "subtitle": "Manage and track your email campaigns",
-    "newCampaign": "New Campaign",
     "createTitle": "Create New Campaign",
     "editTitle": "Edit Campaign {name}",
-    "newCampaignFallback": "New Campaign"
+    "newCampaignFallback": "New Campaign",
+    "title": "Campaigns",
+    "description": "Manage your email outreach campaigns like a pro",
+    "newCampaignButton": "New Campaign",
+    "kpi": {
+      "totalCampaigns": "Total Campaigns",
+      "totalSent": "Total Sent",
+      "totalReplies": "Total Replies",
+      "openRate": "Open Rate",
+      "replyRate": "Reply Rate"
+    }
   },
   "Components": {
     "SettingsErrorState": {

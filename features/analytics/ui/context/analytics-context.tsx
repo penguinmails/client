@@ -1,11 +1,24 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
 import { Mail, TrendingUp, Clock, X } from "lucide-react";
+import { productionLogger } from "@/lib/logger";
 import { MailboxWarmupData } from "@/types";
-import { DomainAnalytics, MailboxAnalytics as DomainMailboxAnalytics } from "@features/analytics/types/domain-specific";
+import {
+  DomainAnalytics,
+  MailboxAnalytics as DomainMailboxAnalytics,
+} from "@features/analytics/types/domain-specific";
 import { WarmupChartData } from "@/types";
-import { DateRangePreset, AnalyticsUIFilters } from "@features/analytics/types/ui";
+import {
+  DateRangePreset,
+  AnalyticsUIFilters,
+} from "@features/analytics/types/ui";
 import { DataGranularity } from "@features/analytics/types/core";
 import { AccountMetrics as TypesAccountMetrics } from "@features/analytics/types";
 
@@ -30,22 +43,27 @@ interface AnalyticsContextType {
   // Mailbox data
   fetchMailboxes: (
     _userid?: string,
-    _companyid?: string
+    _companyid?: string,
   ) => Promise<MailboxWarmupData[]>;
-  fetchMailboxAnalytics: (mailboxId: string) => Promise<MailboxAnalytics & {
-    totalWarmups: number;
-    spamFlags: number;
-    replies: number;
-    lastUpdated: Date;
-  }>;
-  fetchMultipleMailboxAnalytics: (
-    mailboxIds: string[]
-  ) => Promise<Record<string, MailboxAnalytics & {
-    totalWarmups: number;
-    spamFlags: number;
-    replies: number;
-    lastUpdated: Date;
-  }>>;
+  fetchMailboxAnalytics: (mailboxId: string) => Promise<
+    MailboxAnalytics & {
+      totalWarmups: number;
+      spamFlags: number;
+      replies: number;
+      lastUpdated: Date;
+    }
+  >;
+  fetchMultipleMailboxAnalytics: (mailboxIds: string[]) => Promise<
+    Record<
+      string,
+      MailboxAnalytics & {
+        totalWarmups: number;
+        spamFlags: number;
+        replies: number;
+        lastUpdated: Date;
+      }
+    >
+  >;
 
   // Domain analytics
   domains: DomainAnalytics[] | null;
@@ -65,7 +83,7 @@ interface AnalyticsContextType {
     label: string;
     tooltip: string;
   }>;
-  
+
   // Warmup metrics visibility
   visibleWarmupMetrics?: {
     totalWarmups: boolean;
@@ -125,7 +143,7 @@ interface AnalyticsContextType {
 }
 
 const AnalyticsContext = createContext<AnalyticsContextType | undefined>(
-  undefined
+  undefined,
 );
 
 interface AnalyticsProviderProps {
@@ -136,7 +154,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const [domains, setDomains] = useState<DomainAnalytics[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Smart Insights data matching reference design
   const [smartInsightsList] = useState([
     {
@@ -146,7 +164,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       iconBackground: "bg-blue-100",
       iconColor: "text-blue-600",
       count: 24,
-      label: "Unread"
+      label: "Unread",
     },
     {
       id: "interested",
@@ -155,7 +173,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       iconBackground: "bg-green-100",
       iconColor: "text-green-600",
       count: 12,
-      label: "Interested"
+      label: "Interested",
     },
     {
       id: "avg-response",
@@ -164,7 +182,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       iconBackground: "bg-purple-100",
       iconColor: "text-purple-600",
       count: "2.3h",
-      label: "Avg Response"
+      label: "Avg Response",
     },
     {
       id: "not-interested",
@@ -173,8 +191,8 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       iconBackground: "bg-red-100",
       iconColor: "text-red-600",
       count: 8,
-      label: "Not Interested"
-    }
+      label: "Not Interested",
+    },
   ]);
   const [dateRange, setDateRange] = useState<DateRangePreset>("30d");
   const [granularity, setGranularity] = useState<DataGranularity>("week");
@@ -186,7 +204,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 
   // Memoize setVisibleMetrics to prevent infinite re-renders
   const setVisibleMetrics = useCallback((metrics: string[]) => {
-    setFilters(prev => ({ ...prev, visibleMetrics: metrics }));
+    setFilters((prev) => ({ ...prev, visibleMetrics: metrics }));
   }, []);
 
   const [filters, setFilters] = useState<AnalyticsFilters>({
@@ -231,7 +249,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       try {
         const [metricsRes, warmupRes] = await Promise.all([
           fetch("/api/analytics/account-metrics"),
-          fetch("/api/analytics/warmup")
+          fetch("/api/analytics/warmup"),
         ]);
 
         if (metricsRes.ok) {
@@ -241,34 +259,36 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
           setWarmupChartData(await warmupRes.json());
         }
       } catch (err) {
-        console.error("Failed to fetch initial analytics data", err);
+        productionLogger.error("Failed to fetch initial analytics data", err);
       }
     }
     fetchInitialData();
   }, []);
 
-
-
   const fetchMailboxes = async (
     _userid?: string,
-    _companyid?: string
+    _companyid?: string,
   ): Promise<MailboxWarmupData[]> => {
     try {
       const response = await fetch("/api/analytics/mailboxes");
       if (!response.ok) throw new Error("Failed to fetch mailboxes");
       return await response.json();
     } catch (error) {
-      console.error("Error fetching mailboxes:", error);
+      productionLogger.error("Error fetching mailboxes:", error);
       return [];
     }
   };
 
-  const fetchMailboxAnalytics = async (mailboxId: string): Promise<MailboxAnalytics & {
-    totalWarmups: number;
-    spamFlags: number;
-    replies: number;
-    lastUpdated: Date;
-  }> => {
+  const fetchMailboxAnalytics = async (
+    mailboxId: string,
+  ): Promise<
+    MailboxAnalytics & {
+      totalWarmups: number;
+      spamFlags: number;
+      replies: number;
+      lastUpdated: Date;
+    }
+  > => {
     const response = await fetch(`/api/analytics/mailboxes/${mailboxId}`);
     if (!response.ok) throw new Error("Failed to fetch mailbox analytics");
     const data = await response.json();
@@ -276,48 +296,64 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     return {
       ...data,
       lastUpdated: new Date(data.lastUpdated),
-      updatedAt: typeof data.updatedAt === 'string' ? new Date(data.updatedAt).getTime() : data.updatedAt
+      updatedAt:
+        typeof data.updatedAt === "string"
+          ? new Date(data.updatedAt).getTime()
+          : data.updatedAt,
     };
   };
 
-  const fetchMultipleMailboxAnalytics = async (mailboxIds: string[]): Promise<Record<string, MailboxAnalytics & {
-    totalWarmups: number;
-    spamFlags: number;
-    replies: number;
-    lastUpdated: Date;
-  }>> => {
+  const fetchMultipleMailboxAnalytics = async (
+    mailboxIds: string[],
+  ): Promise<
+    Record<
+      string,
+      MailboxAnalytics & {
+        totalWarmups: number;
+        spamFlags: number;
+        replies: number;
+        lastUpdated: Date;
+      }
+    >
+  > => {
     const response = await fetch("/api/analytics/mailboxes/analytics", {
       method: "POST",
       body: JSON.stringify({ mailboxIds }),
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
-    
-    if (!response.ok) throw new Error("Failed to fetch multiple mailbox analytics");
-    
+
+    if (!response.ok)
+      throw new Error("Failed to fetch multiple mailbox analytics");
+
     const data = await response.json();
-    
+
     // Parse dates
-    const parsedData: Record<string, MailboxAnalytics & {
-      totalWarmups: number;
-      spamFlags: number;
-      replies: number;
-      lastUpdated: Date;
-    }> = {};
-    Object.keys(data).forEach(key => {
+    const parsedData: Record<
+      string,
+      MailboxAnalytics & {
+        totalWarmups: number;
+        spamFlags: number;
+        replies: number;
+        lastUpdated: Date;
+      }
+    > = {};
+    Object.keys(data).forEach((key) => {
       parsedData[key] = {
         ...data[key],
         lastUpdated: new Date(data[key].lastUpdated),
-        updatedAt: typeof data[key].updatedAt === 'string' ? new Date(data[key].updatedAt).getTime() : data[key].updatedAt
+        updatedAt:
+          typeof data[key].updatedAt === "string"
+            ? new Date(data[key].updatedAt).getTime()
+            : data[key].updatedAt,
       };
     });
-    
+
     return parsedData;
   };
 
   const getAccountMetrics = (): TypesAccountMetrics => {
     return accountMetrics;
   };
-
 
   const updateFilters = (newFilters: Partial<AnalyticsFilters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -402,24 +438,21 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       formattedStats: {
         totalSent: accountMetrics.sent.toLocaleString(),
         openRate: `${(accountMetrics.openRate * 100).toFixed(1)}%`,
-        clickRate: `${(accountMetrics.clicked_tracked / (accountMetrics.delivered || 1) * 100).toFixed(1)}%`,
+        clickRate: `${((accountMetrics.clicked_tracked / (accountMetrics.delivered || 1)) * 100).toFixed(1)}%`,
         replyRate: `${(accountMetrics.replyRate * 100).toFixed(1)}%`,
         bounceRate: `${(accountMetrics.bounceRate * 100).toFixed(1)}%`,
-        deliveryRate: `${((accountMetrics.delivered / (accountMetrics.sent || 1)) * 100).toFixed(1)}%`
+        deliveryRate: `${((accountMetrics.delivered / (accountMetrics.sent || 1)) * 100).toFixed(1)}%`,
       },
       metrics: {
         totalWarmups: warmupChartData.reduce(
           (acc, d) => acc + d.totalWarmups,
-          0
+          0,
         ),
         totalSpamFlags: warmupChartData.reduce(
           (acc, d) => acc + d.spamFlags,
-          0
+          0,
         ),
-        totalReplies: warmupChartData.reduce(
-          (acc, d) => acc + d.replies,
-          0
-        ),
+        totalReplies: warmupChartData.reduce((acc, d) => acc + d.replies, 0),
       },
     };
   };
@@ -438,18 +471,18 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       {
         key: "totalWarmups",
         label: "Total Warmups",
-        tooltip: "Total number of warmup emails sent"
+        tooltip: "Total number of warmup emails sent",
       },
       {
         key: "spamFlags",
         label: "Spam Flags",
-        tooltip: "Number of emails flagged as spam"
+        tooltip: "Number of emails flagged as spam",
       },
       {
         key: "replies",
         label: "Total Replies",
-        tooltip: "Number of replies received"
-      }
+        tooltip: "Number of replies received",
+      },
     ],
     visibleWarmupMetrics,
     setVisibleWarmupMetrics,
@@ -466,11 +499,11 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     service: mockService,
     loadingState: {
       domains: {
-        campaigns: loading
+        campaigns: loading,
       },
       errors: {
-        campaigns: error
-      }
+        campaigns: error,
+      },
     },
     useFormattedAnalytics,
   };

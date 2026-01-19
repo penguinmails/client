@@ -473,9 +473,20 @@
     "recentReplies": "Respuestas Recientes",
     "kpi": {
       "totalCampaigns": "Campañas Totales",
+      "activeCampaigns": "Campañas Activas",
       "activeLeads": "Leads Activos",
       "completed": "Completado",
-      "totalLeads": "Leads Totales"
+      "totalLeads": "Leads Totales",
+      "leadsContacted": "Leads Contactados",
+      "openRate": "Tasa de Apertura",
+      "replyRate": "Tasa de Respuesta"
+    },
+    "timeAgo": {
+      "justNow": "Ahora mismo",
+      "oneHour": "Hace 1 hora",
+      "hours": "Hace {count} horas",
+      "oneDay": "Hace 1 día",
+      "days": "Hace {count} días"
     },
     "unknownCompany": "Compañía Desconocida"
   },
@@ -484,6 +495,17 @@
     "createCampaign": "Crear Campaña",
     "uploadLeads": "Subir Leads",
     "addDomain": "Añadir Dominio"
+  },
+  "Leads": {
+    "layout": {
+      "title": "Centro de Leads",
+      "description": "Gestiona tus listas de leads, importaciones y base de datos de contactos"
+    },
+    "tabs": {
+      "lists": "Listas de Leads",
+      "upload": "Subir CSV",
+      "contacts": "Todos los Contactos"
+    }
   },
   "AppearanceSettings": {
     "title": "Apariencia",
@@ -608,19 +630,44 @@
     "title": "¡Algo salió mal!",
     "description": "Ocurrió un error inesperado. Por favor intenta recargar la página.",
     "tryAgain": "Intentar de nuevo",
-    "details": "Detalles del error"
+    "details": "Detalles Técnicos"
   },
   "Admin": {
     "title": "Panel de Administración",
     "description": "Gestión de usuarios y análisis entre inquilinos"
   },
+  "Analytics": {
+    "layout": {
+      "title": "Hub de Análisis",
+      "description": "Análisis integral de rendimiento e información de campañas"
+    }
+  },
+  "Infrastructure": {
+    "layout": {
+      "title": "Dominios y Buzones",
+      "description": "Gestiona tus dominios de envío, buzones y procesos de calentamiento",
+      "tabs": {
+        "domains": "Dominios",
+        "mailboxes": "Buzones",
+        "warmup": "Centro de Calentamiento"
+      },
+      "addDomainButton": "Añadir Dominio"
+    }
+  },
   "Campaigns": {
     "title": "Campañas",
-    "subtitle": "Gestiona y rastrea tus campañas de correo",
-    "newCampaign": "Nueva Campaña",
+    "description": "Gestiona tus campañas de correo electrónico como un profesional",
+    "newCampaignButton": "Nueva Campaña",
     "createTitle": "Crear Nueva Campaña",
     "editTitle": "Editar Campaña {name}",
-    "newCampaignFallback": "Nueva Campaña"
+    "newCampaignFallback": "Nueva Campaña",
+    "kpi": {
+      "totalCampaigns": "Campañas Totales",
+      "totalSent": "Total Enviado",
+      "totalReplies": "Respuestas Totales",
+      "openRate": "Tasa de Apertura",
+      "replyRate": "Tasa de Respuesta"
+    }
   },
   "Components": {
     "SettingsErrorState": {

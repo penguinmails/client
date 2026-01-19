@@ -2,6 +2,7 @@
 import { Filter } from "@/components/ui/custom/Filter";
 import { DropDownFilter, SearchInput } from "@/components/ui/custom/Filter";
 import { Button } from "@/components/ui/button/button";
+import { productionLogger } from "@/lib/logger";
 import {
   Table,
   TableBody,
@@ -32,18 +33,20 @@ function ListsTab() {
   const [sortById, setSortById] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchLeadLists().then((result: ActionResult<LeadList[]>) => {
-      if (Array.isArray(result)) {
-        setFilteredLists(result as unknown as LeadListData[]);
-      } else if (result && result.success && result.data) {
-        setFilteredLists(result.data as unknown as LeadListData[]);
-      } else {
+    fetchLeadLists()
+      .then((result: ActionResult<LeadList[]>) => {
+        if (Array.isArray(result)) {
+          setFilteredLists(result as unknown as LeadListData[]);
+        } else if (result && result.success && result.data) {
+          setFilteredLists(result.data as unknown as LeadListData[]);
+        } else {
+          setFilteredLists([]);
+        }
+      })
+      .catch((error: unknown) => {
+        productionLogger.error("Failed to load leads lists:", error);
         setFilteredLists([]);
-      }
-    }).catch((error: unknown) => {
-      console.error("Failed to load leads lists:", error);
-      setFilteredLists([]);
-    });
+      });
   }, []);
 
   function handleSortBy(columnId: string) {
