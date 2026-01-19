@@ -15,7 +15,7 @@ import { SettingsErrorState } from "@/components/settings-error-state";
 import { useSettingsNotifications } from "@/components/settings-success-notification";
 import { useClientPreferences } from "@features/settings/ui/context/client-preferences-context";
 import { usePreferenceSync } from "@features/settings/lib/hooks/use-preference-sync";
-import { Sun, Moon, Monitor, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import type { TableDensity } from "@/lib/utils/browser";
 import { productionLogger } from "@/lib/logger";
@@ -28,7 +28,7 @@ const densityOptions = [
 ];
 
 const AppearanceSettings: React.FC = () => {
-  const { preferences, theme, setTheme, updatePreference, isLoading, error } =
+  const { preferences, theme, updatePreference, isLoading, error } =
     useClientPreferences();
 
   const { syncToServer } = usePreferenceSync();

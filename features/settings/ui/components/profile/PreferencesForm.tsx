@@ -88,13 +88,6 @@ export default function PreferencesForm({
     () => [
       { value: "en", label: t("Settings.profile.preferences.languages.en") },
       { value: "es", label: t("Settings.profile.preferences.languages.es") },
-      { value: "fr", label: t("Settings.profile.preferences.languages.fr") },
-      { value: "de", label: t("Settings.profile.preferences.languages.de") },
-      { value: "it", label: t("Settings.profile.preferences.languages.it") },
-      { value: "pt", label: t("Settings.profile.preferences.languages.pt") },
-      { value: "ja", label: t("Settings.profile.preferences.languages.ja") },
-      { value: "ko", label: t("Settings.profile.preferences.languages.ko") },
-      { value: "zh", label: t("Settings.profile.preferences.languages.zh") },
     ],
     [t]
   );
@@ -122,6 +115,7 @@ export default function PreferencesForm({
   const router = useRouter();
   const pathname = usePathname();
 
+
   const themeOptions = [
     { value: "light", label: t("Settings.profile.preferences.theme.light"), icon: Sun },
     { value: "dark", label: t("Settings.profile.preferences.theme.dark"), icon: Moon },
@@ -132,14 +126,14 @@ export default function PreferencesForm({
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
     if (savedLanguage && savedLanguage !== locale) {
-      router.replace(pathname, { locale: savedLanguage as any });
+      router.replace(pathname, { locale: savedLanguage });
     } else if (!savedLanguage) {
       const browserLang = typeof navigator !== "undefined" ? navigator.language.split("-")[0] : "en";
       const supportedLocales = ["en", "es"]; // From routing.ts
       const defaultLang = supportedLocales.includes(browserLang) ? browserLang : "en";
       localStorage.setItem("language", defaultLang);
       if (defaultLang !== locale) {
-        router.replace(pathname, { locale: defaultLang as any });
+        router.replace(pathname, { locale: defaultLang });
       }
     }
 
@@ -147,17 +141,19 @@ export default function PreferencesForm({
     if (savedTheme && savedTheme !== theme) {
       setTheme(savedTheme);
     }
-  }, []);
+  }, [locale, pathname, router, setTheme, theme]);
 
   const handleLanguageChange = (newLocale: string) => {
     localStorage.setItem("language", newLocale);
-    router.replace(pathname, { locale: newLocale as any });
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    router.replace(pathname, { locale: newLocale });
   };
 
   const handleThemeChange = (newTheme: string) => {
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
   };
+
 
   return (
     <Card>
@@ -205,6 +201,7 @@ export default function PreferencesForm({
             </FormItem>
           )}
         />
+
 
         {/* Theme Selector */}
         <div className="space-y-2">
