@@ -111,12 +111,21 @@ export function LoginForm() {
       setError(errorMessage);
       setLastLoginError(errorMessage); // Track login error to prevent navigation
       
-      // Track failed login attempt and trigger Turnstile after max attempts
+      // Only track failed login attempt for authentication failures (401)
+      // Don't count server errors (500) or network issues as failed attempts
       if (email && email.includes("@")) {
-        const status = recordFailedLoginAttempt(email);
-        setLoginAttempts(status.attempts);
-        setShowTurnstile(status.requiresTurnstile);
-      }
+    // Check if this is an authentication error vs server/network error
+    const isAuthenticationError = errorMessage.toLowerCase().includes("login failed") ||
+                                   errorMessage.toLowerCase().includes("invalid") ||
+                                   errorMessage.toLowerCase().includes("incorrect") ||
+                                   errorMessage.toLowerCase().includes("unauthorized");
+    
+    if (isAuthenticationError) {
+      const status = recordFailedLoginAttempt(email);
+      setLoginAttempts(status.attempts);
+      setShowTurnstile(status.requiresTurnstile);
+    }
+  }
       // Clear error tracking after a delay to allow retry
       setTimeout(() => setLastLoginError(null), 3000);
 
