@@ -1,8 +1,7 @@
 import React, { useTransition } from "react";
 import { cn } from "@/lib/utils";
 import { NavLinkItem } from "@/types/nav-link";
-import { usePathname } from "next/navigation";
-import { useRouter } from "@/lib/config/i18n/navigation";
+import { usePathname, useRouter } from "@/lib/config/i18n/navigation";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { LucideIcon, Loader2 } from "lucide-react";
 

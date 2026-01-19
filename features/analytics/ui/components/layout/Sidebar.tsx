@@ -24,57 +24,63 @@ import {
 } from "lucide-react";
 import SidebarLink from "./SidebarLink";
 import { useEnrichment } from "@features/auth/hooks/use-enrichment";
+import { useTranslations } from "next-intl";
 
 
-// Navigation groups that are always visible (public)
-const publicNavigationGroups: NavLink[] = [
-  {
-    title: "Overview",
-    items: [{ to: "/dashboard", label: "Dashboard", icon: LayoutDashboard }],
-  },
-  {
-    title: "Getting Started",
-    items: [
-      {
-        to: "/dashboard/onboarding",
-        label: "Setup Guide",
-        icon: BookOpen,
-        highlight: true,
-      },
-    ],
-  },
-];
+// Wrapper component to provide translations to navigation groups
+function AppSideBar() {
+  const { isLoadingEnrichment, enrichedUser } = useEnrichment();
+  const t = useTranslations("Sidebar");
+  
+  // Navigation groups that are always visible (public)
+  const publicNavigationGroups: NavLink[] = [
+    {
+      title: t("sections.overview"),
+      items: [{ to: "/dashboard", label: t("items.dashboard"), icon: LayoutDashboard }],
+    },
+    {
+      title: t("sections.gettingStarted"),
+      items: [
+        {
+          to: "/dashboard/onboarding",
+          label: t("items.setupGuide"),
+          icon: BookOpen,
+          highlight: true,
+        },
+      ],
+    },
+  ];
 
-// Navigation groups that require enriched user data (role-dependent)
-const enrichedNavigationGroups: NavLink[] = [
-  {
-    title: "Outreach Hub",
-    items: [
-      { to: "/dashboard/campaigns", label: "Campaigns", icon: Send },
-      { to: "/dashboard/templates", label: "Templates", icon: FileText },
-    ],
-  },
-  {
-    title: "Lead Hub",
-    items: [{ to: "/dashboard/leads", label: "Lead Lists", icon: Users }],
-  },
-  {
-    title: "Communication",
-    items: [{ to: "/dashboard/inbox", label: "Inbox", icon: Inbox }],
-  },
-  {
-    title: "Infrastructure",
-    items: [
-      { to: "/dashboard/domains", label: "Domains & Mailboxes", icon: Server },
-    ],
-  },
-  {
-    title: "Analytics",
-    items: [
-      { to: "/dashboard/analytics", label: "Analytics Hub", icon: BarChart3 },
-    ],
-  },
-];
+  // Navigation groups that require enriched user data (role-dependent)
+  const enrichedNavigationGroups: NavLink[] = [
+    {
+      title: t("sections.outreachHub"),
+      items: [
+        { to: "/dashboard/campaigns", label: t("items.campaigns"), icon: Send },
+        { to: "/dashboard/templates", label: t("items.templates"), icon: FileText },
+      ],
+    },
+    {
+      title: t("sections.leadHub"),
+      items: [{ to: "/dashboard/leads", label: t("items.leadLists"), icon: Users }],
+    },
+    {
+      title: t("sections.communication"),
+      items: [{ to: "/dashboard/inbox", label: t("items.inbox"), icon: Inbox }],
+    },
+    {
+      title: t("sections.infrastructure"),
+      items: [
+        { to: "/dashboard/domains", label: t("items.domainsAndMailboxes"), icon: Server },
+      ],
+    },
+    {
+      title: t("sections.analytics"),
+      items: [
+        { to: "/dashboard/analytics", label: t("items.analyticsHub"), icon: BarChart3 },
+      ],
+    },
+  ];
 
 // Skeleton for nav items
 function NavItemSkeleton({ count = 1 }: { count?: number }) {
@@ -109,8 +115,6 @@ function NavGroupSkeleton({ count = 2 }: { count?: number }) {
   );
 }
 
-function AppSideBar() {
-  const { isLoadingEnrichment, enrichedUser } = useEnrichment();
   
   // Show skeletons if:
   // 1. Enrichment is actively loading, OR

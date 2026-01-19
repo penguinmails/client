@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, usePathname, useRouter } from "@/lib/config/i18n/navigation";
 import { cn } from "@/lib/utils";
 import {
   Settings,
@@ -25,6 +24,8 @@ import { useAuth } from "@features/auth/hooks/use-auth";
 import Image from "next/image";
 import { productionLogger } from "@/lib/logger";
 
+import { useTranslations } from "next-intl";
+
 type NavItem = {
   title: string;
   href: string;
@@ -40,64 +41,65 @@ type NavSection = {
   items: NavItem[];
 };
 
-const navigation: NavSection[] = [
-  {
-    title: "Overview",
-    items: [
-      { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    ],
-  },
-  {
-    title: "Getting Started",
-    items: [
-      { title: "Setup Guide", href: "/dashboard/onboarding", icon: BookOpen },
-    ],
-  },
-  {
-    title: "Outreach Hub",
-    items: [
-      { title: "Campaigns", href: "/dashboard/campaigns", icon: Send },
-      { title: "Templates", href: "/dashboard/templates", icon: FileText },
-    ],
-  },
-  {
-    title: "Lead Hub",
-    items: [
-      { title: "Lead Lists", href: "/dashboard/leads", icon: Users },
-    ],
-  },
-  {
-    title: "Communication",
-    items: [
-      {
-        title: "Inbox",
-        href: "/dashboard/inbox",
-        icon: Inbox,
-        badge: { text: "8", variant: "default" },
-      },
-    ],
-  },
-  {
-    title: "Infrastructure",
-    items: [
-      { title: "Domains & Mailboxes", href: "/dashboard/domains", icon: Server },
-    ],
-  },
-  {
-    title: "Analytics",
-    items: [
-      { title: "Analytics Hub", href: "/dashboard/analytics", icon: BarChart },
-    ],
-  },
-];
-
 export function DashboardSidebar() {
+  const t = useTranslations("Sidebar");
   const pathname = usePathname();
   const isMobile = useIsMobile();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
+
+  const navigation: NavSection[] = [
+    {
+      title: t("sections.overview"),
+      items: [
+        { title: t("items.dashboard"), href: "/dashboard", icon: LayoutDashboard },
+      ],
+    },
+    {
+      title: t("sections.gettingStarted"),
+      items: [
+        { title: t("items.setupGuide"), href: "/dashboard/onboarding", icon: BookOpen },
+      ],
+    },
+    {
+      title: t("sections.outreachHub"),
+      items: [
+        { title: t("items.campaigns"), href: "/dashboard/campaigns", icon: Send },
+        { title: t("items.templates"), href: "/dashboard/templates", icon: FileText },
+      ],
+    },
+    {
+      title: t("sections.leadHub"),
+      items: [
+        { title: t("items.leadLists"), href: "/dashboard/leads", icon: Users },
+      ],
+    },
+    {
+      title: t("sections.communication"),
+      items: [
+        {
+          title: t("items.inbox"),
+          href: "/dashboard/inbox",
+          icon: Inbox,
+          badge: { text: "8", variant: "default" },
+        },
+      ],
+    },
+    {
+      title: t("sections.infrastructure"),
+      items: [
+        { title: t("items.domainsAndMailboxes"), href: "/dashboard/domains", icon: Server },
+      ],
+    },
+    {
+      title: t("sections.analytics"),
+      items: [
+        { title: t("items.analyticsHub"), href: "/dashboard/analytics", icon: BarChart },
+      ],
+    },
+  ];
 
   const content = (
     <>
@@ -211,7 +213,7 @@ export function DashboardSidebar() {
                   {user?.displayName} {user?.claims?.role}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Free Account
+                  {t("account.free")}
                 </div>
               </div>
             )}
