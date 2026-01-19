@@ -4,6 +4,7 @@ import { NavLinkItem } from "@/types/nav-link";
 import { usePathname, useRouter } from "@/lib/config/i18n/navigation";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { LucideIcon, Loader2 } from "lucide-react";
+import { isInfrastructureRoute, INFRASTRUCTURE_MAIN_ROUTE, DASHBOARD_ROUTE, matchesRoute } from "@/lib/constants/routes";
 
 /**
  * SidebarLink - Navigation link with React 19 transition support.
@@ -15,7 +16,21 @@ import { LucideIcon, Loader2 } from "lucide-react";
  */
 function SidebarLink({ link }: { link: NavLinkItem }) {
   const pathname = usePathname();
-  const isActive = pathname === link.to;
+  
+  // Check if this is the infrastructure (Domains & Mailboxes) link
+  const isInfrastructureLink = link.to === INFRASTRUCTURE_MAIN_ROUTE;
+  
+  // For Dashboard link, check exact match (pathname ends with /dashboard)
+  // For other links, use matchesRoute for precise locale-aware matching
+  // For infrastructure link, also check if we're on any infrastructure route
+  const isDashboardLink = link.to === DASHBOARD_ROUTE;
+  const isExactDashboardMatch = isDashboardLink && pathname.endsWith(DASHBOARD_ROUTE);
+  
+  const isActive = 
+    isExactDashboardMatch || 
+    (!isDashboardLink && matchesRoute(pathname, link.to)) || 
+    (isInfrastructureLink && isInfrastructureRoute(pathname));
+    
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

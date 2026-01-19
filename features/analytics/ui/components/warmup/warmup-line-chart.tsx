@@ -31,6 +31,7 @@ import {
   YAxis,
 } from "recharts";
 import { WarmupChartData } from "@/types";
+import { useChartColors } from "@/hooks/use-chart-colors";
 
 interface TooltipPayloadItem {
   dataKey: string;
@@ -88,6 +89,9 @@ function WarmUpLineChart(): ReactElement {
       [metric]: !visibleWarmupMetrics[metric],
     });
   };
+
+  // Get resolved chart colors for Recharts compatibility
+  const chartColors = useChartColors();
 
   const footerMetrics = warmupMetrics.map((metric) => ({
     key: metric.key,
@@ -195,10 +199,10 @@ function WarmUpLineChart(): ReactElement {
                   <Line
                     type="monotone"
                     dataKey="totalWarmups"
-                    stroke="#2563eb"
+                    stroke={chartColors.totalWarmups}
                     strokeWidth={2}
-                    dot={{ fill: "#2563eb", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: "#2563eb", strokeWidth: 2 }}
+                    dot={{ fill: chartColors.totalWarmups, strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: chartColors.totalWarmups, strokeWidth: 2 }}
                   />
                 )}
 
@@ -206,10 +210,10 @@ function WarmUpLineChart(): ReactElement {
                   <Line
                     type="monotone"
                     dataKey="spamFlags"
-                    stroke="hsl(var(--destructive))"
+                    stroke={chartColors.spamFlags}
                     strokeWidth={2}
-                    dot={{ fill: "hsl(var(--destructive))", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: "hsl(var(--destructive))", strokeWidth: 2 }}
+                    dot={{ fill: chartColors.spamFlags, strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: chartColors.spamFlags, strokeWidth: 2 }}
                   />
                 )}
 
@@ -217,10 +221,10 @@ function WarmUpLineChart(): ReactElement {
                   <Line
                     type="monotone"
                     dataKey="replies"
-                    stroke="hsl(var(--chart-2))"
+                    stroke={chartColors.replies}
                     strokeWidth={2}
-                    dot={{ fill: "hsl(var(--chart-2))", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: "hsl(var(--chart-2))", strokeWidth: 2 }}
+                    dot={{ fill: chartColors.replies, strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: chartColors.replies, strokeWidth: 2 }}
                   />
                 )}
               </LineChart>
