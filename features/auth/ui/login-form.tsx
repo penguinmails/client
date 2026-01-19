@@ -18,7 +18,7 @@ import { productionLogger } from "@/lib/logger";
 
 const MAX_LOGIN_ATTEMPTS = parseInt(
   process.env.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS || "3",
-  10
+  10,
 );
 
 export function LoginForm() {
@@ -51,7 +51,7 @@ export function LoginForm() {
           setError(null);
         }
       },
-    [lastLoginError, error]
+    [lastLoginError, error],
   );
 
   // Handle password input changes to clear errors
@@ -65,7 +65,7 @@ export function LoginForm() {
         setError(null);
       }
     },
-    [lastLoginError, error]
+    [lastLoginError, error],
   );
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -92,7 +92,7 @@ export function LoginForm() {
         await verifyTurnstileToken(
           turnstileToken,
           t("errors.captchaRequired"),
-          t("errors.captchaRequired")
+          t("errors.captchaRequired"),
         );
         ph().capture("captcha_completed", { email });
       }
@@ -183,6 +183,12 @@ export function LoginForm() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password">{t("password.label")}</Label>
+              <Link
+                href="/forgot-password"
+                className="text-xs font-medium text-primary hover:underline underline-offset-4"
+              >
+                {t("forgotPassword")}
+              </Link>
             </div>
             <PasswordInput
               name="password"
