@@ -26,17 +26,22 @@ import SidebarLink from "./SidebarLink";
 import { useEnrichment } from "@features/auth/hooks/use-enrichment";
 import { useTranslations } from "next-intl";
 
-
 // Wrapper component to provide translations to navigation groups
 function AppSideBar() {
   const { isLoadingEnrichment, enrichedUser } = useEnrichment();
   const t = useTranslations("Sidebar");
-  
+
   // Navigation groups that are always visible (public)
   const publicNavigationGroups: NavLink[] = [
     {
       title: t("sections.overview"),
-      items: [{ to: "/dashboard", label: t("items.dashboard"), icon: LayoutDashboard }],
+      items: [
+        {
+          to: "/dashboard",
+          label: t("items.dashboard"),
+          icon: LayoutDashboard,
+        },
+      ],
     },
     {
       title: t("sections.gettingStarted"),
@@ -57,12 +62,18 @@ function AppSideBar() {
       title: t("sections.outreachHub"),
       items: [
         { to: "/dashboard/campaigns", label: t("items.campaigns"), icon: Send },
-        { to: "/dashboard/templates", label: t("items.templates"), icon: FileText },
+        {
+          to: "/dashboard/templates",
+          label: t("items.templates"),
+          icon: FileText,
+        },
       ],
     },
     {
       title: t("sections.leadHub"),
-      items: [{ to: "/dashboard/leads", label: t("items.leadLists"), icon: Users }],
+      items: [
+        { to: "/dashboard/leads", label: t("items.leadLists"), icon: Users },
+      ],
     },
     {
       title: t("sections.communication"),
@@ -71,56 +82,64 @@ function AppSideBar() {
     {
       title: t("sections.infrastructure"),
       items: [
-        { to: "/dashboard/domains", label: t("items.domainsAndMailboxes"), icon: Server },
+        {
+          to: "/dashboard/domains",
+          label: t("items.domainsAndMailboxes"),
+          icon: Server,
+        },
       ],
     },
     {
       title: t("sections.analytics"),
       items: [
-        { to: "/dashboard/analytics", label: t("items.analyticsHub"), icon: BarChart3 },
+        {
+          to: "/dashboard/analytics",
+          label: t("items.analyticsHub"),
+          icon: BarChart3,
+        },
       ],
     },
   ];
 
-// Skeleton for nav items
-function NavItemSkeleton({ count = 1 }: { count?: number }) {
-  return (
-    <>
-      {Array.from({ length: count }).map((_, index) => (
-        <SidebarMenuItem key={index}>
-          <SidebarMenuButton className="animate-pulse">
-            <div className="h-4 w-4 bg-muted rounded" />
-            <div className="h-4 w-20 bg-muted rounded" />
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
-    </>
-  );
-}
+  // Skeleton for nav items
+  function NavItemSkeleton({ count = 1 }: { count?: number }) {
+    return (
+      <>
+        {Array.from({ length: count }).map((_, index) => (
+          <SidebarMenuItem key={index}>
+            <SidebarMenuButton className="animate-pulse">
+              <div className="h-4 w-4 bg-muted rounded" />
+              <div className="h-4 w-20 bg-muted rounded" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ))}
+      </>
+    );
+  }
 
-function NavGroupSkeleton({ count = 2 }: { count?: number }) {
-  return (
-    <>
-      {Array.from({ length: count }).map((_, index) => (
-        <SidebarGroup key={index}>
-          <SidebarGroupLabel className="animate-pulse">
-            <div className="h-3 w-16 bg-muted rounded" />
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <NavItemSkeleton count={2} />
-          </SidebarGroupContent>
-        </SidebarGroup>
-      ))}
-    </>
-  );
-}
+  function NavGroupSkeleton({ count = 2 }: { count?: number }) {
+    return (
+      <>
+        {Array.from({ length: count }).map((_, index) => (
+          <SidebarGroup key={index}>
+            <SidebarGroupLabel className="animate-pulse">
+              <div className="h-3 w-16 bg-muted rounded" />
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <NavItemSkeleton count={2} />
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </>
+    );
+  }
 
-  
   // Show skeletons if:
   // 1. Enrichment is actively loading, OR
   // 2. We have a user but no role yet (enrichment not complete)
   const hasEnrichedData = !!enrichedUser?.role;
-  const showSkeletons = isLoadingEnrichment || (enrichedUser && !hasEnrichedData);
+  const showSkeletons =
+    isLoadingEnrichment || (enrichedUser && !hasEnrichedData);
 
   return (
     <Sidebar collapsible="icon" variant="inset">
@@ -151,7 +170,7 @@ function NavGroupSkeleton({ count = 2 }: { count?: number }) {
                 </SidebarGroupContent>
               </SidebarGroup>
             ))}
-            
+
             {/* Show skeletons or actual enriched navigation groups */}
             {showSkeletons ? (
               <NavGroupSkeleton count={5} />
@@ -178,4 +197,3 @@ function NavGroupSkeleton({ count = 2 }: { count?: number }) {
   );
 }
 export default AppSideBar;
-
