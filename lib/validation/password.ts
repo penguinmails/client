@@ -28,9 +28,9 @@ export const calculatePasswordStrength = (
   if (password.length === 0) {
     return {
       score: 0,
-      label: "Very Weak",
+      label: "veryWeak",
       color: "red",
-      feedback: ["Enter a password"],
+      feedback: ["enterPassword"],
     };
   }
 
@@ -41,36 +41,36 @@ export const calculatePasswordStrength = (
   let color: "red" | "yellow" | "green";
   const feedback: string[] = [];
 
-  // Generate feedback messages
-  if (!requirements.length) feedback.push("Use at least 8 characters");
-  if (!requirements.uppercase) feedback.push("Add uppercase letter");
-  if (!requirements.lowercase) feedback.push("Add lowercase letter");
-  if (!requirements.number) feedback.push("Add number");
-  if (!requirements.special) feedback.push("Add special character");
+  // Generate feedback messages (translation keys)
+  if (!requirements.length) feedback.push("useAtLeast8Characters");
+  if (!requirements.uppercase) feedback.push("addUppercaseLetter");
+  if (!requirements.lowercase) feedback.push("addLowercaseLetter");
+  if (!requirements.number) feedback.push("addNumber");
+  if (!requirements.special) feedback.push("addSpecialCharacter");
 
-  // Determine strength level
+  // Determine strength level (translation keys)
   if (score === 0) {
-    label = "Very Weak";
+    label = "veryWeak";
     color = "red";
     if (password.length > 0) {
-      feedback.unshift("Very weak password");
+      feedback.unshift("veryWeakPassword");
     }
   } else if (score <= 2) {
-    label = "Weak";
+    label = "weak";
     color = "red";
-    feedback.unshift("Weak password");
+    feedback.unshift("weakPassword");
   } else if (score <= 3) {
-    label = "Fair";
+    label = "fair";
     color = "yellow";
-    feedback.unshift("Fair password strength");
+    feedback.unshift("fairPasswordStrength");
   } else if (score <= 4) {
-    label = "Good";
+    label = "good";
     color = "green";
-    feedback.unshift("Good password strength");
+    feedback.unshift("goodPasswordStrength");
   } else {
-    label = "Strong";
+    label = "strong";
     color = "green";
-    feedback.unshift("Strong password");
+    feedback.unshift("strongPassword");
   }
 
   return {

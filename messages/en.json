@@ -831,6 +831,25 @@
     "LocaleFallbackToast": {
       "title": "Language not supported",
       "description": "\"{locale}\" isn't supported. Showing English instead."
+    },
+    "PasswordStrength": {
+      "title": "Password strength",
+      "veryWeak": "Very Weak",
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong",
+      "enterPassword": "Enter a password",
+      "veryWeakPassword": "Very weak password",
+      "weakPassword": "Weak password",
+      "fairPasswordStrength": "Fair password strength",
+      "goodPasswordStrength": "Good password strength",
+      "strongPassword": "Strong password",
+      "useAtLeast8Characters": "Use at least 8 characters",
+      "addUppercaseLetter": "Add uppercase letter",
+      "addLowercaseLetter": "Add lowercase letter",
+      "addNumber": "Add number",
+      "addSpecialCharacter": "Add special character"
     }
   }
 }
