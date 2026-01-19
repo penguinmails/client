@@ -6,10 +6,9 @@ import TabTrigger from "@features/domains/ui/components/TabTrigger";
 import { Tabs, TabsList } from "@/components/ui/tabs";
 import { infrastructureTabs as tabs } from "@/features/domains/data/mock";
 import { Suspense } from "react";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/lib/config/i18n/navigation";
 import { Button } from "@/components/ui/button/button";
 import { Plus } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 import { cva } from "class-variance-authority";
