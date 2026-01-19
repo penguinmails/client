@@ -8,6 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import { Mail, TrendingUp, Clock, X } from "lucide-react";
+import { productionLogger } from "@/lib/logger";
 import { MailboxWarmupData } from "@/types";
 import {
   DomainAnalytics,
@@ -258,7 +259,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
           setWarmupChartData(await warmupRes.json());
         }
       } catch (err) {
-        console.error("Failed to fetch initial analytics data", err);
+        productionLogger.error("Failed to fetch initial analytics data", err);
       }
     }
     fetchInitialData();
@@ -273,7 +274,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       if (!response.ok) throw new Error("Failed to fetch mailboxes");
       return await response.json();
     } catch (error) {
-      console.error("Error fetching mailboxes:", error);
+      productionLogger.error("Error fetching mailboxes:", error);
       return [];
     }
   };

@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { productionLogger } from "@/lib/logger";
 import {
   Bar,
   BarChart,
@@ -72,7 +73,7 @@ function MigratedAnalyticsContent() {
           setChartData(data.chartData);
         }
       } catch (error) {
-        console.error("Failed to fetch dashboard data", error);
+        productionLogger.error("Failed to fetch dashboard data", error);
       } finally {
         setLoading(false);
       }

@@ -2,6 +2,7 @@
 import { Filter } from "@/components/ui/custom/Filter";
 import { DropDownFilter, SearchInput } from "@/components/ui/custom/Filter";
 import { Button } from "@/components/ui/button/button";
+import { productionLogger } from "@/lib/logger";
 import {
   Table,
   TableBody,
@@ -43,7 +44,7 @@ function ListsTab() {
         }
       })
       .catch((error: unknown) => {
-        console.error("Failed to load leads lists:", error);
+        productionLogger.error("Failed to load leads lists:", error);
         setFilteredLists([]);
       });
   }, []);
