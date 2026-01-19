@@ -54,20 +54,36 @@ export function DashboardSidebar() {
     {
       title: t("sections.overview"),
       items: [
-        { title: t("items.dashboard"), href: "/dashboard", icon: LayoutDashboard },
+        {
+          title: t("items.dashboard"),
+          href: "/dashboard",
+          icon: LayoutDashboard,
+        },
       ],
     },
     {
       title: t("sections.gettingStarted"),
       items: [
-        { title: t("items.setupGuide"), href: "/dashboard/onboarding", icon: BookOpen },
+        {
+          title: t("items.setupGuide"),
+          href: "/dashboard/onboarding",
+          icon: BookOpen,
+        },
       ],
     },
     {
       title: t("sections.outreachHub"),
       items: [
-        { title: t("items.campaigns"), href: "/dashboard/campaigns", icon: Send },
-        { title: t("items.templates"), href: "/dashboard/templates", icon: FileText },
+        {
+          title: t("items.campaigns"),
+          href: "/dashboard/campaigns",
+          icon: Send,
+        },
+        {
+          title: t("items.templates"),
+          href: "/dashboard/templates",
+          icon: FileText,
+        },
       ],
     },
     {
@@ -90,13 +106,21 @@ export function DashboardSidebar() {
     {
       title: t("sections.infrastructure"),
       items: [
-        { title: t("items.domainsAndMailboxes"), href: "/dashboard/domains", icon: Server },
+        {
+          title: t("items.domainsAndMailboxes"),
+          href: "/dashboard/domains",
+          icon: Server,
+        },
       ],
     },
     {
       title: t("sections.analytics"),
       items: [
-        { title: t("items.analyticsHub"), href: "/dashboard/analytics", icon: BarChart },
+        {
+          title: t("items.analyticsHub"),
+          href: "/dashboard/analytics",
+          icon: BarChart,
+        },
       ],
     },
   ];
@@ -141,9 +165,10 @@ export function DashboardSidebar() {
               <div className="space-y-1">
                 {section.items.map((item, index) => {
                   // Calculate active state once for reuse
-                  const isActive = 
+                  const isActive =
                     pathname === item.href ||
-                    (item.href !== "/dashboard" && pathname.startsWith(item.href)) ||
+                    (item.href !== "/dashboard" &&
+                      pathname.startsWith(item.href)) ||
                     checkInfrastructureRoute(pathname, item.href);
 
                   return (
@@ -164,7 +189,7 @@ export function DashboardSidebar() {
                         className={cn(
                           "transition-all",
                           collapsed ? "size-6 p-1" : "h-4 w-4",
-                          isActive && "text-blue-600"
+                          isActive && "text-blue-600",
                         )}
                       />
                       {!collapsed && <span>{item.title}</span>}
@@ -172,9 +197,12 @@ export function DashboardSidebar() {
                         <span
                           className={cn(
                             "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
-                            item.badge.variant === "default" && "bg-blue-600 text-white",
-                            item.badge.variant === "success" && "bg-green-600 text-white dark:bg-green-500",
-                            item.badge.variant === "destructive" && "bg-destructive text-destructive-foreground",
+                            item.badge.variant === "default" &&
+                              "bg-blue-600 text-white",
+                            item.badge.variant === "success" &&
+                              "bg-green-600 text-white dark:bg-green-500",
+                            item.badge.variant === "destructive" &&
+                              "bg-destructive text-destructive-foreground",
                           )}
                         >
                           {item.badge.text}
@@ -195,8 +223,9 @@ export function DashboardSidebar() {
       {/* User Info */}
       <div className="mt-auto p-4 border-t border-gray-200 dark:border-gray-800">
         <div
-          className={`flex items-start md:items-center justify-between rounded-md p-2 ${collapsed ? "flex-col" : "flex-row"
-            }`}
+          className={`flex items-start md:items-center justify-between rounded-md p-2 ${
+            collapsed ? "flex-col" : "flex-row"
+          }`}
         >
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-full overflow-hidden relative">
