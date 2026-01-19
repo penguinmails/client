@@ -36,36 +36,36 @@ export function useChartColors() {
   const resolveColors = useCallback(() => {
     if (typeof window === "undefined") return;
     
-    const root = document.documentElement;
-    const computedStyle = getComputedStyle(root);
-    
     // Try to get actual rendered colors from a test element
     // This works with any color format (oklch, hsl, hex, etc.)
     const testElement = document.createElement("div");
     testElement.style.cssText = "position:absolute;visibility:hidden;";
     document.body.appendChild(testElement);
     
-    const resolveColor = (cssVar: string, fallback: string): string => {
-      testElement.style.color = `var(${cssVar})`;
-      const computed = getComputedStyle(testElement).color;
-      // If we get a valid rgb/rgba color, convert to hex
-      if (computed && computed !== "rgba(0, 0, 0, 0)" && computed.startsWith("rgb")) {
-        return rgbToHex(computed);
-      }
-      return fallback;
-    };
-    
-    const newColors = {
-      chart1: resolveColor("--chart-1", CHART_COLORS.chart1),
-      chart2: resolveColor("--chart-2", CHART_COLORS.chart2),
-      chart3: resolveColor("--chart-3", CHART_COLORS.chart3),
-      chart4: resolveColor("--chart-4", CHART_COLORS.chart4),
-      chart5: resolveColor("--chart-5", CHART_COLORS.chart5),
-      destructive: resolveColor("--destructive", CHART_COLORS.destructive),
-    };
-    
-    document.body.removeChild(testElement);
-    setColors(newColors);
+    try {
+      const resolveColor = (cssVar: string, fallback: string): string => {
+        testElement.style.color = `var(${cssVar})`;
+        const computed = getComputedStyle(testElement).color;
+        // If we get a valid rgb/rgba color, convert to hex
+        if (computed && computed !== "rgba(0, 0, 0, 0)" && computed.startsWith("rgb")) {
+          return rgbToHex(computed);
+        }
+        return fallback;
+      };
+      
+      const newColors = {
+        chart1: resolveColor("--chart-1", CHART_COLORS.chart1),
+        chart2: resolveColor("--chart-2", CHART_COLORS.chart2),
+        chart3: resolveColor("--chart-3", CHART_COLORS.chart3),
+        chart4: resolveColor("--chart-4", CHART_COLORS.chart4),
+        chart5: resolveColor("--chart-5", CHART_COLORS.chart5),
+        destructive: resolveColor("--destructive", CHART_COLORS.destructive),
+      };
+      
+      setColors(newColors);
+    } finally {
+      document.body.removeChild(testElement);
+    }
   }, []);
 
   useEffect(() => {
