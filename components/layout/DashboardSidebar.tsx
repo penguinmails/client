@@ -91,15 +91,13 @@ const navigation: NavSection[] = [
   },
 ];
 
-// Infrastructure routes that should highlight "Domains & Mailboxes" sidebar item
-const INFRASTRUCTURE_ROUTES = ["/dashboard/domains", "/dashboard/mailboxes", "/dashboard/warmup"];
+// Infrastructure route detection imported from shared constants
+import { isInfrastructureRoute, INFRASTRUCTURE_MAIN_ROUTE } from "@/lib/constants/routes";
 
-// Helper to check if current path matches any infrastructure route
-function isInfrastructureRoute(pathname: string, itemHref: string): boolean {
-  if (itemHref === "/dashboard/domains") {
-    return INFRASTRUCTURE_ROUTES.some(route => 
-      pathname.includes(route)
-    );
+// Helper to check if current path matches infrastructure route for a specific link
+function checkInfrastructureRoute(pathname: string, itemHref: string): boolean {
+  if (itemHref === INFRASTRUCTURE_MAIN_ROUTE) {
+    return isInfrastructureRoute(pathname);
   }
   return false;
 }
@@ -150,47 +148,53 @@ export function DashboardSidebar() {
                 </h3>
               )}
               <div className="space-y-1">
-                {section.items.map((item, index) => (
-                  <Link
-                    key={index}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center transition-all",
-                      collapsed ? "justify-center px-0" : "gap-3 px-3",
-                      "rounded-md py-2 text-sm",
-                      pathname === item.href ||
-                        (item.href !== "/dashboard" && pathname.startsWith(item.href)) ||
-                        isInfrastructureRoute(pathname, item.href)
-                        ? "bg-blue-50 text-blue-700 font-medium"
-                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-gray-100",
-                    )}
-                    onClick={() => isMobile && setMobileOpen(false)}
-                  >
-                    <item.icon
+                {section.items.map((item, index) => {
+                  // Calculate active state once for reuse
+                  const isActive = 
+                    pathname === item.href ||
+                    (item.href !== "/dashboard" && pathname.startsWith(item.href)) ||
+                    checkInfrastructureRoute(pathname, item.href);
+
+                  return (
+                    <Link
+                      key={index}
+                      href={item.href}
                       className={cn(
-                        "transition-all",
-                        collapsed ? "size-6 p-1" : "h-4 w-4",
-                        (pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href)) || isInfrastructureRoute(pathname, item.href)) && "text-blue-600"
+                        "flex items-center transition-all",
+                        collapsed ? "justify-center px-0" : "gap-3 px-3",
+                        "rounded-md py-2 text-sm",
+                        isActive
+                          ? "bg-blue-50 text-blue-700 font-medium"
+                          : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-gray-100",
                       )}
-                    />
-                    {!collapsed && <span>{item.title}</span>}
-                    {!collapsed && item.badge && (
-                      <span
+                      onClick={() => isMobile && setMobileOpen(false)}
+                    >
+                      <item.icon
                         className={cn(
-                          "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
-                          item.badge.variant === "default" && "bg-blue-600 text-white",
-                          item.badge.variant === "success" && "bg-green-600 text-white dark:bg-green-500",
-                          item.badge.variant === "destructive" && "bg-destructive text-destructive-foreground",
+                          "transition-all",
+                          collapsed ? "size-6 p-1" : "h-4 w-4",
+                          isActive && "text-blue-600"
                         )}
-                      >
-                        {item.badge.text}
-                      </span>
-                    )}
-                    {!collapsed && (pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href)) || isInfrastructureRoute(pathname, item.href)) && (
-                      <div className="ml-auto w-1 h-5 bg-blue-600 rounded-full" />
-                    )}
-                  </Link>
-                ))}
+                      />
+                      {!collapsed && <span>{item.title}</span>}
+                      {!collapsed && item.badge && (
+                        <span
+                          className={cn(
+                            "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
+                            item.badge.variant === "default" && "bg-blue-600 text-white",
+                            item.badge.variant === "success" && "bg-green-600 text-white dark:bg-green-500",
+                            item.badge.variant === "destructive" && "bg-destructive text-destructive-foreground",
+                          )}
+                        >
+                          {item.badge.text}
+                        </span>
+                      )}
+                      {!collapsed && isActive && (
+                        <div className="ml-auto w-1 h-5 bg-blue-600 rounded-full" />
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}

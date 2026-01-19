@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "@/lib/config/i18n/navigation";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { LucideIcon, Loader2 } from "lucide-react";
+import { isInfrastructureRoute, INFRASTRUCTURE_MAIN_ROUTE, DASHBOARD_ROUTE, matchesRoute } from "@/lib/constants/routes";
 
 /**
  * SidebarLink - Navigation link with React 19 transition support.
@@ -18,23 +19,18 @@ function SidebarLink({ link }: { link: NavLinkItem }) {
   const pathname = usePathname();
   
   // Check if this is the infrastructure (Domains & Mailboxes) link
-  // and if we're on any infrastructure route (domains, mailboxes, warmup)
-  const isInfrastructureLink = link.to === "/dashboard/domains";
-  const isOnInfrastructureRoute = 
-    pathname.includes("/dashboard/domains") || 
-    pathname.includes("/dashboard/mailboxes") || 
-    pathname.includes("/dashboard/warmup");
+  const isInfrastructureLink = link.to === INFRASTRUCTURE_MAIN_ROUTE;
   
   // For Dashboard link, check exact match (pathname ends with /dashboard)
-  // For other links, check if pathname includes the link path
+  // For other links, use matchesRoute for precise locale-aware matching
   // For infrastructure link, also check if we're on any infrastructure route
-  const isDashboardLink = link.to === "/dashboard";
-  const isExactDashboardMatch = isDashboardLink && pathname.endsWith("/dashboard");
+  const isDashboardLink = link.to === DASHBOARD_ROUTE;
+  const isExactDashboardMatch = isDashboardLink && pathname.endsWith(DASHBOARD_ROUTE);
   
   const isActive = 
     isExactDashboardMatch || 
-    (!isDashboardLink && pathname.includes(link.to)) || 
-    (isInfrastructureLink && isOnInfrastructureRoute);
+    (!isDashboardLink && matchesRoute(pathname, link.to)) || 
+    (isInfrastructureLink && isInfrastructureRoute(pathname));
     
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
