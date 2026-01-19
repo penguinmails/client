@@ -20,11 +20,6 @@ import React, { useState } from "react";
 import type { TableDensity } from "@/lib/utils/browser";
 import { productionLogger } from "@/lib/logger";
 
-const themeOptions = [
-  { value: "light", label: "Light", icon: Sun },
-  { value: "dark", label: "Dark", icon: Moon },
-  { value: "system", label: "System", icon: Monitor },
-];
 
 const densityOptions = [
   { value: "compact", label: "Compact" },
@@ -47,19 +42,6 @@ const AppearanceSettings: React.FC = () => {
     return <div>Loading preferences...</div>;
   }
 
-  const handleThemeChange = async (newTheme: string) => {
-    setSyncLoading(true);
-    try {
-      setTheme?.(newTheme as "light" | "dark" | "auto");
-      await syncToServer?.();
-      showAppearanceUpdateSuccess();
-    } catch (error) {
-      productionLogger.error("Failed to sync theme preference to server", error);
-      // Could show error toast here
-    } finally {
-      setSyncLoading(false);
-    }
-  };
 
   const handleDensityChange = async (newDensity: string) => {
     setSyncLoading(true);
@@ -129,34 +111,6 @@ const AppearanceSettings: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="space-y-2">
-          <Label>Theme</Label>
-          <div className="grid grid-cols-3 gap-2">
-            {themeOptions.map((option) => {
-              const Icon = option.icon;
-              return (
-                <Button
-                  key={option.value}
-                  variant={theme === option.value ? "default" : "outline"}
-                  className="justify-start"
-                  onClick={() => handleThemeChange(option.value)}
-                  disabled={syncLoading}
-                >
-                  {syncLoading && theme === option.value ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Icon className="mr-2 h-4 w-4" />
-                  )}
-                  {option.label}
-                </Button>
-              );
-            })}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Choose your preferred color scheme. System will match your device
-            settings.
-          </p>
-        </div>
 
         <div className="space-y-2">
           <Label>Table Density</Label>

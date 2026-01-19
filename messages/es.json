@@ -241,90 +241,96 @@
       "profileInformation": {
         "title": "Información del Perfil",
         "description": "Actualiza tus detalles personales y avatar."
+      }
+    },
+    "profile": {
+      "updating": "Actualizando Perfil...",
+      "saveChanges": "Guardar Cambios",
+      "title": "Información del Perfil",
+      "firstName": {
+        "label": "Nombre",
+        "placeholder": "Ingresa tu nombre"
       },
-      "profile": {
-        "updating": "Actualizando Perfil...",
-        "saveChanges": "Guardar Cambios",
-        "title": "Información del Perfil",
-        "firstName": {
-          "label": "Nombre",
-          "placeholder": "Ingresa tu nombre"
+      "lastName": {
+        "label": "Apellido",
+        "placeholder": "Ingresa tu apellido"
+      },
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "Ingresa tu correo electrónico"
+      },
+      "phone": {
+        "label": "Teléfono",
+        "placeholder": "Ingresa tu número de teléfono"
+      },
+      "bio": {
+        "label": "Biografía",
+        "placeholder": "Cuéntanos sobre ti"
+      },
+      "avatar": {
+        "title": "Avatar",
+        "current": "Avatar actual",
+        "upload": "Subir nuevo avatar",
+        "uploading": "Subiendo...",
+        "chooseFile": "Elegir archivo",
+        "fileDescription": "PNG, JPG hasta 5MB",
+        "chooseFrom": "Elegir de avatares",
+        "alt": "Avatar {index}",
+        "customUrl": "URL de avatar personalizado",
+        "placeholder": "https://example.com/avatar.jpg",
+        "apply": "Aplicar"
+      },
+      "preferences": {
+        "title": "Preferencias",
+        "timezone": {
+          "label": "Zona horaria",
+          "placeholder": "Selecciona tu zona horaria"
         },
-        "lastName": {
-          "label": "Apellido",
-          "placeholder": "Ingresa tu apellido"
+        "theme": {
+          "label": "Tema",
+          "light": "Claro",
+          "dark": "Oscuro",
+          "system": "Sistema"
         },
-        "email": {
-          "label": "Correo electrónico",
-          "placeholder": "Ingresa tu correo electrónico"
+        "language": {
+          "label": "Idioma",
+          "placeholder": "Selecciona tu idioma"
         },
-        "phone": {
-          "label": "Teléfono",
-          "placeholder": "Ingresa tu número de teléfono"
+        "sidebarView": {
+          "label": "Vista de la barra lateral",
+          "expanded": "Expandido",
+          "collapsed": "Colapsado",
+          "hidden": "Oculto"
         },
-        "bio": {
-          "label": "Biografía",
-          "placeholder": "Cuéntanos sobre ti"
+        "notifications": {
+          "label": "Preferencias de notificación",
+          "email": "Notificaciones por correo electrónico",
+          "push": "Notificaciones push",
+          "marketing": "Correos de marketing",
+          "product": "Actualizaciones de productos"
         },
-        "avatar": {
-          "title": "Avatar",
-          "current": "Avatar actual",
-          "upload": "Subir nuevo avatar",
-          "uploading": "Subiendo...",
-          "chooseFile": "Elegir archivo",
-          "fileDescription": "PNG, JPG hasta 5MB",
-          "chooseFrom": "Elegir de avatares",
-          "alt": "Avatar {index}",
-          "customUrl": "URL de avatar personalizado",
-          "placeholder": "https://example.com/avatar.jpg",
-          "apply": "Aplicar"
+        "timezones": {
+          "UTC": "UTC",
+          "America/New_York": "Hora del Este",
+          "America/Chicago": "Hora del Centro",
+          "America/Denver": "Hora de la Montaña",
+          "America/Los_Angeles": "Hora del Pacífico",
+          "Europe/London": "Londres",
+          "Europe/Paris": "París",
+          "Asia/Tokyo": "Tokio",
+          "Asia/Shanghai": "Shanghái",
+          "Australia/Sydney": "Sídney"
         },
-        "preferences": {
-          "title": "Preferencias",
-          "timezone": {
-            "label": "Zona horaria",
-            "placeholder": "Selecciona tu zona horaria"
-          },
-          "language": {
-            "label": "Idioma",
-            "placeholder": "Selecciona tu idioma"
-          },
-          "sidebarView": {
-            "label": "Vista de la barra lateral",
-            "expanded": "Expandido",
-            "collapsed": "Colapsado",
-            "hidden": "Oculto"
-          },
-          "notifications": {
-            "label": "Preferencias de notificación",
-            "email": "Notificaciones por correo electrónico",
-            "push": "Notificaciones push",
-            "marketing": "Correos de marketing",
-            "product": "Actualizaciones de productos"
-          },
-          "timezones": {
-            "UTC": "UTC",
-            "America/New_York": "Hora del Este",
-            "America/Chicago": "Hora del Centro",
-            "America/Denver": "Hora de la Montaña",
-            "America/Los_Angeles": "Hora del Pacífico",
-            "Europe/London": "Londres",
-            "Europe/Paris": "París",
-            "Asia/Tokyo": "Tokio",
-            "Asia/Shanghai": "Shanghái",
-            "Australia/Sydney": "Sídney"
-          },
-          "languages": {
-            "en": "Inglés",
-            "es": "Español",
-            "fr": "Francés",
-            "de": "Alemán",
-            "it": "Italiano",
-            "pt": "Portugués",
-            "ja": "Japonés",
-            "ko": "Coreano",
-            "zh": "Chino"
-          }
+        "languages": {
+          "en": "Inglés",
+          "es": "Español",
+          "fr": "Francés",
+          "de": "Alemán",
+          "it": "Italiano",
+          "pt": "Portugués",
+          "ja": "Japonés",
+          "ko": "Coreano",
+          "zh": "Chino"
         }
       }
     },

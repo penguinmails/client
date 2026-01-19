@@ -286,6 +286,12 @@
           "label": "Timezone",
           "placeholder": "Select your timezone"
         },
+        "theme": {
+          "label": "Theme",
+          "light": "Light",
+          "dark": "Dark",
+          "system": "System"
+        },
         "language": {
           "label": "Language",
           "placeholder": "Select your language"
