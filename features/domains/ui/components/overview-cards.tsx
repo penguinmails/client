@@ -37,6 +37,8 @@ function OverviewCards() {
         setDomains(domainsData);
       } catch (error) {
         productionLogger.error("Failed to fetch domains:", error);
+        // Set empty array on error to prevent UI from breaking
+        setDomains([]);
       }
     };
     getDomains();
