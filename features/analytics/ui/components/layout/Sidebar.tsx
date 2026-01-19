@@ -117,23 +117,6 @@ function AppSideBar() {
     );
   }
 
-  function NavGroupSkeleton({ count = 2 }: { count?: number }) {
-    return (
-      <>
-        {Array.from({ length: count }).map((_, index) => (
-          <SidebarGroup key={index}>
-            <SidebarGroupLabel className="animate-pulse">
-              <div className="h-3 w-16 bg-muted rounded" />
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <NavItemSkeleton count={2} />
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </>
-    );
-  }
-
   // Show skeletons if:
   // 1. Enrichment is actively loading, OR
   // 2. We have a user but no role yet (enrichment not complete)
@@ -173,7 +156,18 @@ function AppSideBar() {
 
             {/* Show skeletons or actual enriched navigation groups */}
             {showSkeletons ? (
-              <NavGroupSkeleton count={5} />
+              <>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <SidebarGroup key={`skeleton-${index}`}>
+                    <SidebarGroupLabel className="animate-pulse">
+                      <div className="h-3 w-16 bg-muted rounded" />
+                    </SidebarGroupLabel>
+                    <SidebarGroupContent>
+                      <NavItemSkeleton count={2} />
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                ))}
+              </>
             ) : (
               enrichedNavigationGroups.map((group) => (
                 <SidebarGroup key={group.title}>

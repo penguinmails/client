@@ -23,6 +23,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@features/auth/hooks/use-auth";
 import Image from "next/image";
 import { productionLogger } from "@/lib/logger";
+import { isInfrastructureRoute, INFRASTRUCTURE_MAIN_ROUTE } from "@/lib/constants/routes";
 
 import { useTranslations } from "next-intl";
 
@@ -49,6 +50,16 @@ export function DashboardSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
+
+  // Helper to check if pathname matches an infrastructure route
+  // This is used to highlight the infrastructure link when on any infrastructure sub-route
+  const checkInfrastructureRoute = (pathname: string, itemHref: string): boolean => {
+    // Only check infrastructure routes for the infrastructure link
+    if (itemHref === INFRASTRUCTURE_MAIN_ROUTE) {
+      return isInfrastructureRoute(pathname);
+    }
+    return false;
+  };
 
   const navigation: NavSection[] = [
     {
