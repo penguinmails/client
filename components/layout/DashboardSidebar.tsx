@@ -48,7 +48,7 @@ export function DashboardSidebar() {
   const isMobile = useIsMobile();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   // Helper to check if pathname matches an infrastructure route
@@ -282,6 +282,7 @@ export function DashboardSidebar() {
                 className="text-red-600 hover:text-red-800"
                 onClick={async () => {
                   try {
+                    await logout();
                     router.push("/");
                   } catch (error) {
                     productionLogger.error("Error signing out:", error);

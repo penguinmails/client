@@ -43,6 +43,9 @@
     "login": "Iniciar sesión",
     "signup": "Registrarse"
   },
+  "Auth": {
+    "logout": "Cerrar sesión"
+  },
   "Errors": {
     "401-LOGIN": "Las credenciales que proporcionaste no son válidas. Por favor, revisa tu correo electrónico y contraseña.",
     "403-CAMPAIGNS": "No tienes autorización para ver o modificar los datos de la campaña.",
@@ -829,6 +832,25 @@
     "LocaleFallbackToast": {
       "title": "Idioma no compatible",
       "description": "\"{locale}\" no es compatible. Mostrando inglés en su lugar."
+    },
+    "PasswordStrength": {
+      "title": "Fuerza de contraseña",
+      "veryWeak": "Muy débil",
+      "weak": "Débil",
+      "fair": "Aceptable",
+      "good": "Buena",
+      "strong": "Fuerte",
+      "enterPassword": "Ingresa una contraseña",
+      "veryWeakPassword": "Contraseña muy débil",
+      "weakPassword": "Contraseña débil",
+      "fairPasswordStrength": "Fuerza de contraseña aceptable",
+      "goodPasswordStrength": "Buena fuerza de contraseña",
+      "strongPassword": "Contraseña fuerte",
+      "useAtLeast8Characters": "Usa al menos 8 caracteres",
+      "addUppercaseLetter": "Añade letra mayúscula",
+      "addLowercaseLetter": "Añade letra minúscula",
+      "addNumber": "Añade número",
+      "addSpecialCharacter": "Añade carácter especial"
     }
   }
 }
