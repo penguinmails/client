@@ -68,7 +68,7 @@ export default async function LocaleLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased flex flex-col",
-          `${geistSans.variable} ${geistMono.variable} antialiased`
+          `${geistSans.variable} ${geistMono.variable} antialiased`,
         )}
       >
         <CoreProviders>
@@ -78,9 +78,7 @@ export default async function LocaleLayout({
                 <LocaleFallbackToast requestedLocale={localeFallbackCookie} />
               )}
               <AppProviders>
-                <AuthProvider>
-                  {children}
-                </AuthProvider>
+                <AuthProvider>{children}</AuthProvider>
               </AppProviders>
             </ChunkErrorHandler>
           </NextIntlClientProvider>

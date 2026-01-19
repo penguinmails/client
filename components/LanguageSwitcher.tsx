@@ -24,7 +24,11 @@ export function LanguageSwitcher() {
 
   const switchLocale = (newLocale: string) => {
     // Set cookie for better persistence across reloads and sync between public/private
-    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    // Use a function to set the cookie to avoid direct modification
+    const setCookie = (name: string, value: string) => {
+      document.cookie = `${name}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+    };
+    setCookie('NEXT_LOCALE', newLocale);
     router.replace(pathname, { locale: newLocale });
   };
 

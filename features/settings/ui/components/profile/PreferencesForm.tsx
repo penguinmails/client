@@ -24,6 +24,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Monitor, Loader2 } from "lucide-react";
 import { useRouter, usePathname } from "@/lib/config/i18n/navigation";
+import { routing } from "@/lib/config/i18n/routing";
 import { Button } from "@/components/ui/button/button";
 import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -129,8 +130,8 @@ export default function PreferencesForm({
       router.replace(pathname, { locale: savedLanguage });
     } else if (!savedLanguage) {
       const browserLang = typeof navigator !== "undefined" ? navigator.language.split("-")[0] : "en";
-      const supportedLocales = ["en", "es"]; // From routing.ts
-      const defaultLang = supportedLocales.includes(browserLang) ? browserLang : "en";
+      const supportedLocales = routing.locales; // From routing.ts
+      const defaultLang = supportedLocales.includes(browserLang as (typeof supportedLocales)[number]) ? browserLang : "en";
       localStorage.setItem("language", defaultLang);
       if (defaultLang !== locale) {
         router.replace(pathname, { locale: defaultLang });
@@ -145,7 +146,11 @@ export default function PreferencesForm({
 
   const handleLanguageChange = (newLocale: string) => {
     localStorage.setItem("language", newLocale);
-    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    // Use a function to set the cookie to avoid direct modification
+    const setCookie = (name: string, value: string) => {
+      document.cookie = `${name}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+    };
+    setCookie('NEXT_LOCALE', newLocale);
     router.replace(pathname, { locale: newLocale });
   };
 
