@@ -16,7 +16,26 @@ import { LucideIcon, Loader2 } from "lucide-react";
  */
 function SidebarLink({ link }: { link: NavLinkItem }) {
   const pathname = usePathname();
-  const isActive = pathname === link.to;
+  
+  // Check if this is the infrastructure (Domains & Mailboxes) link
+  // and if we're on any infrastructure route (domains, mailboxes, warmup)
+  const isInfrastructureLink = link.to === "/dashboard/domains";
+  const isOnInfrastructureRoute = 
+    pathname.includes("/dashboard/domains") || 
+    pathname.includes("/dashboard/mailboxes") || 
+    pathname.includes("/dashboard/warmup");
+  
+  // For Dashboard link, check exact match (pathname ends with /dashboard)
+  // For other links, check if pathname includes the link path
+  // For infrastructure link, also check if we're on any infrastructure route
+  const isDashboardLink = link.to === "/dashboard";
+  const isExactDashboardMatch = isDashboardLink && pathname.endsWith("/dashboard");
+  
+  const isActive = 
+    isExactDashboardMatch || 
+    (!isDashboardLink && pathname.includes(link.to)) || 
+    (isInfrastructureLink && isOnInfrastructureRoute);
+    
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

@@ -91,6 +91,19 @@ const navigation: NavSection[] = [
   },
 ];
 
+// Infrastructure routes that should highlight "Domains & Mailboxes" sidebar item
+const INFRASTRUCTURE_ROUTES = ["/dashboard/domains", "/dashboard/mailboxes", "/dashboard/warmup"];
+
+// Helper to check if current path matches any infrastructure route
+function isInfrastructureRoute(pathname: string, itemHref: string): boolean {
+  if (itemHref === "/dashboard/domains") {
+    return INFRASTRUCTURE_ROUTES.some(route => 
+      pathname.includes(route)
+    );
+  }
+  return false;
+}
+
 export function DashboardSidebar() {
   const pathname = usePathname();
   const isMobile = useIsMobile();
@@ -146,7 +159,8 @@ export function DashboardSidebar() {
                       collapsed ? "justify-center px-0" : "gap-3 px-3",
                       "rounded-md py-2 text-sm",
                       pathname === item.href ||
-                        (item.href !== "/dashboard" && pathname.startsWith(item.href))
+                        (item.href !== "/dashboard" && pathname.startsWith(item.href)) ||
+                        isInfrastructureRoute(pathname, item.href)
                         ? "bg-blue-50 text-blue-700 font-medium"
                         : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-gray-100",
                     )}
@@ -156,7 +170,7 @@ export function DashboardSidebar() {
                       className={cn(
                         "transition-all",
                         collapsed ? "size-6 p-1" : "h-4 w-4",
-                        (pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))) && "text-blue-600"
+                        (pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href)) || isInfrastructureRoute(pathname, item.href)) && "text-blue-600"
                       )}
                     />
                     {!collapsed && <span>{item.title}</span>}
@@ -172,7 +186,7 @@ export function DashboardSidebar() {
                         {item.badge.text}
                       </span>
                     )}
-                    {!collapsed && (pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))) && (
+                    {!collapsed && (pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href)) || isInfrastructureRoute(pathname, item.href)) && (
                       <div className="ml-auto w-1 h-5 bg-blue-600 rounded-full" />
                     )}
                   </Link>
