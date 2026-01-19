@@ -475,6 +475,7 @@
     "recentReplies": "Recent Replies",
     "kpi": {
       "totalCampaigns": "Total Campaigns",
+      "activeCampaigns": "Active Campaigns",
       "activeLeads": "Active Leads",
       "completed": "Completed",
       "totalLeads": "Total Leads",

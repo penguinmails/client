@@ -72,7 +72,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(result);
-  } catch {
+  } catch (error) {
+    console.error("Failed to process analytics mailboxes request:", error);
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 }

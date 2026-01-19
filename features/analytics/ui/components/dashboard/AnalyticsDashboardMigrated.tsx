@@ -71,8 +71,8 @@ function MigratedAnalyticsContent() {
           setStats(data.stats);
           setChartData(data.chartData);
         }
-      } catch {
-        // Silently fail - dashboard will show error state
+      } catch (error) {
+        console.error("Failed to fetch dashboard data", error);
       } finally {
         setLoading(false);
       }

@@ -32,17 +32,20 @@ function ListsTab() {
   const [sortById, setSortById] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchLeadLists().then((result: ActionResult<LeadList[]>) => {
-      if (Array.isArray(result)) {
-        setFilteredLists(result as unknown as LeadListData[]);
-      } else if (result && result.success && result.data) {
-        setFilteredLists(result.data as unknown as LeadListData[]);
-      } else {
+    fetchLeadLists()
+      .then((result: ActionResult<LeadList[]>) => {
+        if (Array.isArray(result)) {
+          setFilteredLists(result as unknown as LeadListData[]);
+        } else if (result && result.success && result.data) {
+          setFilteredLists(result.data as unknown as LeadListData[]);
+        } else {
+          setFilteredLists([]);
+        }
+      })
+      .catch((error: unknown) => {
+        console.error("Failed to load leads lists:", error);
         setFilteredLists([]);
-      }
-    }).catch(() => {
-      setFilteredLists([]);
-    });
+      });
   }, []);
 
   function handleSortBy(columnId: string) {

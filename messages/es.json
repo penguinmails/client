@@ -473,6 +473,7 @@
     "recentReplies": "Respuestas Recientes",
     "kpi": {
       "totalCampaigns": "Campañas Totales",
+      "activeCampaigns": "Campañas Activas",
       "activeLeads": "Leads Activos",
       "completed": "Completado",
       "totalLeads": "Leads Totales",
@@ -644,10 +645,13 @@
   "Infrastructure": {
     "layout": {
       "title": "Dominios y Buzones",
-      "description": "Gestiona la configuración de tus dominios y buzones de correo"
+      "description": "Gestiona tus dominios de envío, buzones y procesos de calentamiento"
     }
   },
   "Campaigns": {
+    "title": "Campañas",
+    "description": "Gestiona tus campañas de correo electrónico como un profesional",
+    "newCampaignButton": "Nueva Campaña",
     "createTitle": "Crear Nueva Campaña",
     "editTitle": "Editar Campaña {name}",
     "newCampaignFallback": "Nueva Campaña",
