@@ -48,6 +48,7 @@ const globalIgnores = {
     "docs/**",
     "*.config.*",
     "*.setup.*",
+    "__mocks__/**",
     "middleware.ts",
     "postcss.config.mjs",
     "update-firebase-secrets.sh",
