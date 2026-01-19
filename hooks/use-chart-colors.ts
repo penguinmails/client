@@ -13,18 +13,43 @@ export function useCssVariable(cssVariable: string, fallback: string): string {
 
   useEffect(() => {
     const resolveColor = () => {
-      const root = document.documentElement;
-      const computedStyle = getComputedStyle(root);
-      const value = computedStyle.getPropertyValue(cssVariable).trim();
-      
-      if (value) {
-        // If the value is in oklch or hsl format, wrap it appropriately
-        if (value.includes(" ")) {
-          // Assume it's space-separated values like "0 84.2% 60.2%"
-          setColor(`hsl(${value})`);
+      try {
+        const root = document.documentElement;
+        const computedStyle = getComputedStyle(root);
+        const value = computedStyle.getPropertyValue(cssVariable).trim();
+        
+        if (value) {
+          // Check if value is already a valid color format
+          if (value.startsWith("#") || value.startsWith("rgb") || value.startsWith("hsl") || value.startsWith("oklch")) {
+            setColor(value);
+          } else if (value.includes(" ")) {
+            // Try to detect format based on values
+            // oklch format: "0.5 0.2 250" (lightness chroma hue)
+            // hsl format: "220 90% 56%" (hue saturation lightness)
+            const parts = value.split(" ");
+            if (parts.length === 3) {
+              // Check if it looks like oklch (first value usually < 1 or has decimal)
+              const firstPart = parseFloat(parts[0]);
+              if (firstPart <= 1 && !parts[0].includes("%")) {
+                setColor(`oklch(${value})`);
+              } else {
+                setColor(`hsl(${value})`);
+              }
+            } else {
+              // Use fallback for unexpected format
+              setColor(fallback);
+            }
+          } else {
+            // Single value without spaces, use as-is
+            setColor(value);
+          }
         } else {
-          setColor(value);
+          // No value found, use fallback
+          setColor(fallback);
         }
+      } catch {
+        // If any error occurs, use fallback
+        setColor(fallback);
       }
     };
 
@@ -38,33 +63,40 @@ export function useCssVariable(cssVariable: string, fallback: string): string {
     });
 
     return () => observer.disconnect();
-  }, [cssVariable]);
+  }, [cssVariable, fallback]);
 
   return color;
 }
 
 /**
+ * Chart color constants for Recharts.
+ * Using direct hex values for reliability with SVG rendering.
+ */
+const CHART_COLORS = {
+  blue: "#2563eb",      // chart-1 / totalWarmups
+  green: "#16a34a",     // chart-2 / replies
+  yellow: "#eab308",    // chart-3
+  purple: "#8b5cf6",    // chart-4
+  pink: "#ec4899",      // chart-5
+  red: "#dc2626",       // destructive / spamFlags
+} as const;
+
+/**
  * Hook to get chart colors that work with Recharts.
- * Resolves CSS variables to actual color values.
+ * Returns reliable hex colors for SVG rendering.
  */
 export function useChartColors() {
-  const destructive = useCssVariable("--destructive", "#dc2626");
-  const chart1 = useCssVariable("--chart-1", "#2563eb");
-  const chart2 = useCssVariable("--chart-2", "#16a34a");
-  const chart3 = useCssVariable("--chart-3", "#eab308");
-  const chart4 = useCssVariable("--chart-4", "#8b5cf6");
-  const chart5 = useCssVariable("--chart-5", "#ec4899");
-
   return {
-    destructive,
-    chart1,
-    chart2,
-    chart3,
-    chart4,
-    chart5,
+    destructive: CHART_COLORS.red,
+    chart1: CHART_COLORS.blue,
+    chart2: CHART_COLORS.green,
+    chart3: CHART_COLORS.yellow,
+    chart4: CHART_COLORS.purple,
+    chart5: CHART_COLORS.pink,
     // Semantic aliases for warmup chart
-    totalWarmups: chart1,
-    spamFlags: destructive,
-    replies: chart2,
+    totalWarmups: CHART_COLORS.blue,
+    spamFlags: CHART_COLORS.red,
+    replies: CHART_COLORS.green,
   };
 }
+
