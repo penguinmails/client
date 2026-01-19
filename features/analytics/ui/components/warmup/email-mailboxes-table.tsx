@@ -17,7 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Mail, Loader2, AlertCircle } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/lib/config/i18n/navigation";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 import { MailboxWarmupData } from "@/types";
 import { productionLogger } from "@/lib/logger";

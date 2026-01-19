@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { useSearchParams, useParams } from "next/navigation";
+import { Link } from "@/lib/config/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,8 +13,6 @@ import { developmentLogger } from "@/lib/logger";
 
 export function ResetPasswordView() {
   const searchParams = useSearchParams();
-  const params = useParams();
-  const locale = params.locale as string;
   const t = useTranslations("ResetPassword");
   // NileDB sends 'identifier' with the email, but also check 'email' for compatibility
   const email = searchParams.get('identifier') || searchParams.get('email');
@@ -39,7 +37,7 @@ export function ResetPasswordView() {
           <div className="flex flex-col items-center space-y-2">
             <p className="text-xs text-muted-foreground">
               {t('footer.needNewLink')}{' '}
-              <Link href={`/${locale}/forgot-password`} className="underline font-medium text-primary">
+              <Link href="/forgot-password" className="underline font-medium text-primary">
                 {t('footer.requestAnother')}
               </Link>
             </p>
@@ -113,7 +111,7 @@ export function ResetPasswordView() {
         description={t('success.description')}
         footer={
           <div className="flex flex-col items-center space-y-2">
-            <Link href={`/${locale}/login`}>
+            <Link href="/login">
               <Button data-testid="sign-in-button">{t('success.signIn')}</Button>
             </Link>
           </div>

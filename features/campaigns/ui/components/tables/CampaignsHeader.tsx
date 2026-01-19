@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button/button";
-import Link from "next/link";
+import { Link } from "@/lib/config/i18n/navigation";
 import { Plus } from "lucide-react";
 import { copyText as t } from "../data/copy";
 
