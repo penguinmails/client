@@ -647,14 +647,14 @@
   "Infrastructure": {
     "layout": {
       "title": "Domains & Mailboxes",
-      "description": "Manage your sending domains, mailboxes, and warmup processes"
-    },
-    "tabs": {
-      "domains": "Domains",
-      "mailboxes": "Mailboxes",
-      "warmup": "Warmup Hub"
-    },
-    "addDomainButton": "Add Domain"
+      "description": "Manage your sending domains, mailboxes, and warmup processes",
+      "tabs": {
+        "domains": "Domains",
+        "mailboxes": "Mailboxes",
+        "warmup": "Warmup Hub"
+      },
+      "addDomainButton": "Add Domain"
+    }
   },
   "Campaigns": {
     "createTitle": "Create New Campaign",
