@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 import { initPostHog, ph } from "@/lib/posthog";
 import { getLoginAttemptStatus } from "@/features/auth/lib/rate-limit";
 import { productionLogger } from "@/lib/logger";
+import { recordFailedLoginAttempt } from "@/features/auth/lib/rate-limit";
 
 const MAX_LOGIN_ATTEMPTS = parseInt(
   process.env.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS || "3",
@@ -32,6 +33,8 @@ export function LoginForm() {
   const [lastLoginError, setLastLoginError] = useState<string | null>(null);
   const { login, user, error: authError } = useAuth();
   const t = useTranslations("Login");
+
+ 
 
   useEffect(() => {
     initPostHog().then((client) => {
@@ -107,7 +110,13 @@ export function LoginForm() {
       const errorMessage = (err as Error)?.message || t("errors.generic");
       setError(errorMessage);
       setLastLoginError(errorMessage); // Track login error to prevent navigation
-
+      
+      // Track failed login attempt and trigger Turnstile after max attempts
+      if (email && email.includes("@")) {
+        const status = recordFailedLoginAttempt(email);
+        setLoginAttempts(status.attempts);
+        setShowTurnstile(status.requiresTurnstile);
+      }
       // Clear error tracking after a delay to allow retry
       setTimeout(() => setLastLoginError(null), 3000);
 
@@ -124,7 +133,7 @@ export function LoginForm() {
 
   // Removed duplicate navigation logic - auth context handles navigation
   // This prevents race conditions and duplicate navigation attempts
-
+/*
   useEffect(() => {
     if (authError) {
       setError(authError.message);
@@ -137,7 +146,7 @@ export function LoginForm() {
       setError(null);
     }
   }, [authError, email]);
-
+*/
   const icon = user ? User : LogIn;
   const mode = user ? "loggedIn" : "form";
 
