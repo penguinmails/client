@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/lib/config/i18n/navigation";
 import { cn } from "@/lib/utils";
 import {
   BarChart3,
@@ -10,32 +9,35 @@ import {
   Zap,
 } from "lucide-react";
 
+import { useTranslations } from "next-intl";
+
 /**
  * Analytics Navigation Links matching reference design.
  * Only 4 tabs: Overview, By Campaigns, By Mailbox, By Warmup
  */
 function MigratedAnalyticsNavLinks() {
   const pathname = usePathname();
+  const t = useTranslations("Analytics.nav");
 
   const navLinks = [
     {
       href: "/dashboard/analytics",
-      label: "Overview",
+      label: t("overview"),
       icon: BarChart3,
     },
     {
       href: "/dashboard/analytics/campaigns",
-      label: "By Campaign",
+      label: t("byCampaign"),
       icon: TrendingUp,
     },
     {
       href: "/dashboard/analytics/mailboxes",
-      label: "By Mailbox",
+      label: t("byMailbox"),
       icon: Mail,
     },
     {
       href: "/dashboard/analytics/warmup",
-      label: "By Warmup",
+      label: t("byWarmup"),
       icon: Zap,
     },
   ];

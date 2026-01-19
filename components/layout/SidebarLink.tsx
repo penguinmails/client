@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { NavLinkItem } from "@/types/nav-link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "@/lib/config/i18n/navigation";
 import Icon from "@/components/ui/custom/Icon";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 

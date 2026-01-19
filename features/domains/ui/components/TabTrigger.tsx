@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/lib/config/i18n/navigation";
 import { TabsTrigger } from "@/components/ui/tabs";
 
 function TabTrigger({

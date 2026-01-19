@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, usePathname, useRouter } from "@/lib/config/i18n/navigation";
 import { cn } from "@/lib/utils";
 import {
   Settings,
@@ -24,6 +23,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@features/auth/hooks/use-auth";
 import Image from "next/image";
 import { productionLogger } from "@/lib/logger";
+import { isInfrastructureRoute, INFRASTRUCTURE_MAIN_ROUTE } from "@/lib/constants/routes";
+
+import { useTranslations } from "next-intl";
 
 type NavItem = {
   title: string;
@@ -40,75 +42,99 @@ type NavSection = {
   items: NavItem[];
 };
 
-const navigation: NavSection[] = [
-  {
-    title: "Overview",
-    items: [
-      { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    ],
-  },
-  {
-    title: "Getting Started",
-    items: [
-      { title: "Setup Guide", href: "/dashboard/onboarding", icon: BookOpen },
-    ],
-  },
-  {
-    title: "Outreach Hub",
-    items: [
-      { title: "Campaigns", href: "/dashboard/campaigns", icon: Send },
-      { title: "Templates", href: "/dashboard/templates", icon: FileText },
-    ],
-  },
-  {
-    title: "Lead Hub",
-    items: [
-      { title: "Lead Lists", href: "/dashboard/leads", icon: Users },
-    ],
-  },
-  {
-    title: "Communication",
-    items: [
-      {
-        title: "Inbox",
-        href: "/dashboard/inbox",
-        icon: Inbox,
-        badge: { text: "8", variant: "default" },
-      },
-    ],
-  },
-  {
-    title: "Infrastructure",
-    items: [
-      { title: "Domains & Mailboxes", href: "/dashboard/domains", icon: Server },
-    ],
-  },
-  {
-    title: "Analytics",
-    items: [
-      { title: "Analytics Hub", href: "/dashboard/analytics", icon: BarChart },
-    ],
-  },
-];
-
-// Infrastructure route detection imported from shared constants
-import { isInfrastructureRoute, INFRASTRUCTURE_MAIN_ROUTE } from "@/lib/constants/routes";
-
-// Helper to check if current path matches infrastructure route for a specific link
-function checkInfrastructureRoute(pathname: string, itemHref: string): boolean {
-  if (itemHref === INFRASTRUCTURE_MAIN_ROUTE) {
-    return isInfrastructureRoute(pathname);
-  }
-  return false;
-}
-
 export function DashboardSidebar() {
+  const t = useTranslations("Sidebar");
   const pathname = usePathname();
   const isMobile = useIsMobile();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
+
+  // Helper to check if pathname matches an infrastructure route
+  // This is used to highlight the infrastructure link when on any infrastructure sub-route
+  const checkInfrastructureRoute = (pathname: string, itemHref: string): boolean => {
+    // Only check infrastructure routes for the infrastructure link
+    if (itemHref === INFRASTRUCTURE_MAIN_ROUTE) {
+      return isInfrastructureRoute(pathname);
+    }
+    return false;
+  };
+
+  const navigation: NavSection[] = [
+    {
+      title: t("sections.overview"),
+      items: [
+        {
+          title: t("items.dashboard"),
+          href: "/dashboard",
+          icon: LayoutDashboard,
+        },
+      ],
+    },
+    {
+      title: t("sections.gettingStarted"),
+      items: [
+        {
+          title: t("items.setupGuide"),
+          href: "/dashboard/onboarding",
+          icon: BookOpen,
+        },
+      ],
+    },
+    {
+      title: t("sections.outreachHub"),
+      items: [
+        {
+          title: t("items.campaigns"),
+          href: "/dashboard/campaigns",
+          icon: Send,
+        },
+        {
+          title: t("items.templates"),
+          href: "/dashboard/templates",
+          icon: FileText,
+        },
+      ],
+    },
+    {
+      title: t("sections.leadHub"),
+      items: [
+        { title: t("items.leadLists"), href: "/dashboard/leads", icon: Users },
+      ],
+    },
+    {
+      title: t("sections.communication"),
+      items: [
+        {
+          title: t("items.inbox"),
+          href: "/dashboard/inbox",
+          icon: Inbox,
+          badge: { text: "8", variant: "default" },
+        },
+      ],
+    },
+    {
+      title: t("sections.infrastructure"),
+      items: [
+        {
+          title: t("items.domainsAndMailboxes"),
+          href: "/dashboard/domains",
+          icon: Server,
+        },
+      ],
+    },
+    {
+      title: t("sections.analytics"),
+      items: [
+        {
+          title: t("items.analyticsHub"),
+          href: "/dashboard/analytics",
+          icon: BarChart,
+        },
+      ],
+    },
+  ];
 
   const content = (
     <>
@@ -150,9 +176,10 @@ export function DashboardSidebar() {
               <div className="space-y-1">
                 {section.items.map((item, index) => {
                   // Calculate active state once for reuse
-                  const isActive = 
+                  const isActive =
                     pathname === item.href ||
-                    (item.href !== "/dashboard" && pathname.startsWith(item.href)) ||
+                    (item.href !== "/dashboard" &&
+                      pathname.startsWith(item.href)) ||
                     checkInfrastructureRoute(pathname, item.href);
 
                   return (
@@ -173,7 +200,7 @@ export function DashboardSidebar() {
                         className={cn(
                           "transition-all",
                           collapsed ? "size-6 p-1" : "h-4 w-4",
-                          isActive && "text-blue-600"
+                          isActive && "text-blue-600",
                         )}
                       />
                       {!collapsed && <span>{item.title}</span>}
@@ -181,9 +208,12 @@ export function DashboardSidebar() {
                         <span
                           className={cn(
                             "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
-                            item.badge.variant === "default" && "bg-blue-600 text-white",
-                            item.badge.variant === "success" && "bg-green-600 text-white dark:bg-green-500",
-                            item.badge.variant === "destructive" && "bg-destructive text-destructive-foreground",
+                            item.badge.variant === "default" &&
+                              "bg-blue-600 text-white",
+                            item.badge.variant === "success" &&
+                              "bg-green-600 text-white dark:bg-green-500",
+                            item.badge.variant === "destructive" &&
+                              "bg-destructive text-destructive-foreground",
                           )}
                         >
                           {item.badge.text}
@@ -204,8 +234,9 @@ export function DashboardSidebar() {
       {/* User Info */}
       <div className="mt-auto p-4 border-t border-gray-200 dark:border-gray-800">
         <div
-          className={`flex items-start md:items-center justify-between rounded-md p-2 ${collapsed ? "flex-col" : "flex-row"
-            }`}
+          className={`flex items-start md:items-center justify-between rounded-md p-2 ${
+            collapsed ? "flex-col" : "flex-row"
+          }`}
         >
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-full overflow-hidden relative">
@@ -229,7 +260,7 @@ export function DashboardSidebar() {
                   {user?.displayName} {user?.claims?.role}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Free Account
+                  {t("account.free")}
                 </div>
               </div>
             )}

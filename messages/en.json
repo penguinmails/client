@@ -1,4 +1,48 @@
 {
+  "Analytics": {
+    "nav": {
+      "overview": "Overview",
+      "byCampaign": "By Campaign",
+      "byMailbox": "By Mailbox",
+      "byWarmup": "By Warmup"
+    },
+    "layout": {
+      "title": "Analytics Hub",
+      "description": "Comprehensive performance insights and campaign analytics"
+    }
+  },
+  "Sidebar": {
+    "sections": {
+      "overview": "Overview",
+      "gettingStarted": "Getting Started",
+      "outreachHub": "Outreach Hub",
+      "leadHub": "Lead Hub",
+      "communication": "Communication",
+      "infrastructure": "Infrastructure",
+      "analytics": "Analytics"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "setupGuide": "Setup Guide",
+      "campaigns": "Campaigns",
+      "templates": "Templates",
+      "leadLists": "Lead Lists",
+      "inbox": "Inbox",
+      "domainsAndMailboxes": "Domains & Mailboxes",
+      "analyticsHub": "Analytics Hub"
+    },
+    "account": {
+      "free": "Free Account"
+    }
+  },
+  "Navigation": {
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "logout": "Logout",
+    "pricing": "Pricing",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
   "Errors": {
     "401-LOGIN": "The credentials you provided are invalid. Please check your email and password.",
     "403-CAMPAIGNS": "You are not authorized to view or modify campaign data.",
@@ -285,6 +329,12 @@
         "timezone": {
           "label": "Timezone",
           "placeholder": "Select your timezone"
+        },
+        "theme": {
+          "label": "Theme",
+          "light": "Light",
+          "dark": "Dark",
+          "system": "System"
         },
         "language": {
           "label": "Language",
@@ -637,12 +687,6 @@
   "Admin": {
     "title": "Admin Dashboard",
     "description": "Cross-tenant user management and analytics"
-  },
-  "Analytics": {
-    "layout": {
-      "title": "Analytics Hub",
-      "description": "Comprehensive performance insights and campaign analytics"
-    }
   },
   "Infrastructure": {
     "layout": {

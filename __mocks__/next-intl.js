@@ -1,6 +1,17 @@
 // Mock for next-intl to avoid ESM parsing errors in Jest
 module.exports = {
-  useTranslations: () => (key) => key, // returns the key as fallback
+  useTranslations: () => (key) => {
+    // Return more realistic text for common keys
+    const translations = {
+      pricing: "Pricing",
+      login: "Login",
+      signup: "Sign up",
+      logout: "Logout",
+      dashboard: "Dashboard",
+      settings: "Settings",
+    };
+    return translations[key] || key;
+  },
   useFormatter: () => ({ format: (value) => value }),
   useLocale: () => "en",
   useMessages: () => ({}),

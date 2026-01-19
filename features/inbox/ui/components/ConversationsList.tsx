@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { getRelativeTime } from "@/lib/utils/date";
 import { getTagColor } from "@/lib/theme/ui";
 import { Eye, Star } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/lib/config/i18n/navigation";
 import ConversationsListHeader from "./ConversationsListHeader";
 
 import { type Conversation } from "@features/inbox/types";

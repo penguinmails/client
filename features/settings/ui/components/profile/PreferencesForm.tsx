@@ -19,10 +19,15 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ProfileFormValues } from "@/features/settings";
-import { Loader2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { useTheme } from "next-themes";
+import { Sun, Moon, Monitor, Loader2 } from "lucide-react";
+import { useRouter, usePathname } from "@/lib/config/i18n/navigation";
+import { routing } from "@/lib/config/i18n/routing";
+import { Button } from "@/components/ui/button/button";
+import { useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PreferencesFormProps {
   control: Control<ProfileFormValues>;
@@ -84,13 +89,6 @@ export default function PreferencesForm({
     () => [
       { value: "en", label: t("Settings.profile.preferences.languages.en") },
       { value: "es", label: t("Settings.profile.preferences.languages.es") },
-      { value: "fr", label: t("Settings.profile.preferences.languages.fr") },
-      { value: "de", label: t("Settings.profile.preferences.languages.de") },
-      { value: "it", label: t("Settings.profile.preferences.languages.it") },
-      { value: "pt", label: t("Settings.profile.preferences.languages.pt") },
-      { value: "ja", label: t("Settings.profile.preferences.languages.ja") },
-      { value: "ko", label: t("Settings.profile.preferences.languages.ko") },
-      { value: "zh", label: t("Settings.profile.preferences.languages.zh") },
     ],
     [t]
   );
@@ -112,6 +110,55 @@ export default function PreferencesForm({
     ],
     [t]
   );
+
+  const { theme, setTheme } = useTheme();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+
+
+  const themeOptions = [
+    { value: "light", label: t("Settings.profile.preferences.theme.light"), icon: Sun },
+    { value: "dark", label: t("Settings.profile.preferences.theme.dark"), icon: Moon },
+    { value: "system", label: t("Settings.profile.preferences.theme.system"), icon: Monitor },
+  ];
+
+  // Effect to handle initial language/theme from localStorage if not set
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage && savedLanguage !== locale) {
+      router.replace(pathname, { locale: savedLanguage });
+    } else if (!savedLanguage) {
+      const browserLang = typeof navigator !== "undefined" ? navigator.language.split("-")[0] : "en";
+      const supportedLocales = routing.locales; // From routing.ts
+      const defaultLang = supportedLocales.includes(browserLang as (typeof supportedLocales)[number]) ? browserLang : "en";
+      localStorage.setItem("language", defaultLang);
+      if (defaultLang !== locale) {
+        router.replace(pathname, { locale: defaultLang });
+      }
+    }
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme && savedTheme !== theme) {
+      setTheme(savedTheme);
+    }
+  }, [locale, pathname, router, setTheme, theme]);
+
+  const handleLanguageChange = (newLocale: string) => {
+    localStorage.setItem("language", newLocale);
+    // Use a function to set the cookie to avoid direct modification
+    const setCookie = (name: string, value: string) => {
+      document.cookie = `${name}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+    };
+    setCookie('NEXT_LOCALE', newLocale);
+    router.replace(pathname, { locale: newLocale });
+  };
+
+  const handleThemeChange = (newTheme: string) => {
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
 
   return (
     <Card>
@@ -160,6 +207,29 @@ export default function PreferencesForm({
           )}
         />
 
+
+        {/* Theme Selector */}
+        <div className="space-y-2">
+          <Label>{t("Settings.profile.preferences.theme.label")}</Label>
+          <div className="grid grid-cols-3 gap-2">
+            {themeOptions.map((option) => {
+              const Icon = option.icon;
+              return (
+                <Button
+                  key={option.value}
+                  type="button"
+                  variant={theme === option.value ? "default" : "outline"}
+                  className="justify-start"
+                  onClick={() => handleThemeChange(option.value)}
+                >
+                  <Icon className="mr-2 h-4 w-4" />
+                  {option.label}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Language */}
         <FormField
           control={control}
@@ -170,8 +240,11 @@ export default function PreferencesForm({
                 {t("Settings.profile.preferences.language.label")}
               </FormLabel>
               <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
+                onValueChange={(val) => {
+                  field.onChange(val);
+                  handleLanguageChange(val);
+                }}
+                value={locale}
                 disabled={profileLoading || submitLoading}
               >
                 <FormControl>
@@ -228,62 +301,6 @@ export default function PreferencesForm({
           )}
         />
 
-        {/* Notification Preferences */}
-        <div className="space-y-4">
-          <Label className="text-base font-medium">
-            {t("Settings.profile.preferences.notifications.label")}
-          </Label>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="email-notifications"
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                disabled={profileLoading || submitLoading}
-              />
-              <Label htmlFor="email-notifications" className="text-sm">
-                {t("Settings.profile.preferences.notifications.email")}
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="push-notifications"
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                disabled={profileLoading || submitLoading}
-              />
-              <Label htmlFor="push-notifications" className="text-sm">
-                {t("Settings.profile.preferences.notifications.push")}
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="marketing-emails"
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                disabled={profileLoading || submitLoading}
-              />
-              <Label htmlFor="marketing-emails" className="text-sm">
-                {t("Settings.profile.preferences.notifications.marketing")}
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="product-updates"
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                disabled={profileLoading || submitLoading}
-              />
-              <Label htmlFor="product-updates" className="text-sm">
-                {t("Settings.profile.preferences.notifications.product")}
-              </Label>
-            </div>
-          </div>
-        </div>
       </CardContent>
     </Card>
   );

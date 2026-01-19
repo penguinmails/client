@@ -49,7 +49,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Link from "next/link";
+import { Link } from "@/lib/config/i18n/navigation";
 import { copyText as t } from "../data/copy";
 import { CampaignResponse, CampaignStatus } from "@features/campaigns/types";
 import { toast } from "sonner";

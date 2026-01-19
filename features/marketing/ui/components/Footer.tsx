@@ -32,7 +32,7 @@ export default function Footer() {
             Contact Us
           </Link>
         </nav>
-        <div className="sm:ml-auto flex items-center gap-2">
+        <div className="sm:ml-auto flex flex-wrap items-center justify-center gap-4">
           <LanguageSwitcher />
           <ThemeSwitcher />
         </div>

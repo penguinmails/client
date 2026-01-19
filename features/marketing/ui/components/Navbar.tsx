@@ -1,7 +1,9 @@
 "use client";
 
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
 import React from "react";
-import Link from "next/link";
+import { Link } from "@/lib/config/i18n/navigation";
 import { Button } from "@/components/ui/button/button";
 import {
   Sheet,
@@ -47,8 +49,11 @@ const Logo = () => {
   );
 };
 
+import { useTranslations } from "next-intl";
+
 const NavLinks = ({ isMobileMenu = false }: { isMobileMenu?: boolean }) => {
   const { user, logout } = useAuth();
+  const t = useTranslations("Navigation");
   const LinkWrapper = isMobileMenu ? SheetClose : React.Fragment;
   const linkClass = isMobileMenu ? "w-full justify-start" : "";
 
@@ -59,7 +64,7 @@ const NavLinks = ({ isMobileMenu = false }: { isMobileMenu?: boolean }) => {
           <Button variant="ghost" size="sm" asChild className={linkClass}>
             <Link href="/dashboard">
               <LayoutDashboard className="mr-2 h-4 w-4" />
-              Dashboard
+              {t("dashboard")}
             </Link>
           </Button>
         </LinkWrapper>
@@ -67,7 +72,7 @@ const NavLinks = ({ isMobileMenu = false }: { isMobileMenu?: boolean }) => {
           <Button variant="ghost" size="sm" asChild className={linkClass}>
             <Link href="/dashboard/settings">
               <Settings className="mr-2 h-4 w-4" />
-              Settings
+              {t("settings")}
             </Link>
           </Button>
           <Button
@@ -82,7 +87,7 @@ const NavLinks = ({ isMobileMenu = false }: { isMobileMenu?: boolean }) => {
             }}
           >
             <LogOutIcon />
-            Logout
+            {t("logout")}
           </Button>
         </LinkWrapper>
       </>
@@ -93,14 +98,14 @@ const NavLinks = ({ isMobileMenu = false }: { isMobileMenu?: boolean }) => {
     <>
       <LinkWrapper>
         <Button variant="ghost" size="sm" asChild className={linkClass}>
-          <Link href="/pricing">Pricing</Link>
+          <Link href="/pricing">{t("pricing")}</Link>
         </Button>
       </LinkWrapper>
       <LinkWrapper>
         <Button variant="ghost" size="sm" asChild className={linkClass}>
           <Link href="/">
             <LogIn className="mr-2 h-4 w-4" />
-            Login
+            {t("login")}
           </Link>
         </Button>
       </LinkWrapper>
@@ -108,7 +113,7 @@ const NavLinks = ({ isMobileMenu = false }: { isMobileMenu?: boolean }) => {
         <Button size="sm" asChild className={linkClass}>
           <Link href="/signup">
             <UserPlus className="mr-2 h-4 w-4" />
-            Sign Up
+            {t("signup")}
           </Link>
         </Button>
       </LinkWrapper>
@@ -156,6 +161,9 @@ export default function Navbar() {
         ) : (
           <nav className="hidden md:flex items-center gap-4">
             <NavLinks />
+            <div className="ml-2 pl-4 border-l border-border h-6 flex items-center">
+              <LanguageSwitcher />
+            </div>
           </nav>
         )}
       </div>
