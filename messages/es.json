@@ -1,4 +1,48 @@
 {
+  "Analytics": {
+    "nav": {
+      "overview": "Resumen",
+      "byCampaign": "Por Campaña",
+      "byMailbox": "Por Buzón",
+      "byWarmup": "Por Calentamiento"
+    },
+    "layout": {
+      "title": "Hub de Análisis",
+      "description": "Análisis integral de rendimiento e información de campañas"
+    }
+  },
+  "Sidebar": {
+    "sections": {
+      "overview": "Resumen",
+      "gettingStarted": "Comenzando",
+      "outreachHub": "Hub de Difusión",
+      "leadHub": "Hub de Leads",
+      "communication": "Comunicación",
+      "infrastructure": "Infraestructura",
+      "analytics": "Analítica"
+    },
+    "items": {
+      "dashboard": "Tablero",
+      "setupGuide": "Guía de Configuración",
+      "campaigns": "Campañas",
+      "templates": "Plantillas",
+      "leadLists": "Listas de Leads",
+      "inbox": "Bandeja de Entrada",
+      "domainsAndMailboxes": "Dominios y Buzones",
+      "analyticsHub": "Hub de Analítica"
+    },
+    "account": {
+      "free": "Cuenta Gratuita"
+    }
+  },
+  "Navigation": {
+    "dashboard": "Tablero",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión",
+    "pricing": "Precios",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse"
+  },
   "Errors": {
     "401-LOGIN": "Las credenciales que proporcionaste no son válidas. Por favor, revisa tu correo electrónico y contraseña.",
     "403-CAMPAIGNS": "No tienes autorización para ver o modificar los datos de la campaña.",
@@ -641,12 +685,6 @@
   "Admin": {
     "title": "Panel de Administración",
     "description": "Gestión de usuarios y análisis entre inquilinos"
-  },
-  "Analytics": {
-    "layout": {
-      "title": "Hub de Análisis",
-      "description": "Análisis integral de rendimiento e información de campañas"
-    }
   },
   "Infrastructure": {
     "layout": {
