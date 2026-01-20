@@ -21,14 +21,15 @@ Prevents upward layer dependencies that violate FSD architecture.
 ```typescript
 // ❌ Bad - Components layer importing from Features layer
 // File: components/ui/button.tsx
-import { useAuth } from '@/features/auth/model/auth'; // Error!
+import { useAuth } from "@/features/auth/model/auth"; // Error!
 
 // ✅ Good - Components layer importing from Shared layer
 // File: components/ui/button.tsx
-import { cn } from '@/lib/utils/cn';
+import { cn } from "@/lib/utils/cn";
 ```
 
 **Layer Hierarchy** (lower levels can import from higher levels):
+
 1. **App Layer** (`app/`) - Can import from: features, components, shared
 2. **Features Layer** (`features/`) - Can import from: components, shared
 3. **Components Layer** (`components/`) - Can import from: shared
@@ -45,11 +46,11 @@ Prevents direct imports between different features to maintain feature isolation
 ```typescript
 // ❌ Bad - Auth feature importing from Campaigns feature
 // File: features/auth/ui/login-form.tsx
-import { CampaignStats } from '@/features/campaigns/ui/stats'; // Error!
+import { CampaignStats } from "@/features/campaigns/ui/stats"; // Error!
 
 // ✅ Good - Using shared layer for common functionality
 // File: features/auth/ui/login-form.tsx
-import { useSharedHook } from '@/hooks/use-shared-hook';
+import { useSharedHook } from "@/hooks/use-shared-hook";
 ```
 
 #### `fsd-compliance/no-business-logic-in-components`
@@ -63,11 +64,11 @@ Prevents shared components from importing business logic, keeping them domain-ag
 ```typescript
 // ❌ Bad - Shared component with business logic
 // File: components/user-card.tsx
-import { getUserData } from '@/lib/data/users'; // Warning!
+import { getUserData } from "@/lib/data/users"; // Warning!
 
 // ✅ Good - Business logic in feature component
 // File: features/users/ui/user-card.tsx
-import { getUserData } from '@/lib/data/users';
+import { getUserData } from "@/lib/data/users";
 ```
 
 #### `fsd-compliance/no-old-import-paths`
@@ -80,12 +81,12 @@ Detects old import paths that should have been migrated to FSD structure.
 
 ```typescript
 // ❌ Bad - Old import paths
-import { AnalyticsChart } from '@/components/analytics/chart'; // Error!
-import { CampaignForm } from '@/components/campaigns/form'; // Error!
+import { AnalyticsChart } from "@/components/analytics/chart"; // Error!
+import { CampaignForm } from "@/components/campaigns/form"; // Error!
 
 // ✅ Good - New FSD import paths
-import { AnalyticsChart } from '@/features/analytics/ui/components/chart';
-import { CampaignForm } from '@/features/campaigns/ui/components/form';
+import { AnalyticsChart } from "@/features/analytics/ui/components/chart";
+import { CampaignForm } from "@/features/campaigns/ui/components/form";
 ```
 
 ### Style Rules
@@ -109,6 +110,7 @@ Prevents hardcoded hex color values in favor of semantic design tokens.
 ```
 
 **Common Replacements**:
+
 - `#3B82F6` → `text-primary`
 - `#6b7280` → `text-muted-foreground`
 - `#ffffff` → `bg-background`
@@ -131,6 +133,7 @@ Prevents arbitrary spacing values in favor of design system scale.
 ```
 
 **Common Replacements**:
+
 - `w-[350px]` → `w-80`
 - `h-[200px]` → `h-48`
 - `p-[24px]` → `p-6`
@@ -172,7 +175,7 @@ export default [
       "fsd-compliance/no-cross-feature-imports": "error",
       "fsd-compliance/no-business-logic-in-components": "warn",
       "fsd-compliance/no-old-import-paths": "error",
-      
+
       // Style rules
       "fsd-compliance/no-hex-colors": "error",
       "fsd-compliance/no-arbitrary-spacing": "error",
@@ -185,6 +188,7 @@ export default [
 ### Preset Configurations
 
 #### Recommended (Default)
+
 ```javascript
 {
   extends: ["plugin:fsd-compliance/recommended"]
@@ -192,6 +196,7 @@ export default [
 ```
 
 #### Strict Mode
+
 ```javascript
 {
   extends: ["plugin:fsd-compliance/strict"]
@@ -226,6 +231,7 @@ npx eslint --fix components/
 ## Rule Severity Levels
 
 ### Error Level Rules
+
 - `no-upward-dependencies` - Breaks FSD architecture
 - `no-cross-feature-imports` - Violates feature isolation
 - `no-hex-colors` - Prevents design system adoption
@@ -233,12 +239,14 @@ npx eslint --fix components/
 - `no-old-import-paths` - Migration compliance
 
 ### Warning Level Rules
+
 - `require-semantic-tokens` - Encourages best practices
 - `no-business-logic-in-components` - Architectural guidance
 
 ## Disabling Rules
 
 ### File-level Disable
+
 ```typescript
 /* eslint-disable fsd-compliance/no-hex-colors */
 // Legacy component with hardcoded colors
@@ -248,12 +256,14 @@ export function LegacyComponent() {
 ```
 
 ### Line-level Disable
+
 ```typescript
 // eslint-disable-next-line fsd-compliance/no-cross-feature-imports
-import { LegacyUtil } from '@/features/other/legacy';
+import { LegacyUtil } from "@/features/other/legacy";
 ```
 
 ### Configuration Disable
+
 ```javascript
 {
   rules: {
@@ -267,57 +277,63 @@ import { LegacyUtil } from '@/features/other/legacy';
 ### Fixing Upward Dependencies
 
 1. **Identify the violation**:
+
    ```typescript
    // components/ui/form.tsx
-   import { useAuth } from '@/features/auth/model/auth'; // Error!
+   import { useAuth } from "@/features/auth/model/auth"; // Error!
    ```
 
 2. **Move logic to appropriate layer**:
+
    ```typescript
    // shared/hooks/use-auth-state.ts
    export function useAuthState() {
      // Shared auth state logic
    }
-   
+
    // components/ui/form.tsx
-   import { useAuthState } from '@/hooks/use-auth-state';
+   import { useAuthState } from "@/features/auth";
    ```
 
 ### Fixing Cross-Feature Imports
 
 1. **Identify shared functionality**:
+
    ```typescript
    // features/auth/ui/login.tsx
-   import { formatDate } from '@/features/campaigns/utils/date'; // Error!
+   import { formatDate } from "@/features/campaigns/utils/date"; // Error!
    ```
 
 2. **Move to shared layer**:
+
    ```typescript
    // shared/utils/date.ts
    export function formatDate(date: Date) {
      // Shared date formatting logic
    }
-   
+
    // features/auth/ui/login.tsx
-   import { formatDate } from '@/lib/utils/date';
+   import { formatDate } from "@/lib/utils/date";
    ```
 
 ### Fixing Style Violations
 
 1. **Replace hex colors**:
+
    ```typescript
    // Before
    <div style={{ color: '#3B82F6' }}>Text</div>
-   
+
    // After
    <div className="text-primary">Text</div>
    ```
 
 2. **Replace arbitrary spacing**:
+
    ```typescript
    // Before
    <div className="w-[350px] p-[24px]">Content</div>
-   
+
    // After
    <div className="w-80 p-6">Content</div>
    ```
@@ -325,24 +341,27 @@ import { LegacyUtil } from '@/features/other/legacy';
 ## Best Practices
 
 ### 1. Layer Organization
+
 - Keep business logic in features
 - Keep UI primitives in components/ui
 - Keep shared utilities in shared layer
 - Keep app composition in app layer
 
 ### 2. Import Patterns
+
 ```typescript
 // ✅ Good import patterns
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/features/auth/model/auth';
-import { formatDate } from '@/lib/utils/date';
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/features/auth/model/auth";
+import { formatDate } from "@/lib/utils/date";
 
 // ❌ Bad import patterns
-import { AuthButton } from '@/features/auth/ui/auth-button'; // from different feature
-import { getUserData } from '@/lib/data/users'; // from shared component
+import { AuthButton } from "@/features/auth/ui/auth-button"; // from different feature
+import { getUserData } from "@/lib/data/users"; // from shared component
 ```
 
 ### 3. Style Consistency
+
 ```typescript
 // ✅ Good - Semantic tokens
 <Card className="bg-card border-border">
@@ -352,7 +371,7 @@ import { getUserData } from '@/lib/data/users'; // from shared component
 </Card>
 
 // ❌ Bad - Hardcoded values
-<div 
+<div
   className="bg-[#ffffff] border-[#e5e7eb] w-[400px]"
   style={{ color: '#1f2937', fontSize: '18px' }}
 >
@@ -382,4 +401,4 @@ import { getUserData } from '@/lib/data/users'; // from shared component
 
 ---
 
-*This documentation is part of Task 7.1: Create FSD linting rules implementation.*
+_This documentation is part of Task 7.1: Create FSD linting rules implementation._

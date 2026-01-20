@@ -25,7 +25,7 @@ import {
   getBillingDataForSettings,
   updateBillingInfo,
 } from "@features/billing/actions";
-import { updateCompanyInfo, getUserSettings } from "@/lib/actions/settings";
+import { updateCompanyInfo, getUserSettings } from "@/features/settings";
 import {
   useServerAction,
   useServerActionWithParams,

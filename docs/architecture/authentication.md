@@ -34,6 +34,7 @@ interface BaseUser {
 ```
 
 **Properties:**
+
 - `id`: Unique user identifier (UUID)
 - `email`: User's email address
 - `emailVerified`: Optional timestamp when email was verified
@@ -53,6 +54,7 @@ interface AuthUser extends BaseUser {
 ```
 
 **Properties:**
+
 - `profile`: User profile data (bio, avatar, preferences)
 - `tenants`: Multi-tenant containers the user belongs to
 - `companies`: Organizational units within tenants
@@ -71,14 +73,14 @@ The authentication system relies on the following database tables:
 
 ### API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/auth/session` | GET | Validate NileDB session |
-| `/api/auth/login` | POST | Authenticate credentials |
-| `/api/auth/logout` | POST | Invalidate session |
-| `/api/auth/signup` | POST | Register and trigger verification |
-| `/api/user/profile` | GET | Fetch enriched profile |
-| `/api/user/tenants` | GET | Fetch available tenants |
+| Endpoint            | Method | Description                       |
+| ------------------- | ------ | --------------------------------- |
+| `/api/auth/session` | GET    | Validate NileDB session           |
+| `/api/auth/login`   | POST   | Authenticate credentials          |
+| `/api/auth/logout`  | POST   | Invalidate session                |
+| `/api/auth/signup`  | POST   | Register and trigger verification |
+| `/api/user/profile` | GET    | Fetch enriched profile            |
+| `/api/user/tenants` | GET    | Fetch available tenants           |
 
 ---
 
@@ -90,46 +92,53 @@ The authentication system uses a custom error hierarchy for precise error handli
 
 ```typescript
 class AuthError extends Error {
-  constructor(message: string, public code: string, public context?: any) {
+  constructor(
+    message: string,
+    public code: string,
+    public context?: any,
+  ) {
     super(message);
-    this.name = 'AuthError';
+    this.name = "AuthError";
   }
 }
 
 class SessionRecoveryError extends AuthError {
   constructor(attempts: number) {
-    super('Session recovery failed', 'SESSION_RECOVERY_FAILED', { attempts });
+    super("Session recovery failed", "SESSION_RECOVERY_FAILED", { attempts });
   }
 }
 
 class EnrichmentError extends AuthError {
   constructor(userId: string, source: string) {
-    super(`Failed to load ${source}`, 'ENRICHMENT_FAILED', { userId });
+    super(`Failed to load ${source}`, "ENRICHMENT_FAILED", { userId });
   }
 }
 ```
 
 ### Error Codes
 
-| Error Code | Description | Recovery Strategy |
-|------------|-------------|-------------------|
-| `SESSION_RECOVERY_FAILED` | Session restoration failed after retries | Exponential backoff (500ms, 1s, 2s) up to 3 attempts |
-| `ENRICHMENT_FAILED` | Failed to load user profile/tenants | Silent background refresh on focus; blocking error on initial load |
-| `NETWORK_ERROR` | Connectivity issues | Global connectivity listeners triggering toast notifications |
+| Error Code                | Description                              | Recovery Strategy                                                  |
+| ------------------------- | ---------------------------------------- | ------------------------------------------------------------------ |
+| `SESSION_RECOVERY_FAILED` | Session restoration failed after retries | Exponential backoff (500ms, 1s, 2s) up to 3 attempts               |
+| `ENRICHMENT_FAILED`       | Failed to load user profile/tenants      | Silent background refresh on focus; blocking error on initial load |
+| `NETWORK_ERROR`           | Connectivity issues                      | Global connectivity listeners triggering toast notifications       |
 
 ### Recovery Strategies
 
 #### Session Recovery
+
 - **Exponential backoff**: 500ms → 1s → 2s
 - **Maximum attempts**: 3
 - **Trigger**: Automatic on session validation failure
 
 #### Enrichment Recovery
+
 - **Initial load**: Blocking error with retry option
 - **Background refresh**: Silent update on window focus
 - **Cache invalidation**: 5-minute TTL for enrichment data
 
 #### Network Recovery
+
 - **Global listeners**: Monitor connectivity state
 - **Toast notifications**: Inform users of network issues
 - **Offline mode**: Graceful degradation where possible
@@ -140,39 +149,42 @@ class EnrichmentError extends AuthError {
 
 ### Analytics (PostHog)
 
-Authentication events are tracked in `lib/monitoring/auth-metrics.ts`:
+Authentication events are tracked in `features/auth/lib/metrics.ts`:
 
-| Event | Trigger | Description |
-|-------|---------|-------------|
-| `login_attempt_start` | Form submit | User initiated login |
-| `login_success` | Session valid | Successful authentication |
-| `login_failure` | API error | Failed login (excludes validation errors) |
-| `session_recovery` | Automatic restoration | Tracks restoration success/failure |
+| Event                 | Trigger               | Description                               |
+| --------------------- | --------------------- | ----------------------------------------- |
+| `login_attempt_start` | Form submit           | User initiated login                      |
+| `login_success`       | Session valid         | Successful authentication                 |
+| `login_failure`       | API error             | Failed login (excludes validation errors) |
+| `session_recovery`    | Automatic restoration | Tracks restoration success/failure        |
 
 ### Router Integration
 
 #### Next.js App Router
+
 - Uses `useRouter` for client-side transitions
 - Supports `redirectTo` parameter for post-login redirects
 
 #### Middleware
+
 - Server-side session validation
 - Automatic redirects for protected routes
 - Role-based access control
 
 #### Redirect Logic
+
 - **ProtectedRoute**: Checks session and redirects to `/` if unauthenticated
 - **LoginForm**: Handles `redirectTo` param for post-login navigation
 - **Logout**: Hard redirect to `/` to clear client state completely
 
 ### Loading States
 
-| State Type | Implementation | Description |
-|------------|----------------|-------------|
-| **Initial Load** | Full screen skeleton | Shown while checking session on app load |
-| **Navigation** | Top progress bar (NProgress) | Indicates route transitions |
-| **Action** | Inline spinner on buttons | Shows during form submission |
-| **Background** | Silent updates (React Query `isFetching`) | Refreshes data without UI disruption |
+| State Type       | Implementation                            | Description                              |
+| ---------------- | ----------------------------------------- | ---------------------------------------- |
+| **Initial Load** | Full screen skeleton                      | Shown while checking session on app load |
+| **Navigation**   | Top progress bar (NProgress)              | Indicates route transitions              |
+| **Action**       | Inline spinner on buttons                 | Shows during form submission             |
+| **Background**   | Silent updates (React Query `isFetching`) | Refreshes data without UI disruption     |
 
 ---
 
@@ -181,17 +193,18 @@ Authentication events are tracked in `lib/monitoring/auth-metrics.ts`:
 ### Unit Tests
 
 #### Contexts
+
 Test `SessionProvider` state transitions with mocked NileDB hooks:
 
 ```typescript
 // Example test structure
-describe('SessionProvider', () => {
-  it('transitions from unauthenticated to authenticated', () => {
+describe("SessionProvider", () => {
+  it("transitions from unauthenticated to authenticated", () => {
     // Mock NileDB hook to return session
     // Verify AuthUser is set correctly
   });
-  
-  it('handles session recovery failure', () => {
+
+  it("handles session recovery failure", () => {
     // Mock NileDB hook to throw error
     // Verify error state and retry logic
   });
@@ -199,16 +212,17 @@ describe('SessionProvider', () => {
 ```
 
 #### Hooks
+
 Test `useAuth` verified/unverified states:
 
 ```typescript
-describe('useAuth', () => {
-  it('returns verified user with full profile', () => {
+describe("useAuth", () => {
+  it("returns verified user with full profile", () => {
     // Mock enrichment provider
     // Verify AuthUser structure
   });
-  
-  it('returns base user when enrichment fails', () => {
+
+  it("returns base user when enrichment fails", () => {
     // Mock enrichment failure
     // Verify BaseUser is returned
   });
@@ -216,11 +230,12 @@ describe('useAuth', () => {
 ```
 
 #### Utils
+
 Test retry logic with fake timers:
 
 ```typescript
-describe('retryWithBackoff', () => {
-  it('retries with exponential backoff', async () => {
+describe("retryWithBackoff", () => {
+  it("retries with exponential backoff", async () => {
     // Use fake timers
     // Verify delays: 500ms, 1s, 2s
   });
@@ -230,9 +245,10 @@ describe('retryWithBackoff', () => {
 ### Integration Tests
 
 #### Login Flow
+
 ```typescript
-describe('Login Flow', () => {
-  it('completes login and redirects', async () => {
+describe("Login Flow", () => {
+  it("completes login and redirects", async () => {
     // Fill form with credentials
     // Submit form
     // Verify API call to /api/auth/login
@@ -242,14 +258,15 @@ describe('Login Flow', () => {
 ```
 
 #### Protected Routes
+
 ```typescript
-describe('Protected Routes', () => {
-  it('redirects unauthenticated users', () => {
+describe("Protected Routes", () => {
+  it("redirects unauthenticated users", () => {
     // Visit /dashboard without session
     // Verify redirect to /
   });
-  
-  it('allows authenticated users', () => {
+
+  it("allows authenticated users", () => {
     // Login first
     // Visit /dashboard
     // Verify no redirect
@@ -258,9 +275,10 @@ describe('Protected Routes', () => {
 ```
 
 #### Logout
+
 ```typescript
-describe('Logout', () => {
-  it('clears session and redirects', async () => {
+describe("Logout", () => {
+  it("clears session and redirects", async () => {
     // Click logout button
     // Verify session cleared
     // Verify URL is /
@@ -271,14 +289,18 @@ describe('Logout', () => {
 ### Mocks
 
 #### MockNileProvider
+
 Simulates NileDB session states:
+
 - `authenticated`: Returns valid session
 - `unauthenticated`: Returns null session
 - `loading`: Returns undefined session
 - `error`: Throws error
 
 #### MockEnrichmentProvider
+
 Returns fixture data for:
+
 - User profiles
 - Tenants
 - Companies
@@ -291,20 +313,24 @@ Returns fixture data for:
 ### Security
 
 #### CSRF Protection
+
 - **Next.js implicit protection**: Built-in CSRF protection for API routes
 - **Explicit tokens**: Required for mutations (POST, PUT, DELETE, PATCH)
 
 #### Role Validation
+
 - **Middleware level**: Route access control
 - **Component level**: UI element visibility
 - **Dual-check**: Both checks required for complete protection
 
 #### Session Management
+
 - **Short-lived tokens**: Access tokens with limited lifetime
 - **Secure cookies**: HttpOnly, Secure, SameSite=Strict
 - **Token refresh**: Automatic refresh before expiration
 
 #### Input Validation
+
 - **Zod schemas**: Strict validation for all inputs
 - **Type safety**: TypeScript ensures type correctness
 - **Runtime validation**: Prevents malformed data
@@ -313,12 +339,12 @@ Returns fixture data for:
 
 #### Caching Strategy
 
-| Data Type | Cache Duration | Cache Location |
-|-----------|----------------|----------------|
-| Session | 1 minute | Memory cache in operations |
-| Enrichment | 5 minutes | SWR/React Query cache |
-| Profile | 5 minutes | React Query cache |
-| Tenants | 5 minutes | React Query cache |
+| Data Type  | Cache Duration | Cache Location             |
+| ---------- | -------------- | -------------------------- |
+| Session    | 1 minute       | Memory cache in operations |
+| Enrichment | 5 minutes      | SWR/React Query cache      |
+| Profile    | 5 minutes      | React Query cache          |
+| Tenants    | 5 minutes      | React Query cache          |
 
 #### Optimization Techniques
 
@@ -349,20 +375,24 @@ Returns fixture data for:
 - [x] **Enrichment Context**: Implemented with separate loading states
 - [x] **RoleGuard**: Created for granular access control
 - [x] **Logout Fix**: Redirects to `/` preventing 404 loops
-- [x] **Metrics**: `auth-metrics.ts` tracking core events
+- [x] **Metrics**: `features/auth/lib/metrics.ts` tracking core events
 
 ### Verification Steps
 
 1. **Type Checking**
+
    ```bash
    npm run typecheck
    ```
+
    Ensures `AuthUser` propagation is correct throughout the codebase.
 
 2. **Testing**
+
    ```bash
    npm run test:auth
    ```
+
    Or run manual walkthrough of authentication flows.
 
 3. **Analytics Verification**
@@ -375,12 +405,14 @@ Returns fixture data for:
 ## 7. Migration Guide
 
 ### Step 1: Delete Legacy Code
+
 ```bash
 # Remove old authentication context
 rm context/base-auth-context.tsx
 ```
 
 ### Step 2: Update Root Layout
+
 Update `_app.tsx` or RootLayout to wrap with `AuthProvider`:
 
 ```typescript
@@ -397,30 +429,33 @@ export default function RootLayout({ children }) {
 ```
 
 ### Step 3: Replace Direct NileDB Calls
+
 Replace all direct `useNile` calls with `useSession` or `useEnrichment`:
 
 ```typescript
 // Before
-import { useNile } from '@niledatabase/react';
+import { useNile } from "@niledatabase/react";
 const { user } = useNile();
 
 // After
-import { useSession } from '@/context/auth';
+import { useSession } from "@/context/auth";
 const { user } = useSession();
 ```
 
 ### Step 4: Update Redirects
+
 Replace all `redirect('/login')` with `redirect('/')`:
 
 ```typescript
 // Before
-redirect('/login');
+redirect("/login");
 
 // After
-redirect('/');
+redirect("/");
 ```
 
 ### Step 5: Update Protected Routes
+
 Use the new `ProtectedRoute` component or `RoleGuard`:
 
 ```typescript
@@ -440,23 +475,29 @@ if (!user) redirect('/login');
 ### Pre-Deployment Checklist
 
 1. **Type Safety**
+
    ```bash
    npm run typecheck
    ```
+
    - No TypeScript errors
    - `AuthUser` properly propagated
 
 2. **Test Coverage**
+
    ```bash
    npm run test
    ```
+
    - All auth-related tests passing
    - Integration tests cover login, logout, and protected routes
 
 3. **Linting**
+
    ```bash
    npm run lint
    ```
+
    - No ESLint errors
    - FSD compliance verified
 
@@ -481,16 +522,19 @@ if (!user) redirect('/login');
 ### Troubleshooting
 
 #### Session Not Persisting
+
 - Check cookie settings (HttpOnly, Secure, SameSite)
 - Verify NileDB session configuration
 - Check middleware session validation
 
 #### Enrichment Failing Silently
+
 - Check network requests in DevTools
 - Verify API endpoints are accessible
 - Check error logging in PostHog
 
 #### Role-Based Access Not Working
+
 - Verify `RoleGuard` is properly configured
 - Check middleware role validation
 - Ensure permissions are correctly assigned
