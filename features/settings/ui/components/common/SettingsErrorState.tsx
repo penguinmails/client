@@ -35,6 +35,8 @@ interface SettingsErrorStateProps {
   className?: string;
 }
 
+import { useTranslations } from "next-intl";
+
 export function SettingsErrorState({
   error,
   errorType = "generic",
@@ -47,6 +49,8 @@ export function SettingsErrorState({
   showDetails = false,
   className = "",
 }: SettingsErrorStateProps) {
+  const t = useTranslations("Components.SettingsErrorState");
+
   const getErrorIcon = () => {
     switch (errorType) {
       case "network":
@@ -85,38 +89,38 @@ export function SettingsErrorState({
   const getErrorTitle = () => {
     switch (errorType) {
       case "network":
-        return "Connection Error";
+        return t("connectionError");
       case "auth":
-        return "Authentication Required";
+        return t("authRequired");
       case "validation":
-        return "Invalid Input";
+        return t("invalidInput");
       case "server":
-        return "Server Error";
+        return t("serverError");
       case "permission":
-        return "Permission Denied";
+        return t("permissionDenied");
       case "timeout":
-        return "Request Timeout";
+        return t("requestTimeout");
       default:
-        return "Error";
+        return t("error");
     }
   };
 
   const getHelpText = () => {
     switch (errorType) {
       case "network":
-        return "Please check your internet connection and try again.";
+        return t("networkHelp");
       case "auth":
-        return "Please log in again to continue.";
+        return t("authHelp");
       case "validation":
-        return "Please check your input and try again.";
+        return t("validationHelp");
       case "server":
-        return "Our servers are experiencing issues. Please try again later.";
+        return t("serverHelp");
       case "permission":
-        return "You don't have permission to perform this action.";
+        return t("permissionHelp");
       case "timeout":
-        return "The request took too long. Please try again.";
+        return t("timeoutHelp");
       default:
-        return "An unexpected error occurred. Please try again.";
+        return t("genericHelp");
     }
   };
 
@@ -130,9 +134,10 @@ export function SettingsErrorState({
   };
 
   const getRetryText = () => {
-    if (retryLoading) return "Retrying...";
-    if (retryCount > 0) return `Retry (${retryCount}/${maxRetries})`;
-    return "Try Again";
+    if (retryLoading) return t("retrying");
+    if (retryCount > 0)
+      return t("retryCount", { count: retryCount, max: maxRetries });
+    return t("retry");
   };
 
   if (variant === "card") {
@@ -173,7 +178,7 @@ export function SettingsErrorState({
                   variant="outline"
                   size="sm"
                 >
-                  Reload Page
+                  {t("reloadPage")}
                 </Button>
               )}
             </div>
@@ -181,8 +186,7 @@ export function SettingsErrorState({
 
           {retryCount >= maxRetries && errorType === "network" && (
             <div className="text-xs text-muted-foreground">
-              <p>Maximum retry attempts reached.</p>
-              <p>Please check your connection or refresh the page.</p>
+              <p>{t("maxRetries")}</p>
             </div>
           )}
         </CardContent>

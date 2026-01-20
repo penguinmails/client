@@ -38,7 +38,10 @@ describe("PersonalizationTags", () => {
 
   it("displays custom label when provided", () => {
     render(
-      <PersonalizationTags onInsertTag={mockOnInsertTag} label="Custom Label" />
+      <PersonalizationTags
+        onInsertTag={mockOnInsertTag}
+        label="Custom Label"
+      />,
     );
     expect(screen.getByText("Custom Label")).toBeInTheDocument();
   });
@@ -78,7 +81,7 @@ describe("PersonalizationTags", () => {
       <PersonalizationTags
         onInsertTag={mockOnInsertTag}
         className="custom-class"
-      />
+      />,
     );
 
     const wrapper = container.firstChild;

@@ -11,21 +11,14 @@ export {
   type ErrorType
 } from "./SettingsErrorState";
 
-// Success notification functions
 export {
-  showSuccessNotification,
-  showSaveSuccess,
-  showUpdateSuccess,
-  showCreateSuccess,
-  showDeleteSuccess,
-  showInviteSuccess,
-  showUploadSuccess,
-  showProfileUpdateSuccess,
-  showNotificationPreferencesSuccess,
-  showBillingUpdateSuccess,
-  showSecurityUpdateSuccess,
-  showAppearanceUpdateSuccess,
-  showTeamMemberSuccess,
+  SettingsErrorBoundary,
+  SettingsErrorFallback
+} from "./SettingsErrorBoundary";
+
+// Success notification hook and types
+export {
+  useSettingsNotifications,
   type SuccessType
 } from "./SettingsSuccessNotification";
 

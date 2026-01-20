@@ -83,7 +83,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
         setError(err);
       } else {
         setError(
-          err instanceof Error ? err : new Error("Session recovery failed")
+          err instanceof Error ? err : new Error("Session recovery failed"),
         );
       }
       setSession(null);
@@ -96,7 +96,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (isInitialized.current) return;
     isInitialized.current = true;
- 
+
     const init = async () => {
       try {
         await recoverSession();
@@ -116,29 +116,36 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
     onSuccess: async () => {
       try {
         // Essential delay for cookie propagation
-        await new Promise(r => setTimeout(r, 400));
+        await new Promise((r) => setTimeout(r, 400));
         const user = await recoverSessionWithRetry(6, 600, true);
 
         if (user) {
           setSession(user);
-          
+
           if (loginResolver.current) {
             loginResolver.current(user);
           }
         } else {
-          throw new Error("Login succeeded but session could not be established locally. Please refresh.");
+          throw new Error(
+            "Login succeeded but session could not be established locally. Please refresh.",
+          );
         }
       } catch (err) {
         if (loginRejecter.current) {
-          loginRejecter.current(err instanceof Error ? err : new Error(String(err)));
+          loginRejecter.current(
+            err instanceof Error ? err : new Error(String(err)),
+          );
         }
       } finally {
         loginResolver.current = null;
         loginRejecter.current = null;
       }
     },
-    onError: (err: Error | { message?: string } | string | null | undefined) => {
-      const message = typeof err === 'string' ? err : err?.message || "Login failed";
+    onError: (
+      err: Error | { message?: string } | string | null | undefined,
+    ) => {
+      const message =
+        typeof err === "string" ? err : err?.message || "Login failed";
       const errorObj = err instanceof Error ? err : new Error(message);
       setError(errorObj);
       if (loginRejecter.current) {
@@ -146,14 +153,15 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
       }
       loginResolver.current = null;
       loginRejecter.current = null;
-    }
+    },
   });
 
   // Extract the function for calling
   const signInFn = useMemo<NileSignInFunction | null>(() => {
-    if (typeof signInMutation === 'function') return signInMutation as unknown as NileSignInFunction;
+    if (typeof signInMutation === "function")
+      return signInMutation as unknown as NileSignInFunction;
     const result = signInMutation as unknown as NileSignInResult;
-    if (result && typeof result.signIn === 'function') {
+    if (result && typeof result.signIn === "function") {
       return result.signIn;
     }
     return null;
@@ -188,10 +196,10 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
           // explicitly include provider 'credentials' to avoid "Provider undefined" error
           // and redirect: false to keep control in this component
           signInFn({
-            provider: 'credentials',
+            provider: "credentials",
             email,
             password,
-            redirect: false
+            redirect: false,
           });
         } catch (err) {
           setIsLoading(false);
@@ -199,7 +207,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       });
     },
-    [signInFn, safePush, searchParams]
+    [signInFn, safePush, searchParams],
   );
 
   const signup = useCallback(
@@ -209,13 +217,16 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         await signupWithVerification({ email, password }, name);
       } catch (err) {
-        setError(err instanceof Error ? err : new Error("Signup failed"));
+        const errorMessage =
+          err instanceof Error ? err.message : "Signup failed";
+        const error = err instanceof Error ? err : new Error(errorMessage);
+        setError(error);
         throw err;
       } finally {
         setIsLoading(false);
       }
     },
-    []
+    [],
   );
 
   const logout = useCallback(async () => {
@@ -251,7 +262,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
       login,
       signup,
       logout,
-    ]
+    ],
   );
 
   return (

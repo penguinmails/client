@@ -32,3 +32,6 @@ export {
 
 // API Integration - Public API interface
 export { campaignsApi } from './ui/integration/campaigns-api';
+
+// UI Components - Public components
+export { default as PersonalizationTags, personalizationTags } from './ui/components/email/PersonalizationTags';

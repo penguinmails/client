@@ -39,7 +39,15 @@ jest.mock("@/features/auth/lib/rate-limit", () => ({
   getLoginAttemptStatus: jest.fn(() => ({
     attempts: 0,
     requiresTurnstile: false,
+    lockoutExpiresAt: null,
   })),
+  recordFailedLoginAttempt: jest.fn(() => ({
+    attempts: 1,
+    requiresTurnstile: false,
+    lockoutExpiresAt: null,
+    firstAttemptTimestamp: new Date().toISOString(),
+  })),
+  resetLoginAttempts: jest.fn(),
 }));
 
 jest.mock("@/lib/logger", () => ({
@@ -185,7 +193,7 @@ describe("LoginPage", () => {
 
   it("shows loading state during login", async () => {
     mockLogin.mockImplementation(
-      () => new Promise((resolve) => setTimeout(resolve, 100))
+      () => new Promise((resolve) => setTimeout(resolve, 100)),
     );
 
     render(<LoginPage />);
@@ -240,7 +248,7 @@ describe("LoginPage", () => {
         const turnstileSection = screen.queryByTestId("turnstile-section");
         expect(turnstileSection).toBeInTheDocument();
       },
-      { timeout: 2000 }
+      { timeout: 2000 },
     );
   });
 
@@ -324,7 +332,7 @@ describe("LoginPage", () => {
     // This simulates the scenario where signIn succeeds but checkSession returns null
     // which should trigger the "no valid session" error and prevent navigation
     mockLogin.mockRejectedValueOnce(
-      new Error("Login failed - no valid session")
+      new Error("Login failed - no valid session"),
     );
 
     render(<LoginPage />);

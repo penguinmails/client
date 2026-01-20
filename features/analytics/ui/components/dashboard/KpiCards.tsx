@@ -12,7 +12,7 @@ import {
 import { AnalyticsCalculator } from "@features/analytics/lib/calculator";
 import { KPIDisplayConfig } from "@features/analytics/types/ui";
 import { CampaignAnalytics } from "@features/analytics/types/domain-specific";
-import MigratedStatsCard from "@/components/MigratedStatsCard";
+import StatsCard from "@/features/analytics/ui/components/common/StatsCard";
 import { KPISummaryCardSkeleton } from "../SkeletonLoaders";
 
 interface MigratedKpiCardsProps {
@@ -64,7 +64,7 @@ function MigratedKpiCards({
     // Calculate trends (simplified - in real implementation, compare with previous period)
     const getTrend = (
       rate: number,
-      benchmark: number
+      benchmark: number,
     ): "up" | "down" | "stable" => {
       if (rate > benchmark * 1.1) return "up";
       if (rate < benchmark * 0.9) return "down";
@@ -72,7 +72,7 @@ function MigratedKpiCards({
     };
 
     const getChangeType = (
-      trend: "up" | "down" | "stable"
+      trend: "up" | "down" | "stable",
     ): "increase" | "decrease" | "stable" => {
       return trend === "up"
         ? "increase"
@@ -86,7 +86,7 @@ function MigratedKpiCards({
         id: "open-rate",
         name: "Open Rate",
         displayValue: AnalyticsCalculator.formatRateAsPercentage(
-          calculatedRates.openRate
+          calculatedRates.openRate,
         ),
         rawValue: calculatedRates.openRate,
         unit: "%",
@@ -105,7 +105,7 @@ function MigratedKpiCards({
         id: "click-rate",
         name: "Click Rate",
         displayValue: AnalyticsCalculator.formatRateAsPercentage(
-          calculatedRates.clickRate
+          calculatedRates.clickRate,
         ),
         rawValue: calculatedRates.clickRate,
         unit: "%",
@@ -124,7 +124,7 @@ function MigratedKpiCards({
         id: "reply-rate",
         name: "Reply Rate",
         displayValue: AnalyticsCalculator.formatRateAsPercentage(
-          calculatedRates.replyRate
+          calculatedRates.replyRate,
         ),
         rawValue: calculatedRates.replyRate,
         unit: "%",
@@ -227,7 +227,7 @@ function MigratedKpiCards({
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {kpiConfigs.map((kpi) => (
-        <MigratedStatsCard
+        <StatsCard
           key={kpi.id}
           title={kpi.name}
           value={kpi.displayValue}

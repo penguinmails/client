@@ -37,7 +37,11 @@ export class SettingsErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    productionLogger.error("Settings Error Boundary caught an error:", error, errorInfo);
+    productionLogger.error(
+      "Settings Error Boundary caught an error:",
+      error,
+      errorInfo,
+    );
     this.setState({
       error,
       errorInfo: errorInfo.componentStack || null,

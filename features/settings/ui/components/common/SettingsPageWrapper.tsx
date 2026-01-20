@@ -1,9 +1,7 @@
 "use client";
 
 import { ReactNode, Suspense } from "react";
-import {
-  SettingsErrorBoundary,
-} from "@/components/settings/SettingsErrorBoundary";
+import { SettingsErrorBoundary } from "@/features/settings";
 import { SettingsLoadingSkeleton } from "./SettingsLoadingSkeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { WifiOff } from "lucide-react";

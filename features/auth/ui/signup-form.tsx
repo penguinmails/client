@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "@/lib/config/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,7 @@ export default function SignUpFormView() {
   const [error, setError] = useState<SignupError | null>(null);
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
-  const { error: authError, signup, authLoading } = useAuth();
+  const { signup, authLoading } = useAuth();
   const [token, setToken] = useState("");
   const router = useRouter();
 
@@ -110,7 +110,7 @@ export default function SignUpFormView() {
     // This prevents the form from submitting if the CAPTCHA hasn't been completed.
     if (isTurnstileEnabled && !token) {
       const captchaError = new Error(
-        t("errors.captchaRequired")
+        t("errors.captchaRequired"),
       ) as SignupError;
       setError(captchaError);
       return;
@@ -122,7 +122,7 @@ export default function SignUpFormView() {
         await verifyTurnstileToken(
           token,
           t("captcha.noToken"),
-          t("captcha.verificationFailed")
+          t("captcha.verificationFailed"),
         );
       }
 
@@ -134,25 +134,44 @@ export default function SignUpFormView() {
       setToken("");
     } catch (err: unknown) {
       // Show error toast for user feedback
+      let displayMessage = t("errors.signupFailed");
+      let errorMessage = "";
+      let formError: SignupError | null = null;
+
       if (err && typeof err === "object" && "message" in err) {
-        const errorMessage = (err as { message: string }).message;
-        toast.error(errorMessage);
-      } else {
-        toast.error(t("errors.signupFailed"));
+        errorMessage = (err as { message: string }).message;
+
+        // Map backend errors to i18n messages
+        if (errorMessage.includes("already exists")) {
+          displayMessage = t("errors.emailAlreadyExistsVerified.message");
+          // Log raw error for debugging in console
+
+          // Create error object with i18n metadata for form display
+          formError = new Error(displayMessage) as SignupError;
+          formError.i18nKey = "emailAlreadyExistsVerified";
+          formError.actionType = "LOGIN";
+        } else {
+          // Default to generic error message for unmapped errors
+          displayMessage = t("errors.signupFailed");
+
+          // Create error object for form display
+          formError = new Error(displayMessage) as SignupError;
+        }
       }
+
+      toast.error(displayMessage);
+
+      // Set the form error for UI display
+      if (formError) {
+        setError(formError);
+      }
+
       // Re-throw to trigger error display via auth context
       throw err;
     } finally {
       // Auth context manages its own loading state
     }
   };
-
-  useEffect(() => {
-    if (authError) {
-      const authErrorObj = new Error(authError.message) as SignupError;
-      setError(authErrorObj);
-    }
-  }, [authError]);
 
   return (
     <>

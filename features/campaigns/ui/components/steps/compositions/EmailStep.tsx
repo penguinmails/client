@@ -4,7 +4,7 @@ import React, { RefObject } from "react";
 import { Input } from "@/components/ui/input/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TemplateSelector } from "../../forms/TemplateSelector";
-import PersonalizationTags from "@/components/email/PersonalizationTags";
+import { PersonalizationTags } from "@/features/campaigns";
 import { copyText as t } from "../../data/copy";
 import { PartialCampaignStep } from "@features/campaigns/types";
 import { Template } from "@/types";

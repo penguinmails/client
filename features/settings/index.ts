@@ -58,17 +58,17 @@ export {
 } from './ui';
 
 // Shared UI Components - Re-exported for convenience
-export { SettingsLoadingSkeleton } from '@/components/settings-loading-skeleton';
+export { SettingsLoadingSkeleton } from './ui/components/common/SettingsLoadingSkeleton';
 export {
   SettingsErrorState,
   NetworkErrorState,
   AuthErrorState,
   ValidationErrorState,
   ServerErrorState,
-} from '@/components/settings-error-state';
+} from './ui/components/common/SettingsErrorState';
 export {
   useSettingsNotifications,
-} from '@/components/settings-success-notification';
+} from './ui/components/common/SettingsSuccessNotification';
 
 // Context - Public context providers
 export {

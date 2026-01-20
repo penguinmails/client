@@ -47,6 +47,8 @@ export {
   StatsCards,
   AnalyticsProviderClient,
   RealTimeBillingDashboard,
+  StatsCard,
+  LeadsStats,
 } from './ui/components';
 
 // Services - Public analytics services

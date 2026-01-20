@@ -27,7 +27,6 @@ export {
   AdminSystemHealthIndicator,
   AdminSystemHealthBadge,
   // NotificationsPopover moved to @/features/notifications/ui/components/NotificationsPopover
-  HelpSection,
   useFormField,
   Form,
   FormItem,
