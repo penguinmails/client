@@ -87,7 +87,31 @@ export function useChartColors() {
     totalWarmups: colors.chart1,
     spamFlags: colors.destructive,
     replies: colors.chart2,
+    // Text color for chart labels (resolves theme-aware muted foreground)
+    textColor: resolveTextColor(),
   };
+}
+
+/**
+ * Get the current theme-aware text color for chart labels.
+ */
+function resolveTextColor(): string {
+  if (typeof window === "undefined") return "#888888";
+  
+  const testElement = document.createElement("div");
+  testElement.style.cssText = "position:absolute;visibility:hidden;";
+  testElement.className = "text-muted-foreground";
+  document.body.appendChild(testElement);
+  
+  try {
+    const computed = getComputedStyle(testElement).color;
+    if (computed && computed !== "rgba(0, 0, 0, 0)" && computed.startsWith("rgb")) {
+      return rgbToHex(computed);
+    }
+    return "#888888";
+  } finally {
+    document.body.removeChild(testElement);
+  }
 }
 
 /**
