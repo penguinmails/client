@@ -1,5 +1,5 @@
 "use client";
-import { getMockLeads, type MockLead as Lead } from "@/lib/mocks/providers";
+import { getMockLeads, type MockLead as Lead } from "@/features/leads";
 import {
   ArrowUpDown,
   Download,

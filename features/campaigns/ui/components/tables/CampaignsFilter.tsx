@@ -19,7 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Calendar, CheckIcon, Search, Server, X } from "lucide-react";
 import DatePicker from "@/components/ui/custom/DatePicker";
-import { availableMailboxes } from "@/lib/mocks/providers";
+import { availableMailboxes } from "@/features/campaigns";
 import { cn } from "@/lib/utils";
 
 // ============================================================
@@ -52,7 +52,11 @@ export interface CampaignsFilterProps {
   /** Callback when status filter changes */
   onStatusChange?: (status: CampaignStatus) => void;
   /** Callback when date range changes */
-  onDateRangeChange?: (range: DateRange, startDate?: Date, endDate?: Date) => void;
+  onDateRangeChange?: (
+    range: DateRange,
+    startDate?: Date,
+    endDate?: Date,
+  ) => void;
   /** Callback when mailbox selection changes */
   onMailboxChange?: (mailboxes: string[]) => void;
   /** Additional CSS classes */
@@ -65,7 +69,7 @@ export interface CampaignsFilterProps {
 
 /**
  * CampaignsFilter - Filter bar matching legacy visual appearance
- * 
+ *
  * Uses DS components while maintaining the exact same layout and styling
  * as the legacy CampaignsFilter for visual parity.
  */
@@ -106,10 +110,12 @@ export function CampaignsFilter({
   };
 
   return (
-    <div className={cn(
-      "flex flex-col lg:flex-row lg:items-center bg-card dark:bg-card p-4 rounded-lg shadow border border-border gap-4",
-      className
-    )}>
+    <div
+      className={cn(
+        "flex flex-col lg:flex-row lg:items-center bg-card dark:bg-card p-4 rounded-lg shadow border border-border gap-4",
+        className,
+      )}
+    >
       {/* Search Input - Matching Legacy */}
       <div className="flex items-center space-x-2 border border-border shadow-sm rounded-lg px-2 bg-muted/50 dark:bg-muted/30 peer-focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 w-full lg:w-auto">
         <Search className="text-muted-foreground w-5 h-5" />
@@ -266,28 +272,30 @@ export function CampaignsFilter({
               )}
 
               <div className="space-y-2 max-h-50 overflow-y-auto">
-                {availableMailboxes.map((mailbox: { id: string; email: string; name: string }) => (
-                  <div
-                    key={mailbox.id}
-                    className={cn("flex items-center space-x-2", {
-                      "opacity-50": !selectedMailboxes.includes(mailbox.id),
-                    })}
-                  >
-                    <Checkbox
-                      id={mailbox.id}
-                      checked={selectedMailboxes.includes(mailbox.id)}
-                      onCheckedChange={(checked) =>
-                        handleMailboxChange(mailbox.id, checked as boolean)
-                      }
-                    />
-                    <Label
-                      htmlFor={mailbox.id}
-                      className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                {availableMailboxes.map(
+                  (mailbox: { id: string; email: string; name: string }) => (
+                    <div
+                      key={mailbox.id}
+                      className={cn("flex items-center space-x-2", {
+                        "opacity-50": !selectedMailboxes.includes(mailbox.id),
+                      })}
                     >
-                      {mailbox.name} ({mailbox.email})
-                    </Label>
-                  </div>
-                ))}
+                      <Checkbox
+                        id={mailbox.id}
+                        checked={selectedMailboxes.includes(mailbox.id)}
+                        onCheckedChange={(checked) =>
+                          handleMailboxChange(mailbox.id, checked as boolean)
+                        }
+                      />
+                      <Label
+                        htmlFor={mailbox.id}
+                        className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      >
+                        {mailbox.name} ({mailbox.email})
+                      </Label>
+                    </div>
+                  ),
+                )}
               </div>
             </div>
           </PopoverContent>

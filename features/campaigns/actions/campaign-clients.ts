@@ -1,6 +1,6 @@
 "use server";
 
-import { campaignLeads } from "@/lib/mocks/providers";
+import { campaignLeads } from "@/features/campaigns";
 import { developmentLogger } from "@/lib/logger";
 
 export async function getClientsPage(
