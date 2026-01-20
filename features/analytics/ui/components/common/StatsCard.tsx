@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import React from "react";
 
-interface MigratedStatsCardProps {
+interface StatsCardProps {
   title: string;
   value: string | number;
   icon: React.ElementType;
@@ -20,14 +20,14 @@ interface MigratedStatsCardProps {
 }
 
 /**
- * Migrated Stats Card component with enhanced KPI display features.
+ * Stats Card component with enhanced KPI display features.
  * Supports benchmarks, trends, and standardized color coding.
  */
 import { useTranslations } from "next-intl";
 
 // ... existing code ...
 
-const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
+const StatsCard: React.FC<StatsCardProps> = ({
   title,
   value,
   icon,
@@ -40,7 +40,7 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
   change,
   changeType,
 }) => {
-  const t = useTranslations("Components.MigratedStatsCard");
+  const t = useTranslations("Components.StatsCard");
   const Icon = icon;
 
   // Determine if value meets target benchmark
@@ -92,7 +92,7 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
                   "text-xs px-2 py-1 rounded-full",
                   meetsTarget
                     ? "bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400"
-                    : "bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400"
+                    : "bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400",
                 )}
               >
                 {meetsTarget ? t("onTarget") : t("belowTarget")}
@@ -128,4 +128,4 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
   );
 };
 
-export default MigratedStatsCard;
+export default StatsCard;
