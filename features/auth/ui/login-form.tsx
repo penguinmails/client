@@ -33,7 +33,7 @@ export function LoginForm() {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [loginAttempts, setLoginAttempts] = useState(0);
   const [lastLoginError, setLastLoginError] = useState<string | null>(null);
-  const { login, user, error: authError } = useAuth();
+  const { login, user } = useAuth();
   const t = useTranslations("Login");
 
   useEffect(() => {
@@ -111,13 +111,22 @@ export function LoginForm() {
       setError(errorMessage);
       setLastLoginError(errorMessage); // Track login error to prevent navigation
 
-      // Record failed login attempt for rate limiting
-      if (email?.includes("@")) {
-        const updatedStatus = recordFailedLoginAttempt(email);
-        setLoginAttempts(updatedStatus.attempts);
-        setShowTurnstile(updatedStatus.requiresTurnstile);
-      }
+      // Only track failed login attempt for authentication failures (401)
+      // Don't count server errors (500) or network issues as failed attempts
+      if (email && email.includes("@")) {
+        // Check if this is an authentication error vs server/network error
+        const isAuthenticationError =
+          errorMessage.toLowerCase().includes("login failed") ||
+          errorMessage.toLowerCase().includes("invalid") ||
+          errorMessage.toLowerCase().includes("incorrect") ||
+          errorMessage.toLowerCase().includes("unauthorized");
 
+        if (isAuthenticationError) {
+          const status = recordFailedLoginAttempt(email);
+          setLoginAttempts(status.attempts);
+          setShowTurnstile(status.requiresTurnstile);
+        }
+      }
       // Clear error tracking after a delay to allow retry
       setTimeout(() => setLastLoginError(null), 3000);
 
@@ -131,22 +140,6 @@ export function LoginForm() {
       setIsLoading(false);
     }
   };
-
-  // Removed duplicate navigation logic - auth context handles navigation
-  // This prevents race conditions and duplicate navigation attempts
-
-  useEffect(() => {
-    if (authError) {
-      setError(authError.message);
-      if (email && email.includes("@")) {
-        const status = getLoginAttemptStatus(email);
-        setLoginAttempts(status.attempts || 0);
-        setShowTurnstile(status.requiresTurnstile);
-      }
-    } else {
-      setError(null);
-    }
-  }, [authError, email]);
 
   const icon = user ? User : LogIn;
   const mode = user ? "loggedIn" : "form";

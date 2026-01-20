@@ -39,11 +39,15 @@ jest.mock("@/features/auth/lib/rate-limit", () => ({
   getLoginAttemptStatus: jest.fn(() => ({
     attempts: 0,
     requiresTurnstile: false,
+    lockoutExpiresAt: null,
   })),
   recordFailedLoginAttempt: jest.fn(() => ({
     attempts: 1,
     requiresTurnstile: false,
+    lockoutExpiresAt: null,
+    firstAttemptTimestamp: new Date().toISOString(),
   })),
+  resetLoginAttempts: jest.fn(),
 }));
 
 jest.mock("@/lib/logger", () => ({
