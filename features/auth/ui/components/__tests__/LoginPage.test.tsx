@@ -40,6 +40,10 @@ jest.mock("@/features/auth/lib/rate-limit", () => ({
     attempts: 0,
     requiresTurnstile: false,
   })),
+  recordFailedLoginAttempt: jest.fn(() => ({
+    attempts: 1,
+    requiresTurnstile: false,
+  })),
 }));
 
 jest.mock("@/lib/logger", () => ({

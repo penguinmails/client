@@ -8,6 +8,14 @@ export class SignupError extends Error {
   }
 }
 
+interface NileAuthError {
+  message?: string;
+  text?: string;
+  body?: {
+    text?: string;
+  };
+}
+
 interface SignupCredentials {
   email: string;
   password: string;
@@ -24,7 +32,14 @@ export async function signupWithVerification(
     });
 
     if (error) {
-      throw new SignupError(error.message || "Signup failed");
+      // NileDB error can be a string or object with message property
+      const errorMessage = typeof error === 'string' 
+        ? error
+        : (error as NileAuthError)?.message || 
+          (error as NileAuthError)?.text || 
+          (error as NileAuthError)?.body?.text || 
+          "Signup failed";
+      throw new SignupError(errorMessage);
     }
 
     if (user) {
