@@ -1,12 +1,15 @@
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
-function useBack() {
+export default function useBack() {
   const router = useRouter();
 
-  function handleBack() {
-    router.back();
-  }
+  const goBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push('/dashboard');
+    }
+  };
 
-  return handleBack;
+  return goBack;
 }
-export default useBack;

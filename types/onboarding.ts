@@ -1,20 +1,6 @@
-import { LucideIcon } from "lucide-react";
-
-export interface OnboardingStep {
-  id: number;
-  title: string;
-  subtitle: string;
-  explanation: string;
-  icon: LucideIcon;
-  color: string;
-  href: string;
-  buttonText: string;
-  kbLink: string;
-  videoId: string;
-  completed: boolean;
-  promotion?: {
-    title: string;
-    description: string;
-    link: string;
-  };
-}
+/**
+ * Onboarding types backward compatibility layer
+ * 
+ * @deprecated Import from '@features/onboarding/types' instead
+ */
+export * from '@features/onboarding/types';

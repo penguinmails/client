@@ -24,6 +24,11 @@ export interface EmailAccount {
   };
 }
 
+// Mailbox type alias for backward compatibility with components expecting 'dailyLimit' instead of 'dayLimit'
+export type Mailbox = Omit<EmailAccount, 'dayLimit'> & {
+  dailyLimit: number;
+};
+
 /**
  * Data point for account statistics charts
  */

@@ -1,11 +1,28 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+// Only run ESLint and TypeScript checks in local development
+const isLocalDev = process.env.NODE_ENV === 'development' && !process.env.CI;
 
 const nextConfig: NextConfig = {
   eslint: {
-    ignoreDuringBuilds: true,
+    dirs: [
+      "app",
+      "components",
+      "lib",
+      "types",
+      "hooks",
+      "context",
+      "i18n",
+      "src",
+      "features",
+    ],
+    // Only run ESLint during builds in local development
+    ignoreDuringBuilds: !isLocalDev,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    // Only run TypeScript checks during builds in local development
+    ignoreBuildErrors: !isLocalDev,
   },
   images: {
     remotePatterns: [
@@ -23,6 +40,48 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Optimize chunk loading and prevent ChunkLoadError
+  experimental: {
+    // Optimize for stability over aggressive caching
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
+  // Turbopack configuration (replaces experimental.turbo)
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
+      },
+    },
+  },
+  // Webpack optimizations for chunk loading
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Optimize chunk splitting for better loading
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            defaultVendors: {
+              test: /[\\/]node_modules[\\/]/,
+              priority: -10,
+              reuseExistingChunk: true,
+            },
+            default: {
+              minChunks: 2,
+              priority: -20,
+              reuseExistingChunk: true,
+            },
+          },
+        },
+      };
+    }
+    
+    return config;
+  },
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin('./lib/config/i18n/request.ts');
+
+export default withNextIntl(nextConfig);

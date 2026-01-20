@@ -1,9 +1,10 @@
 // Centralized UI component prop interfaces and types
+import React from "react";
 import { VariantProps } from "class-variance-authority";
 
 // Button Types
 export type ButtonVariants = VariantProps<
-  typeof import("../components/ui/button").buttonVariants
+  typeof import("../components/ui/button/button").buttonVariants
 >;
 export type ButtonVariant =
   | "default"
@@ -11,7 +12,11 @@ export type ButtonVariant =
   | "outline"
   | "secondary"
   | "ghost"
-  | "link";
+  | "link"
+  | "success"
+  | "warning"
+  | "info"
+  | "muted";
 export type ButtonSize = "default" | "sm" | "lg" | "icon";
 
 // Form Types
@@ -97,7 +102,7 @@ export interface DashboardLayoutProps {
 
 // Chart and Visualization Prop Types
 export interface CampaignPerformanceChartProps {
-  data: import("./analytics").ChartDataPoint[];
+  data: import("@/features/analytics/types").ChartDataPoint[];
 }
 
 export interface PieChartDataPoint {
@@ -127,4 +132,28 @@ export interface LexicalEditorProps {
 
 export interface LexicalEditorRef {
   insertText: (text: string) => void;
+}
+
+/**
+ * Common React component props and utility types
+ * Part of the FSD shared layer
+ */
+
+export interface ComponentBaseProps {
+  className?: string;
+  children?: React.ReactNode;
+  disabled?: boolean;
+}
+
+/**
+ * Enhanced component props interface for React components
+ * Includes accessibility and testing attributes
+ */
+export interface ComponentProps extends ComponentBaseProps {
+  id?: string;
+  testId?: string;
+  'data-testid'?: string;
+  'aria-label'?: string;
+  'aria-describedby'?: string;
+  role?: string;
 }

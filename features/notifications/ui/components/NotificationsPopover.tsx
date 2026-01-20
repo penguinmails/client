@@ -1,0 +1,43 @@
+"use client";
+
+import { Button } from "@/components/ui/button/button";
+import { PopoverContent } from "@/components/ui/popover";
+import { Notification } from "@features/notifications/types";
+import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
+import { Bell } from "lucide-react";
+import { useEffect, useState } from "react";
+import NotificationsList from "./NotificationsList";
+import { getNotifications } from "@features/notifications/actions";
+
+// Use server action for notifications data
+export function NotificationsPopover() {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchNotifications = async (): Promise<void> => {
+      const data = await getNotifications();
+      // Handle the response structure properly
+      const notifications = data.success ? data.data.notifications : [];
+      setNotifications(notifications);
+      setUnreadCount(notifications.filter((n: Notification) => !n.isRead).length);
+    };
+    fetchNotifications();
+  }, []);
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="ghost" className=" group relative">
+          <Bell className="w-5 h-5 font-bold   group-hover:scale-110 transition-transform" />
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 dark:bg-red-400 rounded-full border border-background" />
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 sm:w-96 bg-card border p-0 rounded-xl shadow-lg  max-h-96 overflow-hidden">
+        <NotificationsList notifications={notifications} />
+      </PopoverContent>
+    </Popover>
+  );
+}

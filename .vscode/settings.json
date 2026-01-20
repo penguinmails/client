@@ -1,9 +1,35 @@
 {
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "files.associations": {
+    "*.test.ts": "typescript",
+    "*.test.tsx": "typescriptreact",
+    "*.spec.ts": "typescript",
+    "*.spec.tsx": "typescriptreact"
+  },
+  "eslint.workingDirectories": ["."],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "jest.autoRun": {
+    "watch": false,
+    "onStartup": ["all-tests"]
+  },
+  "i18n-ally.localesPaths": ["i18n", "messages"],
+
+  // Formatter configurations based on your previous setup
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -14,33 +40,43 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "diffEditor.ignoreTrimWhitespace": false,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Editor behavior improvements
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.fixAll.stylelint": "explicit"
+    "source.fixAll.eslint": "explicit"
   },
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.formatOnSave": true,
   "editor.insertSpaces": true,
   "eslint.format.enable": true,
+
+  // File handling preferences
   "files.autoSave": "afterDelay",
   "files.insertFinalNewline": true,
   "files.eol": "\n",
+
+  // Auto-closing tags for better DX
   "html.autoClosingTags": true,
   "javascript.autoClosingTags": true,
   "javascript.suggest.autoImports": true,
   "javascript.format.enable": false,
   "javascript.validate.enable": true,
   "js/ts.implicitProjectConfig.checkJs": true,
+
+  // Search exclusions for build artifacts
   "search.exclude": {
     "**/.next": true,
-    "**/node_modules": true
+    "**/node_modules": true,
+    "**/coverage": true,
+    "**/.storybook": true
   },
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+
+  // Diff editor preferences
+  "diffEditor.ignoreTrimWhitespace": false
 }

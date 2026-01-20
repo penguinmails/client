@@ -1,0 +1,858 @@
+{
+  "Analytics": {
+    "nav": {
+      "overview": "Overview",
+      "byCampaign": "By Campaign",
+      "byMailbox": "By Mailbox",
+      "byWarmup": "By Warmup"
+    },
+    "layout": {
+      "title": "Analytics Hub",
+      "description": "Comprehensive performance insights and campaign analytics"
+    }
+  },
+  "Sidebar": {
+    "sections": {
+      "overview": "Overview",
+      "gettingStarted": "Getting Started",
+      "outreachHub": "Outreach Hub",
+      "leadHub": "Lead Hub",
+      "communication": "Communication",
+      "infrastructure": "Infrastructure",
+      "analytics": "Analytics"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "setupGuide": "Setup Guide",
+      "campaigns": "Campaigns",
+      "templates": "Templates",
+      "leadLists": "Lead Lists",
+      "inbox": "Inbox",
+      "domainsAndMailboxes": "Domains & Mailboxes",
+      "analyticsHub": "Analytics Hub"
+    },
+    "account": {
+      "free": "Free Account"
+    }
+  },
+  "Navigation": {
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "logout": "Logout",
+    "pricing": "Pricing",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  "Auth": {
+    "logout": "Logout"
+  },
+  "Errors": {
+    "401-LOGIN": "The credentials you provided are invalid. Please check your email and password.",
+    "403-CAMPAIGNS": "You are not authorized to view or modify campaign data.",
+    "403-USERS": "You do not have the necessary permissions to manage user accounts.",
+    "500-AUTH": "An unexpected server error occurred during authentication. Please try again later.",
+    "500-LEADS": "A system error occurred while fetching lead data. The issue has been logged."
+  },
+  "Metadata": {
+    "title": "Penguin Mails - Email Outreach & Domain Warm-up",
+    "description": "Enter the world of Penguin Mails, where every message is a delightful surprise!"
+  },
+  "Login": {
+    "title": "Welcome Back!",
+    "description": "Enter your credentials to access your dashboard.",
+    "email": {
+      "label": "Email",
+      "placeholder": "you@example.com"
+    },
+    "password": {
+      "label": "Password"
+    },
+    "forgotPassword": "Forgot password?",
+    "loginButton": {
+      "default": "Login",
+      "loading": "Logging In...",
+      "tooManyAttempts": "Too many attempts. Complete verification.",
+      "completeVerification": "Complete verification to continue"
+    },
+    "errors": {
+      "title": "Login Failed",
+      "incorrectPassword": "Incorrect password",
+      "userNotFound": "User not found",
+      "generic": "Login failed. Please check your credentials.",
+      "captchaRequired": "Please complete the CAPTCHA verification."
+    },
+    "signup": {
+      "text": "Don't have an account?",
+      "link": "Sign Up"
+    },
+    "failedAttempts": "Failed attempts: {loginAttempts}/{MAX_LOGIN_ATTEMPTS}",
+    "securityVerification": "For security, please complete the verification to continue.",
+    "captchaNotConfigured": "CAPTCHA is not configured. Please contact support."
+  },
+  "button": {
+    "label": "button"
+  },
+  "Common": {
+    "tryAgain": "Try Again",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "ok": "OK",
+    "update": "Update",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "remove": "Remove",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "confirm": "Confirm",
+    "error": "Error",
+    "success": "Success",
+    "updating": "Updating..."
+  },
+  "SignUp": {
+    "header": {
+      "title": "Create your Penguin Mails Account",
+      "description": "Get started with your secure email experience.",
+      "alreadySignedIn": "You are already signed in."
+    },
+    "form": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter your name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "you@example.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password"
+      },
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm your password"
+      }
+    },
+    "errors": {
+      "emailAlreadyExistsVerified": {
+        "title": "Email Already Registered",
+        "message": "This email address is already registered. Please sign in to your existing account.",
+        "actionLogin": "Sign In",
+        "actionForgotPassword": "Forgot Password?"
+      },
+      "emailAlreadyExistsUnverified": {
+        "title": "Account Not Verified",
+        "message": "An account with this email exists but hasn't been verified yet. We've sent you a new verification email.",
+        "actionResend": "Resend Verification Email"
+      },
+      "signupFailed": "Signup failed. Please try again.",
+      "captchaRequired": "Please complete the CAPTCHA verification.",
+      "passwordTooWeak": "Password is too weak. Please include at least 2 of: uppercase, lowercase, number, special character",
+      "passwordMismatch": "Passwords do not match",
+      "invalidEmail": "Please enter a valid email address",
+      "required": "This field is required",
+      "password": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters long",
+      "confirmPassword": "Password confirmation is required"
+    },
+    "success": {
+      "accountCreated": "Account created successfully! Check your email for a verification link to activate your account.",
+      "accountCreatedNoEmail": "Account created successfully! We'll send you a verification link shortly.",
+      "verificationEmailResent": "Verification email has been resent. Please check your inbox."
+    },
+    "button": {
+      "createAccount": "Create Account",
+      "creatingAccount": "Creating Account...",
+      "sending": "Sending..."
+    },
+    "captcha": {
+      "notConfigured": "CAPTCHA is not configured. Please contact support.",
+      "noToken": "No Turnstile token provided",
+      "verificationFailed": "Turnstile verification failed"
+    },
+    "footer": {
+      "haveAccount": "Already have an account?",
+      "login": "Login"
+    }
+  },
+  "ForgotPassword": {
+    "title": "Forgot Your Password?",
+    "description": {
+      "initial": "Enter your email address below and we'll send you a link to reset your password.",
+      "success": "Check your inbox for the reset link."
+    },
+    "form": {
+      "email": {
+        "label": "Email",
+        "placeholder": "you@example.com"
+      },
+      "button": {
+        "sending": "Sending...",
+        "send": "Send Reset Link"
+      }
+    },
+    "alerts": {
+      "error": {
+        "title": "Error"
+      },
+      "success": {
+        "title": "Email Sent!",
+        "description": "If an account exists for {email}, you will receive an email with password reset instructions shortly. Please check your spam folder if you don't see it."
+      }
+    },
+    "footer": {
+      "text": "Remembered your password?",
+      "linkText": "Login"
+    },
+    "alreadySignedIn": "You are already signed in.",
+    "failedToSend": "Failed to send reset link. Please try again."
+  },
+  "ResetPassword": {
+    "header": {
+      "title": "Reset Your Password",
+      "description": "Enter your new password below for"
+    },
+    "form": {
+      "newPassword": {
+        "label": "New Password",
+        "placeholder": "Enter new password"
+      },
+      "confirmPassword": {
+        "label": "Confirm New Password",
+        "placeholder": "Confirm new password"
+      }
+    },
+    "button": {
+      "default": "Reset Password",
+      "loading": "Resetting Password..."
+    },
+    "validating": {
+      "title": "Validating Reset Link...",
+      "description": "Please wait while we validate your password reset link."
+    },
+    "success": {
+      "title": "Password Reset Successful!",
+      "description": "Your password has been successfully reset. You can now sign in with your new password.",
+      "signIn": "Sign In"
+    },
+    "error": {
+      "title": "Invalid Reset Link",
+      "invalidLink": "This password reset link is invalid or has expired.",
+      "noToken": "No reset token provided",
+      "invalidFormat": "Invalid reset token format",
+      "expired": "This password reset link is invalid or has expired.",
+      "validationFailed": "Failed to validate reset token",
+      "generic": "Failed to reset password. Please try again.",
+      "minLength": "Password must be at least 8 characters long",
+      "passwordMismatch": "Passwords don't match"
+    },
+    "footer": {
+      "needNewLink": "Need a new reset link?",
+      "requestAnother": "Request another one"
+    }
+  },
+  "EmailConfirmation": {
+    "title": "Check your email",
+    "description": {
+      "withEmail": "We've sent a verification link to {email}",
+      "withoutEmail": "We've sent a verification link to your email address"
+    },
+    "instructions": "Click the link in the email to activate your account.",
+    "errors": {
+      "unableToResend": "Unable to resend email. Please try signing up again.",
+      "resendFailed": "Failed to resend verification email. Please try again."
+    },
+    "success": {
+      "resendMessage": "A new verification link has been sent to your email."
+    },
+    "button": {
+      "sending": "Sending...",
+      "resendEmail": "Resend confirmation email",
+      "resendCountdown": "Resend in {countdown}s"
+    },
+    "help": {
+      "text": "Didn't receive the email? Check your spam folder or",
+      "link": {
+        "default": "click here to resend",
+        "countdown": "click here to resend in {countdown}s"
+      }
+    }
+  },
+  "Settings": {
+    "general": {
+      "title": "General Settings",
+      "description": "Manage your account preferences and profile information",
+      "profileInformation": {
+        "title": "Profile Information",
+        "description": "Update your personal details and avatar."
+      }
+    },
+    "profile": {
+      "updating": "Updating Profile...",
+      "saveChanges": "Save Changes",
+      "title": "Profile Information",
+      "firstName": {
+        "label": "First Name",
+        "placeholder": "Enter your first name"
+      },
+      "lastName": {
+        "label": "Last Name",
+        "placeholder": "Enter your last name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email"
+      },
+      "phone": {
+        "label": "Phone",
+        "placeholder": "Enter your phone number"
+      },
+      "bio": {
+        "label": "Bio",
+        "placeholder": "Tell us about yourself"
+      },
+      "avatar": {
+        "title": "Avatar",
+        "current": "Current avatar",
+        "upload": "Upload New Avatar",
+        "uploading": "Uploading...",
+        "chooseFile": "Choose File",
+        "fileDescription": "PNG, JPG up to 5MB",
+        "chooseFrom": "Choose from Avatars",
+        "alt": "Avatar {index}",
+        "customUrl": "Custom Avatar URL",
+        "placeholder": "https://example.com/avatar.jpg",
+        "apply": "Apply"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "timezone": {
+          "label": "Timezone",
+          "placeholder": "Select your timezone"
+        },
+        "theme": {
+          "label": "Theme",
+          "light": "Light",
+          "dark": "Dark",
+          "system": "System"
+        },
+        "language": {
+          "label": "Language",
+          "placeholder": "Select your language"
+        },
+        "sidebarView": {
+          "label": "Sidebar View",
+          "expanded": "Expanded",
+          "collapsed": "Collapsed",
+          "hidden": "Hidden"
+        },
+        "notifications": {
+          "label": "Notification Preferences",
+          "email": "Email notifications",
+          "push": "Push notifications",
+          "marketing": "Marketing emails",
+          "product": "Product updates"
+        },
+        "timezones": {
+          "UTC": "UTC",
+          "America/New_York": "Eastern Time",
+          "America/Chicago": "Central Time",
+          "America/Denver": "Mountain Time",
+          "America/Los_Angeles": "Pacific Time",
+          "Europe/London": "London",
+          "Europe/Paris": "Paris",
+          "Asia/Tokyo": "Tokyo",
+          "Asia/Shanghai": "Shanghai",
+          "Australia/Sydney": "Sydney"
+        },
+        "languages": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "ja": "日本語",
+          "ko": "한국어",
+          "zh": "中文"
+        }
+      }
+    },
+
+    "layout": {
+      "title": "Settings",
+      "loading": "Loading preferences...",
+      "theme": {
+        "label": "Theme",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
+        "tooltip": "Switch to {theme} theme"
+      },
+      "sidebar": {
+        "expand": "Expand sidebar",
+        "collapse": "Collapse sidebar"
+      },
+      "tabs": {
+        "general": "General",
+        "security": "Security",
+        "notifications": "Notifications",
+        "tracking": "Tracking",
+        "billing": "Billing",
+        "team": "Team"
+      }
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "description": "Choose how you want to be notified",
+      "emailNotifications": "Email Notifications"
+    },
+    "security": {
+      "title": "Security Settings",
+      "description": "Manage your account security and authentication",
+      "changePassword": "Change Password",
+      "twoFactorAuth": "Two-Factor Authentication",
+      "twoFactorDescription": "Add an extra layer of security to your account",
+      "securityRecommendations": "Security Recommendations"
+    },
+    "tracking": {
+      "title": "Tracking Settings",
+      "description": "Manage your tracking preferences and settings.",
+      "trackingInformation": "Tracking Information"
+    },
+    "billing": {
+      "title": "Billing & Usage",
+      "description": "Manage your subscription and view usage",
+      "billingTab": "Billing",
+      "usageTab": "Usage & Limits"
+    },
+    "appearance": {
+      "title": "Appearance Settings",
+      "description": "Customize the look and feel of the application"
+    },
+    "team": {
+      "title": "Team Management",
+      "description": "Manage your team members and their roles"
+    }
+  },
+  "BillingTab": {
+    "currentPlan": "Current Plan",
+    "active": "Active",
+    "planDetails": "{planName} Plan",
+    "price": "${price}/{period}",
+    "period": {
+      "month": "month",
+      "year": "year"
+    },
+    "emailAccounts": "Email Accounts",
+    "campaigns": "Campaigns",
+    "changePlan": "Change Plan",
+    "paymentMethod": "Payment Method",
+    "updateCard": "Update Card",
+    "addCard": "Add Card",
+    "noPaymentMethod": "No payment method",
+    "addPaymentMethod": "Add a payment method to continue",
+    "companyInformation": "Company Information",
+    "companyName": "Company Name",
+    "industry": "Industry",
+    "companySize": "Company Size",
+    "editCompany": "Edit Company",
+    "billingAddress": "Billing Address",
+    "editAddress": "Edit Address",
+    "recentInvoices": "Recent Invoices",
+    "company": "Company",
+    "street": "123 Business Street",
+    "city": "San Francisco, CA 94105",
+    "country": "United States",
+    "vatId": "VAT ID: US123456789",
+    "endingIn": "ending in",
+    "expires": "expires {expiry}",
+    "technologyServices": "Technology Services",
+    "companySizeDefault": "1-10 employees",
+    "errors": {
+      "loadBilling": "Failed to load billing data",
+      "updateBilling": "Failed to update billing information",
+      "loadCompany": "Failed to load company information",
+      "updateCompany": "Failed to update company name",
+      "noData": "No billing data available",
+      "errorOccurred": "An error occurred"
+    },
+    "success": {
+      "billingUpdated": "Billing information updated successfully",
+      "companyUpdated": "Company name updated successfully"
+    }
+  },
+  "UsageTab": {
+    "usageStatistics": "Usage Statistics",
+    "resetMessage": "Your usage limits will reset on",
+    "daysRemaining": "days remaining",
+    "unlimited": "Unlimited",
+    "emailsSent": "Emails Sent",
+    "contactsReached": "Contacts Reached",
+    "activeCampaigns": "Active Campaigns",
+    "emailAccounts": "Email Accounts",
+    "storageUsed": "Storage Used",
+    "lowStorage": "Low Storage",
+    "used": "used",
+    "addStorage": "Add Storage",
+    "purchaseStorage": "Purchase additional storage at $3 per GB",
+    "failedToLoad": "Failed to load usage data",
+    "failedToLoadStorage": "Failed to load storage options",
+    "unexpectedError": "An unexpected error occurred"
+  },
+  "SettingsErrorFallback": {
+    "errorOccurred": "An error occurred"
+  },
+  "BillingLoadingSkeleton": {},
+  "BillingPage": {
+    "title": "Billing & Plan",
+    "description": "Manage your subscription and view billing history.",
+    "currentPlan": "Current Plan",
+    "currentlyOn": "You are currently on the {plan} plan",
+    "upgradePlan": "Upgrade Plan",
+    "manageSubscription": "Manage Subscription",
+    "stripeNote": "Billing management is handled by Stripe. Clicking the button above will redirect you to Stripe's secure portal.",
+    "failedToLoad": "Failed to load billing data",
+    "retry": "Retry",
+    "noData": "No billing data available"
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "welcome": {
+      "withName": "Welcome back, {displayName}! Here is what is happening with your campaigns.",
+      "anonymous": "Welcome back! Here is what is happening with your campaigns."
+    },
+    "recentReplies": "Recent Replies",
+    "kpi": {
+      "totalCampaigns": "Total Campaigns",
+      "activeCampaigns": "Active Campaigns",
+      "activeLeads": "Active Leads",
+      "completed": "Completed",
+      "totalLeads": "Total Leads",
+      "leadsContacted": "Leads Contacted",
+      "openRate": "Open Rate",
+      "replyRate": "Reply Rate"
+    },
+    "timeAgo": {
+      "justNow": "Just now",
+      "oneHour": "1 hour ago",
+      "hours": "{count} hours ago",
+      "oneDay": "1 day ago",
+      "days": "{count} days ago"
+    },
+    "unknownCompany": "Unknown Company"
+  },
+  "QuickActions": {
+    "title": "Quick Actions",
+    "createCampaign": "Create Campaign",
+    "uploadLeads": "Upload Leads",
+    "addDomain": "Add Domain"
+  },
+  "Leads": {
+    "layout": {
+      "title": "Lead Hub",
+      "description": "Manage your lead lists, imports, and contact database"
+    },
+    "tabs": {
+      "lists": "Lead Lists",
+      "upload": "Upload CSV",
+      "contacts": "All Contacts"
+    }
+  },
+  "AppearanceSettings": {
+    "title": "Appearance",
+    "description": "Customize the look and feel of the application.",
+    "theme": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "contrast": "Contrast"
+    },
+    "layoutDensity": {
+      "label": "Layout Density",
+      "compact": "Compact",
+      "normal": "Normal",
+      "wide": "Wide"
+    },
+    "saveButton": {
+      "default": "Save Appearance",
+      "saving": "Saving..."
+    },
+    "notifications": {
+      "success": "Appearance settings saved",
+      "error": "Failed to save settings",
+      "genericError": "An error occurred"
+    }
+  },
+  "VerifyEmail": {
+    "title": "Verifying your email...",
+    "titleSuccess": "Email Verified!",
+    "titleFail": "Verification Failed",
+    "description": "Please wait while we verify your email address.",
+    "descriptionSuccess": "Your account has been successfully activated.",
+    "descriptionFail": "There was an issue with your email verification.",
+    "noToken": "No verification token provided. Please check your email for the verification link.",
+    "success": "Your email has been successfully verified! You can now log in to your account.",
+    "fail": "Verification failed. The link may be invalid or expired.",
+    "expired": "This verification link has expired. Please request a new one.",
+    "used": "This verification link has already been used. Please request a new one.",
+    "error": "An error occurred during verification. Please try again later.",
+    "resendSuccess": "A new verification link has been sent to your email.",
+    "resendFail": "Failed to resend verification email. Please try again.",
+    "goToLogin": "Go to Login",
+    "sending": "Sending...",
+    "resend": "Resend verification email",
+    "support": "If you're still having trouble, please contact our support team."
+  },
+  "Onboarding": {
+    "noSteps": "No onboarding steps available",
+    "welcome": "Welcome to PenguinMails! 🐧",
+    "setup": "Let's get you set up for cold email success",
+    "help": {
+      "title": "Need Help?",
+      "description": "We're here to support your success",
+      "contactSupport": "Contact Support",
+      "faq": "FAQ"
+    },
+    "faq": {
+      "q1": "How long does the setup process take?",
+      "a1": "Most users complete the entire onboarding in 30-60 minutes. Domain verification can take up to 24 hours, but you can continue with other steps while waiting.",
+      "q2": "Do I need technical knowledge to set this up?",
+      "a2": "Not at all! Our step-by-step guides and video tutorials walk you through everything. For DNS setup, you might need access to your domain registrar, but we provide exact instructions.",
+      "q3": "Can I skip steps and come back later?",
+      "a3": "While you can navigate away at any time, we recommend completing steps in order for the best experience. Each step builds on the previous one.",
+      "q4": "What if I get stuck on a step?",
+      "a4": "Use the \"Need Help?\" button below to access our help center, or contact our support team. We're here to help you succeed!"
+    },
+    "promotion": {
+      "learnMore": "Learn More",
+      "leads": {
+        "title": "Need Quality Leads?",
+        "description": "Our lead generation service finds verified prospects in your target market."
+      },
+      "copy": {
+        "title": "Need Help with Copy?",
+        "description": "Our copywriting experts create high-converting email sequences for you."
+      }
+    },
+    "steps": {
+      "step1": {
+        "title": "Connect Your Domain",
+        "subtitle": "Set up your sending domain for professional email delivery",
+        "explanation": "Your domain is the foundation of your email campaigns. By connecting and verifying your domain (like yourcompany.com), you ensure your emails are delivered from a professional address and improve your sender reputation. This step involves adding DNS records to prove you own the domain.",
+        "buttonText": "Go to Domains Page"
+      },
+      "step2": {
+        "title": "Create Mailboxes",
+        "subtitle": "Create email accounts (mailboxes) to send campaigns from",
+        "explanation": "Mailboxes are the individual email accounts that will send your campaigns. You can create multiple mailboxes like john@yourcompany.com, sales@yourcompany.com to distribute your sending volume and appear more natural. Each mailbox needs to be properly configured with SMTP settings.",
+        "buttonText": "Go to Mailboxes Page"
+      },
+      "step3": {
+        "title": "Enable Warmup",
+        "subtitle": "Warming up mailboxes boosts deliverability and reputation",
+        "explanation": "Email warmup is the process of gradually increasing your sending volume to build a positive sender reputation. Our automated warmup service sends and receives emails between real accounts to establish trust with email providers like Gmail and Outlook, ensuring your campaigns land in the inbox.",
+        "buttonText": "Go to Warmup Page"
+      },
+      "step4": {
+        "title": "Upload Leads",
+        "subtitle": "Upload your leads to start reaching potential clients",
+        "explanation": "Import your prospect list using our CSV upload tool. Your leads should include essential information like first name, last name, email, company, and job title. Quality leads are crucial for campaign success - make sure your list is clean, targeted, and relevant to your offering.",
+        "buttonText": "Go to Leads Page"
+      },
+      "step5": {
+        "title": "Create & Launch Your First Campaign",
+        "subtitle": "Put everything together and send your first cold outreach campaign",
+        "explanation": "Now you're ready to create your first campaign! Use our campaign builder to craft your email sequence, set up follow-ups, choose your leads, assign mailboxes, and configure sending schedules. Start with a small test batch to optimize your approach before scaling up.",
+        "buttonText": "Go to Campaign Builder"
+      }
+    }
+  },
+  "NotFound": {
+    "title": "404",
+    "description": "Oops! The page you're looking for doesn't exist.",
+    "explanation": "You tried to enter an incorrect route. Please check if there is a typo, or try one of these common routes:",
+    "login": "Login",
+    "signup": "Sign Up",
+    "dashboard": "Dashboard",
+    "or": "or",
+    "homeButton": "Go back home"
+  },
+  "Error": {
+    "title": "Something went wrong!",
+    "description": "An unexpected error occurred. Please try refreshing the page.",
+    "tryAgain": "Try again",
+    "details": "Technical Details"
+  },
+  "Admin": {
+    "title": "Admin Dashboard",
+    "description": "Cross-tenant user management and analytics"
+  },
+  "Infrastructure": {
+    "layout": {
+      "title": "Domains & Mailboxes",
+      "description": "Manage your sending domains, mailboxes, and warmup processes",
+      "tabs": {
+        "domains": "Domains",
+        "mailboxes": "Mailboxes",
+        "warmup": "Warmup Hub"
+      },
+      "addDomainButton": "Add Domain"
+    }
+  },
+  "Campaigns": {
+    "createTitle": "Create New Campaign",
+    "editTitle": "Edit Campaign {name}",
+    "newCampaignFallback": "New Campaign",
+    "title": "Campaigns",
+    "description": "Manage your email outreach campaigns like a pro",
+    "newCampaignButton": "New Campaign",
+    "kpi": {
+      "totalCampaigns": "Total Campaigns",
+      "totalSent": "Total Sent",
+      "totalReplies": "Total Replies",
+      "openRate": "Open Rate",
+      "replyRate": "Reply Rate"
+    }
+  },
+  "Components": {
+    "SettingsErrorState": {
+      "connectionError": "Connection Error",
+      "authRequired": "Authentication Required",
+      "invalidInput": "Invalid Input",
+      "serverError": "Server Error",
+      "permissionDenied": "Permission Denied",
+      "requestTimeout": "Request Timeout",
+      "error": "Error",
+      "networkHelp": "Please check your internet connection and try again.",
+      "authHelp": "Please log in again to continue.",
+      "validationHelp": "Please check your input and try again.",
+      "serverHelp": "Our servers are experiencing issues. Please try again later.",
+      "permissionHelp": "You don't have permission to perform this action.",
+      "timeoutHelp": "The request took too long. Please try again.",
+      "genericHelp": "An unexpected error occurred. Please try again.",
+      "retry": "Try Again",
+      "retryCount": "Retry ({count}/{max})",
+      "retrying": "Retrying...",
+      "reloadPage": "Reload Page",
+      "maxRetries": "Maximum retry attempts reached. Please check your connection or refresh the page."
+    },
+    "HelpSection": {
+      "title": "Need Help?",
+      "questions": {
+        "gettingStarted": "How do I get started?",
+        "gettingStartedAns": "Follow the onboarding steps to set up your account and start using the platform. Complete each step in order for the best experience.",
+        "emailSetup": "How do I connect my email account?",
+        "emailSetupAns": "Go to the email settings and follow the connection wizard. We support Gmail, Outlook, and custom SMTP configurations.",
+        "domainVerification": "Why do I need to verify my domain?",
+        "domainVerificationAns": "Domain verification improves email deliverability and helps establish trust with email providers. It's essential for successful email campaigns.",
+        "contactImport": "How do I import my contacts?",
+        "contactImportAns": "You can import contacts via CSV upload or connect your CRM. Make sure your contact list complies with anti-spam regulations.",
+        "troubleshooting": "What if I encounter issues?",
+        "troubleshootingAns": "Check our documentation first, then contact support if you need additional help. We're here to ensure your success."
+      }
+    },
+    "SuccessNotification": {
+      "save": "Settings saved",
+      "saveDesc": "Your settings have been saved successfully.",
+      "update": "Updated successfully",
+      "updateDesc": "Your changes have been applied.",
+      "create": "Created successfully",
+      "createDesc": "The item has been created successfully.",
+      "delete": "Deleted successfully",
+      "deleteDesc": "The item has been removed.",
+      "upload": "Upload complete",
+      "uploadDesc": "Your file has been uploaded successfully.",
+      "invite": "Invitation sent",
+      "inviteDesc": "The invitation has been sent successfully.",
+      "generic": "Success",
+      "genericDesc": "The operation completed successfully.",
+      "profileUpdated": "Profile updated",
+      "profileUpdatedDesc": "Your profile information has been saved successfully.",
+      "notificationSaved": "Notification preferences saved",
+      "notificationSavedDesc": "Your notification settings have been updated.",
+      "billingUpdated": "Billing information updated",
+      "billingUpdatedDesc": "Your billing details have been saved successfully.",
+      "securityUpdated": "Security settings updated",
+      "securityUpdatedDesc": "Your security preferences have been saved.",
+      "appearanceSaved": "Appearance settings saved",
+      "appearanceSavedDesc": "Your interface preferences have been applied."
+    },
+    "DashboardHeader": {
+      "knowledgeBase": "Knowledge Base",
+      "support": "Support",
+      "videoTutorials": "Video Tutorials"
+    },
+    "StatsCard": {
+      "vsLastPeriod": "vs last period"
+    },
+    "SystemHealth": {
+      "system": "System {status}",
+      "healthy": "Healthy",
+      "degraded": "Degraded",
+      "unhealthy": "Unhealthy",
+      "lastChecked": "Last checked: {time}",
+      "nextRetry": "Next retry in: {time}",
+      "checking": "Checking...",
+      "checkNow": "Check Now",
+      "retryLimit": "Retry limit reached",
+      "attempts": "{current}/{max} attempts",
+      "manualReset": "Manual reset"
+    },
+    "MigratedStatsCard": {
+      "onTarget": "On Target",
+      "belowTarget": "Below Target",
+      "target": "Target: {value}"
+    },
+    "ManualRetryModal": {
+      "title": "Connection Issue Detected",
+      "description": "The system health check has encountered repeated failures.",
+      "serverFailed": "Server Connection Failed",
+      "serverFailedDesc": "Unable to connect to the server after {attempts} attempts.",
+      "retryProtection": "Automatic Retry Protection",
+      "wait": "Please wait {time} before trying again.",
+      "manualOrWait": "You can try again manually or wait for automatic retry.",
+      "nextRetry": "Next automatic retry available in: {time}",
+      "close": "Close",
+      "manualRetry": "Manual Retry",
+      "checking": "Checking...",
+      "help": "This modal appears when the system detects repeated connection issues. You can manually retry or wait for automatic retry attempts.",
+      "second": "second",
+      "seconds": "seconds"
+    },
+    "ChunkErrorHandler": {
+      "title": "Loading Error Detected",
+      "description": "A critical chunk failed to load. This typically happens after a deployment or due to cached files.",
+      "techDetails": "Technical Details",
+      "reload": "Reload Application",
+      "hardRefresh": "Hard Refresh (Clear Cache)",
+      "help": "If this persists, try clearing your browser cache or contact support."
+    },
+    "LocaleFallbackToast": {
+      "title": "Language not supported",
+      "description": "\"{locale}\" isn't supported. Showing English instead."
+    },
+    "PasswordStrength": {
+      "title": "Password strength",
+      "veryWeak": "Very Weak",
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong",
+      "enterPassword": "Enter a password",
+      "veryWeakPassword": "Very weak password",
+      "weakPassword": "Weak password",
+      "fairPasswordStrength": "Fair password strength",
+      "goodPasswordStrength": "Good password strength",
+      "strongPassword": "Strong password",
+      "useAtLeast8Characters": "Use at least 8 characters",
+      "addUppercaseLetter": "Add uppercase letter",
+      "addLowercaseLetter": "Add lowercase letter",
+      "addNumber": "Add number",
+      "addSpecialCharacter": "Add special character"
+    }
+  }
+}

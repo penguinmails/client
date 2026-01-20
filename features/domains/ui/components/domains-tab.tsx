@@ -1,0 +1,164 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { getStatusColor } from "@features/domains/lib/utils";
+import { AlertTriangle, Check, Copy, Trash2, X } from "lucide-react";
+import { formatDistanceToNow, differenceInDays } from "date-fns";
+
+// ... existing imports
+
+const formatAddedDate = (dateString: string | null) => {
+  if (!dateString) {
+    return "date unknown";
+  }
+  
+  const date = new Date(dateString);
+  const now = new Date();
+  const daysDiff = differenceInDays(now, date);
+
+  if (daysDiff >= 14 && daysDiff < 30) {
+    const weeks = Math.floor(daysDiff / 7);
+    return `${weeks} weeks ago`;
+  }
+  
+  return formatDistanceToNow(date, { addSuffix: true });
+};
+export const getRecordIcon = (status: string) => {
+  switch (status) {
+    case "verified":
+      return <Check className="w-4 h-4 text-green-600" />;
+    case "pending":
+      return <AlertTriangle className="w-4 h-4 text-orange-600" />;
+    case "failed":
+      return <X className="w-4 h-4 text-red-600" />;
+    default:
+      return <AlertTriangle className="w-4 h-4 text-muted-foreground" />;
+  }
+};
+
+interface DomainsTabProps {
+  domains: Array<{
+    id: number;
+    domain: string;
+    status: string;
+    mailboxes: number;
+    records: {
+      spf: string;
+      dkim: string;
+      dmarc: string;
+      mx: string;
+    };
+    addedDate: string | null;
+  }>;
+  dnsRecords: Array<{
+    name: string;
+    value: string;
+  }>;
+}
+
+function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
+  return (
+    <div className="space-y-6">
+      {domains.map((domain) => (
+        <Card key={domain.id} className="p-6">
+          <CardHeader className="flex flex-row items-center justify-between p-0 mb-6">
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">
+                {domain.domain}
+              </h3>
+              <div className="flex items-center space-x-4 mt-1">
+                <Badge
+                  variant={
+                    domain.status === "verified" ? "default" : "secondary"
+                  }
+                  className={cn(getStatusColor(domain.status.toUpperCase()))}
+                >
+                  {domain.status.toUpperCase() === "VERIFIED"
+                    ? "Verified"
+                    : "Pending Verification"}
+                </Badge>
+                <span className="text-sm text-muted-foreground">
+                  {domain.mailboxes} mailboxes
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  Added {formatAddedDate(domain.addedDate)}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive">
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {dnsRecords.map((record, index) => {
+                const recordKey = record.name
+                  .toLowerCase()
+                  .split(" ")[0] as keyof typeof domain.records;
+                const status = domain.records[recordKey];
+
+                return (
+                  <Card key={index} className="bg-card border shadow-sm p-0 overflow-hidden">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-semibold text-foreground">
+                          {record.name}
+                        </span>
+                        {getRecordIcon(status)}
+                      </div>
+                      <div className="bg-muted/30 rounded p-2 mb-3">
+                        <p className="text-xs text-muted-foreground break-all line-clamp-2">
+                          {record.value}
+                        </p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                        Copy
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            {domain.status.toUpperCase() === "PENDING" && (
+              <Card className="mt-4 border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950">
+                <CardContent className="p-4">
+                  <div className="flex items-start space-x-3">
+                    <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-orange-900 dark:text-orange-100">
+                        DNS Setup Required
+                      </h4>
+                      <p className="text-sm text-orange-700 dark:text-orange-300 mt-1">
+                        Please add the DNS records above to your domain&apos;s
+                        DNS settings. Once added, verification typically takes
+                        5-15 minutes.
+                      </p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mt-2 h-auto p-0 text-orange-700 hover:text-orange-900"
+                      >
+                        Check DNS Status
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+export default DomainsTab;

@@ -4,22 +4,52 @@ module.exports = {
   roots: ['<rootDir>'],
   testMatch: ['**/__tests__/**/*.test.(ts|tsx)', '**/*.test.(ts|tsx)'],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      tsconfig: {
+        jsx: 'react-jsx',
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+        module: 'esnext',
+        target: 'es2017',
+        lib: ['dom', 'dom.iterable', 'esnext'],
+        skipLibCheck: true,
+        forceConsistentCasingInFileNames: true,
+      },
+      useESM: true,
+    }],
   },
   collectCoverageFrom: [
     '**/*.{ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
+    '!**/.next/**',
+    '!**/storybook-static/**',
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
+    '^@app/(.*)$': '<rootDir>/app/$1',
+    '^@features/(.*)$': '<rootDir>/features/$1',
+    '^@shared/(.*)$': '<rootDir>/src/shared/$1',
+    '^server-only$': '<rootDir>/__mocks__/server-only.js',
+    '^client-only$': '<rootDir>/__mocks__/client-only.js',
+    '^next/navigation$': '<rootDir>/__mocks__/next-navigation.js',
+    '^next/headers$': '<rootDir>/__mocks__/next-headers.js',
+    '^next-intl$': '<rootDir>/__mocks__/next-intl.js',
+    '^next-intl/navigation$': '<rootDir>/__mocks__/next-intl/navigation.js',
+    '^next-intl/routing$': '<rootDir>/__mocks__/next-intl/routing.js',
+    '^@niledatabase/(.*)$': '<rootDir>/__mocks__/@niledatabase.js',
+    // Legacy mappings for backward compatibility during migration
+    '^@niledatabase/client$': '<rootDir>/__mocks__/@niledatabase.js',
+    '^@niledatabase/react$': '<rootDir>/__mocks__/@niledatabase.js',
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  globals: {
-    'ts-jest': {
-      tsconfig: {
-        jsx: 'react-jsx',
-      },
-    },
-  },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+  testPathIgnorePatterns: [
+    '<rootDir>/.next/',
+    '<rootDir>/storybook-static/',
+  ],
+  transformIgnorePatterns: [
+    'node_modules/(?!(next-intl|use-intl|@niledatabase|class-variance-authority|next-intl\\/routing|next-intl\\/navigation)/)',
+  ],
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
 };
