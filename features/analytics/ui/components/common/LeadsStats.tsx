@@ -1,7 +1,7 @@
 "use client";
 
 import { Mail, Users } from "lucide-react";
-import { StatsCard } from "@/features/analytics";
+import StatsCard from "./StatsCard";
 import { LeadStats } from "@/types/clients-leads";
 
 interface LeadsStatsProps {

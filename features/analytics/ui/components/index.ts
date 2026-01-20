@@ -20,6 +20,7 @@ export { default as DashboardOverviewLineChart } from './dashboard/MigratedOverv
 export { default as DashboardPerformanceFilter } from './dashboard/MigratedPerformanceFilter';
 export { default as DashboardStatsCard } from './common/StatsCard';
 export { default as StatsCard } from './common/StatsCard';
+export { default as LeadsStats } from './common/LeadsStats';
 export { default as KpiCards } from './dashboard/KpiCards';
 
 // Dashboard Actions
