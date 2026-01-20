@@ -5,14 +5,6 @@
  * External features should only import from this index file, not from internal modules.
  */
 
-// Actions - Server-side operations
-export {
-  getCrossDomainPerformanceComparison,
-  getCrossDomainTimeSeries,
-  getCrossDomainCorrelationAnalysis,
-  generateCrossDomainInsights,
-} from './actions';
-
 // Types - Public type definitions
 export type {
   PerformanceMetrics,
@@ -29,6 +21,36 @@ export type {
   ChartDataPoint,
   AnalyticsUIFilters,
 } from './types';
+
+// Additional types for warmup functionality
+export type {
+  MailboxWarmupData,
+} from './lib/warmup';
+
+// Hooks - Client-side data fetching and state management
+export {
+  useDomainAnalytics,
+  useDomainAnalyticsSummary,
+} from './hooks/use-domain-analytics';
+
+// Actions - Server-side operations
+export {
+  getCrossDomainPerformanceComparison,
+  getCrossDomainTimeSeries,
+  getCrossDomainCorrelationAnalysis,
+  generateCrossDomainInsights,
+} from './actions';
+
+// Data Access - Public data operations
+export {
+  getMailboxWarmupData,
+  getMailboxById,
+} from './lib/warmup';
+
+// Services - Public analytics services
+export {
+  analyticsService,
+} from './lib/services';
 
 // UI Components - Public components for external use
 export {
@@ -50,8 +72,3 @@ export {
   StatsCard,
   LeadsStats,
 } from './ui/components';
-
-// Services - Public analytics services
-export {
-  analyticsService,
-} from './lib/services';

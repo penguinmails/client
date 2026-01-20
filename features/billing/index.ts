@@ -5,6 +5,16 @@
  * External features should only import from this index file, not from internal modules.
  */
 
+// Types - Public type definitions
+export type {
+  StorageOption,
+  PaymentMethod,
+  SubscriptionPlan,
+  CompanyBilling,
+  Invoice,
+  BillingSummary,
+} from './types';
+
 // Actions - Server-side operations
 export {
   getBillingInfo,
@@ -17,22 +27,6 @@ export {
   getUsageWithCalculations,
 } from './actions';
 
-// Types - Public type definitions
-export type {
-  StorageOption,
-  PaymentMethod,
-  SubscriptionPlan,
-  CompanyBilling,
-  Invoice,
-  BillingSummary,
-} from './types';
-
-// UI Components - Public components for external use
-export {
-  BillingSettings,
-  BillingLoadingSkeleton,
-} from './ui/components';
-
 // Hooks - Public custom hooks
 export {
   useBillingAnalytics,
@@ -44,3 +38,9 @@ export {
 export {
   createStripeCheckoutSession,
 } from './lib/checkout';
+
+// UI Components - Public components for external use
+export {
+  BillingSettings,
+  BillingLoadingSkeleton,
+} from './ui/components';

@@ -5,6 +5,13 @@
  * External features should only import from this index file, not from internal modules.
  */
 
+// Types - Public type definitions
+export type {
+  TeamMember,
+  TeamRole,
+  TeamPermission,
+} from './types';
+
 // Actions - Server-side operations
 export {
   getTeamMembers,
@@ -15,13 +22,6 @@ export {
   cancelInvite,
   resendInvite,
 } from './actions';
-
-// Types - Public type definitions
-export type {
-  TeamMember,
-  TeamRole,
-  TeamPermission,
-} from './types';
 
 // UI Components - Public components for external use
 export {
