@@ -10,6 +10,7 @@ type ChartColors = {
   chart4: string;
   chart5: string;
   destructive: string;
+  textColor: string;
 };
 
 /**
@@ -24,6 +25,7 @@ const CHART_COLORS: ChartColors = {
   chart4: "#8b5cf6", // Purple
   chart5: "#ec4899", // Pink
   destructive: "#dc2626", // Red - Spam Flags
+  textColor: "#888888", // Default text color for chart labels
 };
 
 /**
@@ -53,6 +55,16 @@ export function useChartColors() {
         return fallback;
       };
       
+      // Resolve text color for chart labels using Tailwind class
+      const resolveTextColor = (): string => {
+        testElement.className = "text-muted-foreground";
+        const computed = getComputedStyle(testElement).color;
+        if (computed && computed !== "rgba(0, 0, 0, 0)" && computed.startsWith("rgb")) {
+          return rgbToHex(computed);
+        }
+        return CHART_COLORS.textColor;
+      };
+      
       const newColors = {
         chart1: resolveColor("--chart-1", CHART_COLORS.chart1),
         chart2: resolveColor("--chart-2", CHART_COLORS.chart2),
@@ -60,6 +72,7 @@ export function useChartColors() {
         chart4: resolveColor("--chart-4", CHART_COLORS.chart4),
         chart5: resolveColor("--chart-5", CHART_COLORS.chart5),
         destructive: resolveColor("--destructive", CHART_COLORS.destructive),
+        textColor: resolveTextColor(),
       };
       
       setColors(newColors);
@@ -87,31 +100,7 @@ export function useChartColors() {
     totalWarmups: colors.chart1,
     spamFlags: colors.destructive,
     replies: colors.chart2,
-    // Text color for chart labels (resolves theme-aware muted foreground)
-    textColor: resolveTextColor(),
   };
-}
-
-/**
- * Get the current theme-aware text color for chart labels.
- */
-function resolveTextColor(): string {
-  if (typeof window === "undefined") return "#888888";
-  
-  const testElement = document.createElement("div");
-  testElement.style.cssText = "position:absolute;visibility:hidden;";
-  testElement.className = "text-muted-foreground";
-  document.body.appendChild(testElement);
-  
-  try {
-    const computed = getComputedStyle(testElement).color;
-    if (computed && computed !== "rgba(0, 0, 0, 0)" && computed.startsWith("rgb")) {
-      return rgbToHex(computed);
-    }
-    return "#888888";
-  } finally {
-    document.body.removeChild(testElement);
-  }
 }
 
 /**
