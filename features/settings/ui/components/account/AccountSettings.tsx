@@ -8,10 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  SettingsLoadingSkeleton,
-  SettingsErrorState,
-} from "@/components";
+import { SettingsLoadingSkeleton, SettingsErrorState } from "../common";
 import { useState, useCallback } from "react";
 
 // Local ActionResult type to avoid import issues
@@ -24,31 +21,35 @@ interface ActionResult<T = unknown> {
 // Simple useServerAction implementation
 function useServerAction<T = unknown, P = void>(
   action: (params: P) => Promise<ActionResult<T>>,
-  options?: { onError?: (error: string) => void }
+  options?: { onError?: (error: string) => void },
 ) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<T | null>(null);
 
-  const execute = useCallback(async (params: P) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await action(params);
-      if (result.success) {
-        setData(result.data || null);
-      } else {
-        setError(result.error || "Unknown error");
-        options?.onError?.(result.error || "Unknown error");
+  const execute = useCallback(
+    async (params: P) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await action(params);
+        if (result.success) {
+          setData(result.data || null);
+        } else {
+          setError(result.error || "Unknown error");
+          options?.onError?.(result.error || "Unknown error");
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Unknown error";
+        setError(errorMessage);
+        options?.onError?.(errorMessage);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      setError(errorMessage);
-      options?.onError?.(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [action, options]);
+    },
+    [action, options],
+  );
 
   return { loading, error, data, execute };
 }
@@ -59,15 +60,12 @@ import PasswordSettingsForm from "../profile/PasswordSettingsForm";
 import { ProfileSettingsForm } from "../profile/ProfileSettingsForm";
 import { ProfileFormValues } from "@/features/settings";
 
-
 interface AccountSettingsProps extends React.HTMLAttributes<HTMLDivElement> {
   userProfile?: ProfileFormValues & { role: string; avatarUrl?: string };
 }
 
 // Wrapper to adapt ProfileActionResponse to ActionResult format expected by useServerAction
-const getUserProfileAction = async (): Promise<
-  ActionResult<unknown>
-> => {
+const getUserProfileAction = async (): Promise<ActionResult<unknown>> => {
   try {
     const result = await getUserProfile();
 
@@ -158,18 +156,18 @@ export default function AccountSettings({
       sidebarView?: string;
     };
     userProfile = {
-      firstName: data.firstName || '',
-      lastName: data.lastName || '',
-      name: data.name || data.email || '', // Use email as fallback if name is empty
-      email: data.email || '',
+      firstName: data.firstName || "",
+      lastName: data.lastName || "",
+      name: data.name || data.email || "", // Use email as fallback if name is empty
+      email: data.email || "",
       avatarUrl: data.avatar || data.avatarUrl || undefined,
       username: undefined, // Not available in profile data
       role: data.role || undefined,
       phone: data.phone,
       bio: data.bio,
       avatar: data.avatar,
-      timezone: data.timezone || 'UTC',
-      language: data.language || 'en',
+      timezone: data.timezone || "UTC",
+      language: data.language || "en",
       sidebarView: data.sidebarView as "collapsed" | "expanded" | undefined,
     };
   }

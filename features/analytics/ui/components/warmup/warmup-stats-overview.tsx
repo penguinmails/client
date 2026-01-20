@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import StatsCard from "@/components/MigratedStatsCard";
+import StatsCard from "@/features/analytics/ui/components/common/StatsCard";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
 import { mapRawToLegacyMailboxData } from "@features/analytics/lib/mappers";
 import { MailboxWarmupData } from "@/types";

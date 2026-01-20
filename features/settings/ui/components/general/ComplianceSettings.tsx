@@ -18,9 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
-import { SettingsErrorState } from "@/components/settings-error-state";
-import { useSettingsNotifications } from "@/components/settings-success-notification";
+import { SettingsLoadingSkeleton } from "@/features/settings/ui/components/common/SettingsLoadingSkeleton";
+import { SettingsErrorState } from "@/features/settings/ui/components/common/SettingsErrorState";
+import { useSettingsNotifications } from "@/features/settings/ui/components/common/SettingsSuccessNotification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -40,7 +40,7 @@ import {
 } from "@features/settings/actions";
 import { Loader2 } from "lucide-react";
 import { productionLogger } from "@/lib/logger";
-import { NextRequest } from 'next/server';
+import { NextRequest } from "next/server";
 
 const complianceFormSchema = z.object({
   autoAddUnsubscribeLink: z.boolean(),
@@ -70,7 +70,7 @@ export function ComplianceSettings({
 }: ComplianceSettingsProps) {
   const { showSaveSuccess } = useSettingsNotifications();
   const [submitLoading, setSubmitLoading] = useState(false);
-  
+
   // Server action for fetching compliance settings
   const complianceAction = useServerAction(() => getComplianceSettings(), {
     onError: (error) => {
@@ -132,8 +132,11 @@ export function ComplianceSettings({
         // Map form fields to server expected fields if needed
         // For now, just pass the data as-is since server accepts any partial
       };
-      
-      const result = await updateComplianceSettings({ data: serverData, req: undefined as unknown as NextRequest });
+
+      const result = await updateComplianceSettings({
+        data: serverData,
+        req: undefined as unknown as NextRequest,
+      });
 
       if (result.success) {
         showSaveSuccess("Compliance settings have been updated successfully."); // Use hook function
@@ -141,7 +144,7 @@ export function ComplianceSettings({
         // Handle validation errors
         productionLogger.error(
           "Failed to save compliance settings",
-          "Unknown error"
+          "Unknown error",
         );
       }
     } catch (error) {

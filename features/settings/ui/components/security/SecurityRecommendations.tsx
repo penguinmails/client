@@ -2,9 +2,9 @@
 import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button/button";
-import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
-import { SettingsErrorState } from "@/components/settings-error-state";
-import { useSettingsNotifications } from "@/components/settings-success-notification";
+import { SettingsLoadingSkeleton } from "@/features/settings/ui/components/common/SettingsLoadingSkeleton";
+import { SettingsErrorState } from "@/features/settings/ui/components/common/SettingsErrorState";
+import { useSettingsNotifications } from "@/features/settings/ui/components/common/SettingsSuccessNotification";
 import { useTwoAuthContext } from "./TwoFactorAuthSwitch";
 import { AlertTriangle, Check, Shield, Loader2, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -45,7 +45,10 @@ function SecurityRecommendations() {
       await securityAction.execute(undefined);
       showSecurityUpdateSuccess();
     } catch (error) {
-      productionLogger.error("Failed to refresh security recommendations", error);
+      productionLogger.error(
+        "Failed to refresh security recommendations",
+        error,
+      );
     } finally {
       setRefreshing(false);
     }
@@ -126,7 +129,7 @@ function SecurityRecommendations() {
         className={cn(
           isEnabled
             ? "border-green-200 bg-green-50/50"
-            : "border-orange-200 bg-orange-50/50"
+            : "border-orange-200 bg-orange-50/50",
         )}
       >
         <AlertTitle className="flex items-center justify-between">
@@ -134,7 +137,7 @@ function SecurityRecommendations() {
             <div
               className={cn(
                 "p-1 rounded-full",
-                isEnabled ? "bg-green-100" : "bg-orange-100"
+                isEnabled ? "bg-green-100" : "bg-orange-100",
               )}
             >
               {isEnabled ? (
@@ -150,7 +153,7 @@ function SecurityRecommendations() {
             className={cn(
               isEnabled
                 ? "bg-green-100 text-green-700 border-green-300"
-                : "bg-orange-100 text-orange-700 border-orange-300"
+                : "bg-orange-100 text-orange-700 border-orange-300",
             )}
           >
             {isEnabled ? "Enabled" : "Recommended"}
@@ -212,7 +215,7 @@ function SecurityRecommendations() {
           title: recommendation.title,
           description: recommendation.description,
           status: recommendation.completed ? "enabled" : "recommended",
-          actionRequired: !recommendation.completed
+          actionRequired: !recommendation.completed,
         };
         return (
           <Alert
@@ -222,7 +225,7 @@ function SecurityRecommendations() {
                 ? "border-green-200 bg-green-50/50"
                 : uiRecommendation.status === "warning"
                   ? "border-red-200 bg-red-50/50"
-                  : "border-orange-200 bg-orange-50/50"
+                  : "border-orange-200 bg-orange-50/50",
             )}
           >
             <AlertTitle className="flex items-center justify-between">
@@ -234,7 +237,7 @@ function SecurityRecommendations() {
                       ? "bg-green-100"
                       : uiRecommendation.status === "warning"
                         ? "bg-red-100"
-                        : "bg-orange-100"
+                        : "bg-orange-100",
                   )}
                 >
                   {uiRecommendation.status === "enabled" ? (
@@ -254,7 +257,7 @@ function SecurityRecommendations() {
                     ? "bg-green-100 text-green-700 border-green-300"
                     : uiRecommendation.status === "warning"
                       ? "bg-red-100 text-red-700 border-red-300"
-                      : "bg-orange-100 text-orange-700 border-orange-300"
+                      : "bg-orange-100 text-orange-700 border-orange-300",
                 )}
               >
                 {uiRecommendation.status === "enabled"

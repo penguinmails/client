@@ -10,16 +10,15 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
-import { SettingsErrorState } from "@/components/settings-error-state";
-import { useSettingsNotifications } from "@/components/settings-success-notification";
+import { SettingsLoadingSkeleton } from "@/features/settings/ui/components/common/SettingsLoadingSkeleton";
+import { SettingsErrorState } from "@/features/settings/ui/components/common/SettingsErrorState";
+import { useSettingsNotifications } from "@/features/settings/ui/components/common/SettingsSuccessNotification";
 import { useClientPreferences } from "@features/settings/ui/context/client-preferences-context";
 import { usePreferenceSync } from "@features/settings/lib/hooks/use-preference-sync";
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import type { TableDensity } from "@/lib/utils/browser";
 import { productionLogger } from "@/lib/logger";
-
 
 const densityOptions = [
   { value: "compact", label: "Compact" },
@@ -42,7 +41,6 @@ const AppearanceSettings: React.FC = () => {
     return <div>Loading preferences...</div>;
   }
 
-
   const handleDensityChange = async (newDensity: string) => {
     setSyncLoading(true);
     try {
@@ -50,7 +48,10 @@ const AppearanceSettings: React.FC = () => {
       await syncToServer?.();
       showAppearanceUpdateSuccess();
     } catch (error) {
-      productionLogger.error("Failed to sync density preference to server", error);
+      productionLogger.error(
+        "Failed to sync density preference to server",
+        error,
+      );
       // Could show error toast here
     } finally {
       setSyncLoading(false);
@@ -65,7 +66,10 @@ const AppearanceSettings: React.FC = () => {
       await syncToServer?.();
       showAppearanceUpdateSuccess();
     } catch (error) {
-      productionLogger.error("Failed to sync campaign preview preference", error);
+      productionLogger.error(
+        "Failed to sync campaign preview preference",
+        error,
+      );
     } finally {
       setSyncLoading(false);
     }
@@ -111,7 +115,6 @@ const AppearanceSettings: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-
         <div className="space-y-2">
           <Label>Table Density</Label>
           <div className="grid grid-cols-3 gap-2">

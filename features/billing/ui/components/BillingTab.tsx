@@ -34,7 +34,7 @@ import { BillingLoadingSkeleton } from "@features/billing/ui/components/BillingL
 import {
   SettingsErrorBoundary,
   SettingsErrorFallback,
-} from "@/components/settings/SettingsErrorBoundary";
+} from "@/features/settings";
 import { Button } from "@/components/ui/button/button";
 import { toast } from "sonner";
 import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checkout";
@@ -58,13 +58,13 @@ function BillingTab() {
         toast.error(t("BillingTab.errors.loadBilling"), { description: error });
       },
     }),
-    [t]
+    [t],
   );
 
   // Server action hooks
   const billingDataAction = useServerAction(
     getBillingDataForSettings,
-    billingOptions
+    billingOptions,
   );
   const { execute: loadBilling } = billingDataAction;
 
@@ -81,12 +81,12 @@ function BillingTab() {
         });
       },
     }),
-    [loadBilling, t]
+    [loadBilling, t],
   );
 
   const updateBillingAction = useServerActionWithParams(
     updateBillingInfo,
-    updateOptions
+    updateOptions,
   );
 
   const updateCompanyOptions = useMemo(
@@ -102,12 +102,12 @@ function BillingTab() {
         });
       },
     }),
-    [loadBilling, t]
+    [loadBilling, t],
   );
 
   const updateCompanyAction = useServerActionWithParams(
     updateCompanyInfo,
-    updateCompanyOptions
+    updateCompanyOptions,
   );
 
   const companyOptions = useMemo(
@@ -118,7 +118,7 @@ function BillingTab() {
         });
       },
     }),
-    [t]
+    [t],
   );
 
   const companyDataAction = useServerAction(getUserSettings, companyOptions);
@@ -208,7 +208,7 @@ function BillingTab() {
             <div className="grid gap-6 md:grid-cols-3">
               <Card
                 className={cn(
-                  "border-primary/70 bg-linear-to-br from-primary/20 to-indigo-50"
+                  "border-primary/70 bg-linear-to-br from-primary/20 to-indigo-50",
                 )}
               >
                 <CardContent>
@@ -336,7 +336,7 @@ function BillingTab() {
                   t("BillingTab.company");
                 const newCompanyName = prompt(
                   t("BillingTab.companyName") + ":",
-                  currentName
+                  currentName,
                 );
                 if (
                   newCompanyName &&

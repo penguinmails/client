@@ -2,7 +2,7 @@
 
 import { Eye, Mail, MousePointer, Reply, CheckCircle } from "lucide-react";
 import { KPIDisplayConfig } from "@features/analytics/types/ui";
-import MigratedStatsCard from "@/components/MigratedStatsCard";
+import StatsCard from "@/features/analytics/ui/components/common/StatsCard";
 
 interface MigratedAnalyticsStatisticsProps {
   // New individual prop interface
@@ -32,7 +32,8 @@ function MigratedAnalyticsStatistics({
       id: "total-sent",
       name: "Total Sent",
       displayValue: totalSent.toString(),
-      rawValue: typeof totalSent === 'string' ? parseFloat(totalSent) || 0 : totalSent,
+      rawValue:
+        typeof totalSent === "string" ? parseFloat(totalSent) || 0 : totalSent,
       unit: "emails",
       color: "blue",
     },
@@ -40,7 +41,8 @@ function MigratedAnalyticsStatistics({
       id: "open-rate",
       name: "Open Rate",
       displayValue: `${openRate}%`,
-      rawValue: typeof openRate === 'string' ? parseFloat(openRate) || 0 : openRate,
+      rawValue:
+        typeof openRate === "string" ? parseFloat(openRate) || 0 : openRate,
       unit: "%",
       color: "purple",
     },
@@ -48,7 +50,8 @@ function MigratedAnalyticsStatistics({
       id: "reply-rate",
       name: "Reply Rate",
       displayValue: `${replyRate}%`,
-      rawValue: typeof replyRate === 'string' ? parseFloat(replyRate) || 0 : replyRate,
+      rawValue:
+        typeof replyRate === "string" ? parseFloat(replyRate) || 0 : replyRate,
       unit: "%",
       color: "green",
     },
@@ -56,7 +59,8 @@ function MigratedAnalyticsStatistics({
       id: "click-rate",
       name: "Click Rate",
       displayValue: `${clickRate}%`,
-      rawValue: typeof clickRate === 'string' ? parseFloat(clickRate) || 0 : clickRate,
+      rawValue:
+        typeof clickRate === "string" ? parseFloat(clickRate) || 0 : clickRate,
       unit: "%",
       color: "orange",
     },
@@ -104,7 +108,7 @@ function MigratedAnalyticsStatistics({
   return (
     <>
       {kpiConfigs.map((kpi) => (
-        <MigratedStatsCard
+        <StatsCard
           key={kpi.id}
           title={kpi.name}
           value={kpi.displayValue}

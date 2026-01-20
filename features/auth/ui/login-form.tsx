@@ -13,7 +13,10 @@ import { Turnstile } from "next-turnstile";
 import { verifyTurnstileToken } from "@/features/auth/lib/verify-token";
 import { useTranslations } from "next-intl";
 import { initPostHog, ph } from "@/lib/posthog";
-import { getLoginAttemptStatus, recordFailedLoginAttempt } from "@/features/auth/lib/rate-limit";
+import {
+  getLoginAttemptStatus,
+  recordFailedLoginAttempt,
+} from "@/features/auth/lib/rate-limit";
 import { productionLogger } from "@/lib/logger";
 
 const MAX_LOGIN_ATTEMPTS = parseInt(

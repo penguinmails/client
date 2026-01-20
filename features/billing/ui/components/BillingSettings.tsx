@@ -9,14 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SettingsLoadingSkeleton } from "@/components/settings-loading-skeleton";
-import { SettingsErrorState } from "@/components/settings-error-state";
-import { useSettingsNotifications } from "@/components/settings-success-notification";
+import {
+  SettingsLoadingSkeleton,
+  SettingsErrorState,
+  useSettingsNotifications,
+} from "@/features/settings";
 import { useServerAction } from "@/hooks/use-server-action";
 import { productionLogger } from "@/lib/logger";
-import {
-  getBillingInfo,
-} from "../integration/billing-api";
+import { getBillingInfo } from "../integration/billing-api";
 import { Loader2 } from "lucide-react";
 import type { BillingData } from "@features/settings/types";
 import { ChangePlanTrigger } from "./change-plan-dialog";
@@ -24,7 +24,7 @@ import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checko
 
 // Type guards
 const isValidPlanDetails = (
-  planDetails: unknown
+  planDetails: unknown,
 ): planDetails is BillingData["planDetails"] => {
   if (typeof planDetails !== "object" || planDetails === null) return false;
   const obj = planDetails as Record<string, unknown>;
@@ -41,7 +41,7 @@ const isValidPlanDetails = (
 };
 
 const isValidPaymentMethod = (
-  paymentMethod: unknown
+  paymentMethod: unknown,
 ): paymentMethod is BillingData["paymentMethod"] => {
   if (typeof paymentMethod !== "object" || paymentMethod === null) return false;
   const obj = paymentMethod as Record<string, unknown>;
@@ -53,7 +53,7 @@ const isValidPaymentMethod = (
 };
 
 const isValidInvoice = (
-  invoice: unknown
+  invoice: unknown,
 ): invoice is BillingData["billingHistory"][0] => {
   if (typeof invoice !== "object" || invoice === null) return false;
   const obj = invoice as Record<string, unknown>;
@@ -99,7 +99,7 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
     if (!initialBilling) {
       billingAction.execute(undefined);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialBilling]);
 
   // const handlePlanChange = async () => {
@@ -172,15 +172,20 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-medium">
-                {isBillingData(billing) && isValidPlanDetails(billing.planDetails)
+                {isBillingData(billing) &&
+                isValidPlanDetails(billing.planDetails)
                   ? billing.planDetails.name
                   : "Unknown Plan"}
               </h3>
               <p className="text-sm text-muted-foreground">
-                {isBillingData(billing) && isValidPlanDetails(billing.planDetails)
+                {isBillingData(billing) &&
+                isValidPlanDetails(billing.planDetails)
                   ? `${billing.planDetails.price} / month`
                   : "Unknown price"}{" "}
-                • Renews on {isBillingData(billing) ? billing.renewalDate : "Unknown date"}{" "}
+                • Renews on{" "}
+                {isBillingData(billing)
+                  ? billing.renewalDate
+                  : "Unknown date"}{" "}
               </p>
             </div>
             <ChangePlanTrigger
@@ -196,7 +201,8 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
                 <span>Email accounts</span>
                 <span>
                   {billing.emailAccountsUsed || 0} /{" "}
-                  {isBillingData(billing) && isValidPlanDetails(billing.planDetails)
+                  {isBillingData(billing) &&
+                  isValidPlanDetails(billing.planDetails)
                     ? billing.planDetails.maxEmailAccounts
                     : "Unknown"}
                 </span>
@@ -208,7 +214,9 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
               <div className="flex justify-between text-sm">
                 <span>Emails per month</span>
                 <span>
-                  {isBillingData(billing) ? (billing.emailsPerMonthUsed || 0).toLocaleString() : "Unknown"}
+                  {isBillingData(billing)
+                    ? (billing.emailsPerMonthUsed || 0).toLocaleString()
+                    : "Unknown"}
                 </span>
               </div>
             </div>
@@ -303,31 +311,32 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Billing History</h3>
           <div className="rounded-md border">
-            {isBillingData(billing) && billing.billingHistory.map((item, index) => (
-              <div
-                key={index}
-                className={`p-4 flex items-center justify-between text-sm ${index > 0 ? "border-t" : ""}`}
-              >
-                <div>
-                  <p className="font-medium">
-                    {isValidInvoice(item) ? item.date : "Unknown date"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {isValidInvoice(item)
-                      ? item.description
-                      : "Unknown description"}
-                  </p>
+            {isBillingData(billing) &&
+              billing.billingHistory.map((item, index) => (
+                <div
+                  key={index}
+                  className={`p-4 flex items-center justify-between text-sm ${index > 0 ? "border-t" : ""}`}
+                >
+                  <div>
+                    <p className="font-medium">
+                      {isValidInvoice(item) ? item.date : "Unknown date"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {isValidInvoice(item)
+                        ? item.description
+                        : "Unknown description"}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium">
+                      {isValidInvoice(item) ? item.amount : "Unknown amount"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {isValidInvoice(item) ? item.method : "Unknown method"}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-medium">
-                    {isValidInvoice(item) ? item.amount : "Unknown amount"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {isValidInvoice(item) ? item.method : "Unknown method"}
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
           <div className="text-center">
             <Button variant="link" size="sm">

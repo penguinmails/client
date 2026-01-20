@@ -4,8 +4,8 @@ import "@testing-library/jest-dom";
 import {
   SettingsErrorBoundary,
   SettingsErrorFallback,
-} from "../SettingsErrorBoundary";
-import { MockFunction } from '@/types/test-utils';
+} from "../common/SettingsErrorBoundary";
+import { MockFunction } from "@/types/test-utils";
 
 // Mock console methods to avoid noise in tests
 let consoleErrorSpy: jest.SpyInstance;
@@ -35,7 +35,7 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <div>Test content</div>
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       expect(screen.getByText("Test content")).toBeInTheDocument();
@@ -45,12 +45,12 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <ThrowError shouldThrow={false} />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       expect(screen.getByText("No error")).toBeInTheDocument();
       expect(
-        screen.queryByText("Something went wrong")
+        screen.queryByText("Something went wrong"),
       ).not.toBeInTheDocument();
     });
   });
@@ -60,16 +60,16 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       expect(screen.getByText("Something went wrong")).toBeInTheDocument();
       expect(screen.getByText("Test error message")).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /try again/i })
+        screen.getByRole("button", { name: /try again/i }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /reload page/i })
+        screen.getByRole("button", { name: /reload page/i }),
       ).toBeInTheDocument();
     });
 
@@ -81,12 +81,14 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <ThrowGenericError />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       expect(screen.getByText("Something went wrong")).toBeInTheDocument();
       expect(
-        screen.getByText("An unexpected error occurred while loading settings.")
+        screen.getByText(
+          "An unexpected error occurred while loading settings.",
+        ),
       ).toBeInTheDocument();
     });
 
@@ -94,13 +96,13 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         "[ERROR] Settings Error Boundary caught an error:",
         expect.any(Error),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
   });
@@ -110,7 +112,7 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       expect(screen.getByText("Something went wrong")).toBeInTheDocument();
@@ -128,7 +130,7 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       const reloadButton = screen.getByRole("button", { name: /reload page/i });
@@ -148,12 +150,12 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary fallback={customFallback}>
           <ThrowError shouldThrow={true} />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       expect(screen.getByText("Custom error fallback")).toBeInTheDocument();
       expect(
-        screen.queryByText("Something went wrong")
+        screen.queryByText("Something went wrong"),
       ).not.toBeInTheDocument();
     });
   });
@@ -171,11 +173,11 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       expect(
-        screen.getByText("Error Details (Development)")
+        screen.getByText("Error Details (Development)"),
       ).toBeInTheDocument();
     });
 
@@ -185,11 +187,11 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       expect(
-        screen.queryByText("Error Details (Development)")
+        screen.queryByText("Error Details (Development)"),
       ).not.toBeInTheDocument();
     });
   });
@@ -213,13 +215,13 @@ describe("SettingsErrorBoundary", () => {
       render(
         <SettingsErrorBoundary>
           <TestComponent />
-        </SettingsErrorBoundary>
+        </SettingsErrorBoundary>,
       );
 
       // This won't actually trigger the error boundary because useEffect errors
       // are not caught by error boundaries. But we test the component structure.
       expect(
-        screen.getByRole("button", { name: /trigger error/i })
+        screen.getByRole("button", { name: /trigger error/i }),
       ).toBeInTheDocument();
     });
   });
@@ -248,7 +250,7 @@ describe("SettingsErrorFallback", () => {
     render(<SettingsErrorFallback error="Test error" />);
 
     expect(
-      screen.queryByRole("button", { name: /retry/i })
+      screen.queryByRole("button", { name: /retry/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -293,7 +295,7 @@ describe("Error Boundary Integration", () => {
         <SettingsErrorBoundary>
           <InnerComponent shouldThrow={true} />
         </SettingsErrorBoundary>
-      </SettingsErrorBoundary>
+      </SettingsErrorBoundary>,
     );
 
     // Inner error boundary should catch the error
@@ -324,7 +326,7 @@ describe("Error Boundary Integration", () => {
     render(
       <SettingsErrorBoundary>
         <AsyncComponent />
-      </SettingsErrorBoundary>
+      </SettingsErrorBoundary>,
     );
 
     // Initially shows content

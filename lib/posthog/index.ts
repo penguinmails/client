@@ -50,6 +50,7 @@ export async function initPostHog(): Promise<PostHog> {
 
     posthog.init(KEY, {
       api_host: HOST,
+      defaults: '2025-11-30',
       autocapture: true,
       capture_pageview: true,
       capture_pageleave: true,
