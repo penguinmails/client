@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import { cn } from "@/lib/utils";
-import { PasswordStrength } from "@/lib/utils";
+import { PasswordStrength } from "@/lib/validation";
 import { Progress } from "@/components/ui/progress";
+import { useTranslations } from "next-intl";
 
 interface PasswordStrengthMeterProps {
   strength: PasswordStrength;
@@ -16,6 +19,7 @@ export const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({
   name,
   className,
 }) => {
+  const t = useTranslations("Components.PasswordStrength");
   const getColorClasses = (color: string) => {
     switch (color) {
       case "red":
@@ -52,12 +56,12 @@ export const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({
       data-testid={`${testId}-strength-meter`}
     >
       <div className="flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">Password strength</span>
+        <span className="text-xs text-muted-foreground">{t("title")}</span>
         <span
           className={cn("text-xs font-medium", colorClasses)}
           data-testid={`${testId}-strength-label`}
         >
-          {strength.label}
+          {t(strength.label)}
         </span>
       </div>
 
@@ -80,7 +84,7 @@ export const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({
               className="text-xs text-muted-foreground leading-tight"
               data-testid={`${testId}-feedback-${index}`}
             >
-              • {message}
+              • {t(message)}
             </p>
           ))}
         </div>

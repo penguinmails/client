@@ -1,0 +1,290 @@
+"use client";
+import { Filter, SearchInput } from "@/components/ui/custom/Filter";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getMockCampaigns, getMockMailboxes } from "@/lib/mocks/providers";
+import { cn } from "@/lib/utils";
+import {
+  Archive,
+  AtSign,
+  Clock,
+  Inbox,
+  Mail,
+  Send,
+  Tag,
+  Trash2,
+  TrendingUp,
+  Users,
+  X,
+} from "lucide-react";
+import { useEffect, useReducer } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+function InboxFilter() {
+  const campaignsData = getMockCampaigns();
+  const mailboxes = getMockMailboxes();
+  
+  const [filterState, setFilterState] = useReducer(
+    (state, action) => ({ ...state, ...action }),
+    {
+      selectedFilter: 'all',
+      campaignFilter: [],
+      mailboxFilter: [],
+      tagFilter: [],
+      timeFilter: 'all'
+    }
+  );
+
+  const router = useRouter();
+  const currentSearchParams = useSearchParams();
+
+  useEffect(() => {
+    const params = new URLSearchParams(currentSearchParams);
+    setFilterState({
+      selectedFilter: params.get("filter") || "all",
+      campaignFilter: params.getAll("campaigns"),
+      mailboxFilter: params.getAll("mailboxes"),
+      tagFilter: params.getAll("tags"),
+      timeFilter: params.get("time") || "all"
+    });
+  }, [currentSearchParams]);
+
+  const filters = [
+    { id: "all", label: "All Messages", count: 156, icon: Inbox },
+    { id: "unread", label: "Unread", count: 24, icon: Mail },
+    { id: "sent", label: "Sent", count: 89, icon: Send },
+    { id: "archived", label: "Archived", count: 43, icon: Archive },
+    { id: "trash", label: "Trash", count: 12, icon: Trash2 },
+    { id: "team", label: "Team", count: 8, icon: Users },
+  ];
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (filterState.selectedFilter !== "all") params.append("filter", filterState.selectedFilter);
+    filterState.campaignFilter.forEach((c) => params.append("campaigns", c));
+    filterState.tagFilter.forEach((t) => params.append("tags", t));
+    filterState.mailboxFilter.forEach((m) => params.append("mailboxes", m));
+    if (filterState.timeFilter !== "all") params.append("time", filterState.timeFilter);
+    router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
+  }, [
+    filterState.selectedFilter,
+    filterState.campaignFilter,
+    filterState.tagFilter,
+    filterState.mailboxFilter,
+    filterState.timeFilter,
+    router,
+  ]);
+
+
+  const tags = ["Interested", "Not Interested", "Maybe Later", "Follow Up"];
+
+  const handleMultiSelectToggle = (
+    value: string,
+    currentSelection: string[],
+    setSelection: (selection: string[]) => void
+  ) => {
+    if (currentSelection.includes(value)) {
+      setSelection(currentSelection.filter((item) => item !== value));
+    } else {
+      setSelection([...currentSelection, value]);
+    }
+  };
+
+  const clearMultiSelect = (setSelection: (selection: string[]) => void) => {
+    setSelection([]);
+  };
+
+  const renderMultiSelectFilter = (
+    title: string,
+    items: string[],
+    selectedItems: string[],
+    setSelectedItems: (items: string[]) => void,
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+  ) => {
+    const Icon = icon;
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Icon className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-foreground">{title}</span>
+          </div>
+          {selectedItems.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => clearMultiSelect(setSelectedItems)}
+              className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-3 h-3" />
+            </Button>
+          )}
+        </div>
+
+        {selectedItems.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2">
+            {selectedItems.map((item) => (
+              <Badge
+                key={item}
+                variant="secondary"
+                className="text-xs flex items-center gap-1"
+              >
+                {item}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    handleMultiSelectToggle(
+                      item,
+                      selectedItems,
+                      setSelectedItems,
+                    )
+                  }
+                  className="h-3 w-3 p-0 ml-1 hover:bg-gray-300"
+                >
+                  <X className="w-2 h-2" />
+                </Button>
+              </Badge>
+            ))}
+          </div>
+        )}
+
+        <Select
+          value=""
+          onValueChange={(value) =>
+            handleMultiSelectToggle(value, selectedItems, setSelectedItems)
+          }
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder={`Select ${title.toLowerCase()}`} />
+          </SelectTrigger>
+          <SelectContent>
+            {items
+              .filter((item) => !selectedItems.includes(item))
+              .map((item) => (
+                <SelectItem key={item} value={item}>
+                  {item}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <Filter
+        className={cn(
+          "bg-card dark:bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none"
+        )}
+      >
+        <SearchInput />
+
+        {/* Filters */}
+        <div className="flex-1 p-4 overflow-y-auto">
+          <div className="space-y-1">
+            {filters.map((filter) => {
+              const Icon = filter.icon;
+              return (
+                <Button
+                  key={filter.id}
+                  onClick={() => setFilterState({ selectedFilter: filter.id })}
+                  variant={filterState.selectedFilter === filter.id ? "secondary" : "ghost"}
+                  className={cn(
+                    "w-full justify-between h-auto py-2.5 px-3",
+                    filterState.selectedFilter === filter.id
+                      ? "bg-[#eff6ff] text-blue-600 hover:bg-[#eff6ff]"
+                      : "text-gray-600 dark:text-muted-foreground hover:bg-gray-100",
+                  )}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Icon
+                      className={cn(
+                        "w-4 h-4",
+                        filterState.selectedFilter === filter.id
+                          ? "text-blue-600"
+                          : "text-gray-500"
+                      )}
+                    />
+                    <span className="text-sm font-medium">{filter.label}</span>
+                  </div>
+                  <Badge
+                    variant={
+                      filterState.selectedFilter === filter.id ? "default" : "secondary"
+                    }
+                    className="text-xs"
+                  >
+                    {filter.count}
+                  </Badge>
+                </Button>
+              );
+            })}
+          </div>
+
+          {/* Additional Filters */}
+          <div className="mt-6 space-y-4">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Filter By
+            </h3>
+
+            {/* Campaigns Filter */}
+            {renderMultiSelectFilter(
+              "Campaigns",
+              campaignsData.map((c) => c.name),
+              filterState.campaignFilter,
+              (campaignFilter) => setFilterState({ campaignFilter }),
+              TrendingUp
+            )}
+
+            {/* Mailboxes Filter */}
+            {renderMultiSelectFilter(
+              "Mailboxes",
+              mailboxes.map((m) => m.email),
+              filterState.mailboxFilter,
+              (mailboxFilter) => setFilterState({ mailboxFilter }),
+              AtSign
+            )}
+
+            {/* Tags Filter */}
+            {renderMultiSelectFilter(
+              "Tags",
+              tags,
+              filterState.tagFilter,
+              (tagFilter) => setFilterState({ tagFilter }),
+              Tag
+            )}
+
+            {/* Time Filter (single select) */}
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Clock className="w-4 h-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700 dark:text-foreground">
+                  Time
+                </span>
+              </div>
+              <Select value={filterState.timeFilter} onValueChange={(timeFilter) => setFilterState({ timeFilter })}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="All Time" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Time</SelectItem>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="week">This Week</SelectItem>
+                  <SelectItem value="month">This Month</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+      </Filter>
+    </>
+  );
+}
+export default InboxFilter;

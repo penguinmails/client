@@ -1,7 +1,9 @@
+// Optimized ESLint configuration using split configs for better performance
+// Consolidated ignores with specialized rule configs for different file types
+
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
-import { defineConfig, globalIgnores } from "eslint/config";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,56 +12,60 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = defineConfig([
-  // Global ignores
-  globalIgnores([
-    "**/node_modules/",
-    ".git/",
-    ".next/",
-    "out/",
-    "build/",
-    "dist/",
-    "public/",
-    ".vscode/",
-    ".idea/",
+import { mainConfig } from "./eslint.main.config.mjs";
+import { testConfig } from "./eslint.test.config.mjs";
+import { storybookConfig } from "./eslint.storybook.config.mjs";
+
+// Consolidated global ignores (covers all file types)
+const globalIgnores = {
+  ignores: [
+    "**/node_modules/**",
+    ".git/**",
+    ".next/**",
+    "out/**",
+    "build/**",
+    "dist/**",
+    "public/**",
+    ".vscode/**",
     "*.log",
     "next-env.d.ts",
-    ".open-next/",
-    ".wrangler/",
     ".eslintcache",
     "tsconfig.json",
-    "jsconfig.json",
+    "tsconfig.tsbuildinfo",
     "*.lock",
     "package.json",
+    "package-lock.json",
     "*.yml",
+    "*.yaml",
+    "*.md",
     "jest.setup.js",
-    "convex/_generated/",
-    "coverage/",
-    ".kiro"
-  ]),
-  // Next.js and TypeScript configuration
-  {
-    name: "next-typescript-config",
-    files: ["**/*.{js,jsx,ts,tsx}"],
-    extends: [
-      ...compat.config({
-        extends: ["next", "next/typescript", "prettier"],
-      }),
-    ],
-    rules: {
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        { argsIgnorePattern: "^_" },
-      ],
-      // Additional best practice rules
-      "@/prefer-const": "error",
-      "@typescript-eslint/no-var-requires": "error",
-    },
-    linterOptions: {
-      reportUnusedDisableDirectives: "warn",
-    },
-  },
-]);
+    "jest.config.js",
+    "coverage/**",
+    "storybook-static/**",
+    ".storybook/**",
+    "scripts/**",
+    "database/**",
+    "docs/**",
+    "*.config.*",
+    "*.setup.*",
+    "__mocks__/**",
+    "middleware.ts",
+    "postcss.config.mjs",
+    "update-firebase-secrets.sh",
+    "version.txt",
+    "docker-compose.yml",
+    ".env*",
+    "messages",
+  ],
+};
+
+// Combine all rule configurations directly (no slice operations needed!)
+const eslintConfig = [
+  globalIgnores,
+  ...compat.extends("next", "next/typescript", "prettier"),
+  mainConfig,
+  testConfig,
+  storybookConfig,
+];
 
 export default eslintConfig;

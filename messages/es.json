@@ -1,0 +1,856 @@
+{
+  "Analytics": {
+    "nav": {
+      "overview": "Resumen",
+      "byCampaign": "Por Campaña",
+      "byMailbox": "Por Buzón",
+      "byWarmup": "Por Calentamiento"
+    },
+    "layout": {
+      "title": "Hub de Análisis",
+      "description": "Análisis integral de rendimiento e información de campañas"
+    }
+  },
+  "Sidebar": {
+    "sections": {
+      "overview": "Resumen",
+      "gettingStarted": "Comenzando",
+      "outreachHub": "Hub de Difusión",
+      "leadHub": "Hub de Leads",
+      "communication": "Comunicación",
+      "infrastructure": "Infraestructura",
+      "analytics": "Analítica"
+    },
+    "items": {
+      "dashboard": "Tablero",
+      "setupGuide": "Guía de Configuración",
+      "campaigns": "Campañas",
+      "templates": "Plantillas",
+      "leadLists": "Listas de Leads",
+      "inbox": "Bandeja de Entrada",
+      "domainsAndMailboxes": "Dominios y Buzones",
+      "analyticsHub": "Hub de Analítica"
+    },
+    "account": {
+      "free": "Cuenta Gratuita"
+    }
+  },
+  "Navigation": {
+    "dashboard": "Tablero",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión",
+    "pricing": "Precios",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse"
+  },
+  "Auth": {
+    "logout": "Cerrar sesión"
+  },
+  "Errors": {
+    "401-LOGIN": "Las credenciales que proporcionaste no son válidas. Por favor, revisa tu correo electrónico y contraseña.",
+    "403-CAMPAIGNS": "No tienes autorización para ver o modificar los datos de la campaña.",
+    "403-USERS": "No tienes los permisos necesarios para administrar las cuentas de usuario.",
+    "500-AUTH": "Ocurrió un error inesperado en el servidor durante la autenticación. Por favor, inténtalo de nuevo más tarde.",
+    "500-LEADS": "Ocurrió un error del sistema al obtener los datos de los leads. El problema ha sido registrado."
+  },
+  "Metadata": {
+    "title": "Penguin Mails - Envío de correos electrónicos y calentamiento de dominios",
+    "description": "¡Entra en el mundo de Penguin Mails, donde cada mensaje es una agradable sorpresa!"
+  },
+  "Login": {
+    "title": "¡Bienvenido de nuevo!",
+    "description": "Ingrese sus credenciales para acceder a su panel de control.",
+    "email": {
+      "label": "Correo electrónico",
+      "placeholder": "tu@ejemplo.com"
+    },
+    "password": {
+      "label": "Contraseña"
+    },
+    "forgotPassword": "¿Olvidaste la contraseña?",
+    "loginButton": {
+      "default": "Iniciar sesión",
+      "loading": "Iniciando sesión...",
+      "tooManyAttempts": "Demasiados intentos. Completa la verificación.",
+      "completeVerification": "Completa la verificación para continuar"
+    },
+    "errors": {
+      "title": "Error de inicio de sesión",
+      "incorrectPassword": "Contraseña incorrecta",
+      "userNotFound": "Usuario no encontrado",
+      "generic": "Error de inicio de sesión. Por favor, revisa tus credenciales.",
+      "captchaRequired": "Por favor, completa la verificación CAPTCHA."
+    },
+    "signup": {
+      "text": "¿No tienes una cuenta?",
+      "link": "Regístrate"
+    },
+    "failedAttempts": "Intentos fallidos: {loginAttempts}/{MAX_LOGIN_ATTEMPTS}",
+    "securityVerification": "Por seguridad, completa la verificación para continuar.",
+    "captchaNotConfigured": "El CAPTCHA no está configurado. Por favor, contacta con el soporte."
+  },
+  "button": {
+    "label": "botón"
+  },
+  "Common": {
+    "tryAgain": "Intentar de Nuevo",
+    "loading": "Cargando...",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "ok": "OK",
+    "update": "Actualizar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "add": "Añadir",
+    "remove": "Eliminar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "confirm": "Confirmar",
+    "error": "Error",
+    "success": "Éxito",
+    "updating": "Actualizando..."
+  },
+  "SignUp": {
+    "header": {
+      "title": "Crea tu cuenta de Penguin Mails",
+      "description": "Comienza con tu experiencia de correo electrónico seguro.",
+      "alreadySignedIn": "Ya has iniciado sesión."
+    },
+    "form": {
+      "name": {
+        "label": "Nombre",
+        "placeholder": "Ingresa tu nombre"
+      },
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "tu@ejemplo.com"
+      },
+      "password": {
+        "label": "Contraseña",
+        "placeholder": "Ingresa tu contraseña"
+      },
+      "confirmPassword": {
+        "label": "Confirmar contraseña",
+        "placeholder": "Confirma tu contraseña"
+      }
+    },
+    "errors": {
+      "emailAlreadyExistsVerified": {
+        "title": "Correo electrónico ya registrado",
+        "message": "Esta dirección de correo electrónico ya está registrada. Por favor, inicia sesión en tu cuenta existente.",
+        "actionLogin": "Iniciar sesión",
+        "actionForgotPassword": "¿Olvidaste la contraseña?"
+      },
+      "emailAlreadyExistsUnverified": {
+        "title": "Cuenta no verificada",
+        "message": "Existe una cuenta con este correo electrónico pero aún no ha sido verificada. Te hemos enviado un nuevo correo de verificación.",
+        "actionResend": "Reenviar correo de verificación"
+      },
+      "signupFailed": "Error en el registro. Por favor, inténtalo de nuevo.",
+      "captchaRequired": "Por favor, completa la verificación CAPTCHA.",
+      "passwordTooWeak": "La contraseña es demasiado débil. Por favor, incluye al menos 2 de los siguientes: mayúsculas, minúsculas, números, caracteres especiales",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
+      "required": "Este campo es obligatorio",
+      "password": "La contraseña es obligatoria",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "confirmPassword": "La confirmación de contraseña es obligatoria"
+    },
+    "success": {
+      "accountCreated": "¡Cuenta creada con éxito! Revisa tu correo electrónico para ver un enlace de verificación para activar tu cuenta.",
+      "accountCreatedNoEmail": "¡Cuenta creada con éxito! En breve te enviaremos un enlace de verificación.",
+      "verificationEmailResent": "El correo de verificación ha sido reenviado. Por favor, revisa tu bandeja de entrada."
+    },
+    "button": {
+      "createAccount": "Crear cuenta",
+      "creatingAccount": "Creando cuenta...",
+      "sending": "Enviando..."
+    },
+    "captcha": {
+      "notConfigured": "CAPTCHA no está configurado. Por favor, contacta con soporte.",
+      "noToken": "No se proporcionó ningún token de Turnstile",
+      "verificationFailed": "La verificación de Turnstile falló"
+    },
+    "footer": {
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "login": "Iniciar sesión"
+    }
+  },
+  "ForgotPassword": {
+    "title": "¿Olvidaste tu contraseña?",
+    "description": {
+      "initial": "Introduce tu dirección de correo electrónico a continuación y te enviaremos un enlace para restablecer tu contraseña.",
+      "success": "Revisa tu bandeja de entrada para ver el enlace de restablecimiento."
+    },
+    "form": {
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "tu@ejemplo.com"
+      },
+      "button": {
+        "sending": "Enviando...",
+        "send": "Enviar enlace de restablecimiento"
+      }
+    },
+    "alerts": {
+      "error": {
+        "title": "Error"
+      },
+      "success": {
+        "title": "¡Correo electrónico enviado!",
+        "description": "Si existe una cuenta para {email}, recibirás un correo electrónico con instrucciones para restablecer la contraseña en breve. Por favor, revisa tu carpeta de spam si no lo ves."
+      }
+    },
+    "footer": {
+      "text": "¿Recordaste tu contraseña?",
+      "linkText": "Iniciar sesión"
+    },
+    "alreadySignedIn": "Ya has iniciado sesión.",
+    "failedToSend": "No se pudo enviar el enlace de restablecimiento. Por favor, inténtalo de nuevo."
+  },
+  "ResetPassword": {
+    "header": {
+      "title": "Restablece tu contraseña",
+      "description": "Introduce tu nueva contraseña a continuación para"
+    },
+    "form": {
+      "newPassword": {
+        "label": "Nueva contraseña",
+        "placeholder": "Introduce la nueva contraseña"
+      },
+      "confirmPassword": {
+        "label": "Confirmar nueva contraseña",
+        "placeholder": "Confirma la nueva contraseña"
+      }
+    },
+    "button": {
+      "default": "Restablecer contraseña",
+      "loading": "Restableciendo contraseña..."
+    },
+    "validating": {
+      "title": "Validando enlace de restablecimiento...",
+      "description": "Por favor, espera mientras validamos tu enlace de restablecimiento de contraseña."
+    },
+    "success": {
+      "title": "¡Contraseña restablecida con éxito!",
+      "description": "Tu contraseña ha sido restablecida con éxito. Ahora puedes iniciar sesión con tu nueva contraseña.",
+      "signIn": "Iniciar sesión"
+    },
+    "error": {
+      "title": "Enlace de restablecimiento no válido",
+      "invalidLink": "Este enlace de restablecimiento de contraseña no es válido o ha caducado.",
+      "noToken": "No se proporcionó ningún token de restablecimiento",
+      "invalidFormat": "Formato de token de restablecimiento no válido",
+      "expired": "Este enlace de restablecimiento de contraseña no es válido o ha caducado.",
+      "validationFailed": "No se pudo validar el token de restablecimiento",
+      "generic": "No se pudo restablecer la contraseña. Por favor, inténtalo de nuevo.",
+      "minLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    },
+    "footer": {
+      "needNewLink": "¿Necesitas un nuevo enlace de restablecimiento?",
+      "requestAnother": "Solicita otro"
+    }
+  },
+  "EmailConfirmation": {
+    "title": "Revisa tu correo electrónico",
+    "description": {
+      "withEmail": "Hemos enviado un enlace de verificación a {email}",
+      "withoutEmail": "Hemos enviado un enlace de verificación a tu dirección de correo electrónico"
+    },
+    "instructions": "Haz clic en el enlace del correo electrónico para activar tu cuenta.",
+    "errors": {
+      "unableToResend": "No se pudo reenviar el correo electrónico. Por favor, intenta registrarte de nuevo.",
+      "resendFailed": "No se pudo reenviar el correo de verificación. Por favor, inténtalo de nuevo."
+    },
+    "success": {
+      "resendMessage": "Se ha enviado un nuevo enlace de verificación a tu correo electrónico."
+    },
+    "button": {
+      "sending": "Enviando...",
+      "resendEmail": "Reenviar correo de confirmación",
+      "resendCountdown": "Reenviar en {countdown}s"
+    },
+    "help": {
+      "text": "¿No recibiste el correo electrónico? Revisa tu carpeta de spam o",
+      "link": {
+        "default": "haz clic aquí para reenviar",
+        "countdown": "haz clic aquí para reenviar en {countdown}s"
+      }
+    }
+  },
+  "Settings": {
+    "general": {
+      "title": "Configuración General",
+      "description": "Gestiona las preferencias de tu cuenta y la información del perfil",
+      "profileInformation": {
+        "title": "Información del Perfil",
+        "description": "Actualiza tus detalles personales y avatar."
+      }
+    },
+    "profile": {
+      "updating": "Actualizando Perfil...",
+      "saveChanges": "Guardar Cambios",
+      "title": "Información del Perfil",
+      "firstName": {
+        "label": "Nombre",
+        "placeholder": "Ingresa tu nombre"
+      },
+      "lastName": {
+        "label": "Apellido",
+        "placeholder": "Ingresa tu apellido"
+      },
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "Ingresa tu correo electrónico"
+      },
+      "phone": {
+        "label": "Teléfono",
+        "placeholder": "Ingresa tu número de teléfono"
+      },
+      "bio": {
+        "label": "Biografía",
+        "placeholder": "Cuéntanos sobre ti"
+      },
+      "avatar": {
+        "title": "Avatar",
+        "current": "Avatar actual",
+        "upload": "Subir nuevo avatar",
+        "uploading": "Subiendo...",
+        "chooseFile": "Elegir archivo",
+        "fileDescription": "PNG, JPG hasta 5MB",
+        "chooseFrom": "Elegir de avatares",
+        "alt": "Avatar {index}",
+        "customUrl": "URL de avatar personalizado",
+        "placeholder": "https://example.com/avatar.jpg",
+        "apply": "Aplicar"
+      },
+      "preferences": {
+        "title": "Preferencias",
+        "timezone": {
+          "label": "Zona horaria",
+          "placeholder": "Selecciona tu zona horaria"
+        },
+        "theme": {
+          "label": "Tema",
+          "light": "Claro",
+          "dark": "Oscuro",
+          "system": "Sistema"
+        },
+        "language": {
+          "label": "Idioma",
+          "placeholder": "Selecciona tu idioma"
+        },
+        "sidebarView": {
+          "label": "Vista de la barra lateral",
+          "expanded": "Expandido",
+          "collapsed": "Colapsado",
+          "hidden": "Oculto"
+        },
+        "notifications": {
+          "label": "Preferencias de notificación",
+          "email": "Notificaciones por correo electrónico",
+          "push": "Notificaciones push",
+          "marketing": "Correos de marketing",
+          "product": "Actualizaciones de productos"
+        },
+        "timezones": {
+          "UTC": "UTC",
+          "America/New_York": "Hora del Este",
+          "America/Chicago": "Hora del Centro",
+          "America/Denver": "Hora de la Montaña",
+          "America/Los_Angeles": "Hora del Pacífico",
+          "Europe/London": "Londres",
+          "Europe/Paris": "París",
+          "Asia/Tokyo": "Tokio",
+          "Asia/Shanghai": "Shanghái",
+          "Australia/Sydney": "Sídney"
+        },
+        "languages": {
+          "en": "Inglés",
+          "es": "Español",
+          "fr": "Francés",
+          "de": "Alemán",
+          "it": "Italiano",
+          "pt": "Portugués",
+          "ja": "Japonés",
+          "ko": "Coreano",
+          "zh": "Chino"
+        }
+      }
+    },
+    "layout": {
+      "title": "Configuración",
+      "loading": "Cargando preferencias...",
+      "theme": {
+        "label": "Tema",
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema",
+        "tooltip": "Cambiar a tema {theme}"
+      },
+      "sidebar": {
+        "expand": "Expandir barra lateral",
+        "collapse": "Contraer barra lateral"
+      },
+      "tabs": {
+        "general": "General",
+        "security": "Seguridad",
+        "notifications": "Notificaciones",
+        "tracking": "Seguimiento",
+        "billing": "Facturación"
+      }
+    },
+    "notifications": {
+      "title": "Preferencias de Notificación",
+      "description": "Elige cómo quieres ser notificado",
+      "emailNotifications": "Notificaciones por Email"
+    },
+    "security": {
+      "title": "Configuración de Seguridad",
+      "description": "Gestiona la seguridad de tu cuenta y la autenticación",
+      "changePassword": "Cambiar Contraseña",
+      "twoFactorAuth": "Autenticación de Dos Factores",
+      "twoFactorDescription": "Añade una capa extra de seguridad a tu cuenta",
+      "securityRecommendations": "Recomendaciones de Seguridad"
+    },
+    "tracking": {
+      "title": "Configuración de Seguimiento",
+      "description": "Gestiona tus preferencias y configuraciones de seguimiento.",
+      "trackingInformation": "Información de Seguimiento"
+    },
+    "billing": {
+      "title": "Facturación y Uso",
+      "description": "Gestiona tu suscripción y visualiza el uso",
+      "billingTab": "Facturación",
+      "usageTab": "Uso y Límites"
+    },
+    "appearance": {
+      "title": "Configuración de Apariencia",
+      "description": "Personaliza la apariencia de la aplicación"
+    },
+    "team": {
+      "title": "Gestión de Equipo",
+      "description": "Gestiona los miembros de tu equipo y sus roles"
+    }
+  },
+  "BillingTab": {
+    "currentPlan": "Plan Actual",
+    "active": "Activo",
+    "planDetails": "Plan {planName}",
+    "price": "${price}/{period}",
+    "period": {
+      "month": "mes",
+      "year": "año"
+    },
+    "emailAccounts": "Cuentas de Email",
+    "campaigns": "Campañas",
+    "changePlan": "Cambiar Plan",
+    "paymentMethod": "Método de Pago",
+    "updateCard": "Actualizar Tarjeta",
+    "addCard": "Añadir Tarjeta",
+    "noPaymentMethod": "No hay método de pago",
+    "addPaymentMethod": "Añade un método de pago para continuar",
+    "companyInformation": "Información de la Empresa",
+    "companyName": "Nombre de la Empresa",
+    "industry": "Industria",
+    "companySize": "Tamaño de la Empresa",
+    "editCompany": "Editar Empresa",
+    "billingAddress": "Dirección de Facturación",
+    "editAddress": "Editar Dirección",
+    "recentInvoices": "Facturas Recientes",
+    "company": "Empresa",
+    "street": "123 Business Street",
+    "city": "San Francisco, CA 94105",
+    "country": "Estados Unidos",
+    "vatId": "NIF: US123456789",
+    "endingIn": "terminando en",
+    "expires": "expira {expiry}",
+    "technologyServices": "Servicios Tecnológicos",
+    "companySizeDefault": "1-10 empleados",
+    "errors": {
+      "loadBilling": "Error al cargar los datos de facturación",
+      "updateBilling": "Error al actualizar la información de facturación",
+      "loadCompany": "Error al cargar la información de la empresa",
+      "updateCompany": "Error al actualizar el nombre de la empresa",
+      "noData": "No hay datos de facturación disponibles",
+      "errorOccurred": "Ocurrió un error"
+    },
+    "success": {
+      "billingUpdated": "Información de facturación actualizada correctamente",
+      "companyUpdated": "Nombre de la empresa actualizado correctamente"
+    }
+  },
+  "UsageTab": {
+    "usageStatistics": "Estadísticas de Uso",
+    "resetMessage": "Tus límites de uso se restablecerán el",
+    "daysRemaining": "días restantes",
+    "unlimited": "Ilimitado",
+    "emailsSent": "Emails Enviados",
+    "contactsReached": "Contactos Alcanzados",
+    "activeCampaigns": "Campañas Activas",
+    "emailAccounts": "Cuentas de Email",
+    "storageUsed": "Almacenamiento Usado",
+    "lowStorage": "Almacenamiento Bajo",
+    "used": "usado",
+    "addStorage": "Añadir Almacenamiento",
+    "purchaseStorage": "Compra almacenamiento adicional a $3 por GB",
+    "failedToLoad": "Error al cargar los datos de uso",
+    "failedToLoadStorage": "Error al cargar las opciones de almacenamiento",
+    "unexpectedError": "Ocurrió un error inesperado"
+  },
+  "SettingsErrorFallback": {
+    "errorOccurred": "Ocurrió un error"
+  },
+  "BillingLoadingSkeleton": {},
+  "BillingPage": {
+    "title": "Facturación y Plan",
+    "description": "Gestiona tu suscripción y visualiza el historial de facturación.",
+    "currentPlan": "Plan Actual",
+    "currentlyOn": "Actualmente estás en el plan {plan}",
+    "upgradePlan": "Actualizar Plan",
+    "manageSubscription": "Gestionar Suscripción",
+    "stripeNote": "La gestión de facturación es manejada por Stripe. Haciendo clic en el botón anterior serás redirigido al portal seguro de Stripe.",
+    "failedToLoad": "Error al cargar los datos de facturación",
+    "retry": "Reintentar",
+    "noData": "No hay datos de facturación disponibles"
+  },
+  "Dashboard": {
+    "title": "Tablero",
+    "welcome": {
+      "withName": "¡Bienvenido de nuevo, {displayName}! Esto es lo que está sucediendo con tus campañas.",
+      "anonymous": "¡Bienvenido de nuevo! Esto es lo que está sucediendo con tus campañas."
+    },
+    "recentReplies": "Respuestas Recientes",
+    "kpi": {
+      "totalCampaigns": "Campañas Totales",
+      "activeCampaigns": "Campañas Activas",
+      "activeLeads": "Leads Activos",
+      "completed": "Completado",
+      "totalLeads": "Leads Totales",
+      "leadsContacted": "Leads Contactados",
+      "openRate": "Tasa de Apertura",
+      "replyRate": "Tasa de Respuesta"
+    },
+    "timeAgo": {
+      "justNow": "Ahora mismo",
+      "oneHour": "Hace 1 hora",
+      "hours": "Hace {count} horas",
+      "oneDay": "Hace 1 día",
+      "days": "Hace {count} días"
+    },
+    "unknownCompany": "Compañía Desconocida"
+  },
+  "QuickActions": {
+    "title": "Acciones Rápidas",
+    "createCampaign": "Crear Campaña",
+    "uploadLeads": "Subir Leads",
+    "addDomain": "Añadir Dominio"
+  },
+  "Leads": {
+    "layout": {
+      "title": "Centro de Leads",
+      "description": "Gestiona tus listas de leads, importaciones y base de datos de contactos"
+    },
+    "tabs": {
+      "lists": "Listas de Leads",
+      "upload": "Subir CSV",
+      "contacts": "Todos los Contactos"
+    }
+  },
+  "AppearanceSettings": {
+    "title": "Apariencia",
+    "description": "Personaliza la apariencia de la aplicación.",
+    "theme": {
+      "label": "Tema",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "contrast": "Contraste"
+    },
+    "layoutDensity": {
+      "label": "Densidad de Diseño",
+      "compact": "Compacto",
+      "normal": "Normal",
+      "wide": "Ancho"
+    },
+    "saveButton": {
+      "default": "Guardar Apariencia",
+      "saving": "Guardando..."
+    },
+    "notifications": {
+      "success": "Configuración de apariencia guardada",
+      "error": "Error al guardar la configuración",
+      "genericError": "Ocurrió un error"
+    }
+  },
+  "VerifyEmail": {
+    "title": "Verificando tu correo electrónico...",
+    "titleSuccess": "¡Correo electrónico verificado!",
+    "titleFail": "Verificación fallida",
+    "description": "Por favor espera mientras verificamos tu dirección de correo electrónico.",
+    "descriptionSuccess": "Tu cuenta ha sido activada exitosamente.",
+    "descriptionFail": "Hubo un problema con la verificación de tu correo electrónico.",
+    "noToken": "No se proporcionó ningún token de verificación. Por favor revisa tu correo electrónico para el enlace de verificación.",
+    "success": "¡Tu correo electrónico ha sido verificado exitosamente! Ahora puedes iniciar sesión en tu cuenta.",
+    "fail": "Verificación fallida. El enlace puede ser inválido o haber expirado.",
+    "expired": "Este enlace de verificación ha expirado. Por favor solicita uno nuevo.",
+    "used": "Este enlace de verificación ya ha sido utilizado. Por favor solicita uno nuevo.",
+    "error": "Ocurrió un error durante la verificación. Por favor inténtalo de nuevo más tarde.",
+    "resendSuccess": "Se ha enviado un nuevo enlace de verificación a tu correo electrónico.",
+    "resendFail": "No se pudo reenviar el correo de verificación. Por favor inténtalo de nuevo.",
+    "goToLogin": "Ir a Iniciar Sesión",
+    "sending": "Enviando...",
+    "resend": "Reenviar correo de verificación",
+    "support": "Si sigues teniendo problemas, por favor contacta a nuestro equipo de soporte."
+  },
+  "Onboarding": {
+    "noSteps": "No hay pasos de onboarding disponibles",
+    "welcome": "¡Bienvenido a PenguinMails! 🐧",
+    "setup": "Vamos a prepararte para el éxito en el correo frío",
+    "help": {
+      "title": "¿Necesitas ayuda?",
+      "description": "Estamos aquí para apoyar tu éxito",
+      "contactSupport": "Contactar a Soporte",
+      "faq": "Preguntas Frecuentes"
+    },
+    "faq": {
+      "q1": "¿Cuánto tiempo lleva el proceso de configuración?",
+      "a1": "La mayoría de los usuarios completan todo el proceso de incorporación en 30-60 minutos. La verificación del dominio puede tardar hasta 24 horas, pero puedes continuar con otros pasos mientras esperas.",
+      "q2": "¿Necesito conocimientos técnicos para configurar esto?",
+      "a2": "¡Para nada! Nuestras guías paso a paso y tutoriales en video te guiarán a través de todo. Para la configuración de DNS, es posible que necesites acceso a tu registrador de dominios, pero proporcionamos instrucciones exactas.",
+      "q3": "¿Puedo saltarme pasos y volver más tarde?",
+      "a3": "Aunque puedes navegar fuera en cualquier momento, recomendamos completar los pasos en orden para obtener la mejor experiencia. Cada paso se basa en el anterior.",
+      "q4": "¿Qué pasa si me quedo atascado en un paso?",
+      "a4": "Usa el botón \"¿Necesitas ayuda?\" a continuación para acceder a nuestro centro de ayuda o contacta a nuestro equipo de soporte. ¡Estamos aquí para ayudarte a tener éxito!"
+    },
+    "promotion": {
+      "learnMore": "Aprende más",
+      "leads": {
+        "title": "¿Necesitas leads de calidad?",
+        "description": "Nuestro servicio de generación de leads encuentra prospectos verificados en tu mercado objetivo."
+      },
+      "copy": {
+        "title": "¿Necesitas ayuda con el copywriting?",
+        "description": "Nuestros expertos en copywriting crean secuencias de correo electrónico de alta conversión para ti."
+      }
+    },
+    "steps": {
+      "step1": {
+        "title": "Conecta tu dominio",
+        "subtitle": "Configura tu dominio de envío para una entrega de correo electrónico profesional",
+        "explanation": "Tu dominio es la base de tus campañas de correo electrónico. Al conectar y verificar tu dominio (como tuempresa.com), te aseguras de que tus correos electrónicos se entreguen desde una dirección profesional y mejoras tu reputación como remitente. Este paso implica agregar registros DNS para demostrar que eres el propietario del dominio.",
+        "buttonText": "Ir a la página de dominios"
+      },
+      "step2": {
+        "title": "Crear buzones de correo",
+        "subtitle": "Crea cuentas de correo electrónico (buzones) para enviar campañas desde ellas",
+        "explanation": "Los buzones de correo son las cuentas de correo electrónico individuales que enviarán tus campañas. Puedes crear múltiples buzones como juan@tuempresa.com, ventas@tuempresa.com para distribuir tu volumen de envío y parecer más natural. Cada buzón debe configurarse correctamente con la configuración SMTP.",
+        "buttonText": "Ir a la página de buzones de correo"
+      },
+      "step3": {
+        "title": "Habilitar calentamiento",
+        "subtitle": "El calentamiento de los buzones de correo aumenta la entregabilidad y la reputación",
+        "explanation": "El calentamiento de correo electrónico es el proceso de aumentar gradualmente tu volumen de envío para construir una reputación de remitente positiva. Nuestro servicio de calentamiento automatizado envía y recibe correos electrónicos entre cuentas reales para establecer confianza con proveedores de correo electrónico como Gmail y Outlook, asegurando que tus campañas lleguen a la bandeja de entrada.",
+        "buttonText": "Ir a la página de calentamiento"
+      },
+      "step4": {
+        "title": "Subir leads",
+        "subtitle": "Sube tus leads para empezar a llegar a clientes potenciales",
+        "explanation": "Importa tu lista de prospectos utilizando nuestra herramienta de carga de CSV. Tus leads deben incluir información esencial como nombre, apellido, correo electrónico, empresa y cargo. Los leads de calidad son cruciales para el éxito de la campaña: asegúrate de que tu lista esté limpia, segmentada y sea relevante para tu oferta.",
+        "buttonText": "Ir a la página de leads"
+      },
+      "step5": {
+        "title": "Crea y lanza tu primera campaña",
+        "subtitle": "Junta todo y envía tu primera campaña de correo en frío",
+        "explanation": "¡Ahora estás listo para crear tu primera campaña! Utiliza nuestro creador de campañas para elaborar tu secuencia de correos electrónicos, configurar seguimientos, elegir tus leads, asignar buzones y configurar horarios de envío. Comienza con un pequeño lote de prueba para optimizar tu enfoque antes de escalar.",
+        "buttonText": "Ir al creador de campañas"
+      }
+    }
+  },
+  "NotFound": {
+    "title": "404",
+    "description": "¡Ups! La página que buscas no existe.",
+    "explanation": "Intentaste ingresar a una ruta incorrecta. Por favor verifica si hay un error tipográfico, o prueba una de estas rutas comunes:",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "dashboard": "Tablero",
+    "or": "o",
+    "homeButton": "Volver al inicio"
+  },
+  "Error": {
+    "title": "¡Algo salió mal!",
+    "description": "Ocurrió un error inesperado. Por favor intenta recargar la página.",
+    "tryAgain": "Intentar de nuevo",
+    "details": "Detalles Técnicos"
+  },
+  "Admin": {
+    "title": "Panel de Administración",
+    "description": "Gestión de usuarios y análisis entre inquilinos"
+  },
+  "Infrastructure": {
+    "layout": {
+      "title": "Dominios y Buzones",
+      "description": "Gestiona tus dominios de envío, buzones y procesos de calentamiento",
+      "tabs": {
+        "domains": "Dominios",
+        "mailboxes": "Buzones",
+        "warmup": "Centro de Calentamiento"
+      },
+      "addDomainButton": "Añadir Dominio"
+    }
+  },
+  "Campaigns": {
+    "title": "Campañas",
+    "description": "Gestiona tus campañas de correo electrónico como un profesional",
+    "newCampaignButton": "Nueva Campaña",
+    "createTitle": "Crear Nueva Campaña",
+    "editTitle": "Editar Campaña {name}",
+    "newCampaignFallback": "Nueva Campaña",
+    "kpi": {
+      "totalCampaigns": "Campañas Totales",
+      "totalSent": "Total Enviado",
+      "totalReplies": "Respuestas Totales",
+      "openRate": "Tasa de Apertura",
+      "replyRate": "Tasa de Respuesta"
+    }
+  },
+  "Components": {
+    "SettingsErrorState": {
+      "connectionError": "Error de conexión",
+      "authRequired": "Autenticación requerida",
+      "invalidInput": "Entrada inválida",
+      "serverError": "Error del servidor",
+      "permissionDenied": "Permiso denegado",
+      "requestTimeout": "Tiempo de espera agotado",
+      "error": "Error",
+      "networkHelp": "Por favor, comprueba tu conexión a internet e inténtalo de nuevo.",
+      "authHelp": "Por favor, inicia sesión de nuevo para continuar.",
+      "validationHelp": "Por favor, comprueba tu entrada e inténtalo de nuevo.",
+      "serverHelp": "Nuestros servidores están experimentando problemas. Por favor, inténtalo de nuevo más tarde.",
+      "permissionHelp": "No tienes permiso para realizar esta acción.",
+      "timeoutHelp": "La solicitud tardó demasiado. Por favor, inténtalo de nuevo.",
+      "genericHelp": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.",
+      "retry": "Intentar de nuevo",
+      "retryCount": "Reintentar ({count}/{max})",
+      "retrying": "Reintentando...",
+      "reloadPage": "Recargar página",
+      "maxRetries": "Se alcanzó el número máximo de intentos. Por favor comprueba tu conexión o recarga la página."
+    },
+    "HelpSection": {
+      "title": "¿Necesitas ayuda?",
+      "questions": {
+        "gettingStarted": "¿Cómo empiezo?",
+        "gettingStartedAns": "Sigue los pasos de incorporación para configurar tu cuenta y comenzar a usar la plataforma. Completa cada paso en orden para obtener la mejor experiencia.",
+        "emailSetup": "¿Cómo conecto mi cuenta de correo electrónico?",
+        "emailSetupAns": "Ve a la configuración de correo electrónico y sigue el asistente de conexión. Admitimos Gmail, Outlook y configuraciones SMTP personalizadas.",
+        "domainVerification": "¿Por qué necesito verificar mi dominio?",
+        "domainVerificationAns": "La verificación del dominio mejora la capacidad de entrega del correo electrónico y ayuda a establecer confianza con los proveedores de correo electrónico. Es esencial para campañas de correo electrónico exitosas.",
+        "contactImport": "¿Cómo importo mis contactos?",
+        "contactImportAns": "Puedes importar contactos mediante carga CSV o conectar tu CRM. Asegúrate de que tu lista de contactos cumpla con las regulaciones antispam.",
+        "troubleshooting": "¿Qué pasa si encuentro problemas?",
+        "troubleshootingAns": "Consulta nuestra documentación primero, luego contacta con soporte si necesitas ayuda adicional. Estamos aquí para asegurar tu éxito."
+      }
+    },
+    "SuccessNotification": {
+      "save": "Configuración guardada",
+      "saveDesc": "Tu configuración se ha guardado correctamente.",
+      "update": "Actualizado correctamente",
+      "updateDesc": "Tus cambios se han aplicado.",
+      "create": "Creado correctamente",
+      "createDesc": "El elemento se ha creado correctamente.",
+      "delete": "Eliminado correctamente",
+      "deleteDesc": "El elemento se ha eliminado.",
+      "upload": "Carga completa",
+      "uploadDesc": "Tu archivo se ha cargado correctamente.",
+      "invite": "Invitación enviada",
+      "inviteDesc": "La invitación se ha enviado correctamente.",
+      "generic": "Éxito",
+      "genericDesc": "La operación se completó correctamente.",
+      "profileUpdated": "Perfil actualizado",
+      "profileUpdatedDesc": "Tu información de perfil se ha guardado correctamente.",
+      "notificationSaved": "Preferencias de notificación guardadas",
+      "notificationSavedDesc": "Tu configuración de notificaciones se ha actualizado.",
+      "billingUpdated": "Información de facturación actualizada",
+      "billingUpdatedDesc": "Tus detalles de facturación se han guardado correctamente.",
+      "securityUpdated": "Configuración de seguridad actualizada",
+      "securityUpdatedDesc": "Tus preferencias de seguridad se han guardado.",
+      "appearanceSaved": "Configuración de apariencia guardada",
+      "appearanceSavedDesc": "Tus preferencias de interfaz se han aplicado."
+    },
+    "DashboardHeader": {
+      "knowledgeBase": "Base de Conocimientos",
+      "support": "Soporte",
+      "videoTutorials": "Tutoriales en Vídeo"
+    },
+    "StatsCard": {
+      "vsLastPeriod": "vs periodo anterior"
+    },
+    "SystemHealth": {
+      "system": "Sistema {status}",
+      "healthy": "Saludable",
+      "degraded": "Degradado",
+      "unhealthy": "No saludable",
+      "lastChecked": "Última comprobación: {time}",
+      "nextRetry": "Próximo intento en: {time}",
+      "checking": "Comprobando...",
+      "checkNow": "Comprobar Ahora",
+      "retryLimit": "Límite de intentos alcanzado",
+      "attempts": "{current}/{max} intentos",
+      "manualReset": "Reinicio manual"
+    },
+    "MigratedStatsCard": {
+      "onTarget": "En Objetivo",
+      "belowTarget": "Por Debajo del Objetivo",
+      "target": "Objetivo: {value}"
+    },
+    "ManualRetryModal": {
+      "title": "Problema de Conexión Detectado",
+      "description": "La comprobación del sistema ha encontrado fallos repetidos.",
+      "serverFailed": "Conexión al Servidor Fallida",
+      "serverFailedDesc": "No se pudo conectar al servidor después de {attempts} intentos.",
+      "retryProtection": "Protección de Reintento Automático",
+      "wait": "Por favor espera {time} antes de intentar de nuevo.",
+      "manualOrWait": "Puedes intentar de nuevo manualmente o esperar al reintento automático.",
+      "nextRetry": "Próximo reintento automático disponible en: {time}",
+      "close": "Cerrar",
+      "manualRetry": "Reintento Manual",
+      "checking": "Comprobando...",
+      "help": "Este modal aparece cuando el sistema detecta problemas de conexión repetidos. Puedes reintentar manualmente o esperar a los reintentos automáticos.",
+      "second": "segundo",
+      "seconds": "segundos"
+    },
+    "ChunkErrorHandler": {
+      "title": "Error de Carga Detectado",
+      "description": "Falló la carga de un fragmento crítico. Esto suele ocurrir después de un despliegue o debido a archivos en caché.",
+      "techDetails": "Detalles Técnicos",
+      "reload": "Recargar Aplicación",
+      "hardRefresh": "Recarga Completa (Borrar Caché)",
+      "help": "Si esto persiste, intenta borrar la caché de tu navegador o contacta soporte."
+    },
+    "LocaleFallbackToast": {
+      "title": "Idioma no compatible",
+      "description": "\"{locale}\" no es compatible. Mostrando inglés en su lugar."
+    },
+    "PasswordStrength": {
+      "title": "Fuerza de contraseña",
+      "veryWeak": "Muy débil",
+      "weak": "Débil",
+      "fair": "Aceptable",
+      "good": "Buena",
+      "strong": "Fuerte",
+      "enterPassword": "Ingresa una contraseña",
+      "veryWeakPassword": "Contraseña muy débil",
+      "weakPassword": "Contraseña débil",
+      "fairPasswordStrength": "Fuerza de contraseña aceptable",
+      "goodPasswordStrength": "Buena fuerza de contraseña",
+      "strongPassword": "Contraseña fuerte",
+      "useAtLeast8Characters": "Usa al menos 8 caracteres",
+      "addUppercaseLetter": "Añade letra mayúscula",
+      "addLowercaseLetter": "Añade letra minúscula",
+      "addNumber": "Añade número",
+      "addSpecialCharacter": "Añade carácter especial"
+    }
+  }
+}

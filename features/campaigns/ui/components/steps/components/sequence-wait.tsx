@@ -1,0 +1,86 @@
+import { Button } from "@/components/ui/button/button";
+import { Input } from "@/components/ui/input/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Clock, Trash2 } from "lucide-react";
+import { EmailStep } from "./sequence-email";
+
+interface WaitStepProps {
+  step: EmailStep;
+  index: number;
+  updateStep: (index: number, updates: Partial<EmailStep>) => void;
+  removeStep: (index: number) => void;
+}
+
+function WaitStep({ step, index, updateStep, removeStep }: WaitStepProps) {
+  return (
+    <div className="bg-card dark:bg-card rounded-2xl shadow-sm border border-border p-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-muted dark:bg-muted">
+            <Clock className="w-5 h-5 text-muted-foreground" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">Wait Step</h3>
+            <p className="text-sm text-muted-foreground">Step {index + 1}</p>
+          </div>
+        </div>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => removeStep(index)}
+          className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+        >
+          <Trash2 className="w-5 h-5" />
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <Label className="block text-sm font-medium text-foreground mb-2">
+            Wait Duration
+          </Label>
+          <Input
+            type="number"
+            value={step.delay || 2}
+            onChange={(e) =>
+              updateStep(index, {
+                delay: parseInt(e.target.value) || 0,
+              })
+            }
+            className="w-full px-4 py-3 border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent"
+          />
+        </div>
+        <div>
+          <Label className="block text-sm font-medium text-foreground mb-2">
+            Unit
+          </Label>
+          <Select
+            value={step.delayUnit || "days"}
+            onValueChange={(value) =>
+              updateStep(index, {
+                delayUnit: value as "hours" | "days",
+              })
+            }
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="hours">Hours</SelectItem>
+              <SelectItem value="days">Days</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </div>
+  );
+}
+export default WaitStep;

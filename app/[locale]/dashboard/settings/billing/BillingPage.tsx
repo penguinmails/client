@@ -1,0 +1,173 @@
+"use client";
+
+import Link from "next/link";
+import { appConfig as config } from "@/lib/config";
+import { getBillingDataForSettings } from "@features/billing/actions";
+import { useServerAction } from "@/hooks/use-server-action";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button/button";
+import { AlertTriangle, RefreshCw } from "lucide-react";
+import { ChangePlanTrigger } from "@features/billing/ui/components/change-plan-dialog";
+import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checkout";
+import { productionLogger } from "@/lib/logger";
+import { useTranslations } from "next-intl";
+import { isFeatureEnabled } from "@/lib/features";
+import { useRouter } from "next/navigation";
+
+// Simple loading skeleton component
+function BillingLoadingSkeleton() {
+  return (
+    <div className="bg-white dark:bg-card shadow sm:rounded-lg animate-pulse">
+      <div className="px-4 py-5 sm:p-6">
+        <div className="h-6 bg-gray-200 dark:bg-muted rounded w-48 mb-2" />
+        <div className="h-4 bg-gray-200 dark:bg-muted rounded w-64 mb-4" />
+        <div className="rounded-md bg-gray-50 dark:bg-muted/30 px-6 py-5">
+          <div className="h-4 bg-gray-200 dark:bg-muted rounded w-24 mb-2" />
+          <div className="h-4 bg-gray-200 dark:bg-muted rounded w-40" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function BillingSettingsPage() {
+  const t = useTranslations();
+  const { handleCheckoutForPlan, isCheckoutLoading } = useStripeCheckout();
+  const router = useRouter();
+
+  // Server action hooks for billing data
+  const billingOptions = {
+    onError: (error: string) => {
+      productionLogger.error("Failed to load billing data", error);
+    },
+  };
+
+  const billingDataAction = useServerAction(
+    getBillingDataForSettings,
+    billingOptions
+  );
+  const { execute: loadBilling } = billingDataAction;
+
+  // Load billing data on component mount
+  useEffect(() => {
+    loadBilling();
+  }, [loadBilling]);
+
+  // Redirect if stripe billing feature is disabled
+  useEffect(() => {
+    if (!isFeatureEnabled("stripe-billing")) {
+      router.push("/dashboard/settings");
+    }
+  }, [router]);
+
+  // Don't render anything if feature is disabled (will redirect)
+  if (!isFeatureEnabled("stripe-billing")) {
+    return null;
+  }
+
+  // Show loading skeleton while data is loading
+  if (billingDataAction.loading && !billingDataAction.data) {
+    return <BillingLoadingSkeleton />;
+  }
+
+  // Show error state if data failed to load
+  if (billingDataAction.error && !billingDataAction.data) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <AlertTriangle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+          <p className="text-muted-foreground">
+            {t("BillingPage.failedToLoad")}
+          </p>
+          <Button
+            onClick={() => loadBilling()}
+            variant="outline"
+            size="sm"
+            className="mt-2"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            {t("BillingPage.retry")}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show fallback if no data available
+  if (!billingDataAction.data) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <AlertTriangle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+          <p className="text-muted-foreground">{t("BillingPage.noData")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const billingData = billingDataAction.data;
+
+  // Company billing data - now from API based on billing model
+  const companyBilling = {
+    currentPlanName: billingData.planDetails.name, // Dynamic from billing data
+    // Add more company-related billing fields here as needed
+  };
+
+  const planType = companyBilling.currentPlanName;
+
+  return (
+    <div className="bg-white dark:bg-card shadow sm:rounded-lg">
+      <div className="px-4 py-5 sm:p-6">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-foreground">
+          {t("BillingPage.title")}
+        </h3>
+        <div className="mt-2 max-w-xl text-sm text-gray-500 dark:text-muted-foreground">
+          <p>{t("BillingPage.description")}</p>
+        </div>
+
+        <div className="mt-5">
+          <div className="rounded-md bg-gray-50 dark:bg-muted/30 px-6 py-5 sm:flex sm:items-start sm:justify-between">
+            <div className="sm:flex sm:items-start">
+              <div className="mt-3 sm:mt-0 sm:ml-4">
+                <div className="text-sm font-medium text-gray-900 dark:text-foreground">
+                  {t("BillingPage.currentPlan")}
+                </div>
+                <div className="mt-1 text-sm text-gray-600 dark:text-muted-foreground">
+                  {t("BillingPage.currentlyOn", {
+                    plan: planType.charAt(0) + planType.slice(1).toLowerCase(),
+                  })}
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 sm:mt-0 sm:ml-6 sm:shrink-0">
+              {planType === "FREE" ? (
+                <div className="w-48">
+                  <ChangePlanTrigger
+                    title={t("BillingPage.upgradePlan")}
+                    onSelectPlan={handleCheckoutForPlan}
+                    isLoading={isCheckoutLoading}
+                  />
+                </div>
+              ) : (
+                <Link
+                  href={config.stripe.portalUrl} // Link to Stripe Customer Portal
+                  target="_blank" // Open Stripe in new tab
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-border shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-foreground bg-white dark:bg-card hover:bg-gray-50 dark:hover:bg-muted/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  {t("BillingPage.manageSubscription")}
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 border-t border-gray-200 dark:border-border pt-6">
+          <p className="text-sm text-gray-500 dark:text-muted-foreground">
+            {t("BillingPage.stripeNote")}
+          </p>
+          {/* Add billing history section later if needed */}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -16,6 +16,25 @@ import {
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 
+// Design tokens for consistent form styling
+const formDesignTokens = {
+  item: {
+    base: "grid gap-2",
+    compact: "grid gap-1"
+  },
+  label: {
+    base: "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+    error: "text-destructive",
+    default: "text-foreground"
+  },
+  description: {
+    base: "text-sm text-muted-foreground"
+  },
+  message: {
+    base: "text-sm font-medium text-destructive"
+  }
+} as const;
+
 const Form = FormProvider;
 
 type FormFieldContextValue<
@@ -80,7 +99,7 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
     <FormItemContext.Provider value={{ id }}>
       <div
         data-slot="form-item"
-        className={cn("grid gap-2", className)}
+        className={cn(formDesignTokens.item.base, className)}
         {...props}
       />
     </FormItemContext.Provider>
@@ -97,7 +116,11 @@ function FormLabel({
     <Label
       data-slot="form-label"
       data-error={!!error}
-      className={cn("data-[error=true]:text-destructive", className)}
+      className={cn(
+        formDesignTokens.label.base,
+        error ? formDesignTokens.label.error : formDesignTokens.label.default,
+        className
+      )}
       htmlFor={formItemId}
       {...props}
     />
@@ -130,7 +153,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-description"
       id={formDescriptionId}
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn(formDesignTokens.description.base, className)}
       {...props}
     />
   );
@@ -148,7 +171,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-destructive text-sm", className)}
+      className={cn(formDesignTokens.message.base, className)}
       {...props}
     >
       {body}
@@ -165,4 +188,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  formDesignTokens,
 };

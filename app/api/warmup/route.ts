@@ -1,25 +1,37 @@
 import { NextResponse } from "next/server";
-import { warmupData } from "@/lib/data/domains.mock";
+import { MOCK_WARMUP_DATA } from "@features/domains/lib/mocks/warmup";
 
-// GET /api/warmup - Get warmup data for the current user's company
+/**
+ * GET /api/warmup
+ * Returns mock warmup data with simulated delay
+ */
 export async function GET() {
+  // Simulate network delay (500ms)
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  return NextResponse.json(MOCK_WARMUP_DATA);
+}
+
+/**
+ * POST /api/warmup
+ * Placeholder for future warmup configuration
+ */
+export async function POST(request: Request) {
   try {
-    // const session = await getServerSession(authOptions);
+    const body = await request.json();
+    
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 300));
 
-    // if (!session || !session.user) {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // }
-
-    const companyId = 1; //session.user.companyId;
-    console.log("Company ID:", companyId);
-
-    return NextResponse.json(warmupData);
-  } catch (error: unknown) {
-    console.error("Warmup Data Error:", String(error));
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : String(error) || "An internal server error occurred";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    // In a real implementation, this would configure warmup settings
+    return NextResponse.json(
+      { message: "Warmup configuration updated successfully", data: body },
+      { status: 201 }
+    );
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 }
+    );
   }
 }

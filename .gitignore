@@ -1,3 +1,5 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 # dependencies
 /node_modules
 
@@ -14,15 +16,13 @@
 # misc
 .DS_Store
 *.pem
-.eslintcache
-**/_generated
-tasks
 
 # debug
-npm-debug.log*
+*.log
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.local
 !.env.example
 
 # vercel
@@ -30,6 +30,7 @@ npm-debug.log*
 
 # typescript
 *.tsbuildinfo
+next-env.d.ts
 
 # Ignore ALL Terraform working directories & files in any subfolder
 **/.terraform/
@@ -43,11 +44,9 @@ npm-debug.log*
 # Ignore ALL Mailu env
 **/mailu.env
 
-# Ignore OpenNext build output
-.open-next
-
+*storybook.log
+storybook-static
+.jest-test-results.json
+.eslintcache
 .kiro
 .roo
-.specify
-old
-specs
