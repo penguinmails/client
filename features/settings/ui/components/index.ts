@@ -34,11 +34,11 @@ export {
 export {
   SettingsErrorBoundary,
   SettingsErrorFallback,
-} from "@/components/settings/SettingsErrorBoundary";
+} from "./common/SettingsErrorBoundary";
 export { SettingsErrorState } from './common/SettingsErrorState';
 export { SettingsLoadingSkeleton } from './common/SettingsLoadingSkeleton';
 export { SettingsPageWrapper } from './common/SettingsPageWrapper';
-export { showSaveSuccess, showAppearanceUpdateSuccess } from './common/SettingsSuccessNotification';
+export { useSettingsNotifications } from './common/SettingsSuccessNotification';
 
 // Navigation components
 export { default as NavLink } from './NavLink';

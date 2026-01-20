@@ -13,9 +13,6 @@ export type { SystemHealthStatus } from './system/SystemHealthContext';
 // Layout
 // NotificationsPopover moved to @/features/notifications/ui/components/NotificationsPopover
 
-// Onboarding
-export { HelpSection } from './onboarding/HelpSection';
-
 // Forms
 export {
   useFormField,
