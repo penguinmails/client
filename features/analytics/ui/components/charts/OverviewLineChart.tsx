@@ -28,11 +28,13 @@ import {
 } from "recharts";
 import { useEffect, useState } from "react";
 import { productionLogger } from "@/lib/logger";
+import { useChartColors } from "@/hooks/use-chart-colors";
 
 function OverviewLineChart() {
   const { filters, loadingState } = useAnalytics();
   const { service: campaignService } = useDomainAnalytics();
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
+  const chartColors = useChartColors();
 
   // Fetch data when filters change
   useEffect(() => {
@@ -118,14 +120,14 @@ function OverviewLineChart() {
             />
             <XAxis
               dataKey="name"
-              tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+              tick={{ fontSize: 12, fill: chartColors.textColor }}
               tickLine={{ stroke: "hsl(var(--border))" }}
               axisLine={{ stroke: "hsl(var(--border))" }}
               interval="preserveStartEnd"
               minTickGap={50}
             />
             <YAxis
-              tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+              tick={{ fontSize: 12, fill: chartColors.textColor }}
               tickLine={{ stroke: "hsl(var(--border))" }}
               axisLine={{ stroke: "hsl(var(--border))" }}
               tickFormatter={(value) => AnalyticsCalculator.formatNumber(value)}

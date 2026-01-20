@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CAMPAIGN_COLORS, CHART_BACKGROUNDS } from "@/lib/config/chart-colors";
+import { useChartColors } from "@/hooks/use-chart-colors";
 
 // ============================================================
 // Types
@@ -98,6 +99,7 @@ const CampaignPerformanceChart: React.FC<CampaignPerformanceChartProps> = ({
   className,
 }) => {
   const safeData = canonicalizeChartData(data);
+  const chartColors = useChartColors();
 
   return (
     <Card className={className}>
@@ -125,12 +127,12 @@ const CampaignPerformanceChart: React.FC<CampaignPerformanceChartProps> = ({
                 dataKey="name"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 12, fill: chartColors.textColor }}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 12, fill: chartColors.textColor }}
               />
               <Tooltip
                 content={<CustomTooltip />}

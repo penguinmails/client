@@ -186,12 +186,12 @@ function WarmUpLineChart(): ReactElement {
                   dataKey="date"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: "text-muted-foreground" }}
+                  tick={{ fontSize: 12, fill: chartColors.textColor }}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: "text-muted-foreground" }}
+                  tick={{ fontSize: 12, fill: chartColors.textColor }}
                 />
                 <RechartsTooltip content={<CustomTooltip />} />
 
