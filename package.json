@@ -26,7 +26,11 @@
     "storybook-docs": "storybook docs",
     "check-size": "node scripts/check-file-sizes.js",
     "fsd:validate": "tsx scripts/fsd-import-path-validator.ts",
-    "validate:fsd-linting": "tsx scripts/validate-fsd-linting.ts"
+    "validate:fsd-linting": "tsx scripts/validate-fsd-linting.ts",
+    "docs:validate": "node scripts/automated-validation.js",
+    "docs:validate-links": "node scripts/link-validator.js",
+    "docs:validate-freshness": "node scripts/content-freshness-validator.js",
+    "docs:validate-structure": "node scripts/structure-validator.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
