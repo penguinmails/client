@@ -329,8 +329,7 @@ function BillingTab() {
             </CardTitle>
             <Button
               variant="link"
-              size="sm"
-              className="text-primary hover:text-primary/80"
+              className="text-primary hover:text-primary/80 underline"
               disabled={updateBillingAction.loading}
               onClick={() => {
                 const currentName =
@@ -372,7 +371,7 @@ function BillingTab() {
                   <label className="text-sm font-medium text-muted-foreground">
                     {t("BillingTab.industry")}
                   </label>
-                  <p className="text-foreground">
+                  <p className="text-muted-foreground">
                     {companyDataAction.data?.companyInfo.industry ||
                       t("BillingTab.technologyServices")}
                   </p>
@@ -381,7 +380,7 @@ function BillingTab() {
                   <label className="text-sm font-medium text-muted-foreground">
                     {t("BillingTab.companySize")}
                   </label>
-                  <p className="text-foreground">
+                  <p className="text-muted-foreground">
                     {companyDataAction.data?.companyInfo.size ||
                       t("BillingTab.companySizeDefault")}
                   </p>
