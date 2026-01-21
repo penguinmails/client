@@ -738,5 +738,5 @@ This authentication development guide provides comprehensive information for imp
 
 ## Related Documentation
 
-- **[Authentication Implementation Guide](./authentication-implementation.md)** - Detailed implementation patterns and migration strategies
-- **[Troubleshooting](./troubleshooting.md)** - Common issues and solutions
+- **[Authentication Implementation Guide](docs/architecture/authentication.md)** - Detailed implementation patterns and migration strategies
+- **[Troubleshooting](docs/guides/troubleshooting.md)** - Common issues and solutions

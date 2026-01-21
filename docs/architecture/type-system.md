@@ -65,8 +65,8 @@ type LoadingState =
 
 ### Analytics Types
 
-- [Analytics Type Organization](../../types/analytics/README.md)
-- [Analytics Type Limitations](../../types/analytics/type-limitations.md)
+- [Analytics Type Organization](docs/architecture/README.md)
+- [Type System Documentation](../architecture/type-system.md)
 
 ### Domain Types
 
@@ -227,7 +227,7 @@ interface FormHandlers {
 
 ### Known Constraints
 
-- [Analytics Type Constraints](../../types/analytics/type-limitations.md)
+- [Type System Documentation](../architecture/type-system.md)
 
 ### Type System Issues
 
@@ -269,8 +269,8 @@ type SimplifiedAnalytics = Pick<CampaignAnalytics, "id" | "name" | "stats">;
 
 ### Type Migration Patterns
 
-- [Type Migration Guide](../../types/analytics/migration-guide.md)
-- [Migration Lessons Learned](../../lib/services/analytics/migration-lessons.md#type-migrations)
+- [Type Migration Guide](docs/infrastructure/niledb-migration-guide.md)
+- [Migration Lessons Learned](docs/guides/actions-migration-lessons.md#type-migrations)
 
 ### Backward Compatibility
 
@@ -300,7 +300,7 @@ function migrateCampaignV1ToV2(v1: CampaignV1): CampaignV2 {
 ## Getting Started
 
 1. **Understanding Type Organization**: Review the structure above
-2. **Feature-Specific Types**: Start with [Analytics Types](../../types/analytics/README.md)
+2. **Feature-Specific Types**: Start with [Analytics Types](docs/architecture/README.md)
 3. **Common Patterns**: Study the patterns in `types/common.ts`
 
 ## Contributing to Type System
@@ -315,5 +315,5 @@ When adding new types:
 
 For questions about type organization or patterns, refer to:
 
-- [Development Patterns](../development/README.md#type-patterns)
-- [Analytics Type Patterns](../../types/analytics/README.md)
+- [Development Patterns](docs/architecture/README.md#type-patterns)
+- [Analytics Type Patterns](docs/architecture/README.md)

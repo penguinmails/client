@@ -680,9 +680,9 @@ class DomainAlertNotifier {
 
 ## Related Documentation
 
-- [DNS Configuration Guide](../infrastructure/dns-setup.md)
-- [Email Authentication Guide](../infrastructure/email-auth.md)
-- [Domain Types Documentation](../../types/domains/README.md)
+- [DNS Configuration Guide](docs/infrastructure/dns-setup.md)
+- [Email Authentication Guide](docs/infrastructure/email-auth.md)
+- [Domain Types Documentation](docs/architecture/README.md)
 - [Analytics Architecture](./README.md)
 
 ## External Resources

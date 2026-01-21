@@ -4,15 +4,15 @@ This guide provides comprehensive instructions for implementing real component t
 
 ## Table of Contents
 
-1. [Core Principles](#core-principles)
-2. [Quick Start](#quick-start)
-3. [Setup Helpers](#setup-helpers)
-4. [Testing Patterns](#testing-patterns)
-5. [Strategic Mocking](#strategic-mocking)
-6. [Accessibility Testing](#accessibility-testing)
-7. [Performance Testing](#performance-testing)
-8. [Common Scenarios](#common-scenarios)
-9. [Troubleshooting](#troubleshooting)
+1. [Core Principles](docs/guides/actions-api.md#core-principles)
+2. [Quick Start](docs/guides/actions-api.md#quick-start)
+3. [Setup Helpers](docs/guides/actions-api.md#setup-helpers)
+4. [Testing Patterns](docs/guides/actions-api.md#testing-patterns)
+5. [Strategic Mocking](docs/guides/actions-api.md#strategic-mocking)
+6. [Accessibility Testing](docs/guides/actions-api.md#accessibility-testing)
+7. [Performance Testing](docs/guides/actions-api.md#performance-testing)
+8. [Common Scenarios](docs/guides/actions-api.md#common-scenarios)
+9. [Troubleshooting](docs/guides/actions-api.md#troubleshooting)
 
 ## Core Principles
 

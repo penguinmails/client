@@ -2,48 +2,62 @@
 
 ## Overview
 
-This directory contains comprehensive documentation for the PenguinMails architecture, with a focus on the Feature-Sliced Design (FSD) implementation and component organization.
+This directory contains comprehensive documentation for the PenguinMails architecture, covering system design, technical decisions, and architectural patterns used throughout the platform.
+
+## Navigation
+
+← [Back to Documentation Home](../README.md)
 
 ## Documentation Index
 
 ### Core Architecture
 
-- **[FSD Migration Guide](./fsd-migration-guide.md)** - Complete guide to Feature-Sliced Design implementation and migration results
-- **[Component Migration Summary](./component-migration-summary.md)** - Detailed summary of the component migration project
-- **[Migration Strategy and Continuation](./migration-strategy-and-continuation.md)** - Detailed phase-by-phase migration plan and continuation guidelines
-- **[Build Validation and Deployment](./build-validation-and-deployment.md)** - Production build validation results and deployment guide
-- **[Import Path Conventions](./import-path-conventions.md)** - Standardized import path patterns and team guidelines
+- **[Authentication](./authentication.md)** - Authentication system and security architecture
+- **[Database Architecture](./database-architecture.md)** - NileDB multi-tenant database design
+- **[API Routes](./api-routes.md)** - API design patterns and conventions
+- **[Type System](./type-system.md)** - TypeScript architecture and type definitions
+- **[Feature API Contracts](./feature-api-contracts.md)** - API contract definitions between features
+- **[Import Path Conventions](./import-path-conventions.md)** - Standardized import path patterns
 - **[Semantic Tokens](./semantic-tokens.md)** - Design system token usage and conventions
-- **[Authentication Architecture](./authentication.md)** - Complete authentication system documentation including data models, error handling, and security
-
-### Migration Documentation
-
-The FSD component migration has been completed successfully. Key documents:
-
-1. **Migration Guide** - Architectural vision and current structure
-2. **Migration Summary** - Before/after comparison and statistics  
-3. **Import Conventions** - New import path patterns for the team
-4. **Team Guidelines** - Day-to-day development guidelines
+- **[Build Validation and Deployment](./build-validation-and-deployment.md)** - Production build validation and deployment guide
 
 ## Quick Navigation
 
-### For Developers
-- **New to the project?** Start with [FSD Migration Guide](./fsd-migration-guide.md)
-- **Need migration details?** See [Migration Strategy and Continuation](./migration-strategy-and-continuation.md)
-- **Build validation?** Check [Build Validation and Deployment](./build-validation-and-deployment.md)
-- **Need import paths?** Check [Import Path Conventions](./import-path-conventions.md)
-- **Adding components?** Review [Team Guidelines](../team-guidelines.md)
-- **Working on auth?** See [Authentication Architecture](./authentication.md)
+### For New Developers
 
-### For Architects
-- **Migration details?** See [Component Migration Summary](./component-migration-summary.md)
-- **Migration strategy?** Review [Migration Strategy and Continuation](./migration-strategy-and-continuation.md)
-- **Build validation?** Check [Build Validation and Deployment](./build-validation-and-deployment.md)
-- **Architecture decisions?** Review [FSD Migration Guide](./fsd-migration-guide.md)
-- **Design system?** Check [Semantic Tokens](./semantic-tokens.md)
-- **Auth architecture?** Review [Authentication Architecture](./authentication.md)
+- **Getting oriented?** Start with [Database Architecture](./database-architecture.md) and [Authentication](./authentication.md)
+- **Need API patterns?** Check [API Routes](./api-routes.md) and [Feature API Contracts](./feature-api-contracts.md)
+- **Working with types?** See [Type System](./type-system.md)
+- **Import questions?** Review [Import Path Conventions](./import-path-conventions.md)
+
+### For Frontend Developers
+
+- **Component architecture?** See [Semantic Tokens](./semantic-tokens.md) and [Type System](./type-system.md)
+- **API integration?** Check [API Routes](./api-routes.md) and [Feature API Contracts](./feature-api-contracts.md)
+- **Import patterns?** Review [Import Path Conventions](./import-path-conventions.md)
+
+### For Backend Developers
+
+- **Database design?** Start with [Database Architecture](./database-architecture.md)
+- **Auth implementation?** See [Authentication](./authentication.md)
+- **API development?** Check [API Routes](./api-routes.md)
+- **Type safety?** Review [Type System](./type-system.md)
+
+### For DevOps Engineers
+
+- **Deployment process?** See [Build Validation and Deployment](./build-validation-and-deployment.md)
+- **Database setup?** Check [Database Architecture](./database-architecture.md)
+- **Infrastructure patterns?** Review [Authentication](./authentication.md) for security considerations
 
 ## Architecture Principles
+
+### Multi-Tenant Architecture
+
+The platform is built with complete tenant isolation using NileDB's multi-tenant PostgreSQL capabilities:
+
+- **Data Isolation**: Complete separation between organizations
+- **Security**: Tenant-scoped authentication and authorization
+- **Scalability**: Efficient resource utilization across tenants
 
 ### Feature-Sliced Design (FSD)
 
@@ -56,70 +70,91 @@ The project follows FSD principles with clear layer separation:
 └── app/                 # Application layer (Next.js App Router)
 ```
 
-### Key Benefits
+### Type Safety
 
-- **Clear Boundaries**: Features are self-contained with their own UI and logic
-- **Improved Maintainability**: Changes are isolated to specific features
-- **Better Scalability**: Easy to add new features following established patterns
-- **Enhanced Developer Experience**: Intuitive component organization and discovery
+- **Strict TypeScript**: No `any` types allowed
+- **Database Types**: Generated from schema with Drizzle ORM
+- **API Contracts**: Typed interfaces between frontend and backend
+- **Validation**: Zod schemas for runtime type checking
 
-### Component Classification
+## Key Technologies
 
-Components are classified into three main categories:
+### Database & Backend
 
-1. **Feature-Specific**: Business logic for a single feature → `features/{feature}/ui/components/`
-2. **Shared Infrastructure**: Cross-feature utilities → `shared/{category}/`
-3. **UI Primitives**: Base components → `components/ui/`
+- **NileDB**: Multi-tenant PostgreSQL with built-in authentication
+- **Drizzle ORM**: Type-safe database queries and migrations
+- **Next.js API Routes**: Server-side API endpoints
+- **Zod**: Schema validation and type inference
 
-## Migration Status
+### Frontend & UI
 
-✅ **COMPLETED** - January 2, 2026  
+- **Next.js 15**: App Router with React Server Components
+- **TypeScript**: Strict type checking throughout
+- **Tailwind CSS**: Utility-first styling
+- **shadcn/ui**: Component library built on Radix UI
+
+## Cross-References
+
+### Related Documentation
+
+- **[Infrastructure Setup](../infrastructure/README.md)** - Environment and deployment configuration
+- **[Development Guides](../guides/README.md)** - Development workflows and best practices
+- **[Testing Strategies](../testing/README.md)** - Testing architecture and patterns
+- **[Component System](../components/README.md)** - UI component architecture
+- **[Performance Optimization](../performance/README.md)** - Performance architecture considerations
+
+### Implementation Guides
+
+- **Database Setup**: [NileDB Setup](../infrastructure/niledb-setup.md)
+- **Authentication Flow**: [Email Auth](../infrastructure/email-auth.md)
+- **Development Workflow**: [Development Workflow](../guides/development-workflow.md)
+- **Testing Patterns**: [Best Practices](../testing/best-practices.md)
+
+## Migration and Evolution
+
+### Completed Migrations
+
+✅ **Feature-Sliced Design Migration** - January 2026
+
 - 159 components analyzed and properly classified
 - 151 components migrated to appropriate FSD locations
-- 100% success rate with zero functional regressions
-- Comprehensive documentation and team guidelines created
+- Zero functional regressions
+- Comprehensive documentation created
 
-## Validation
+### Future Considerations
 
-The architecture is validated through:
+- **Microservices Evolution**: Potential service extraction patterns
+- **Performance Optimization**: Architecture improvements for scale
+- **Security Enhancements**: Advanced security patterns and practices
 
-- **TypeScript Compilation**: Zero errors
+## Validation and Quality
+
+The architecture is continuously validated through:
+
+- **TypeScript Compilation**: Zero type errors
 - **Import Resolution**: 100% success rate
-- **Test Suite**: All tests passing
-- **Build Process**: Production builds successful
-- **ESLint Rules**: FSD compliance checking
+- **Test Suite**: Comprehensive test coverage
+- **Build Process**: Production build validation
+- **ESLint Rules**: Architectural compliance checking
 
-## Future Considerations
+## Support and Contribution
 
-### Adding New Features
+### Getting Help
 
-1. Create feature directory: `features/{feature-name}/`
-2. Follow FSD structure: `ui/components/`, `model/`, `api/`
-3. Use established import patterns
-4. Update feature index exports
+1. **Architecture questions**: Review relevant documentation in this directory
+2. **Implementation guidance**: Check [Development Guides](../guides/README.md)
+3. **Complex decisions**: Consult with the architecture team
+4. **Pattern evolution**: Update documentation when patterns change
 
-### Refactoring Components
+### Contributing to Architecture
 
-1. Analyze current usage patterns
-2. Determine correct FSD location
-3. Move component to appropriate directory
-4. Update all import paths
-5. Run validation tools
+1. **Propose changes**: Follow [Team Guidelines](../guides/team-guidelines.md)
+2. **Document decisions**: Update relevant architecture documents
+3. **Validate changes**: Run all validation tools
+4. **Review process**: Follow [Review Processes](../maintenance/review-and-update-processes.md)
 
-## Related Documentation
+---
 
-- **[Team Guidelines](../team-guidelines.md)** - Day-to-day development guidelines
-- **[Testing Documentation](../testing/)** - Testing strategies and best practices
-- **[Development Guides](../guides/)** - Additional development resources
-
-## Support
-
-For architecture questions:
-
-1. Review the relevant documentation in this directory
-2. Use validation tools to check compliance
-3. Consult with the architecture team for complex decisions
-4. Update documentation when patterns evolve
-
-**Last Updated:** January 2, 2026  
-**Maintained by:** Architecture Team
+**Maintained by**: Architecture Team  
+**Last Updated**: January 2026  
+**Related**: [Documentation Guidelines](../maintenance/documentation-guidelines.md)

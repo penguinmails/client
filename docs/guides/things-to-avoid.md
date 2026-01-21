@@ -630,7 +630,7 @@ class UserService {
 
 For specific guidance on any of these patterns, refer to:
 
-- [Analytics Service Documentation](../../lib/services/analytics/README.md)
-- [Development Patterns](./README.md#common-development-patterns)
+- [Analytics Service Documentation](docs/architecture/README.md)
+- [Development Patterns](docs/architecture/README.md#common-development-patterns)
 - [Troubleshooting Guide](./troubleshooting.md)
-- [Testing Strategies](./testing.md)
+- [Testing Strategies](docs/guides/testing-general.md)

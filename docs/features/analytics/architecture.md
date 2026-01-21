@@ -369,9 +369,9 @@ async function migrateAnalyticsSchema() {
 
 ## Related Documentation
 
-- [Service Implementation](../../lib/services/analytics/README.md)
-- [Component Architecture](../../components/analytics/README.md)
-- [Type System](../../types/analytics/README.md)
-- [NileDB Setup](../../database-architecture.md)
-- [Performance Optimization](../../database-architecture.md)
-- [Troubleshooting Guide](../../lib/services/analytics/troubleshooting.md)
+- [Service Implementation](docs/architecture/README.md)
+- [Component Architecture](docs/architecture/README.md)
+- [Type System](docs/architecture/README.md)
+- [NileDB Setup](docs/architecture/database-architecture.md)
+- [Performance Optimization](docs/architecture/database-architecture.md)
+- [Troubleshooting Guide](docs/guides/troubleshooting.md)

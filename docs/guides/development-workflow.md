@@ -2,31 +2,20 @@
 
 ## Overview
 
-This section covers general development workflow, testing strategies, troubleshooting guides, and common patterns used across the project. For feature-specific development guides, see the documentation co-located with the relevant code.
+This section covers advanced development workflow, testing strategies, troubleshooting guides, and common patterns used across the project. For basic setup and onboarding, see the [Getting Started Guide](../getting-started.md). For feature-specific development guides, see the documentation co-located with the relevant code.
 
 ## Development Process
 
-### Getting Started
+### Prerequisites
 
-1. **Environment Setup**: Follow [Infrastructure Setup](../infrastructure/) guides
-2. **Code Organization**: Understand the [project structure](#project-structure)
-3. **Type System**: Review [TypeScript organization](../types/README.md)
+Before diving into advanced development patterns, ensure you have completed the basic setup:
+
+1. **Environment Setup**: Complete the [Getting Started Guide](../getting-started.md)
+2. **Code Organization**: Understand the [project structure](../getting-started.md#understanding-the-codebase)
+3. **Type System**: Review [TypeScript organization](../architecture/README.md)
 4. **Testing**: Follow [testing strategies](#testing-strategies)
 
-### Project Structure
-
-```
-├── app/                    # Next.js app router pages
-├── components/            # React components (with co-located docs)
-├── lib/                   # Business logic and utilities
-│   ├── actions/          # Server actions (with co-located docs)
-│   ├── services/         # Business services (with co-located docs)
-│   └── utils/           # Utility functions
-├── types/                # TypeScript type definitions
-└── docs/                 # Central documentation hub
-```
-
-### Code Organization Principles
+### Advanced Development Principles
 
 1. **Co-location**: Keep related code and documentation together
 2. **Domain Separation**: Organize by business domain, not technical layer
@@ -85,21 +74,23 @@ describe("Analytics Integration", () => {
 
 ### Feature-Specific Testing
 
-- [Analytics Testing](../../lib/services/analytics/testing.md)
-- [Billing Testing](../../lib/actions/billing/testing.md)
-- [Component Testing Patterns](../../components/analytics/README.md#testing)
+- [Analytics Testing](docs/guides/testing-general.md)
+- [Billing Testing](docs/guides/testing-general.md)
+- [Component Testing Patterns](docs/architecture/README.md#testing)
 
 ## Architectural Decisions and Patterns
 
 ### Key Architectural Refactoring Patterns
 
 #### Component Refactoring (Billing Dashboard Example)
+
 - **Large Component Reduction**: Successfully reduced `RealTimeBillingDashboard.tsx` from 975 to 208 lines (78% reduction)
 - **Modular Extraction**: Extracted 9 sub-components into dedicated files with single responsibilities
 - **Hook Extraction**: Moved complex state management logic to custom hooks (`useBillingRefresh`)
 - **Benefits**: Improved maintainability, testability, reusability, and performance through smaller bundle sizes
 
 #### Performance Monitor Refactoring
+
 - **Monolithic Reduction**: Reduced `RuntimePerformanceMonitor` from 1066 to 369 lines (65% reduction)
 - **Modular Architecture**: Extracted utilities for statistics, validation, measurement, and reporting
 - **Composable Pattern**: Created reusable utility functions that can be combined flexibly
@@ -108,6 +99,7 @@ describe("Analytics Integration", () => {
 ### Security Architecture Patterns
 
 #### OLTP-First Security Boundaries
+
 - **Database-Level Isolation**: Use Row-Level Security (RLS) for tenant isolation
 - **PCI Compliance**: Implement payment tokenization with external processors
 - **Sensitive Data Protection**: Store only last 4 digits and tokenized IDs for payment methods
@@ -117,19 +109,21 @@ describe("Analytics Integration", () => {
 ### Performance Optimization Patterns
 
 #### Analytics Performance Optimization
+
 - **Progressive Filtering**: Load OLTP data first (fast), then apply basic filters, load analytics separately
 - **Redis Caching Strategy**: 5-15 minute TTL based on data freshness requirements
 - **Composite Cache Keys**: Include filter combinations and date ranges in cache keys
 - **Parallel Processing**: Process OLTP and OLAP data simultaneously for mixed calculations
 
 #### Caching TTL Strategy
+
 ```typescript
 const cacheTTLs = {
-  performance: 5 * 60,    // 5 minutes - frequently changing data
-  usage: 10 * 60,         // 10 minutes - moderate change frequency
+  performance: 5 * 60, // 5 minutes - frequently changing data
+  usage: 10 * 60, // 10 minutes - moderate change frequency
   effectiveness: 15 * 60, // 15 minutes - slower changing metrics
-  overview: 5 * 60,       // 5 minutes - dashboard data
-  timeSeries: 10 * 60,    // 10 minutes - chart data
+  overview: 5 * 60, // 5 minutes - dashboard data
+  timeSeries: 10 * 60, // 10 minutes - chart data
 };
 ```
 
@@ -183,7 +177,7 @@ Consistent React hook patterns:
 // Data fetching hook pattern
 function useAnalyticsData<T>(
   query: string,
-  args: any
+  args: any,
 ): {
   data: T | null;
   loading: boolean;
@@ -198,9 +192,9 @@ function useAnalyticsData<T>(
 
 ### Database Integration
 
-- [Database Optimization](../database-architecture.md)
-- [Database Query Patterns](../database-architecture.md#query-performance)
-- [Type Safety with Analytics Services](../database-architecture.md#type-system)
+- [Database Optimization](docs/architecture/database-architecture.md)
+- [Database Query Patterns](docs/architecture/database-architecture.md#query-performance)
+- [Type Safety with Analytics Services](docs/architecture/database-architecture.md#type-system)
 
 ### Next.js Patterns
 
@@ -210,9 +204,9 @@ function useAnalyticsData<T>(
 
 ### TypeScript Patterns {#type-patterns}
 
-- [Type System Organization](../types/README.md)
-- [Type Safety Best Practices](../types/README.md#type-safety-best-practices)
-- [Generic Utilities](../types/README.md#generic-type-utilities)
+- [Type System Organization](docs/architecture/README.md)
+- [Type Safety Best Practices](docs/architecture/README.md#type-safety-best-practices)
+- [Generic Utilities](docs/architecture/README.md#generic-type-utilities)
 
 ## Code Quality Standards
 
@@ -242,8 +236,8 @@ function useAnalyticsData<T>(
 ### Common Issues
 
 - [General Troubleshooting](./troubleshooting.md)
-- [Database-Specific Issues](../database-architecture.md)
-- [Type System Issues](../types/README.md#type-system-limitations)
+- [Database-Specific Issues](docs/architecture/database-architecture.md)
+- [Type System Issues](docs/architecture/README.md#type-system-limitations)
 
 ### Debugging Strategies
 
@@ -263,9 +257,9 @@ function useAnalyticsData<T>(
 
 ### General Migration Strategies
 
-- [Migration Patterns](./migration-patterns.md)
-- [Type Migration Strategies](../types/README.md#migration-and-evolution)
-- [Service Migration Patterns](../../lib/services/analytics/migration-lessons.md)
+- [Migration Patterns](docs/features/analytics/MIGRATION.md)
+- [Type Migration Strategies](docs/architecture/README.md#migration-and-evolution)
+- [Service Migration Patterns](docs/guides/actions-migration-lessons.md)
 
 ### Backward Compatibility
 
@@ -309,8 +303,8 @@ npm run build
 
 ### Documentation Resources
 
-- [Analytics Documentation](../analytics/README.md)
-- [Type System Guide](../types/README.md)
+- [Analytics Documentation](docs/architecture/README.md)
+- [Type System Guide](docs/architecture/README.md)
 - [Infrastructure Setup](../infrastructure/)
 
 ### Actions Development
@@ -321,16 +315,16 @@ npm run build
 
 ### Feature-Specific Help
 
-- [Analytics Services](../../lib/services/analytics/README.md)
-- [Authentication Implementation](../../lib/actions/core/README.md)
-- [Billing Implementation](../../lib/actions/billing/README.md)
+- [Analytics Services](docs/architecture/README.md)
+- [Authentication Implementation](docs/architecture/README.md)
+- [Billing Implementation](docs/architecture/README.md)
 
 ### Common Questions
 
-- **Type Errors**: Check [Type System Guide](../types/README.md)
+- **Type Errors**: Check [Type System Guide](docs/architecture/README.md)
 - **Performance Issues**: Review [troubleshooting guide](./troubleshooting.md)
 - **Testing Questions**: See feature-specific testing guides
-- **Architecture Questions**: Review [analytics architecture](../analytics/README.md)
+- **Architecture Questions**: Review [analytics architecture](docs/architecture/README.md)
 
 ## Contributing
 

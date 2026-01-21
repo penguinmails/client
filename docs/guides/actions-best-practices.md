@@ -6,16 +6,16 @@ This document outlines best practices and common patterns for working with the r
 
 ## Table of Contents
 
-1. [Core Principles](#core-principles)
-2. [Action Structure](#action-structure)
-3. [Error Handling Best Practices](#error-handling-best-practices)
-4. [Validation Patterns](#validation-patterns)
-5. [Authentication and Authorization](#authentication-and-authorization)
-6. [Performance Optimization](#performance-optimization)
-7. [Testing Best Practices](#testing-best-practices)
-8. [Code Organization](#code-organization)
-9. [Common Anti-Patterns](#common-anti-patterns)
-10. [Migration Guidelines](#migration-guidelines)
+1. [Core Principles](docs/guides/actions-api.md#core-principles)
+2. [Action Structure](docs/guides/actions-api.md#action-structure)
+3. [Error Handling Best Practices](docs/guides/actions-api.md#error-handling-best-practices)
+4. [Validation Patterns](docs/guides/actions-api.md#validation-patterns)
+5. [Authentication and Authorization](docs/guides/actions-api.md#authentication-and-authorization)
+6. [Performance Optimization](docs/guides/actions-api.md#performance-optimization)
+7. [Testing Best Practices](docs/guides/actions-api.md#testing-best-practices)
+8. [Code Organization](docs/guides/actions-api.md#code-organization)
+9. [Common Anti-Patterns](docs/guides/actions-api.md#common-anti-patterns)
+10. [Migration Guidelines](docs/guides/actions-api.md#migration-guidelines)
 
 ## Core Principles
 

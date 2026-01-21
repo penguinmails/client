@@ -3,9 +3,10 @@
 This document describes the canonical authentication flow, current behavior, and the decided policies for three cross-cutting concerns: Turnstile (bot checks), payment gating, and email verification. It also lists implementation steps, relevant files, and acceptance criteria for tests and PRs.
 
 ## Goals
+
 - Keep Turnstile behavior as-is but add thorough tests for signup and login flows.
-- Enforce a *hard payment gate* (paywall) for dashboard functionality via a dedicated payment gate page and redirect after login when necessary.
-- Use a *soft pester* approach for email verification in the Dashboard UI (banner/modal), but block select critical features until email is verified.
+- Enforce a _hard payment gate_ (paywall) for dashboard functionality via a dedicated payment gate page and redirect after login when necessary.
+- Use a _soft pester_ approach for email verification in the Dashboard UI (banner/modal), but block select critical features until email is verified.
 
 ---
 
@@ -48,7 +49,7 @@ This document describes the canonical authentication flow, current behavior, and
 
 The Authentication flow follows strict Feature-Sliced Design (FSD) principles:
 
-- **App Layer (`app/`)**: 
+- **App Layer (`app/`)**:
   - Contains strictly routing and layout composition.
   - No business logic or state management.
   - Imports only from `features/`, `widgets/`, or `pages/`.
@@ -125,7 +126,8 @@ The Authentication flow follows strict Feature-Sliced Design (FSD) principles:
 ---
 
 If this looks good I will:
-1. Finalize this doc and commit it to `docs/features/auth/AUTH_FLOW.md` (done),
+
+1. Finalize this doc and commit it to `docs/features/auth/auth-flow.md` (done),
 2. Re-open work items and implement tests (Turnstile tests next), and
 3. Implement the `payment-gate` and verification banner (in that order).
 
