@@ -19,6 +19,20 @@ export {
   getUserProfile,
 } from './queries';
 
+// Hooks - Public custom hooks
+export { useAuth } from './hooks/use-auth';
+export { useSession } from './hooks/use-session';
+export { useEnrichment } from './hooks/use-enrichment';
+export {
+  useAuthState,
+  useUserPermissions,
+  useTenantContext,
+} from './hooks/use-auth-state';
+export {
+  useTwoFactorAuth,
+  twoFactorValidation,
+} from './hooks/use-two-factor-auth';
+
 // UI Components - Public components for external use
 export {
   AuthTemplate,
@@ -29,23 +43,16 @@ export {
 } from './ui/components';
 
 // Context - Public context providers
-// Context - Public context providers
 export {
   AuthProvider,
 } from './ui/context/auth-provider';
-
-export { useAuth } from './hooks/use-auth';
-export { useSession } from './hooks/use-session';
-export { useEnrichment } from './hooks/use-enrichment';
-
-
-// Hooks - Public custom hooks
-export {
-  useAuthState,
-  useTwoFactorAuth,
-} from '@/hooks';
 
 // Operations - Public auth operations
 export {
   checkSession,
 } from './lib/session-operations';
+
+// Metrics - Auth-specific metrics and analytics
+export {
+  authMetrics,
+} from './lib/metrics';

@@ -4,12 +4,12 @@ This document establishes testing standards and provides comprehensive checklist
 
 ## Table of Contents
 
-1. [Testing Standards](#testing-standards)
-2. [Code Review Checklist](#code-review-checklist)
-3. [Test Quality Metrics](#test-quality-metrics)
-4. [Common Anti-Patterns](#common-anti-patterns)
-5. [Best Practices Enforcement](#best-practices-enforcement)
-6. [Automated Quality Checks](#automated-quality-checks)
+1. [Testing Standards](docs/guides/actions-api.md#testing-standards)
+2. [Code Review Checklist](docs/guides/actions-api.md#code-review-checklist)
+3. [Test Quality Metrics](docs/guides/actions-api.md#test-quality-metrics)
+4. [Common Anti-Patterns](docs/guides/actions-api.md#common-anti-patterns)
+5. [Best Practices Enforcement](docs/guides/actions-api.md#best-practices-enforcement)
+6. [Automated Quality Checks](docs/guides/actions-api.md#automated-quality-checks)
 
 ## Testing Standards
 

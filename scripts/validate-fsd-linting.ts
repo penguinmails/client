@@ -128,7 +128,7 @@ const testCases: TestCase[] = [
     expectedMessageCount: 0,
     code: `
       import { Button } from '@/components/ui/button';
-      import { useAuthState } from '@/hooks/use-auth-state';
+      import { useAuthState } from '@/features/auth';
       import { AuthInput } from '@/features/auth/ui/auth-input';
       
       export function AuthForm() {

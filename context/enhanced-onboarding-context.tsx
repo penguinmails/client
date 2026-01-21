@@ -1,5 +1,5 @@
 "use client";
-import { getOnboardingSteps } from "@/lib/data/onboarding.mock";
+import { getOnboardingSteps } from "@/features/onboarding";
 import {
   createContext,
   ReactNode,
@@ -20,21 +20,21 @@ function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
   const t = useTranslations();
   const [currentStep, setCurrentStep] = useState(1);
   const [steps, setSteps] = useState<OnboardingStep[]>(() =>
-    getOnboardingSteps(t)
+    getOnboardingSteps(t),
   );
 
   const totalSteps = steps.length;
 
   const currentStepData = useMemo(
     () => steps.find((step) => step.id === currentStep) || null,
-    [steps, currentStep]
+    [steps, currentStep],
   );
 
   const markStepCompleted = useCallback((stepId: number) => {
     setSteps((prevSteps) =>
       prevSteps.map((step) =>
-        step.id === stepId ? { ...step, completed: true } : step
-      )
+        step.id === stepId ? { ...step, completed: true } : step,
+      ),
     );
   }, []);
 
@@ -60,7 +60,7 @@ function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
         false
       );
     },
-    [currentStep, steps, totalSteps]
+    [currentStep, steps, totalSteps],
   );
 
   const setCurrentStepWithCompletion = useCallback(
@@ -71,7 +71,7 @@ function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
       if (stepId > currentStep) {
         const stepsToComplete = Array.from(
           { length: stepId - currentStep },
-          (_, i) => currentStep + i
+          (_, i) => currentStep + i,
         );
 
         developmentLogger.debug("Auto-completing steps:", stepsToComplete);
@@ -80,14 +80,14 @@ function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
           prevSteps.map((step) =>
             stepsToComplete.includes(step.id)
               ? { ...step, completed: true }
-              : step
-          )
+              : step,
+          ),
         );
       }
 
       setCurrentStep(stepId);
     },
-    [currentStep]
+    [currentStep],
   );
 
   const contextValue = useMemo(
@@ -113,7 +113,7 @@ function EnhancedOnboardingProvider({ children }: { children: ReactNode }) {
       markStepCompleted,
       isStepAccessible,
       setCurrentStepWithCompletion,
-    ]
+    ],
   );
 
   return (
@@ -127,7 +127,7 @@ function useEnhancedOnboarding() {
   const context = useContext(EnhancedOnboardingContext);
   if (!context) {
     throw new Error(
-      "useEnhancedOnboarding must be used within an EnhancedOnboardingProvider"
+      "useEnhancedOnboarding must be used within an EnhancedOnboardingProvider",
     );
   }
   return context;

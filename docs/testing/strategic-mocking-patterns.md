@@ -4,16 +4,16 @@ This document provides comprehensive patterns and examples for strategic mocking
 
 ## Table of Contents
 
-1. [Mocking Philosophy](#mocking-philosophy)
-2. [What to Mock vs. What Not to Mock](#what-to-mock-vs-what-not-to-mock)
-3. [External Dependency Mocking](#external-dependency-mocking)
-4. [Context Provider Mocking](#context-provider-mocking)
-5. [Next.js Hook Mocking](#nextjs-hook-mocking)
-6. [API and Server Action Mocking](#api-and-server-action-mocking)
-7. [Third-Party Library Mocking](#third-party-library-mocking)
-8. [Pre-configured Mock Strategies](#pre-configured-mock-strategies)
-9. [Custom Mock Strategies](#custom-mock-strategies)
-10. [Mock Data Generators](#mock-data-generators)
+1. [Mocking Philosophy](docs/guides/actions-api.md#mocking-philosophy)
+2. [What to Mock vs. What Not to Mock](docs/guides/actions-api.md#what-to-mock-vs-what-not-to-mock)
+3. [External Dependency Mocking](docs/guides/actions-api.md#external-dependency-mocking)
+4. [Context Provider Mocking](docs/guides/actions-api.md#context-provider-mocking)
+5. [Next.js Hook Mocking](docs/guides/actions-api.md#nextjs-hook-mocking)
+6. [API and Server Action Mocking](docs/guides/actions-api.md#api-and-server-action-mocking)
+7. [Third-Party Library Mocking](docs/guides/actions-api.md#third-party-library-mocking)
+8. [Pre-configured Mock Strategies](docs/guides/actions-api.md#pre-configured-mock-strategies)
+9. [Custom Mock Strategies](docs/guides/actions-api.md#custom-mock-strategies)
+10. [Mock Data Generators](docs/guides/actions-api.md#mock-data-generators)
 
 ## Mocking Philosophy
 

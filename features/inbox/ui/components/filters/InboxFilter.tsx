@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getMockCampaigns, getMockMailboxes } from "@/lib/mocks/providers";
 import { cn } from "@/lib/utils";
 import {
   Archive,
@@ -24,22 +23,53 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function InboxFilter() {
-  const campaignsData = getMockCampaigns();
-  const mailboxes = getMockMailboxes();
-  
+  const [campaignsData, setCampaignsData] = useState<Array<{ id: string; name: string }>>([]);
+  const [mailboxes, setMailboxes] = useState<Array<{ id: string; email: string }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch campaigns and mailboxes from API routes
+  useEffect(() => {
+    async function fetchInboxData() {
+      try {
+        const [campaignsResponse, mailboxesResponse] = await Promise.all([
+          fetch('/api/campaigns'),
+          fetch('/api/mailboxes'),
+        ]);
+
+        if (campaignsResponse.ok) {
+          const campaigns = await campaignsResponse.json();
+          setCampaignsData(campaigns.map((c: { id: string; name: string }) => ({ id: c.id, name: c.name })));
+        }
+
+        if (mailboxesResponse.ok) {
+          const mailboxesData = await mailboxesResponse.json();
+          // Handle both array and object responses
+          const mailboxesArray = Array.isArray(mailboxesData) ? mailboxesData : mailboxesData.mailboxes || [];
+          setMailboxes(mailboxesArray.map((m: { id: string; email: string }) => ({ id: m.id, email: m.email })));
+        }
+      } catch {
+        // Silently fail - component will show empty state
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchInboxData();
+  }, []);
+
   const [filterState, setFilterState] = useReducer(
     (state, action) => ({ ...state, ...action }),
     {
-      selectedFilter: 'all',
+      selectedFilter: "all",
       campaignFilter: [],
       mailboxFilter: [],
       tagFilter: [],
-      timeFilter: 'all'
-    }
+      timeFilter: "all",
+    },
   );
 
   const router = useRouter();
@@ -52,7 +82,7 @@ function InboxFilter() {
       campaignFilter: params.getAll("campaigns"),
       mailboxFilter: params.getAll("mailboxes"),
       tagFilter: params.getAll("tags"),
-      timeFilter: params.get("time") || "all"
+      timeFilter: params.get("time") || "all",
     });
   }, [currentSearchParams]);
 
@@ -66,11 +96,13 @@ function InboxFilter() {
   ];
   useEffect(() => {
     const params = new URLSearchParams();
-    if (filterState.selectedFilter !== "all") params.append("filter", filterState.selectedFilter);
+    if (filterState.selectedFilter !== "all")
+      params.append("filter", filterState.selectedFilter);
     filterState.campaignFilter.forEach((c) => params.append("campaigns", c));
     filterState.tagFilter.forEach((t) => params.append("tags", t));
     filterState.mailboxFilter.forEach((m) => params.append("mailboxes", m));
-    if (filterState.timeFilter !== "all") params.append("time", filterState.timeFilter);
+    if (filterState.timeFilter !== "all")
+      params.append("time", filterState.timeFilter);
     router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
   }, [
     filterState.selectedFilter,
@@ -81,13 +113,12 @@ function InboxFilter() {
     router,
   ]);
 
-
   const tags = ["Interested", "Not Interested", "Maybe Later", "Follow Up"];
 
   const handleMultiSelectToggle = (
     value: string,
     currentSelection: string[],
-    setSelection: (selection: string[]) => void
+    setSelection: (selection: string[]) => void,
   ) => {
     if (currentSelection.includes(value)) {
       setSelection(currentSelection.filter((item) => item !== value));
@@ -105,7 +136,7 @@ function InboxFilter() {
     items: string[],
     selectedItems: string[],
     setSelectedItems: (items: string[]) => void,
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>,
   ) => {
     const Icon = icon;
     return (
@@ -182,7 +213,7 @@ function InboxFilter() {
     <>
       <Filter
         className={cn(
-          "bg-card dark:bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none"
+          "bg-card dark:bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none",
         )}
       >
         <SearchInput />
@@ -196,7 +227,11 @@ function InboxFilter() {
                 <Button
                   key={filter.id}
                   onClick={() => setFilterState({ selectedFilter: filter.id })}
-                  variant={filterState.selectedFilter === filter.id ? "secondary" : "ghost"}
+                  variant={
+                    filterState.selectedFilter === filter.id
+                      ? "secondary"
+                      : "ghost"
+                  }
                   className={cn(
                     "w-full justify-between h-auto py-2.5 px-3",
                     filterState.selectedFilter === filter.id
@@ -210,14 +245,16 @@ function InboxFilter() {
                         "w-4 h-4",
                         filterState.selectedFilter === filter.id
                           ? "text-blue-600"
-                          : "text-gray-500"
+                          : "text-gray-500",
                       )}
                     />
                     <span className="text-sm font-medium">{filter.label}</span>
                   </div>
                   <Badge
                     variant={
-                      filterState.selectedFilter === filter.id ? "default" : "secondary"
+                      filterState.selectedFilter === filter.id
+                        ? "default"
+                        : "secondary"
                     }
                     className="text-xs"
                   >
@@ -235,21 +272,21 @@ function InboxFilter() {
             </h3>
 
             {/* Campaigns Filter */}
-            {renderMultiSelectFilter(
+            {!loading && campaignsData.length > 0 && renderMultiSelectFilter(
               "Campaigns",
               campaignsData.map((c) => c.name),
               filterState.campaignFilter,
               (campaignFilter) => setFilterState({ campaignFilter }),
-              TrendingUp
+              TrendingUp,
             )}
 
             {/* Mailboxes Filter */}
-            {renderMultiSelectFilter(
+            {!loading && mailboxes.length > 0 && renderMultiSelectFilter(
               "Mailboxes",
               mailboxes.map((m) => m.email),
               filterState.mailboxFilter,
               (mailboxFilter) => setFilterState({ mailboxFilter }),
-              AtSign
+              AtSign,
             )}
 
             {/* Tags Filter */}
@@ -258,7 +295,7 @@ function InboxFilter() {
               tags,
               filterState.tagFilter,
               (tagFilter) => setFilterState({ tagFilter }),
-              Tag
+              Tag,
             )}
 
             {/* Time Filter (single select) */}
@@ -269,7 +306,10 @@ function InboxFilter() {
                   Time
                 </span>
               </div>
-              <Select value={filterState.timeFilter} onValueChange={(timeFilter) => setFilterState({ timeFilter })}>
+              <Select
+                value={filterState.timeFilter}
+                onValueChange={(timeFilter) => setFilterState({ timeFilter })}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="All Time" />
                 </SelectTrigger>

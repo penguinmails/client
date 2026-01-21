@@ -25,7 +25,7 @@ import { AnalyticsCalculator } from "@/lib/services/analytics";
 
 const openRate = AnalyticsCalculator.calculateOpenRate(
   metrics.opened,
-  metrics.sent
+  metrics.sent,
 );
 ```
 
@@ -79,7 +79,7 @@ function processCampaigns(campaigns: Campaign[]): CampaignWithMetrics[] {
     ...campaign,
     openRate: AnalyticsCalculator.calculateOpenRate(
       campaign.metrics.opened,
-      campaign.metrics.sent
+      campaign.metrics.sent,
     ),
   }));
 }
@@ -149,10 +149,9 @@ export async function getCampaigns(context: ActionContext) {
 export async function getCampaigns(context: ActionContext) {
   if (!context.companyId) throw new Error("Unauthorized");
 
-  return await db.query(
-    "SELECT * FROM campaigns WHERE company_id = $1",
-    [context.companyId]
-  );
+  return await db.query("SELECT * FROM campaigns WHERE company_id = $1", [
+    context.companyId,
+  ]);
 }
 ```
 
@@ -256,7 +255,7 @@ interface AnalyticsData {
 function processAnalytics(data: AnalyticsData) {
   return AnalyticsCalculator.calculateOpenRate(
     data.metrics.opened,
-    data.metrics.sent
+    data.metrics.sent,
   );
 }
 ```
@@ -412,10 +411,9 @@ function getCompanyAnalytics(allAnalytics: Analytics[], companyId: string) {
 export async function getCompanyAnalytics(context: ActionContext) {
   if (!context.companyId) throw new Error("Unauthorized");
 
-  return await db.query(
-    "SELECT * FROM analytics WHERE company_id = $1",
-    [context.companyId]
-  );
+  return await db.query("SELECT * FROM analytics WHERE company_id = $1", [
+    context.companyId,
+  ]);
 }
 ```
 
@@ -608,7 +606,7 @@ class UserService {
 
 ## Summary
 
-### Key Principles to Follow:
+### Key Principles to Follow
 
 1. **Single Source of Truth**: Centralize calculations and data definitions
 2. **Separation of Concerns**: Keep data, business logic, and UI separate
@@ -619,7 +617,7 @@ class UserService {
 7. **Testing**: Test behavior, not implementation
 8. **Organization**: Avoid circular dependencies and god objects
 
-### When in Doubt:
+### When in Doubt
 
 - Check existing patterns in the codebase
 - Consult feature-specific documentation
@@ -628,9 +626,9 @@ class UserService {
 - Consider performance implications
 - Think about error scenarios
 
-For specific guidance on any of these patterns, refer to:
+For specific guidance on any of these patterns, refer to
 
-- [Analytics Service Documentation](../../lib/services/analytics/README.md)
-- [Development Patterns](./README.md#common-development-patterns)
+- [Analytics Service Documentation](../features/analytics/README.md)
+- [Development Patterns](./development-workflow.md#common-development-patterns)
 - [Troubleshooting Guide](./troubleshooting.md)
-- [Testing Strategies](./testing.md)
+- [Testing Strategies](./testing-general.md)

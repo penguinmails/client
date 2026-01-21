@@ -20,21 +20,17 @@ import {
   AlertTriangle,
   RefreshCw,
 } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   getBillingDataForSettings,
   updateBillingInfo,
 } from "@features/billing/actions";
-import { updateCompanyInfo, getUserSettings } from "@/lib/actions/settings";
+import { useAuth } from "@/lib/hooks/use-auth";
 import {
   useServerAction,
   useServerActionWithParams,
 } from "@/hooks/use-server-action";
 import { BillingLoadingSkeleton } from "@features/billing/ui/components/BillingLoadingSkeleton";
-import {
-  SettingsErrorBoundary,
-  SettingsErrorFallback,
-} from "@/features/settings";
 import { Button } from "@/components/ui/button/button";
 import { toast } from "sonner";
 import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checkout";
@@ -42,6 +38,84 @@ import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "@/lib/config/i18n/navigation";
 import CheckoutDialog from "@features/billing/ui/components/checkout-dialog";
 import { useTranslations } from "next-intl";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+// Local error boundary for billing feature
+class BillingErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback?: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: {
+    children: React.ReactNode;
+    fallback?: React.ReactNode;
+  }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // eslint-disable-next-line no-console
+    console.error("Billing Error Boundary caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
+      return (
+        <Card className="border-destructive/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Something went wrong
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription>
+                {this.state.error?.message ||
+                  "An unexpected error occurred while loading billing."}
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Simple error fallback component
+function BillingErrorFallback({
+  error,
+  retry,
+}: {
+  error: string;
+  retry?: () => void;
+}) {
+  return (
+    <Alert variant="destructive">
+      <AlertTriangle className="h-4 w-4" />
+      <AlertDescription className="flex items-center justify-between">
+        <span>{error}</span>
+        {retry && (
+          <Button onClick={retry} variant="outline" size="sm">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Retry
+          </Button>
+        )}
+      </AlertDescription>
+    </Alert>
+  );
+}
 
 function BillingTab() {
   const t = useTranslations();
@@ -50,6 +124,7 @@ function BillingTab() {
   const router = useRouter();
   const pathname = usePathname();
   const checkout = searchParams.get("checkout");
+  const { userCompanies, selectedCompanyId, refreshCompanies } = useAuth();
 
   // Memoized options to keep stable references
   const billingOptions = useMemo(
@@ -89,56 +164,37 @@ function BillingTab() {
     updateOptions,
   );
 
-  const updateCompanyOptions = useMemo(
-    () => ({
-      onSuccess: () => {
-        toast.success(t("BillingTab.success.companyUpdated"));
-        // Refresh billing data in case it includes company info
-        loadBilling();
-      },
-      onError: (error: string) => {
-        toast.error(t("BillingTab.errors.updateCompany"), {
-          description: error,
-        });
-      },
-    }),
-    [loadBilling, t],
+  // Get current company from auth context
+  const currentCompany = userCompanies.find(
+    (company) => company.id === selectedCompanyId,
   );
-
-  const updateCompanyAction = useServerActionWithParams(
-    updateCompanyInfo,
-    updateCompanyOptions,
-  );
-
-  const companyOptions = useMemo(
-    () => ({
-      onError: (error: string) => {
-        toast.error(t("BillingTab.errors.loadCompany"), {
-          description: error,
-        });
-      },
-    }),
-    [t],
-  );
-
-  const companyDataAction = useServerAction(getUserSettings, companyOptions);
-  const { execute: loadCompanyData } = companyDataAction;
-
-  // Load billing data on component mount
-  useEffect(() => {
-    loadBilling();
-    loadCompanyData();
-  }, [loadBilling, loadCompanyData]);
 
   // Handle company name update
   const handleCompanyNameUpdate = async (newName: string) => {
-    if (!billingDataAction.data) return;
+    if (!currentCompany) return;
 
-    await updateCompanyAction.execute({
-      name: newName,
-    });
-    // Refresh company data after update
-    loadCompanyData();
+    // Update company info through API endpoint
+    try {
+      const response = await fetch(`/api/companies/${currentCompany.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: newName }),
+      });
+
+      if (response.ok) {
+        toast.success(t("BillingTab.success.companyUpdated"));
+        // Refresh companies in auth context
+        await refreshCompanies();
+      } else {
+        throw new Error("Failed to update company");
+      }
+    } catch (error) {
+      toast.error(t("BillingTab.errors.updateCompany"), {
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
   };
 
   useEffect(() => {
@@ -156,7 +212,7 @@ function BillingTab() {
   // Show error state if data failed to load
   if (billingDataAction.error && !billingDataAction.data) {
     return (
-      <SettingsErrorFallback
+      <BillingErrorFallback
         error={
           typeof billingDataAction.error === "string"
             ? billingDataAction.error
@@ -193,7 +249,7 @@ function BillingTab() {
   const billingData = billingDataAction.data;
 
   return (
-    <SettingsErrorBoundary>
+    <BillingErrorBoundary>
       <div className="space-y-5">
         {/* Current Plan Card */}
         <Card>
@@ -332,7 +388,7 @@ function BillingTab() {
               disabled={updateBillingAction.loading}
               onClick={() => {
                 const currentName =
-                  companyDataAction.data?.companyInfo.name ||
+                  currentCompany?.name ||
                   t("BillingTab.company");
                 const newCompanyName = prompt(
                   t("BillingTab.companyName") + ":",
@@ -361,29 +417,12 @@ function BillingTab() {
                       {t("BillingTab.companyName")}
                     </label>
                     <p className="font-medium text-gray-900 dark:text-foreground">
-                      {companyDataAction.data?.companyInfo.name ||
+                      {currentCompany?.name ||
                         t("Common.loading")}
                     </p>
                   </div>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-foreground">
-                    {t("BillingTab.industry")}
-                  </label>
-                  <p className="text-gray-600">
-                    {companyDataAction.data?.companyInfo.industry ||
-                      t("BillingTab.technologyServices")}
-                  </p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-foreground">
-                    {t("BillingTab.companySize")}
-                  </label>
-                  <p className="text-gray-600">
-                    {companyDataAction.data?.companyInfo.size ||
-                      t("BillingTab.companySizeDefault")}
-                  </p>
-                </div>
+
               </div>
             </div>
           </CardContent>
@@ -399,7 +438,7 @@ function BillingTab() {
             <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
               <div className="space-y-1">
                 <p className="font-medium text-gray-900 dark:text-foreground">
-                  {companyDataAction.data?.companyInfo.name ||
+                  {currentCompany?.name ||
                     t("BillingTab.company")}
                 </p>
                 <p className="text-gray-600 dark:text-muted-foreground">
@@ -439,7 +478,7 @@ function BillingTab() {
           </div>
         )}
       </div>
-    </SettingsErrorBoundary>
+    </BillingErrorBoundary>
   );
 }
 

@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { type MockLead as LeadList } from "@/lib/mocks/providers";
+import { type MockLead as LeadList } from "@/features/leads";
 import { Eye } from "lucide-react";
 
 const mockListData = {
@@ -90,9 +90,9 @@ function ShowLeadListItemButton({ list }: { list: LeadList }) {
           <Eye className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      { }
+      {}
       <DialogContent className="sm:max-w-4xl max-h-[80vh] overflow-y-auto">
-      { }
+        {}
         <DialogClose />
         <DialogHeader>
           <DialogTitle>Contacts in &ldquo;{list.name}&rdquo;</DialogTitle>

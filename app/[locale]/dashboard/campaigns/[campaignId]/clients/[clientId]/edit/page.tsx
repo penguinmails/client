@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getClient } from "@/lib/queries/clients";
+import { getClient } from "@/features/leads";
 import ClientForm from "@/features/leads/ui/components/forms/LeadForm";
 import { LeadHeader } from "@/features/leads/ui/components/forms/LeadHeader";
 
@@ -22,7 +22,10 @@ export default async function EditClientPage({ params }: EditClientPageProps) {
 
   return (
     <div className="container py-8">
-      <LeadHeader client={{...client, id: client.id.toString()}} campaignId={campaignId} />
+      <LeadHeader
+        client={{ ...client, id: client.id.toString() }}
+        campaignId={campaignId}
+      />
       <ClientForm client={client} campaignId={campaignId} isEditMode={true} />
     </div>
   );
