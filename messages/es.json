@@ -701,6 +701,17 @@
       "addDomainButton": "Añadir Dominio"
     }
   },
+  "domains": {
+    "new": {
+      "title": "Añadir Nuevo Dominio",
+      "subtitle": "Configura tu dominio para el envío de correos",
+      "steps": {
+        "domain": "Añadir Dominio",
+        "dns": "Configuración DNS",
+        "verify": "Verificar Dominio"
+      }
+    }
+  },
   "Campaigns": {
     "title": "Campañas",
     "description": "Gestiona tus campañas de correo electrónico como un profesional",

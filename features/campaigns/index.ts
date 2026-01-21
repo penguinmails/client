@@ -30,8 +30,19 @@ export {
   getTimezones,
 } from './actions';
 
+// UI Components - Public components
+export { 
+  default as PersonalizationTags, 
+  personalizationTags 
+} from './ui/components/email/PersonalizationTags';
+
 // API Integration - Public API interface
 export { campaignsApi } from './ui/integration/campaigns-api';
 
-// UI Components - Public components
-export { default as PersonalizationTags, personalizationTags } from './ui/components/email/PersonalizationTags';
+// Mock Data - For development and testing (temporary exports)
+export {
+  campaignsData,
+  availableMailboxes,
+  campaignLeads,
+  getMockCampaigns,
+} from './lib/mocks';

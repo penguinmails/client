@@ -5,19 +5,19 @@
  * External features should only import from this index file, not from internal modules.
  */
 
-// Actions - Server-side operations
-export {
-  getNotifications,
-  markNotificationAsRead,
-  markAllNotificationsAsRead,
-} from './actions';
-
 // Types - Public type definitions
 export type {
   Notification,
   NotificationType,
   NotificationStatus,
 } from './types';
+
+// Actions - Server-side operations
+export {
+  getNotifications,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+} from './actions';
 
 // UI Components - Public components for external use
 export {

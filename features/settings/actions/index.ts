@@ -41,7 +41,7 @@ export async function updateFullProfile(data: ProfileFormValues, req?: NextReque
 import { 
   getUserSettings as originalGetUserSettings, 
   updateCompanyInfo as originalUpdateCompanyInfo 
-} from '@/lib/actions/settings';
+} from '../lib/actions';
 
 /**
  * Fetches general user and company settings

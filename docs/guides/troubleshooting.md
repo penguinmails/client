@@ -481,10 +481,10 @@ function trackPerformance(
 
 ### Internal Resources
 
-- [Analytics Troubleshooting](../../lib/services/analytics/troubleshooting.md)
-- [NileDB Optimization](../database-architecture.md)
-- [Authentication Guide](./authentication.md)
-- [Billing Troubleshooting](../../lib/actions/billing/troubleshooting.md)
+- [Analytics Troubleshooting](docs/guides/troubleshooting.md)
+- [NileDB Optimization](docs/architecture/database-architecture.md)
+- [Authentication Guide](docs/architecture/authentication.md)
+- [Billing Troubleshooting](docs/guides/troubleshooting.md)
 
 ### Team Communication
 

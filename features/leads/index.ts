@@ -12,6 +12,16 @@ export type {
   LeadStatus,
 } from './types';
 
+// Additional types from queries
+export type {
+  Client,
+} from './lib/queries';
+
+// Mock types - For development and testing
+export type {
+  MockLead,
+} from './lib/mocks';
+
 // Actions - Server-side operations
 export {
   getLeadLists,
@@ -25,6 +35,12 @@ export {
   deleteLead,
 } from './actions';
 
+// Queries - Data access operations
+export {
+  getClient,
+  getClientsByCampaign,
+} from './lib/queries';
+
 // UI Components - Public components for external use
 export {
   NewLeadForm,
@@ -34,3 +50,8 @@ export {
 
 // API Integration - Public API interface
 export { leadsApi } from './ui/integration/leads-api';
+
+// Mock Data - For development and testing (temporary exports)
+export {
+  getMockLeads,
+} from './lib/mocks';

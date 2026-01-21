@@ -4,16 +4,16 @@ This document provides specific guidelines for reviewing test code to ensure adh
 
 ## Table of Contents
 
-1. [Review Process Overview](#review-process-overview)
-2. [Pre-Review Checklist](#pre-review-checklist)
-3. [Component Usage Review](#component-usage-review)
-4. [Mocking Strategy Review](#mocking-strategy-review)
-5. [Test Quality Assessment](#test-quality-assessment)
-6. [Performance Review](#performance-review)
-7. [Accessibility Review](#accessibility-review)
-8. [Review Comment Templates](#review-comment-templates)
-9. [Approval Criteria](#approval-criteria)
-10. [Common Review Scenarios](#common-review-scenarios)
+1. [Review Process Overview](docs/guides/actions-api.md#review-process-overview)
+2. [Pre-Review Checklist](docs/guides/actions-api.md#pre-review-checklist)
+3. [Component Usage Review](docs/guides/actions-api.md#component-usage-review)
+4. [Mocking Strategy Review](docs/guides/actions-api.md#mocking-strategy-review)
+5. [Test Quality Assessment](docs/guides/actions-api.md#test-quality-assessment)
+6. [Performance Review](docs/guides/actions-api.md#performance-review)
+7. [Accessibility Review](docs/guides/actions-api.md#accessibility-review)
+8. [Review Comment Templates](docs/guides/actions-api.md#review-comment-templates)
+9. [Approval Criteria](docs/guides/actions-api.md#approval-criteria)
+10. [Common Review Scenarios](docs/guides/actions-api.md#common-review-scenarios)
 
 ## Review Process Overview
 

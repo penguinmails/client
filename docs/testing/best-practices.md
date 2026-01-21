@@ -4,16 +4,16 @@ This document consolidates the essential best practices for implementing real co
 
 ## Table of Contents
 
-1. [Core Principles](#core-principles)
-2. [Component Testing Guidelines](#component-testing-guidelines)
-3. [Mocking Best Practices](#mocking-best-practices)
-4. [Test Organization](#test-organization)
-5. [Performance Considerations](#performance-considerations)
-6. [Accessibility Standards](#accessibility-standards)
-7. [Error Handling](#error-handling)
-8. [Maintenance Guidelines](#maintenance-guidelines)
-9. [Quality Assurance](#quality-assurance)
-10. [Team Standards](#team-standards)
+1. [Core Principles](docs/guides/actions-api.md#core-principles)
+2. [Component Testing Guidelines](docs/guides/actions-api.md#component-testing-guidelines)
+3. [Mocking Best Practices](docs/guides/actions-api.md#mocking-best-practices)
+4. [Test Organization](docs/guides/actions-api.md#test-organization)
+5. [Performance Considerations](docs/guides/actions-api.md#performance-considerations)
+6. [Accessibility Standards](docs/guides/actions-api.md#accessibility-standards)
+7. [Error Handling](docs/guides/actions-api.md#error-handling)
+8. [Maintenance Guidelines](docs/guides/actions-api.md#maintenance-guidelines)
+9. [Quality Assurance](docs/guides/actions-api.md#quality-assurance)
+10. [Team Standards](docs/guides/actions-api.md#team-standards)
 
 ## Core Principles
 

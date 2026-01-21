@@ -542,7 +542,7 @@ class DMARCAnalyzer {
 - [DNS Configuration Guide](./dns-setup.md)
 - [Cloudflare Configuration](./cloudflare.md)
 - [Domain Management](../../types/domains/README.md)
-- [Email Service Integration](../../lib/services/email/README.md)
+- [Email Service Integration](docs/architecture/README.md)
 
 ## External Resources
 

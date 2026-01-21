@@ -703,6 +703,17 @@
       "addDomainButton": "Add Domain"
     }
   },
+  "domains": {
+    "new": {
+      "title": "Add New Domain",
+      "subtitle": "Configure your domain for email sending",
+      "steps": {
+        "domain": "Add Domain",
+        "dns": "DNS Setup",
+        "verify": "Verify Domain"
+      }
+    }
+  },
   "Campaigns": {
     "createTitle": "Create New Campaign",
     "editTitle": "Edit Campaign {name}",

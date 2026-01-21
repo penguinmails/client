@@ -34,8 +34,8 @@ This document defines clear ownership assignments for each documentation categor
 - `lib/services/analytics/troubleshooting.md` - Analytics-specific issues
 - `lib/services/analytics/testing.md` - Analytics testing strategies
 - `lib/services/analytics/migration-lessons.md` - Historical context
-- `components/analytics/README.md` - Component organization
-- `components/analytics/troubleshooting.md` - Component issues
+- `docs/features/analytics/README.md` - Feature documentation
+- `docs/troubleshooting/README.md` - General troubleshooting
 - `types/analytics/README.md` - Analytics type organization
 - `types/analytics/type-limitations.md` - Type constraints
 

@@ -29,7 +29,7 @@ Analytics are organized by business domain:
 
 ## System Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Analytics System                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -87,26 +87,26 @@ All metrics follow consistent calculation patterns:
 
 ### Service Documentation
 
-- [Analytics Services Architecture](../../lib/services/analytics/README.md)
-- [Service Troubleshooting](../../lib/services/analytics/troubleshooting.md)
-- [NileDB Setup Guide](../../database-architecture.md)
-- [NileDB Optimization](../../database-architecture.md)
+- [Analytics Services Architecture](./architecture.md)
+- [Service Troubleshooting](../../guides/troubleshooting.md)
+- [NileDB Setup Guide](../../architecture/database-architecture.md)
+- [NileDB Optimization](../../architecture/database-architecture.md)
 
 ### Component Documentation
 
-- [Analytics Components](../../components/analytics/README.md)
-- [Component Troubleshooting](../../components/analytics/troubleshooting.md)
+- [Analytics Components](../../components/README.md)
+- [Component Troubleshooting](../../guides/troubleshooting.md)
 
 ### Type System
 
-- [Analytics Types](../../types/analytics/README.md)
-- [Type Limitations](../../types/analytics/type-limitations.md)
+- [Analytics Types](../../../features/analytics/types/README.md)
+- [Type System Documentation](../../architecture/type-system.md)
 
 ### Development Resources
 
-- [Testing Strategies](../../lib/services/analytics/testing.md)
-- [Migration Lessons](../../lib/services/analytics/migration-lessons.md)
-- [Performance Patterns](../../database-architecture.md)
+- [Testing Strategies](../../guides/testing-general.md)
+- [Migration Lessons](../../guides/actions-migration-lessons.md)
+- [Performance Patterns](../../architecture/database-architecture.md)
 
 ## Database Strategy
 
@@ -165,28 +165,26 @@ Analytics services integrate with:
 
 ## Business Context
 
-For business rationale and strategic context behind the analytics system:
-
-- [Business Context](./business-context.md) - Strategic justification and business requirements
+For business rationale and strategic context behind the analytics system, see the [Analytics Architecture](../../architecture/README.md) documentation.
 
 ## Getting Started
 
-1. **Understanding the Architecture**: Start with [Service Architecture](../../lib/services/analytics/README.md)
-2. **Setting Up Analytics**: Follow the [NileDB Setup Guide](../../database-architecture.md)
-3. **Common Issues**: Check [Troubleshooting Guide](../../lib/services/analytics/troubleshooting.md)
-4. **Type System**: Review [Analytics Types](../../types/analytics/README.md)
+1. **Understanding the Architecture**: Start with [Service Architecture](./architecture.md)
+2. **Setting Up Analytics**: Follow the [NileDB Setup Guide](../../architecture/database-architecture.md)
+3. **Common Issues**: Check [Troubleshooting Guide](../../guides/troubleshooting.md)
+4. **Type System**: Review [Analytics Types](../../../features/analytics/types/README.md)
 
 ## Architecture Deep Dive
 
 For detailed system architecture information, see:
 
-- [System Architecture](./architecture.md) - Comprehensive architectural overview
-- [Service Architecture](../../lib/services/analytics/README.md) - Implementation details
+- [System Architecture](../../architecture/database-architecture.md) - Comprehensive architectural overview
+- [Service Architecture](./architecture.md) - Implementation details
 
 ## Evolution and History
 
 For historical context and migration lessons, see:
 
-- [Migration Lessons Learned](../../lib/services/analytics/migration-lessons.md)
-- [Architectural Evolution](./architecture.md#evolution-and-scalability)
-- [Refactoring Decisions](../../lib/services/analytics/migration-lessons.md#refactoring-decisions)
+- [Migration Lessons Learned](../../guides/actions-migration-lessons.md)
+- [Architectural Evolution](../../architecture/database-architecture.md#evolution-and-scalability)
+- [Refactoring Decisions](../../guides/actions-migration-lessons.md#refactoring-decisions)

@@ -196,7 +196,6 @@ on:
     paths:
       - "docs/**"
       - "lib/**/*.md"
-      - "components/**/*.md"
       - "types/**/*.md"
 
 jobs:

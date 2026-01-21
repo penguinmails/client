@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { MOCK_CAMPAIGNS } from "@features/campaigns/lib/mocks/campaigns";
+import { campaignsData } from "@/features/campaigns/lib/mocks";
 
 /**
  * GET /api/campaigns
@@ -9,7 +9,7 @@ export async function GET() {
   // Simulate network delay (500ms)
   await new Promise(resolve => setTimeout(resolve, 500));
 
-  return NextResponse.json(MOCK_CAMPAIGNS);
+  return NextResponse.json(campaignsData);
 }
 
 /**

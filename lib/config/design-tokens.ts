@@ -2,7 +2,7 @@
  * Design tokens for consistent spacing, theming, and component styling
  * Part of the FSD shared layer
  * 
- * @see components/design-system/CONTRIBUTING.md for usage guidelines
+ * @see docs/architecture/semantic-tokens.md for usage guidelines
  */
 
 // ============================================================================
