@@ -249,7 +249,7 @@ function BillingTab() {
   const billingData = billingDataAction.data;
 
   return (
-    <SettingsErrorBoundary>
+    <BillingErrorBoundary>
       <div className="space-y-6">
         {/* Current Plan Card */}
         <Card>
@@ -418,7 +418,7 @@ function BillingTab() {
                       {t("BillingTab.companyName")}
                     </label>
                     <p className="font-medium text-foreground">
-                      {companyDataAction.data?.companyInfo.name ||
+                      {currentCompany?.name ||
                         t("Common.loading")}
                     </p>
                   </div>
@@ -428,8 +428,7 @@ function BillingTab() {
                     {t("BillingTab.industry")}
                   </label>
                   <p className="text-muted-foreground">
-                    {companyDataAction.data?.companyInfo.industry ||
-                      t("BillingTab.technologyServices")}
+                    {t("BillingTab.technologyServices")}
                   </p>
                 </div>
                 <div>
@@ -437,8 +436,7 @@ function BillingTab() {
                     {t("BillingTab.companySize")}
                   </label>
                   <p className="text-muted-foreground">
-                    {companyDataAction.data?.companyInfo.size ||
-                      t("BillingTab.companySizeDefault")}
+                    {t("BillingTab.companySizeDefault")}
                   </p>
                 </div>
               </div>
@@ -456,7 +454,7 @@ function BillingTab() {
             <div className="bg-muted/30 rounded-lg p-4">
               <div className="space-y-1">
                 <p className="font-medium text-foreground">
-                  {companyDataAction.data?.companyInfo.name ||
+                  {currentCompany?.name ||
                     t("BillingTab.company")}
                 </p>
                 <p className="text-muted-foreground">
