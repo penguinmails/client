@@ -250,7 +250,7 @@ function BillingTab() {
 
   return (
     <BillingErrorBoundary>
-      <div className="space-y-5">
+      <div className="space-y-6">
         {/* Current Plan Card */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -335,18 +335,18 @@ function BillingTab() {
           </CardHeader>
           <CardContent>
             {billingData.paymentMethod ? (
-              <div className="flex items-center justify-between bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-muted/30 rounded-lg p-4">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-white dark:bg-card p-2 rounded-lg border dark:border-border">
-                    <CreditCard className="w-5 h-5 text-gray-600 dark:text-muted-foreground" />
+                  <div className="bg-card p-2 rounded-lg border border-border">
+                    <CreditCard className="w-5 h-5 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-foreground">
+                    <p className="font-medium text-foreground">
                       {billingData.paymentMethod.brand}{" "}
                       {t("BillingTab.endingIn")}{" "}
                       {billingData.paymentMethod.lastFour}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
                       {t("BillingTab.expires", {
                         expiry: billingData.paymentMethod.expiry,
                       })}
@@ -356,16 +356,16 @@ function BillingTab() {
                 <UpdateCardDialogTrigger title={t("BillingTab.updateCard")} />
               </div>
             ) : (
-              <div className="flex items-center justify-between bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-muted/30 rounded-lg p-4">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-white dark:bg-card p-2 rounded-lg border dark:border-border">
-                    <CreditCard className="w-5 h-5 text-gray-600 dark:text-muted-foreground" />
+                  <div className="bg-card p-2 rounded-lg border border-border">
+                    <CreditCard className="w-5 h-5 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-foreground">
                       {t("BillingTab.noPaymentMethod")}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {t("BillingTab.addPaymentMethod")}
                     </p>
                   </div>
@@ -383,8 +383,9 @@ function BillingTab() {
               <Building className="w-5 h-5 inline mr-2" />
               {t("BillingTab.companyInformation")}
             </CardTitle>
-            <button
-              className="text-sm text-blue-600 hover:text-blue-800 underline disabled:opacity-50"
+            <Button
+              variant="link"
+              className="text-primary hover:text-primary/80 underline"
               disabled={updateBillingAction.loading}
               onClick={() => {
                 const currentName =
@@ -406,23 +407,38 @@ function BillingTab() {
               {updateBillingAction.loading
                 ? t("Common.updating")
                 : t("BillingTab.editCompany")}
-            </button>
+            </Button>
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
-              <div className="space-y-3">
+            <div className="bg-muted/30 rounded-lg p-4">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-foreground">
+                    <label className="text-sm font-medium text-muted-foreground">
                       {t("BillingTab.companyName")}
                     </label>
-                    <p className="font-medium text-gray-900 dark:text-foreground">
+                    <p className="font-medium text-foreground">
                       {currentCompany?.name ||
                         t("Common.loading")}
                     </p>
                   </div>
                 </div>
-
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    {t("BillingTab.industry")}
+                  </label>
+                  <p className="text-muted-foreground">
+                    {t("BillingTab.technologyServices")}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    {t("BillingTab.companySize")}
+                  </label>
+                  <p className="text-muted-foreground">
+                    {t("BillingTab.companySizeDefault")}
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -430,27 +446,27 @@ function BillingTab() {
 
         {/* Billing Address Card */}
         <Card>
-          <CardHeader className="flex-center-between">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle>{t("BillingTab.billingAddress")}</CardTitle>
             <EditAddressTrigger title={t("BillingTab.editAddress")} />
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
+            <div className="bg-muted/30 rounded-lg p-4">
               <div className="space-y-1">
-                <p className="font-medium text-gray-900 dark:text-foreground">
+                <p className="font-medium text-foreground">
                   {currentCompany?.name ||
                     t("BillingTab.company")}
                 </p>
-                <p className="text-gray-600 dark:text-muted-foreground">
+                <p className="text-muted-foreground">
                   {t("BillingTab.street")}
                 </p>
-                <p className="text-gray-600 dark:text-muted-foreground">
+                <p className="text-muted-foreground">
                   {t("BillingTab.city")}
                 </p>
-                <p className="text-gray-600 dark:text-muted-foreground">
+                <p className="text-muted-foreground">
                   {t("BillingTab.country")}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-muted-foreground mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   {t("BillingTab.vatId")}
                 </p>
               </div>
@@ -471,7 +487,7 @@ function BillingTab() {
         {/* Loading overlay for updates */}
         {updateBillingAction.loading && (
           <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-card p-4 rounded-lg shadow-lg flex items-center space-x-2">
+            <div className="bg-card p-4 rounded-lg shadow-lg flex items-center space-x-2">
               <RefreshCw className="h-4 w-4 animate-spin" />
               <span>{t("Common.loading")}</span>
             </div>
