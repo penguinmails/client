@@ -204,7 +204,7 @@ export function EnrichedUserGate({
     );
   }
 
-  // Check email verification (soft pester per AUTH_FLOW.md)
+  // Check email verification (soft pester per auth-flow.md)
   const emailNotVerified = enrichedUser && !enrichedUser.emailVerified;
 
   // Check payment status (would need to be added to enrichment)
