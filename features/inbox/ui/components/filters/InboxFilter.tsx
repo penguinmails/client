@@ -9,8 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getMockCampaigns } from "@/features/campaigns";
-import { getMockMailboxes } from "@/features/mailboxes";
 import { cn } from "@/lib/utils";
 import {
   Archive,
@@ -25,12 +23,43 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function InboxFilter() {
-  const campaignsData = getMockCampaigns();
-  const mailboxes = getMockMailboxes();
+  const [campaignsData, setCampaignsData] = useState<Array<{ id: string; name: string }>>([]);
+  const [mailboxes, setMailboxes] = useState<Array<{ id: string; email: string }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch campaigns and mailboxes from API routes
+  useEffect(() => {
+    async function fetchInboxData() {
+      try {
+        const [campaignsResponse, mailboxesResponse] = await Promise.all([
+          fetch('/api/campaigns'),
+          fetch('/api/mailboxes'),
+        ]);
+
+        if (campaignsResponse.ok) {
+          const campaigns = await campaignsResponse.json();
+          setCampaignsData(campaigns.map((c: { id: string; name: string }) => ({ id: c.id, name: c.name })));
+        }
+
+        if (mailboxesResponse.ok) {
+          const mailboxesData = await mailboxesResponse.json();
+          // Handle both array and object responses
+          const mailboxesArray = Array.isArray(mailboxesData) ? mailboxesData : mailboxesData.mailboxes || [];
+          setMailboxes(mailboxesArray.map((m: { id: string; email: string }) => ({ id: m.id, email: m.email })));
+        }
+      } catch {
+        // Silently fail - component will show empty state
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchInboxData();
+  }, []);
 
   const [filterState, setFilterState] = useReducer(
     (state, action) => ({ ...state, ...action }),
@@ -243,7 +272,7 @@ function InboxFilter() {
             </h3>
 
             {/* Campaigns Filter */}
-            {renderMultiSelectFilter(
+            {!loading && campaignsData.length > 0 && renderMultiSelectFilter(
               "Campaigns",
               campaignsData.map((c) => c.name),
               filterState.campaignFilter,
@@ -252,7 +281,7 @@ function InboxFilter() {
             )}
 
             {/* Mailboxes Filter */}
-            {renderMultiSelectFilter(
+            {!loading && mailboxes.length > 0 && renderMultiSelectFilter(
               "Mailboxes",
               mailboxes.map((m) => m.email),
               filterState.mailboxFilter,
