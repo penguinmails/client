@@ -6,14 +6,14 @@ This document describes the authentication architecture for the PenguinMails cli
 
 ## Table of Contents
 
-1. [Core Architecture & Types](docs/guides/actions-api.md#1-core-architecture--types)
-2. [Error Handling System](docs/guides/actions-api.md#2-error-handling-system)
-3. [Integration Points](docs/guides/actions-api.md#3-integration-points)
-4. [Testing Strategy](docs/guides/actions-api.md#4-testing-strategy)
-5. [Security & Performance](docs/guides/actions-api.md#5-security--performance)
-6. [Implementation Checklist](docs/guides/actions-api.md#6-implementation-checklist)
-7. [Migration Guide](docs/guides/actions-api.md#7-migration-guide)
-8. [Verification](docs/guides/actions-api.md#8-verification)
+1. [Core Architecture & Types](#1-core-architecture--types)
+2. [Error Handling System](#2-error-handling-system)
+3. [Integration Points](#3-integration-points)
+4. [Testing Strategy](#4-testing-strategy)
+5. [Security & Performance](#5-security--performance)
+6. [Implementation Checklist](#6-implementation-checklist)
+7. [Migration Guide](#7-migration-guide)
+8. [Verification](#8-verification)
 
 ---
 

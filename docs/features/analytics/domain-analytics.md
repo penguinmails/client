@@ -165,7 +165,7 @@ class RealTimeDomainMonitor implements DomainHealthMonitor {
       .pipe(
         switchMap(() => this.checkDeliverability(domain)),
         filter((metrics) => this.isDeliverabilityAlert(metrics)),
-        map((metrics) => this.createDeliveryAlert(metrics))
+        map((metrics) => this.createDeliveryAlert(metrics)),
       );
   }
 
@@ -352,12 +352,12 @@ const AuthenticationStatus: React.FC<AuthenticationStatusProps> = ({
 interface DomainAnalyticsCache {
   getCachedMetrics(
     domain: string,
-    timeRange: TimeRange
+    timeRange: TimeRange,
   ): Promise<DomainMetrics | null>;
   setCachedMetrics(
     domain: string,
     timeRange: TimeRange,
-    metrics: DomainMetrics
+    metrics: DomainMetrics,
   ): Promise<void>;
   invalidateCache(domain: string): Promise<void>;
 }
@@ -367,7 +367,7 @@ class RedisDomainAnalyticsCache implements DomainAnalyticsCache {
 
   async getCachedMetrics(
     domain: string,
-    timeRange: TimeRange
+    timeRange: TimeRange,
   ): Promise<DomainMetrics | null> {
     const key = this.generateCacheKey(domain, timeRange);
     const cached = await this.redis.get(key);
@@ -382,7 +382,7 @@ class RedisDomainAnalyticsCache implements DomainAnalyticsCache {
   async setCachedMetrics(
     domain: string,
     timeRange: TimeRange,
-    metrics: DomainMetrics
+    metrics: DomainMetrics,
   ): Promise<void> {
     const key = this.generateCacheKey(domain, timeRange);
     const ttl = this.calculateTTL(timeRange);
@@ -409,19 +409,19 @@ class RedisDomainAnalyticsCache implements DomainAnalyticsCache {
 interface DomainAnalyticsBatchProcessor {
   processDomainsBatch(
     domains: string[],
-    timeRange: TimeRange
+    timeRange: TimeRange,
   ): Promise<Map<string, DomainMetrics>>;
 }
 
 class ConcurrentDomainProcessor implements DomainAnalyticsBatchProcessor {
   constructor(
     private collector: DomainAnalyticsCollector,
-    private concurrencyLimit: number = 5
+    private concurrencyLimit: number = 5,
   ) {}
 
   async processDomainsBatch(
     domains: string[],
-    timeRange: TimeRange
+    timeRange: TimeRange,
   ): Promise<Map<string, DomainMetrics>> {
     const results = new Map<string, DomainMetrics>();
 
@@ -433,7 +433,7 @@ class ConcurrentDomainProcessor implements DomainAnalyticsBatchProcessor {
         try {
           const metrics = await this.collector.collectAllMetrics(
             domain,
-            timeRange
+            timeRange,
           );
           return { domain, metrics };
         } catch (error) {
@@ -508,7 +508,7 @@ class DomainAlertManager {
 
   async evaluateAlerts(
     domain: string,
-    metrics: DomainMetrics
+    metrics: DomainMetrics,
   ): Promise<DomainAlert[]> {
     const rules = this.alertRules.get(domain) || [];
     const alerts: DomainAlert[] = [];
@@ -537,7 +537,7 @@ class DomainAlertManager {
 
   private evaluateCondition(
     condition: AlertCondition,
-    metrics: DomainMetrics
+    metrics: DomainMetrics,
   ): boolean {
     const value = this.getMetricValue(condition.metric, metrics);
 
@@ -575,7 +575,7 @@ class DomainAlertNotifier {
     const enabledChannels = this.channels.filter((c) => c.enabled);
 
     const notifications = enabledChannels.map((channel) =>
-      this.sendToChannel(channel, alert)
+      this.sendToChannel(channel, alert),
     );
 
     await Promise.allSettled(notifications);
@@ -583,7 +583,7 @@ class DomainAlertNotifier {
 
   private async sendToChannel(
     channel: NotificationChannel,
-    alert: DomainAlert
+    alert: DomainAlert,
   ): Promise<void> {
     switch (channel.type) {
       case "email":
@@ -680,9 +680,9 @@ class DomainAlertNotifier {
 
 ## Related Documentation
 
-- [DNS Configuration Guide](docs/infrastructure/dns-setup.md)
-- [Email Authentication Guide](docs/infrastructure/email-auth.md)
-- [Domain Types Documentation](docs/architecture/README.md)
+- [DNS Configuration Guide](../../infrastructure/dns-setup.md)
+- [Email Authentication Guide](../../infrastructure/email-auth.md)
+- [Domain Types Documentation](../../../types/domains/README.md)
 - [Analytics Architecture](./README.md)
 
 ## External Resources

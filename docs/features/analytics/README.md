@@ -29,7 +29,7 @@ Analytics are organized by business domain:
 
 ## System Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Analytics System                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -87,26 +87,26 @@ All metrics follow consistent calculation patterns:
 
 ### Service Documentation
 
-- [Analytics Services Architecture](docs/architecture/README.md)
-- [Service Troubleshooting](docs/guides/troubleshooting.md)
-- [NileDB Setup Guide](docs/architecture/database-architecture.md)
-- [NileDB Optimization](docs/architecture/database-architecture.md)
+- [Analytics Services Architecture](./architecture.md)
+- [Service Troubleshooting](../../guides/troubleshooting.md)
+- [NileDB Setup Guide](../../architecture/database-architecture.md)
+- [NileDB Optimization](../../architecture/database-architecture.md)
 
 ### Component Documentation
 
-- [Analytics Components](docs/architecture/README.md)
-- [Component Troubleshooting](docs/guides/troubleshooting.md)
+- [Analytics Components](../../components/README.md)
+- [Component Troubleshooting](../../guides/troubleshooting.md)
 
 ### Type System
 
-- [Analytics Types](docs/architecture/README.md)
+- [Analytics Types](../../../features/analytics/types/README.md)
 - [Type System Documentation](../../architecture/type-system.md)
 
 ### Development Resources
 
-- [Testing Strategies](docs/guides/testing-general.md)
-- [Migration Lessons](docs/guides/actions-migration-lessons.md)
-- [Performance Patterns](docs/architecture/database-architecture.md)
+- [Testing Strategies](../../guides/testing-general.md)
+- [Migration Lessons](../../guides/actions-migration-lessons.md)
+- [Performance Patterns](../../architecture/database-architecture.md)
 
 ## Database Strategy
 
@@ -169,22 +169,22 @@ For business rationale and strategic context behind the analytics system, see th
 
 ## Getting Started
 
-1. **Understanding the Architecture**: Start with [Service Architecture](docs/architecture/README.md)
-2. **Setting Up Analytics**: Follow the [NileDB Setup Guide](docs/architecture/database-architecture.md)
-3. **Common Issues**: Check [Troubleshooting Guide](docs/guides/troubleshooting.md)
-4. **Type System**: Review [Analytics Types](docs/architecture/README.md)
+1. **Understanding the Architecture**: Start with [Service Architecture](./architecture.md)
+2. **Setting Up Analytics**: Follow the [NileDB Setup Guide](../../architecture/database-architecture.md)
+3. **Common Issues**: Check [Troubleshooting Guide](../../guides/troubleshooting.md)
+4. **Type System**: Review [Analytics Types](../../../features/analytics/types/README.md)
 
 ## Architecture Deep Dive
 
 For detailed system architecture information, see:
 
-- [System Architecture](docs/architecture/database-architecture.md) - Comprehensive architectural overview
-- [Service Architecture](docs/architecture/README.md) - Implementation details
+- [System Architecture](../../architecture/database-architecture.md) - Comprehensive architectural overview
+- [Service Architecture](./architecture.md) - Implementation details
 
 ## Evolution and History
 
 For historical context and migration lessons, see:
 
-- [Migration Lessons Learned](docs/guides/actions-migration-lessons.md)
-- [Architectural Evolution](docs/architecture/database-architecture.md#evolution-and-scalability)
-- [Refactoring Decisions](docs/guides/actions-migration-lessons.md#refactoring-decisions)
+- [Migration Lessons Learned](../../guides/actions-migration-lessons.md)
+- [Architectural Evolution](../../architecture/database-architecture.md#evolution-and-scalability)
+- [Refactoring Decisions](../../guides/actions-migration-lessons.md#refactoring-decisions)

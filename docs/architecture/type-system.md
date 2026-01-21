@@ -6,7 +6,7 @@ The project uses a well-organized TypeScript type system that promotes type safe
 
 ## Type Organization Structure
 
-```
+```text
 types/
 ├── index.ts                 # Central type exports
 ├── common.ts               # Shared utility types
@@ -65,8 +65,8 @@ type LoadingState =
 
 ### Analytics Types
 
-- [Analytics Type Organization](docs/architecture/README.md)
-- [Type System Documentation](../architecture/type-system.md)
+- [Analytics Type Organization](../../features/analytics/types/README.md)
+- [Type System Documentation](./type-system.md)
 
 ### Domain Types
 
@@ -227,7 +227,7 @@ interface FormHandlers {
 
 ### Known Constraints
 
-- [Type System Documentation](../architecture/type-system.md)
+- [Type System Documentation](./type-system.md)
 
 ### Type System Issues
 
@@ -300,7 +300,7 @@ function migrateCampaignV1ToV2(v1: CampaignV1): CampaignV2 {
 ## Getting Started
 
 1. **Understanding Type Organization**: Review the structure above
-2. **Feature-Specific Types**: Start with [Analytics Types](docs/architecture/README.md)
+2. **Feature-Specific Types**: Start with [Analytics Types](../../features/analytics/types/README.md)
 3. **Common Patterns**: Study the patterns in `types/common.ts`
 
 ## Contributing to Type System
@@ -315,5 +315,5 @@ When adding new types:
 
 For questions about type organization or patterns, refer to:
 
-- [Development Patterns](docs/architecture/README.md#type-patterns)
-- [Analytics Type Patterns](docs/architecture/README.md)
+- [Development Patterns](../guides/development-workflow.md#type-patterns)
+- [Analytics Type Patterns](../../features/analytics/types/README.md)

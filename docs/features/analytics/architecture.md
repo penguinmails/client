@@ -115,7 +115,7 @@ abstract class BaseAnalyticsService {
     operation: string,
     entityIds: string[],
     filters: any,
-    executor: () => Promise<T>
+    executor: () => Promise<T>,
   ): Promise<T> {
     // Caching and error handling logic
   }
@@ -129,7 +129,7 @@ Each domain extends the base service with specific functionality:
 ```typescript
 class CampaignAnalyticsService extends BaseAnalyticsService {
   async getPerformanceMetrics(
-    campaignIds: string[]
+    campaignIds: string[],
   ): Promise<CampaignMetrics[]> {
     return this.executeWithCache("performance", campaignIds, {}, async () => {
       // Fetch metrics from NileDB
@@ -191,7 +191,8 @@ Standardized patterns for backend integration:
 // Data retrieval pattern
 async function getCampaignAnalytics(campaignIds: string[]) {
   // Database-scoped query with proper indexing using NileDB client
-  return await nile.db("campaign_analytics")
+  return await nile
+    .db("campaign_analytics")
     .whereIn("campaign_id", campaignIds)
     .orderBy("timestamp", "desc");
 }
@@ -369,9 +370,9 @@ async function migrateAnalyticsSchema() {
 
 ## Related Documentation
 
-- [Service Implementation](docs/architecture/README.md)
-- [Component Architecture](docs/architecture/README.md)
-- [Type System](docs/architecture/README.md)
-- [NileDB Setup](docs/architecture/database-architecture.md)
-- [Performance Optimization](docs/architecture/database-architecture.md)
-- [Troubleshooting Guide](docs/guides/troubleshooting.md)
+- [Service Implementation](./README.md)
+- [Component Architecture](../../components/README.md)
+- [Type System](../../architecture/type-system.md)
+- [NileDB Setup](../../architecture/database-architecture.md)
+- [Performance Optimization](../../architecture/database-architecture.md)
+- [Troubleshooting Guide](../../guides/troubleshooting.md)

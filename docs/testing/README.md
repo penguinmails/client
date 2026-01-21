@@ -40,8 +40,6 @@ All testing-related documentation has been consolidated in this directory to pro
 | [Testing Strategies (Legacy)](../guides/testing-legacy.md) | Original testing strategies | Superseded - use current docs |
 
 > **Note**: Legacy documentation files in `docs/guides/` have been marked as superseded and redirect to this consolidated documentation.
-> | [Testing Guide (Legacy)](../guides/testing-general.md) | Original testing guide | Superseded - use current docs |
-> | [Testing Strategies (Legacy)](../guides/testing-legacy.md) | Original testing strategies | Superseded - use current docs |
 
 ### 🎯 Quick Start
 

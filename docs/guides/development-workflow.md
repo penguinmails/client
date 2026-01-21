@@ -74,9 +74,9 @@ describe("Analytics Integration", () => {
 
 ### Feature-Specific Testing
 
-- [Analytics Testing](docs/guides/testing-general.md)
-- [Billing Testing](docs/guides/testing-general.md)
-- [Component Testing Patterns](docs/architecture/README.md#testing)
+- [Analytics Testing](./testing-general.md)
+- [Billing Testing](./testing-general.md)
+- [Component Testing Patterns](../testing/best-practices.md#component-testing-guidelines)
 
 ## Architectural Decisions and Patterns
 
