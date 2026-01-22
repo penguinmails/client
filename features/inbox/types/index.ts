@@ -1,14 +1,43 @@
 import { z } from "zod";
+import type { 
+  Message as CanonicalMessage, 
+  Conversation as CanonicalConversation, 
+  MessageType, 
+  ConversationStatus, 
+  TagType,
+  EmailCampaign,
+  EmailWithDetails,
+  Reply,
+  MessageThread,
+  InboxItem,
+  InboxState,
+  InboxFilter,
+  InboxFilterType
+} from "./conversation";
 
 // ============================================================
-// Shared Types & Enums
+// Shared Types & Enums (re-export from canonical source)
 // ============================================================
+export type {
+  MessageType,
+  ConversationStatus,
+  TagType,
+  EmailCampaign,
+  EmailWithDetails,
+  Reply,
+  MessageThread,
+  InboxItem,
+  InboxState,
+  InboxFilter,
+  InboxFilterType
+};
 
-export type MessageType = "incoming" | "outgoing" | "system";
-export type ConversationStatus = "read" | "unread" | "archived" | "spam";
+// Re-export canonical types
+export type Message = CanonicalMessage;
+export type Conversation = CanonicalConversation;
 
 // ============================================================
-// Schemas
+// Schemas (aligned with canonical types)
 // ============================================================
 
 export const ClientSchema = z.object({
@@ -76,6 +105,16 @@ export const MessageSchema = z.object({
   avatar: z.string().optional(),
   isStarred: z.boolean().optional(),
   attachments: z.array(z.any()).optional(),
+  emailAccountId: z.string().optional(),
+  emailAccountEmail: z.string().email().optional(),
+  direction: z.enum(['inbound', 'outbound']).optional(),
+  from: z.string().optional(),
+  to: z.array(z.string()).optional(),
+  cc: z.array(z.string()).optional(),
+  deliveredTo: z.string().optional(),
+  threadId: z.union([z.string(), z.number()]).optional(),
+  parentId: z.union([z.string(), z.number()]).optional(),
+  htmlContent: z.string().optional(),
 });
 
 export const ConversationSchema = z.object({
@@ -87,9 +126,9 @@ export const ConversationSchema = z.object({
   subject: z.string(),
   preview: z.string(),
   time: z.string(), // ISO string
-  status: z.enum(["read", "unread", "archived", "spam"]),
+  status: z.enum(["read", "unread", "archived", "muted", "important"]),
   campaign: z.string().optional(),
-  tag: z.string().optional(),
+  tag: z.enum(["interested", "not-interested", "maybe-later", "hot-lead", "follow-up", "replied"]).optional(),
   isPinned: z.boolean().optional(),
   isStarred: z.boolean().optional(),
   avatar: z.string().optional(),
@@ -98,6 +137,8 @@ export const ConversationSchema = z.object({
   followUpDate: z.string().optional(),
   unreadCount: z.number().optional(),
   messages: z.array(MessageSchema).optional(),
+  emailAccountId: z.string().optional(),
+  emailAccountEmail: z.string().email().optional(),
 });
 
 // Legacy Email Schema (from types/inbox.ts) - Keeping for compatibility
@@ -122,18 +163,15 @@ export const EmailsTypeSchema = z
   .optional();
 
 // ============================================================
-// Types
+// Types from Schemas (for backward compatibility)
 // ============================================================
 
 // Import shared types instead of redefining
 import type { Campaign, Client } from "@/types/common";
 
-
-export type Message = z.infer<typeof MessageSchema>;
-export type Conversation = z.infer<typeof ConversationSchema>;
-export type { Client, Campaign };
 export type Email = z.infer<typeof EmailSchema>;
 export type EmailsType = z.infer<typeof EmailsTypeSchema>;
+export type { Client, Campaign };
 
 // Feature-specific interfaces
 export interface InboxMessage extends Message {

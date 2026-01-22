@@ -31,14 +31,21 @@ export interface EmailWithDetails extends Email {
 
 // Message Types for individual messages in conversations
 export interface Message {
-  id: number;
+  id: string | number;
   type: MessageType;
   sender: string;
   time: string; // ISO date string
   content: string;
-  threadId?: number; // For threading
-  parentId?: number; // For replies
+  threadId?: string | number; // For threading
+  parentId?: string | number; // For replies
   htmlContent?: string; // If available
+  emailAccountId?: string; // Canonical mailbox identity
+  emailAccountEmail?: string; // Email address for display
+  direction?: 'inbound' | 'outbound'; // For SMTP log source compatibility
+  from?: string; // From header (for SMTP log parsing)
+  to?: string[]; // To headers (for SMTP log parsing)
+  cc?: string[]; // CC headers (for SMTP log parsing)
+  deliveredTo?: string; // Delivered-To header (for SMTP log parsing)
 }
 
 // Enums
@@ -77,7 +84,7 @@ export type InboxFilterType =
 
 // Conversation Interface (Enhanced)
 export interface Conversation {
-  id: number;
+  id: string | number;
   name: string;
   email: string;
   company: string;
@@ -96,6 +103,8 @@ export interface Conversation {
   followUpDate: string; // ISO date string for follow-up
   messages?: Message[]; // Individual messages in the conversation
   unreadCount?: number;
+  emailAccountId?: string; // Canonical mailbox identity
+  emailAccountEmail?: string; // Email address for display
 }
 
 // Reply Types
