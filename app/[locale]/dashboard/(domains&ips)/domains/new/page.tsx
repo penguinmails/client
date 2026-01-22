@@ -1,10 +1,10 @@
 "use client";
 
 import { Suspense } from "react";
-import NewDomainHeaderDetails from "@/components/domains/new/NewDomainHeaderDetails";
-import NewDomainNavigation from "@/components/domains/new/NewDomainNavigation";
-import NewDomainStep from "@/components/domains/new/NewDomainStep";
-import NewDomainStepper from "@/components/domains/new/NewDomainStepper";
+import NewDomainHeaderDetails from "@/features/domains/ui/components/new/NewDomainHeaderDetails";
+import NewDomainNavigation from "@/features/domains/ui/components/new/NewDomainNavigation";
+import NewDomainStep from "@/features/domains/ui/components/new/NewDomainStep";
+import NewDomainStepper from "@/features/domains/ui/components/new/NewDomainStepper";
 import { Button } from "@/components/ui/button";
 import {
   Card,
