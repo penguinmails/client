@@ -80,124 +80,47 @@ type Story = StoryObj<typeof CampaignStats>;
 // Stories
 // ============================================================
 
-// Side-by-side comparison of individual stats cards
-export const StatsCardComparison: Story = {
+// Compact layout with individual stats
+export const CompactLayout: Story = {
   render: () => (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-muted-foreground">
-          🔴 Legacy StatsCard (Deprecated)
-        </h2>
-        <div className="border-2 border-red-200 dark:border-red-900 rounded-lg p-4 bg-red-50/50 dark:bg-red-900/10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {legacyStatsItems.map((item) => (
-              <StatsCard
-                key={item.title}
-                title={item.title}
-                value={item.value}
-                icon={item.icon}
-                color={item.iconColor}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-          ✅ Migrated Stats (UnifiedStatsCard layout=&quot;compact&quot;)
-        </h2>
-        <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {legacyStatsItems.map((item) => (
-              <UnifiedStatsCard
-                key={item.title}
-                title={item.title}
-                value={item.value}
-                icon={item.icon}
-                layout="compact"
-                iconColor={item.iconColor}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {legacyStatsItems.map((item) => (
+        <UnifiedStatsCard
+          key={item.title}
+          title={item.title}
+          value={item.value}
+          icon={item.icon}
+          layout="compact"
+          iconColor={item.iconColor}
+        />
+      ))}
     </div>
   ),
   parameters: {
     docs: {
       description: {
-        story: "Side-by-side comparison of legacy StatsCard vs UnifiedStatsCard with layout='compact'.",
+        story: "UnifiedStatsCard with layout='compact' showing individual metrics.",
       },
     },
   },
 };
 
-// Migrated Stats - Full Campaign Stats
-export const FullCampaignStatsComparison: Story = {
+// Full Campaign Stats
+export const FullStats: Story = {
   render: () => (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-muted-foreground">
-          🔴 Legacy KPI Cards
-        </h2>
-        <div className="border-2 border-red-200 dark:border-red-900 rounded-lg p-4 bg-red-50/50 dark:bg-red-900/10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <StatsCard
-              title="Total Sent"
-              value="15,420"
-              icon={Mail}
-              color="bg-gray-100 dark:bg-muted text-gray-600 dark:text-muted-foreground"
-            />
-            <StatsCard
-              title="Opens (Tracked)"
-              value="5,850 (39.3%)"
-              icon={Eye}
-              color="bg-blue-100 text-blue-600"
-            />
-            <StatsCard
-              title="Replies"
-              value="892 (6.0%)"
-              icon={TrendingUp}
-              color="bg-green-100 text-green-600"
-            />
-            <StatsCard
-              title="Clicks (Tracked)"
-              value="1,245 (8.4%)"
-              icon={MousePointer}
-              color="bg-purple-100 text-purple-600"
-            />
-            <StatsCard
-              title="Bounces"
-              value="530 (3.4%)"
-              icon={AlertTriangle}
-              color="bg-red-100 text-red-600"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-          ✅ Migrated KPI Cards (Using UnifiedStatsCard)
-        </h2>
-        <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <CampaignStats customTotals={mockTotals} loading={false} />
-        </div>
-      </div>
-    </div>
+    <CampaignStats customTotals={mockTotals} loading={false} />
   ),
   parameters: {
     docs: {
       description: {
-        story: "Full campaign stats comparison with all 5 KPI cards using UnifiedStatsCard.",
+        story: "Full campaign stats with all 5 KPI cards using UnifiedStatsCard.",
       },
     },
   },
 };
 
 // Loading State
-export const MigratedStatsLoading: Story = {
+export const Loading: Story = {
   args: {
     loading: true,
   },
@@ -210,8 +133,8 @@ export const MigratedStatsLoading: Story = {
   },
 };
 
-// Zero Values
-export const MigratedStatsEmpty: Story = {
+// Empty State
+export const Empty: Story = {
   args: {
     customTotals: {
       sent: 0,
@@ -259,37 +182,17 @@ export const DarkMode: Story = {
   },
 };
 
-// StatsCards Wrapper Comparison
-export const StatsCardsWrapperComparison: Story = {
+// StatsCards Wrapper
+export const StatsCardsWrapper: Story = {
   render: () => (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-muted-foreground">
-          🔴 Legacy StatsCards Wrapper
-        </h2>
-        <div className="border-2 border-red-200 dark:border-red-900 rounded-lg p-4 bg-red-50/50 dark:bg-red-900/10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <StatsCards stats={legacyStatsItems} />
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-          ✅ Migrated StatsCards Wrapper (Using UnifiedStatsCard)
-        </h2>
-        <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <StatsCards stats={legacyStatsItems} />
-          </div>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <StatsCards stats={legacyStatsItems} />
     </div>
   ),
   parameters: {
     docs: {
       description: {
-        story: "Comparison of the StatsCards wrapper component using UnifiedStatsCard.",
+        story: "StatsCards wrapper component using UnifiedStatsCard internally.",
       },
     },
   },
