@@ -734,6 +734,10 @@
         "error": {
           "title": "DNS Records Not Verified",
           "description": "Please verify all DNS records before continuing"
+        },
+        "success": {
+          "title": "DNS Records Verified",
+          "description": "All DNS records have been verified successfully"
         }
       },
       "confirmation": {

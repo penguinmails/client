@@ -11,14 +11,14 @@ const steps = [
     title: "step1.title",
     subtitle: "step1.subtitle",
     icon: Globe,
-    color: "bg-blue-500",
+    color: "bg-blue-500 text-white",
   },
   {
     number: 2,
     title: "step2.title",
     subtitle: "step2.subtitle",
     icon: Server,
-    color: "bg-purple-500",
+    color: "bg-purple-500 text-white",
   },
   {
     number: 3,

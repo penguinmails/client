@@ -1,3 +1,5 @@
+"use client";
+
 import { Suspense } from "react";
 import NewDomainHeaderDetails from "@/components/domains/new/NewDomainHeaderDetails";
 import NewDomainNavigation from "@/components/domains/new/NewDomainNavigation";
@@ -13,10 +15,12 @@ import {
 import { AddDomainProvider } from "@/context/AddDomainContext";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export const dynamic = "force-dynamic";
 
 function NewDomainPage() {
+  const t = useTranslations("domains.new");
   return (
     <AddDomainProvider>
       <Card>
@@ -29,11 +33,8 @@ function NewDomainPage() {
                 </Link>
               </Button>
               <div>
-                <h1 className="text-2xl font-bold">Add New Domain</h1>
-                <p className="text-muted-foreground">
-                  Connect your domain to start creating mailboxes and sending
-                  cold emails
-                </p>
+                <h1 className="text-2xl font-bold">{t("title")}</h1>
+                <p className="text-muted-foreground">{t("description")}</p>
               </div>
             </div>
             <NewDomainHeaderDetails />

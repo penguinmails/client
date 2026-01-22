@@ -22,7 +22,7 @@ export default function NewDomainStepper() {
                   isCompleted
                     ? "bg-green-500 text-white"
                     : isCurrent
-                    ? step.color + " text-white"
+                    ? step.color
                     : "bg-gray-200 text-gray-500"
                 }`}
               >

@@ -732,6 +732,10 @@
         "error": {
           "title": "Registros DNS No Verificados",
           "description": "Por favor verifica todos los registros DNS antes de continuar"
+        },
+        "success": {
+          "title": "Registros DNS Verificados",
+          "description": "Todos los registros DNS han sido verificados exitosamente"
         }
       },
       "confirmation": {
