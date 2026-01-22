@@ -3,6 +3,9 @@ import { DashboardLayout } from "./dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { SessionProvider } from "@/features/auth/ui/context/session-context";
+import { UserEnrichmentProvider } from "@/features/auth/ui/context/enrichment-context";
 import {
   Mail,
   Users,
@@ -42,192 +45,229 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    title: "Dashboard",
-    children: (
-      <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <Mail className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
-              <p className="text-xs text-muted-foreground">
-                +20.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
-              <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
-              <p className="text-xs text-muted-foreground">
-                +19% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-              <Mail className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+573</div>
-              <p className="text-xs text-muted-foreground">
-                +201 since last hour
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    ),
-  },
+  render: () => (
+    <SessionProvider>
+      <UserEnrichmentProvider>
+        <SidebarProvider>
+          <DashboardLayout title="Dashboard">
+            <div className="space-y-6">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Total Revenue
+                    </CardTitle>
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">$45,231.89</div>
+                    <p className="text-xs text-muted-foreground">
+                      +20.1% from last month
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Active Users
+                    </CardTitle>
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">+2350</div>
+                    <p className="text-xs text-muted-foreground">
+                      +180.1% from last month
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">+12,234</div>
+                    <p className="text-xs text-muted-foreground">
+                      +19% from last month
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Active Now
+                    </CardTitle>
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">+573</div>
+                    <p className="text-xs text-muted-foreground">
+                      +201 since last hour
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </DashboardLayout>
+        </SidebarProvider>
+      </UserEnrichmentProvider>
+    </SessionProvider>
+  ),
 };
 
 export const FullFeatured: Story = {
-  args: {
-    title: "Dashboard",
-    children: (
-      <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <Mail className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
-              <p className="text-xs text-muted-foreground">
-                +20.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
-              <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
-              <p className="text-xs text-muted-foreground">
-                +19% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-              <Mail className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+573</div>
-              <p className="text-xs text-muted-foreground">
-                +201 since last hour
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+  render: () => (
+    <SessionProvider>
+      <UserEnrichmentProvider>
+        <SidebarProvider>
+          <DashboardLayout title="Dashboard">
+            <div className="space-y-6">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Total Revenue
+                    </CardTitle>
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">$45,231.89</div>
+                    <p className="text-xs text-muted-foreground">
+                      +20.1% from last month
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Active Users
+                    </CardTitle>
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">+2350</div>
+                    <p className="text-xs text-muted-foreground">
+                      +180.1% from last month
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">+12,234</div>
+                    <p className="text-xs text-muted-foreground">
+                      +19% from last month
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Active Now
+                    </CardTitle>
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">+573</div>
+                    <p className="text-xs text-muted-foreground">
+                      +201 since last hour
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4">
-            <CardHeader>
-              <CardTitle>Overview</CardTitle>
-            </CardHeader>
-            <CardContent className="pl-2">
-              <div className="h-48 w-full bg-muted rounded-md flex items-center justify-center">
-                <p className="text-muted-foreground">Chart placeholder</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="col-span-3">
-            <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="flex items-center">
-                    <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center mr-3">
-                      <Users className="h-4 w-4" />
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-4">
+                  <CardHeader>
+                    <CardTitle>Overview</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    <div className="h-48 w-full bg-muted rounded-md flex items-center justify-center">
+                      <p className="text-muted-foreground">Chart placeholder</p>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">User {i + 1}</p>
-                      <p className="text-xs text-muted-foreground">
-                        user{i + 1}@example.com
-                      </p>
+                  </CardContent>
+                </Card>
+                <Card className="col-span-3">
+                  <CardHeader>
+                    <CardTitle>Recent Sales</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="flex items-center">
+                          <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center mr-3">
+                            <Users className="h-4 w-4" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">User {i + 1}</p>
+                            <p className="text-xs text-muted-foreground">
+                              user{i + 1}@example.com
+                            </p>
+                          </div>
+                          <Badge variant="secondary">+$12.00</Badge>
+                        </div>
+                      ))}
                     </div>
-                    <Badge variant="secondary">+$12.00</Badge>
-                  </div>
-                ))}
+                  </CardContent>
+                </Card>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    ),
-  },
+            </div>
+          </DashboardLayout>
+        </SidebarProvider>
+      </UserEnrichmentProvider>
+    </SessionProvider>
+  ),
 };
 
 export const Loading: Story = {
-  args: {
-    title: "Dashboard",
-    children: (
-      <div className="space-y-4 p-8">
-        <div className="h-8 bg-muted rounded animate-pulse mb-4" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
-          ))}
-        </div>
-      </div>
-    ),
-  },
+  render: () => (
+    <SessionProvider>
+      <UserEnrichmentProvider>
+        <SidebarProvider>
+          <DashboardLayout title="Dashboard">
+            <div className="space-y-4 p-8">
+              <div className="h-8 bg-muted rounded animate-pulse mb-4" />
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-32 bg-muted rounded-lg animate-pulse"
+                  />
+                ))}
+              </div>
+            </div>
+          </DashboardLayout>
+        </SidebarProvider>
+      </UserEnrichmentProvider>
+    </SessionProvider>
+  ),
 };
 
 export const Error: Story = {
-  args: {
-    title: "Dashboard",
-    children: (
-      <div className="flex flex-col items-center justify-center h-64 space-y-4 p-8 text-center">
-        <AlertTriangle className="h-12 w-12 text-destructive" />
-        <h3 className="text-lg font-semibold">Failed to load dashboard</h3>
-        <p className="text-muted-foreground max-w-md">
-          There was an error loading your dashboard data. Please refresh the
-          page.
-        </p>
-        <Button variant="outline">Retry</Button>
-      </div>
-    ),
-  },
+  render: () => (
+    <SessionProvider>
+      <UserEnrichmentProvider>
+        <SidebarProvider>
+          <DashboardLayout title="Dashboard">
+            <div className="flex flex-col items-center justify-center h-64 space-y-4 p-8 text-center">
+              <AlertTriangle className="h-12 w-12 text-destructive" />
+              <h3 className="text-lg font-semibold">
+                Failed to load dashboard
+              </h3>
+              <p className="text-muted-foreground max-w-md">
+                There was an error loading your dashboard data. Please refresh
+                the page.
+              </p>
+              <Button variant="outline">Retry</Button>
+            </div>
+          </DashboardLayout>
+        </SidebarProvider>
+      </UserEnrichmentProvider>
+    </SessionProvider>
+  ),
 };
 
 // Sample data for realistic dashboard
@@ -302,9 +342,7 @@ const DashboardContentSample = () => (
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">+12,234</div>
-          <p className="text-xs text-muted-foreground">
-            +19% from last month
-          </p>
+          <p className="text-xs text-muted-foreground">+19% from last month</p>
         </CardContent>
       </Card>
       <Card>
@@ -314,9 +352,7 @@ const DashboardContentSample = () => (
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">+573</div>
-          <p className="text-xs text-muted-foreground">
-            +201 since last hour
-          </p>
+          <p className="text-xs text-muted-foreground">+201 since last hour</p>
         </CardContent>
       </Card>
     </div>
@@ -338,10 +374,7 @@ const DashboardContentSample = () => (
         </CardHeader>
         <CardContent className="p-0">
           {mockRecentReplies.map((reply) => (
-            <div
-              key={reply.email}
-              className="flex items-start gap-3 p-4"
-            >
+            <div key={reply.email} className="flex items-start gap-3 p-4">
               <div className="w-9 h-9 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-xs font-medium">{reply.avatar}</span>
               </div>
@@ -379,7 +412,9 @@ const DashboardContentSample = () => (
                 </div>
                 <div>
                   <p className="text-sm font-medium">Welcome Series</p>
-                  <p className="text-xs text-muted-foreground">Active campaign</p>
+                  <p className="text-xs text-muted-foreground">
+                    Active campaign
+                  </p>
                 </div>
               </div>
               <div className="text-right">
@@ -447,8 +482,15 @@ const DashboardContentSample = () => (
 );
 
 export const WithSampleContent: Story = {
-  args: {
-    title: "Dashboard",
-    children: <DashboardContentSample />,
-  },
+  render: () => (
+    <SessionProvider>
+      <UserEnrichmentProvider>
+        <SidebarProvider>
+          <DashboardLayout title="Dashboard">
+            <DashboardContentSample />
+          </DashboardLayout>
+        </SidebarProvider>
+      </UserEnrichmentProvider>
+    </SessionProvider>
+  ),
 };

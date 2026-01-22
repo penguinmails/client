@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { action } from "@storybook/addon-actions";
+import { fn } from "storybook/test";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -166,7 +166,7 @@ export const PasswordInput: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => action("form-submitted")(data))}
+            onClick={fn()}
           >
             Submit
           </Button>
@@ -210,7 +210,7 @@ export const NumberInput: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => action("form-submitted")(data))}
+            onClick={fn()}
           >
             Submit
           </Button>
@@ -282,7 +282,7 @@ export const UrlInput: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => action("form-submitted")(data))}
+            onClick={fn()}
           >
             Submit
           </Button>
@@ -331,7 +331,7 @@ export const SelectDropdown: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => action("form-submitted")(data))}
+            onClick={fn()}
           >
             Submit
           </Button>
@@ -370,7 +370,7 @@ export const CheckboxField: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => action("form-submitted")(data))}
+            onClick={fn()}
           >
             Submit
           </Button>
