@@ -12,7 +12,7 @@ module.exports = {
     replace: mockFn(),
     back: mockFn(),
   }),
-  usePathname: () => '/',
+  usePathname: () => "/",
   useSearchParams: () => ({
     get: mockFn(),
   }),
