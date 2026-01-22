@@ -375,7 +375,7 @@ const DashboardContentSample = () => (
         <CardContent className="p-0">
           {mockRecentReplies.map((reply) => (
             <div key={reply.email} className="flex items-start gap-3 p-4">
-              <div className="w-9 h-9 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 bg-muted rounded-full flex items-center justify-center shrink-0">
                 <span className="text-xs font-medium">{reply.avatar}</span>
               </div>
               <div className="flex-1 min-w-0">
@@ -450,7 +450,7 @@ const DashboardContentSample = () => (
               variant="ghost"
               className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-muted/50"
             >
-              <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center shrink-0">
                 <Plus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
@@ -464,7 +464,7 @@ const DashboardContentSample = () => (
               variant="ghost"
               className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-muted/50"
             >
-              <div className="w-9 h-9 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 bg-green-500/10 rounded-lg flex items-center justify-center shrink-0">
                 <Upload className="w-4 h-4 text-green-600 dark:text-green-400" />
               </div>
               <div>
