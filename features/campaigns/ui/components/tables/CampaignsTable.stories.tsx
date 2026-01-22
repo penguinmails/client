@@ -100,40 +100,8 @@ const tableMeta: Meta<typeof CampaignsTable> = {
 export default tableMeta;
 type Story = StoryObj<typeof CampaignsTable>;
 
-// Side-by-side comparison
-export const SideBySideComparison: Story = {
-  render: () => (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-muted-foreground">
-          🔴 Legacy CampaignsTable (Deprecated)
-        </h2>
-        <div className="border-2 border-red-200 dark:border-red-900 rounded-lg p-4 bg-red-50/50 dark:bg-red-900/10">
-          <CampaignsTable />
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-          ✅ Migrated Table (Design System)
-        </h2>
-        <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <CampaignsTable campaigns={mockCampaigns} />
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Side-by-side comparison showing the legacy table above and the migrated DS table below.",
-      },
-    },
-  },
-};
-
-// Migrated Table - Default State
-export const MigratedTableDefault: Story = {
+// Default State
+export const Default: Story = {
   args: {
     campaigns: mockCampaigns,
     title: "Campañas",
@@ -147,8 +115,8 @@ export const MigratedTableDefault: Story = {
   },
 };
 
-// Migrated Table - Loading State
-export const MigratedTableLoading: Story = {
+// Loading State
+export const Loading: Story = {
   args: {
     campaigns: mockCampaigns,
     title: "Campañas",
@@ -163,8 +131,8 @@ export const MigratedTableLoading: Story = {
   },
 };
 
-// Migrated Table - Empty State
-export const MigratedTableEmpty: Story = {
+// Empty State
+export const Empty: Story = {
   args: {
     campaigns: [],
     title: "Campañas",
@@ -207,35 +175,17 @@ export const DarkMode: Story = {
 // Filter Comparison Story
 // ============================================================
 
-export const FilterComparison: Story = {
+export const FilterExample: Story = {
   render: () => (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-muted-foreground">
-          🔴 Legacy CampaignsFilter (Deprecated)
-        </h2>
-        <div className="border-2 border-red-200 dark:border-red-900 rounded-lg p-4 bg-red-50/50 dark:bg-red-900/10">
-          <CampaignsFilter />
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-          ✅ Migrated Filter (Design System)
-        </h2>
-        <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <CampaignsFilter
-            onSearch={(term) => console.log("Search:", term)}
-            onStatusChange={(status) => console.log("Status:", status)}
-          />
-        </div>
-      </div>
-    </div>
+    <CampaignsFilter
+      onSearch={(term) => console.log("Search:", term)}
+      onStatusChange={(status) => console.log("Status:", status)}
+    />
   ),
   parameters: {
     docs: {
       description: {
-        story: "Comparison between the legacy filter and the migrated UnifiedFilterBar version.",
+        story: "Migrated filter with search and status change handlers.",
       },
     },
   },

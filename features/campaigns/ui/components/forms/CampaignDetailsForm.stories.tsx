@@ -79,52 +79,7 @@ type Story = StoryObj<typeof CampaignDetailsForm>;
 // Stories
 // ============================================================
 
-export const SideBySideComparison: Story = {
-  render: () => (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-muted-foreground">
-          🔴 Legacy CampaignDetailsForm (Deprecated)
-        </h2>
-        <div className="border-2 border-red-200 dark:border-red-900 rounded-lg p-4 bg-red-50/50 dark:bg-red-900/10">
-          <FormWrapper>
-            {(form) => (
-              <CampaignDetailsForm
-                form={form}
-                sendingAccounts={mockSendingAccounts}
-              />
-            )}
-          </FormWrapper>
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-          ✅ Migrated Form (Using UnifiedFormField)
-        </h2>
-        <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <FormWrapper>
-            {(form) => (
-              <CampaignDetailsForm
-                form={form}
-                sendingAccounts={mockSendingAccounts}
-              />
-            )}
-          </FormWrapper>
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Side-by-side comparison of legacy form vs migrated form using DS UnifiedFormField.",
-      },
-    },
-  },
-};
-
-export const MigratedFormDefault: Story = {
+export const Default: Story = {
   render: () => (
     <FormWrapper>
       {(form) => (
@@ -144,7 +99,7 @@ export const MigratedFormDefault: Story = {
   },
 };
 
-export const MigratedFormEmpty: Story = {
+export const Empty: Story = {
   render: () => (
     <FormWrapper defaultValues={{}}>
       {(form) => (
@@ -164,7 +119,7 @@ export const MigratedFormEmpty: Story = {
   },
 };
 
-export const MigratedFormReadOnly: Story = {
+export const ReadOnly: Story = {
   render: () => (
     <FormWrapper>
       {(form) => (
