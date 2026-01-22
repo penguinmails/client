@@ -27,33 +27,7 @@ function ClientConversationWrapper({ params }: { params: Promise<{ id: string }>
       
       const result = await getConversationById(id);
       if (result.success && result.data) {
-        const conversation = result.data;
-        // Transform mock conversation to match expected interface
-        const transformedConversation = {
-          ...conversation,
-          id: parseInt(conversation.id.toString(), 10),
-          name: conversation.name || conversation.subject || 'Unknown',
-          email: conversation.email,
-          company: conversation.company || 'Unknown Company',
-          title: conversation.title || 'Email Conversation',
-          preview: conversation.preview || conversation.subject || 'No preview available',
-          time: conversation.time || new Date().toISOString(),
-          status: (conversation.status as 'read' | 'unread' | 'archived' | 'muted' | 'important') || 'read',
-          campaign: conversation.campaign || 'General Campaign',
-          tag: (conversation.tag as 'interested' | 'not-interested' | 'maybe-later' | 'hot-lead' | 'follow-up' | 'replied') || 'follow-up',
-          isPinned: conversation.isPinned || false,
-          isStarred: conversation.isStarred || false,
-          avatar: conversation.avatar || 'UN',
-          lastMessage: (conversation.lastMessage as 'outgoing' | 'incoming') || 'incoming',
-          notes: conversation.notes || '',
-          followUpDate: conversation.followUpDate || new Date().toISOString(),
-          messages: conversation.messages?.map(msg => ({
-            ...msg,
-            id: parseInt(msg.id.toString(), 10),
-            type: msg.type === 'system' ? 'incoming' : msg.type
-          })).filter(msg => msg.type === 'outgoing' || msg.type === 'incoming')
-        };
-        setCurrentConversation(transformedConversation);
+        setCurrentConversation(result.data);
       }
     };
     loadConversation();
