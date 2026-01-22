@@ -25,7 +25,7 @@ const getTaskIcon = (type: string) => {
     case "domain":
       return <Globe size={16} className="text-orange-500" />;
     default:
-      return <Calendar size={16} className="text-gray-500" />;
+      return <Calendar size={16} className="text-muted-foreground" />;
   }
 };
 
@@ -45,10 +45,10 @@ const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
                 {getTaskIcon(task.type)}
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-800">
+                <p className="text-sm font-medium text-foreground">
                   {task.title}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   {task.type.charAt(0).toUpperCase() + task.type.slice(1)} ·{" "}
                   {task.dueDate}
                 </p>
@@ -57,7 +57,7 @@ const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
           ))}
           {/* Add a message if no tasks */}
           {tasks.length === 0 && (
-            <li className="py-3 text-sm text-gray-500 text-center">
+            <li className="py-3 text-sm text-muted-foreground text-center">
               No upcoming tasks found.
             </li>
           )}

@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/card";
 import { AlertTriangle } from "lucide-react";
 import { WarmupSummaryData } from "@features/campaigns/types";
+import { statusColors } from "@/lib/config/design-tokens";
+import { cn } from "@/lib/utils";
 
 interface WarmupSummaryProps {
   data: WarmupSummaryData;
@@ -27,19 +29,19 @@ function WarmupSummary({ data }: WarmupSummaryProps) {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Warming Up</span>
-          <span className="font-medium text-orange-600 dark:text-orange-400">
+          <span className={cn("font-medium", statusColors.warning)}>
             {data.warmingUp}
           </span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Ready to Send</span>
-          <span className="font-medium text-green-600 dark:text-green-400">
+          <span className={cn("font-medium", statusColors.success)}>
             {data.readyToSend}
           </span>
         </div>
       </CardContent>
       <CardFooter className="border-t">
-        <div className="flex items-center text-sm text-amber-600 dark:text-amber-400">
+        <div className={cn("flex items-center text-sm", statusColors.warning)}>
           <AlertTriangle className="size-4 mr-2" />
           {data.needsAttention} mailboxes need attention
         </div>
