@@ -1,11 +1,11 @@
 module.exports = {
   useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
+    push: () => {},
+    replace: () => {},
+    back: () => {},
   }),
   usePathname: () => '/',
   useSearchParams: () => ({
-    get: jest.fn(),
+    get: () => {},
   }),
 };
