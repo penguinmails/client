@@ -1,13 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { CampaignStats } from "./CampaignStats";
 import { StatsCards } from "./StatsCards";
-import { StatsCard } from "@/components/stats-card";
 import { UnifiedStatsCard } from "@/components/design-system";
 import {
-  AlertTriangle,
   Eye,
   Mail,
-  MousePointer,
   TrendingUp,
 } from "lucide-react";
 
