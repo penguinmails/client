@@ -1,7 +1,14 @@
+// Mock function for Storybook environment
+const mockFn = () => {
+  const fn = () => {};
+  fn.mock = { calls: [] };
+  return fn;
+};
+
 module.exports = {
   headers: () => new Map(),
   cookies: () => ({
-    get: jest.fn(),
-    set: jest.fn(),
+    get: mockFn(),
+    set: mockFn(),
   }),
 };
