@@ -249,14 +249,14 @@ function MigratedKpiCards({
 function getColorForKPI(color?: KPIDisplayConfig["color"]) {
   switch (color) {
     case "positive":
-      return "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400";
+      return "bg-success/10 text-success";
     case "warning":
-      return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400";
+      return "bg-warning/10 text-warning";
     case "danger":
-      return "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400";
+      return "bg-destructive/10 text-destructive";
     case "neutral":
     default:
-      return "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400";
+      return "bg-primary/10 text-primary";
   }
 }
 
