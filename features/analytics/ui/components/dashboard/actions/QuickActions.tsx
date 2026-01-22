@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 
 function QuickActions() {
   const t = useTranslations("QuickActions");
+  const btnStyle = "w-full justify-start h-fit gap-3 p-3 text-left hover:bg-accent rounded-lg";
 
   return (
     <Card>
@@ -22,7 +23,7 @@ function QuickActions() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-accent rounded-lg" 
+          className={btnStyle}
           asChild
         >
           <Link href="/dashboard/campaigns/create">
@@ -37,7 +38,7 @@ function QuickActions() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-accent rounded-lg" 
+          className={btnStyle}
           asChild
         >
           <Link href="/dashboard/leads">
@@ -52,7 +53,7 @@ function QuickActions() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="w-full justify-start h-fit gap-3 p-3 text-left hover:bg-accent rounded-lg" 
+          className={btnStyle}
           asChild
         >
           <Link href="/dashboard/domains/new">
