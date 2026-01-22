@@ -706,11 +706,64 @@
   "domains": {
     "new": {
       "title": "Add New Domain",
+      "description": "Connect your domain to start creating mailboxes and sending cold emails",
       "subtitle": "Configure your domain for email sending",
-      "steps": {
-        "domain": "Add Domain",
-        "dns": "DNS Setup",
-        "verify": "Verify Domain"
+      "step1": {
+        "title": "Enter Domain",
+        "subtitle": "Provide your domain name"
+      },
+      "step2": {
+        "title": "Set Up DNS Records",
+        "subtitle": "Configure DNS settings"
+      },
+      "step3": {
+        "title": "Confirmation",
+        "subtitle": "Domain verified successfully"
+      },
+      "form": {
+        "domain": {
+          "label": "Domain Name",
+          "placeholder": "example.com"
+        },
+        "submit": "Add Domain",
+        "submitting": "Adding Domain..."
+      },
+      "dns": {
+        "title": "Set Up DNS Records",
+        "description": "Configure the following DNS records in your domain provider's dashboard",
+        "error": {
+          "title": "DNS Records Not Verified",
+          "description": "Please verify all DNS records before continuing"
+        },
+        "success": {
+          "title": "DNS Records Verified",
+          "description": "All DNS records have been verified successfully"
+        }
+      },
+      "confirmation": {
+        "title": "Domain Added Successfully!",
+        "description": "Your domain is now ready to use",
+        "message": "You can now create mailboxes and start sending emails from this domain"
+      },
+      "navigation": {
+        "back": "Back",
+        "next": "Next",
+        "finish": "Finish"
+      },
+      "error": {
+        "title": "Failed to Add Domain"
+      },
+      "success": {
+        "title": "Domain Added!",
+        "description": "Your domain {domain} has been added successfully"
+      }
+    },
+    "dns": {
+      "descriptions": {
+        "spf": "Sender Policy Framework - Prevents email spoofing",
+        "dkim": "DomainKeys Identified Mail - Email authentication",
+        "dmarc": "Domain-based Message Authentication - Email policy",
+        "mx": "Mail Exchange - Routes incoming emails"
       }
     }
   },

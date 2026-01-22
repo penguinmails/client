@@ -51,38 +51,7 @@ type Story = StoryObj<typeof CampaignPerformanceChart>;
 // Stories
 // ============================================================
 
-export const SideBySideComparison: Story = {
-  render: () => (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-muted-foreground">
-          🔴 Legacy CampaignPerformanceChart (Deprecated)
-        </h2>
-        <div className="border-2 border-red-200 dark:border-red-900 rounded-lg p-4 bg-red-50/50 dark:bg-red-900/10">
-          <CampaignPerformanceChart data={mockChartData} />
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-          ✅ Migrated Chart (Using CAMPAIGN_COLORS + DS Card)
-        </h2>
-        <div className="border-2 border-green-200 dark:border-green-900 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
-          <CampaignPerformanceChart data={mockChartData} />
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Side-by-side comparison of legacy chart vs migrated chart using CAMPAIGN_COLORS.",
-      },
-    },
-  },
-};
-
-export const MigratedChartDefault: Story = {
+export const Default: Story = {
   args: {
     data: mockChartData,
     title: "Campaign Performance",
@@ -96,7 +65,7 @@ export const MigratedChartDefault: Story = {
   },
 };
 
-export const MigratedChartCustomTitle: Story = {
+export const CustomTitle: Story = {
   args: {
     data: mockChartData,
     title: "Email Outreach Metrics",

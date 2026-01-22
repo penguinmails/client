@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { fn } from "storybook/test";
 import { Button } from "./button";
 
 const meta = {
@@ -24,7 +25,7 @@ export const Default: Story = {
     variant: "default",
     size: "sm",
     disabled: false,
-    onClick: () => alert("Button clicked!"),
+    onClick: fn(),
     children: "Default Button",
   },
 };
@@ -34,7 +35,7 @@ export const Destructive: Story = {
     labelKey: "label",
     variant: "destructive",
     size: "sm",
-    onClick: () => alert("Button clicked!"),
+    onClick: fn(),
     children: "Destructive Button",
     className: "border-2 border-black",
   },
@@ -105,7 +106,7 @@ export const Error: Story = {
   args: {
     variant: "destructive",
     size: "sm",
-    onClick: () => alert("Error action triggered!"),
+    onClick: fn(),
     children: "Error Action",
   },
 };
@@ -114,7 +115,7 @@ export const Success: Story = {
   args: {
     variant: "default",
     size: "sm",
-    onClick: () => alert("Success!"),
+    onClick: fn(),
     children: "Success Action",
     className: "bg-green-600 hover:bg-green-700",
   },

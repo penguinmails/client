@@ -1,37 +1,68 @@
 // Mock for @niledatabase/client to avoid ESM parsing errors in Jest
+// Simple mock function for Storybook environment
+const mockFn = () => {
+  const fn = () => {};
+  fn.mock = { calls: [] };
+  return fn;
+};
+
+// Mock for @niledatabase/react hooks
+const useSignIn = (options = {}) => {
+  const signIn = mockFn();
+  // Return the function directly or as an object based on usage
+  return signIn;
+};
+
+const useSignOut = (options = {}) => {
+  const signOut = mockFn();
+  return signOut;
+};
+
+const useUser = (options = {}) => ({
+  user: null,
+  isLoading: false,
+  error: null,
+});
+
+const useSession = (options = {}) => ({
+  session: null,
+  isLoading: false,
+  error: null,
+});
+
 module.exports = {
   // Mock NileDB client
-  createClient: jest.fn(() => ({
+  createClient: mockFn(() => ({
     auth: {
-      signIn: jest.fn(),
-      signOut: jest.fn(),
-      getUser: jest.fn(),
-      getSession: jest.fn(),
+      signIn: mockFn(),
+      signOut: mockFn(),
+      getUser: mockFn(),
+      getSession: mockFn(),
     },
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(),
-          maybeSingle: jest.fn(),
-          then: jest.fn(),
+    from: mockFn(() => ({
+      select: mockFn(() => ({
+        eq: mockFn(() => ({
+          single: mockFn(),
+          maybeSingle: mockFn(),
+          then: mockFn(),
         })),
-        insert: jest.fn(() => ({
-          values: jest.fn(() => ({
-            select: jest.fn(() => ({
-              single: jest.fn(),
+        insert: mockFn(() => ({
+          values: mockFn(() => ({
+            select: mockFn(() => ({
+              single: mockFn(),
             })),
           })),
         })),
-        update: jest.fn(() => ({
-          eq: jest.fn(() => ({
-            select: jest.fn(() => ({
-              single: jest.fn(),
+        update: mockFn(() => ({
+          eq: mockFn(() => ({
+            select: mockFn(() => ({
+              single: mockFn(),
             })),
           })),
         })),
-        delete: jest.fn(() => ({
-          eq: jest.fn(() => ({
-            then: jest.fn(),
+        delete: mockFn(() => ({
+          eq: mockFn(() => ({
+            then: mockFn(),
           })),
         })),
       })),
@@ -39,11 +70,26 @@ module.exports = {
   })),
 
   // Mock auth utilities
-  getCurrentUser: jest.fn(),
-  requireAuth: jest.fn(),
-  getSession: jest.fn(),
-  signIn: jest.fn(),
-  signOut: jest.fn(),
+  getCurrentUser: mockFn(),
+  requireAuth: mockFn(),
+  getSession: mockFn(),
+  signIn: mockFn(),
+  signOut: mockFn(),
+
+  // Mock NileDB React hooks
+  useSignIn,
+  useSignOut,
+  useUser,
+  useSession,
+
+  // Mock components
+  SignOutButton: ({ children, className, buttonText, ...props }) => {
+    const React = require('react');
+    return React.createElement('button', {
+      className,
+      ...props,
+    }, buttonText || children || 'Sign Out');
+  },
 
   // Mock types
   User: {},

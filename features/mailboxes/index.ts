@@ -7,8 +7,13 @@
 
 // Types - Public type definitions
 export type {
+  EmailAccount,
+  EmailAccountWithAnalytics,
+  EmailAccountAnalytics,
   MailboxData,
-} from './actions';
+  MockMailbox,
+  EmailAccountStatus
+} from './types';
 
 // Actions - Server-side operations
 export {

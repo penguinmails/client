@@ -32,6 +32,11 @@ const config: StorybookConfig = {
       '@niledatabase/server': path.resolve(__dirname, './mocks/nile-server.js'),
       '@niledatabase/client': path.resolve(__dirname, './mocks/nile-server.js'),
       '@niledatabase/react': path.resolve(__dirname, './mocks/nile-server.js'),
+      // Mock Next.js navigation for Storybook
+      'next/navigation': path.resolve(__dirname, '../__mocks__/next-navigation.js'),
+      'next-intl/navigation': path.resolve(__dirname, '../__mocks__/next-intl/navigation.js'),
+      // Mock lib/config/i18n/navigation for Storybook
+      '@/lib/config/i18n/navigation': path.resolve(__dirname, '../__mocks__/next-intl/navigation.js'),
     };
     return config;
   },

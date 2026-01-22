@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { fn } from "storybook/test";
 import { PageHeader } from "./page-header";
 import { Button } from "@/components/ui/button";
 import React from "react";
@@ -141,7 +142,7 @@ export const Error: Story = {
     title: "Error",
     description: "Failed to load page data",
     actions: (
-      <Button variant="outline" size="sm" onClick={() => alert("Retry")}>
+      <Button variant="outline" size="sm" onClick={fn()}>
         Retry
       </Button>
     ),

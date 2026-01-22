@@ -20,7 +20,9 @@ export const mockConversations: Conversation[] = [
     isStarred: true,
     avatar: 'SJ',
     notes: '',
-    followUpDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+    followUpDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    emailAccountId: '1',
+    emailAccountEmail: 'sales@company.com'
   },
   {
     id: '2',
@@ -40,7 +42,9 @@ export const mockConversations: Conversation[] = [
     isStarred: false,
     avatar: 'MC',
     notes: '',
-    followUpDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+    followUpDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    emailAccountId: '2',
+    emailAccountEmail: 'support@company.com'
   },
   {
     id: '3',
@@ -60,7 +64,9 @@ export const mockConversations: Conversation[] = [
     isStarred: false,
     avatar: 'LR',
     notes: '',
-    followUpDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString()
+    followUpDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+    emailAccountId: '1',
+    emailAccountEmail: 'sales@company.com'
   },
   {
     id: '4',
@@ -80,7 +86,9 @@ export const mockConversations: Conversation[] = [
     isStarred: false,
     avatar: 'DK',
     notes: '',
-    followUpDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString()
+    followUpDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+    emailAccountId: '3',
+    emailAccountEmail: 'marketing@company.com'
   }
 ];
 
@@ -91,21 +99,42 @@ export const mockMessages: Record<string, Message[]> = {
       type: 'incoming',
       sender: 'John Doe',
       time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      content: 'Hi there! I saw your product and I am very interested in learning more about it. Could you provide some additional details?'
+      content: 'Hi there! I saw your product and I am very interested in learning more about it. Could you provide some additional details?',
+      emailAccountId: '1',
+      emailAccountEmail: 'sales@company.com',
+      direction: 'inbound',
+      from: 'john.doe@example.com',
+      to: ['sales@company.com'],
+      cc: [],
+      deliveredTo: 'sales@company.com'
     },
     {
       id: 'msg2',
       type: 'outgoing',
       sender: 'You',
       time: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-      content: 'Hello John! Thank you for your interest. I\'d be happy to schedule a demo to show you our features. When would be a good time for you?'
+      content: 'Hello John! Thank you for your interest. I\'d be happy to schedule a demo to show you our features. When would be a good time for you?',
+      emailAccountId: '1',
+      emailAccountEmail: 'sales@company.com',
+      direction: 'outbound',
+      from: 'sales@company.com',
+      to: ['john.doe@example.com'],
+      cc: [],
+      deliveredTo: 'john.doe@example.com'
     },
     {
       id: 'msg3',
       type: 'incoming',
       sender: 'John Doe',
       time: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-      content: 'That sounds great! How about tomorrow at 2 PM EST? I\'m particularly interested in the integration capabilities.'
+      content: 'That sounds great! How about tomorrow at 2 PM EST? I\'m particularly interested in the integration capabilities.',
+      emailAccountId: '1',
+      emailAccountEmail: 'sales@company.com',
+      direction: 'inbound',
+      from: 'john.doe@example.com',
+      to: ['sales@company.com'],
+      cc: [],
+      deliveredTo: 'sales@company.com'
     }
   ],
   '2': [
@@ -114,7 +143,14 @@ export const mockMessages: Record<string, Message[]> = {
       type: 'incoming',
       sender: 'Jane Smith',
       time: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-      content: 'Thanks for reaching out! I need some more information about your pricing structure and implementation timeline.'
+      content: 'Thanks for reaching out! I need some more information about your pricing structure and implementation timeline.',
+      emailAccountId: '2',
+      emailAccountEmail: 'support@company.com',
+      direction: 'inbound',
+      from: 'jane.smith@example.com',
+      to: ['support@company.com'],
+      cc: [],
+      deliveredTo: 'support@company.com'
     }
   ],
   '3': [
@@ -123,7 +159,14 @@ export const mockMessages: Record<string, Message[]> = {
       type: 'incoming',
       sender: 'Mike Johnson',
       time: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-      content: 'This looks very promising! We\'re ready to move forward. When can we schedule a call to discuss the contract details?'
+      content: 'This looks very promising! We\'re ready to move forward. When can we schedule a call to discuss the contract details?',
+      emailAccountId: '1',
+      emailAccountEmail: 'sales@company.com',
+      direction: 'inbound',
+      from: 'mike.johnson@example.com',
+      to: ['sales@company.com'],
+      cc: [],
+      deliveredTo: 'sales@company.com'
     }
   ]
 };
