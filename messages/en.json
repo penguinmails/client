@@ -19,7 +19,8 @@
       "leadHub": "Lead Hub",
       "communication": "Communication",
       "infrastructure": "Infrastructure",
-      "analytics": "Analytics"
+      "analytics": "Analytics",
+      "admin": "Admin"
     },
     "items": {
       "dashboard": "Dashboard",
@@ -29,7 +30,8 @@
       "leadLists": "Lead Lists",
       "inbox": "Inbox",
       "domainsAndMailboxes": "Domains & Mailboxes",
-      "analyticsHub": "Analytics Hub"
+      "analyticsHub": "Analytics Hub",
+      "diagnostics": "Diagnostics"
     },
     "account": {
       "free": "Free Account"
@@ -702,6 +704,10 @@
         "warmup": "Warmup Hub"
       },
       "addDomainButton": "Add Domain"
+    },
+    "users": {
+      "title": "Panel Users",
+      "description": "Manage hosting panel users and their allocated resources."
     }
   },
   "domains": {

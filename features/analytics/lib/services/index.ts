@@ -7,3 +7,4 @@
 export * from './AnalyticsService';
 export * from './CampaignAnalyticsService';
 export * from './CrossDomainAnalyticsService';
+export * from './EventStorageService';

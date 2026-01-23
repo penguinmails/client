@@ -10,7 +10,7 @@ import {
 import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/StatsCardSkeleton";
 import { StatsCards } from "@features/campaigns/ui/components/reports/StatsCards";
 import { Button } from "@/components/ui/button/button";
-import { Plus, Send, Mail, TrendingUp, Eye, Users } from "lucide-react";
+import { Plus, Send, Mail, TrendingUp, Eye, Users, MousePointer } from "lucide-react";
 import { Link } from "@/lib/config/i18n/navigation";
 import { Suspense } from "react";
 import { CampaignDisplay } from "@features/campaigns/types";
@@ -31,42 +31,42 @@ export default function CampaignsContent({
   newCampaignLabel,
 }: CampaignsContentProps) {
   const [campaigns, setCampaigns] = useState<CampaignDisplay[]>([]);
-
-  // Calculate stats from campaigns data
-  const totalCampaigns = 12; // Reference shows 12
-  const totalSent = 2847; // Reference shows 2,847
-  const totalRepliesPercent = "8.7%"; // Reference shows 8.7% for Total Replies
-  const openRate = "34.2%"; // Reference shows 34.2%
-  const replyRate = "8.7%"; // Reference shows 8.7%";
+  const [statsData, setStatsData] = useState({
+    totalSent: 0,
+    openRate: 0,
+    replyRate: 0,
+    clickRate: 0,
+  });
+  const [loadingStats, setLoadingStats] = useState(true);
 
   const stats = [
     {
       title: "Total Campaigns",
-      value: totalCampaigns.toString(),
+      value: campaigns.length.toString(),
       icon: Send,
       iconColor: "bg-blue-100 text-blue-600",
     },
     {
       title: "Total Sent",
-      value: totalSent.toLocaleString(),
+      value: statsData.totalSent.toLocaleString(),
       icon: Mail,
       iconColor: "text-purple-600 bg-purple-100",
     },
     {
-      title: "Total Replies",
-      value: totalRepliesPercent,
-      icon: TrendingUp,
-      iconColor: "text-green-500 bg-green-100",
-    },
-    {
       title: "Open Rate",
-      value: openRate,
+      value: `${(statsData.openRate * 100).toFixed(1)}%`,
       icon: Eye,
       iconColor: "text-orange-500 bg-orange-100",
     },
     {
+      title: "Click Rate",
+      value: `${(statsData.clickRate * 100).toFixed(1)}%`,
+      icon: MousePointer,
+      iconColor: "text-blue-500 bg-blue-100",
+    },
+    {
       title: "Reply Rate",
-      value: replyRate,
+      value: `${(statsData.replyRate * 100).toFixed(1)}%`,
       icon: Users,
       iconColor: "text-pink-600 bg-pink-100",
     },
@@ -82,15 +82,29 @@ export default function CampaignsContent({
         }
 
         const data = await response.json();
-
         setCampaigns(data);
       } catch {
-        // In a real implementation, you would handle errors here
-        // For now, we'll just leave campaigns empty
+        // Handle error
+      }
+    }
+
+    async function fetchStats() {
+      try {
+        setLoadingStats(true);
+        const response = await fetch("/api/analytics/dashboard");
+        if (response.ok) {
+          const data = await response.json();
+          setStatsData(data.stats);
+        }
+      } catch {
+        // Handle error
+      } finally {
+        setLoadingStats(false);
       }
     }
 
     fetchCampaigns();
+    fetchStats();
   }, []);
 
   return (
@@ -108,16 +122,16 @@ export default function CampaignsContent({
         </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
-        <Suspense
-          fallback={Array.from({ length: 5 }).map((_, index) => (
+        {loadingStats ? (
+          Array.from({ length: 5 }).map((_, index) => (
             <StatsCardSkeleton
               key={index}
               className="flex-row-reverse justify-end gap-2 "
             />
-          ))}
-        >
+          ))
+        ) : (
           <StatsCards stats={stats} />
-        </Suspense>
+        )}
       </div>
       <CampaignsFilter />
 

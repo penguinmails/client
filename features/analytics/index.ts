@@ -50,6 +50,7 @@ export {
 // Services - Public analytics services
 export {
   analyticsService,
+  eventStorageService,
 } from './lib/services';
 
 // UI Components - Public components for external use

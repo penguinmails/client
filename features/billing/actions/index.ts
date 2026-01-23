@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { StorageOption } from '../types';
+import * as infrastructureBilling from '@/features/infrastructure';
 
 // Local mock billing info type for this module only
 interface MockBillingInfo {
@@ -107,37 +108,59 @@ const storageOptions: StorageOption[] = [
 ];
 
 export async function getBillingInfo(_req?: NextRequest) {
-  // Shape aligned with legacy BillingData expected by settings components
-  return {
-    success: true,
-    data: {
-      renewalDate: mockBillingInfo.nextBillingDate.toISOString(),
-      emailAccountsUsed: mockBillingInfo.emailAccountsUsed ?? 0,
-      campaignsUsed: mockBillingInfo.campaignsUsed ?? 0,
-      emailsPerMonthUsed: mockBillingInfo.usage.emailsSent,
-      planDetails: {
-        id: 'professional',
-        name: mockBillingInfo.planDetails?.name ?? mockBillingInfo.currentPlan,
-        isMonthly: mockBillingInfo.planDetails?.isMonthly ?? (mockBillingInfo.billingCycle === 'monthly'),
-        price: mockBillingInfo.planDetails?.price ?? 0,
-        description: 'Professional plan',
-        maxEmailAccounts: mockBillingInfo.planDetails?.maxEmailAccounts ?? 0,
-        maxCampaigns: mockBillingInfo.planDetails?.maxCampaigns ?? 0,
-        maxEmailsPerMonth: mockBillingInfo.usage.emailsLimit,
+  try {
+    const dashboardResult = await infrastructureBilling.getBillingDashboardAction();
+    
+    if (!dashboardResult.success) {
+      throw new Error(dashboardResult.error || "Failed to fetch infrastructure billing");
+    }
+
+    const { balance, unpaidInvoices, paymentHistory } = dashboardResult.data;
+
+    return {
+      success: true,
+      data: {
+        renewalDate: mockBillingInfo.nextBillingDate.toISOString(),
+        emailAccountsUsed: mockBillingInfo.emailAccountsUsed ?? 0,
+        campaignsUsed: mockBillingInfo.campaignsUsed ?? 0,
+        emailsPerMonthUsed: mockBillingInfo.usage.emailsSent,
+        balance: balance,
+        unpaidInvoicesCount: unpaidInvoices.length,
+        planDetails: {
+          id: 'professional',
+          name: mockBillingInfo.planDetails?.name ?? mockBillingInfo.currentPlan,
+          isMonthly: mockBillingInfo.planDetails?.isMonthly ?? (mockBillingInfo.billingCycle === 'monthly'),
+          price: mockBillingInfo.planDetails?.price ?? 0,
+          description: 'Professional plan',
+          maxEmailAccounts: mockBillingInfo.planDetails?.maxEmailAccounts ?? 0,
+          maxCampaigns: mockBillingInfo.planDetails?.maxCampaigns ?? 0,
+          maxEmailsPerMonth: mockBillingInfo.usage.emailsLimit,
+        },
+        paymentMethod: {
+          lastFour: mockBillingInfo.paymentMethod.lastFour ?? mockBillingInfo.paymentMethod.last4,
+          expiry: mockBillingInfo.paymentMethod.expiry ?? `${mockBillingInfo.paymentMethod.expiryMonth}/${mockBillingInfo.paymentMethod.expiryYear}`,
+          brand: mockBillingInfo.paymentMethod.brand ?? 'Visa',
+        },
+        billingHistory: paymentHistory.map((item: any) => ({
+          date: item.date || item.paydate || new Date().toISOString(),
+          description: item.name || item.itemname || "Service payment",
+          amount: `${item.amount || '0.00'} ${item.currency || 'USD'}`,
+          method: mockBillingInfo.paymentMethod.type,
+        })),
+        unpaidInvoices: unpaidInvoices.map((inv: any) => ({
+          id: inv.id,
+          amount: inv.amount,
+          currency: inv.currency,
+          date: inv.date,
+        }))
       },
-      paymentMethod: {
-        lastFour: mockBillingInfo.paymentMethod.lastFour ?? mockBillingInfo.paymentMethod.last4,
-        expiry: mockBillingInfo.paymentMethod.expiry ?? `${mockBillingInfo.paymentMethod.expiryMonth}/${mockBillingInfo.paymentMethod.expiryYear}`,
-        brand: mockBillingInfo.paymentMethod.brand ?? 'Visa',
-      },
-      billingHistory: mockBillingInfo.billingHistory.map((item) => ({
-        date: item.date.toISOString(),
-        description: item.description,
-        amount: `$${item.amount.toFixed(2)}`,
-        method: mockBillingInfo.paymentMethod.type,
-      })),
-    },
-  };
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to fetch billing info",
+    };
+  }
 }
 
 export async function updatePaymentMethod(_paymentData: unknown, _req?: NextRequest) {
@@ -186,18 +209,31 @@ export async function updateBillingInfo(
 }
 
 export async function getUsageWithCalculations(_req?: NextRequest) {
-  // Mock implementation for usage calculations
-  return {
-    success: true,
-    data: {
-      emailsSent: 2500,
-      emailsLimit: 10000,
-      storageUsed: 1.2,
-      storageLimit: 5,
-      campaignsUsed: 12,
-      campaignsLimit: 50,
-      emailAccountsUsed: 5,
-      maxEmailAccounts: 10
-    }
-  };
+  try {
+    const [vpsResult, domainsResult] = await Promise.all([
+      infrastructureBilling.listVpsInstancesAction(),
+      infrastructureBilling.listBillManagerDomainsAction()
+    ]);
+
+    return {
+      success: true,
+      data: {
+        emailsSent: 2500,
+        emailsLimit: 10000,
+        storageUsed: 1.2,
+        storageLimit: 5,
+        campaignsUsed: 12,
+        campaignsLimit: 50,
+        emailAccountsUsed: 5,
+        maxEmailAccounts: 10,
+        vpsCount: vpsResult.success ? vpsResult.data?.length : 0,
+        domainsCount: domainsResult.success ? domainsResult.data?.length : 0,
+      }
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: "Failed to fetch usage calculations"
+    };
+  }
 }

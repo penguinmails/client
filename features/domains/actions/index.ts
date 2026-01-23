@@ -5,6 +5,12 @@ import { NextRequest } from "next/server";
 import { Domain, EmailAccount, DomainSettings, DNSProvider } from "../types";
 import { productionLogger } from "@/lib/logger";
 
+// Infrastructure Imports
+import { listWebDomains, addWebDomain } from "../../infrastructure/api/hestia";
+import { getHestiaConfig } from "../../infrastructure/actions/config";
+import { mapHestiaDomainsToInternal } from "./hestia-mapper";
+
+
 /**
  * Extended domain data with associated mailboxes and aggregated statistics
  */
@@ -62,44 +68,20 @@ export interface DomainsDataResponse {
  */
 export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataResponse> {
   try {
-    // Mock data for domains (placeholder implementation)
-    // TODO: Replace with actual NileDB queries when backend is ready
-    const domains: Domain[] = [
-      {
-        id: 1,
-        domain: 'mycompany.com',
-        status: 'VERIFIED',
-        createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // Added 2 weeks ago
-        emailAccounts: 5,
-        records: {
-          spf: 'verified',
-          dkim: 'verified',
-          dmarc: 'verified',
-          mx: 'verified'
-        }
-      },
-      {
-        id: 2,
-        domain: 'outreach.mycompany.com',
-        status: 'PENDING',
-        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // Added 1 day ago
-        emailAccounts: 0,
-        records: {
-          spf: 'verified',
-          dkim: 'pending',
-          dmarc: 'pending',
-          mx: 'verified'
-        }
-      }
-    ];
+    const config = getHestiaConfig();
+    const user = process.env.SERVER_ADMIN_USER || 'admin';
+
+    // Fetch from Hestia
+    const hestiaDomains = await listWebDomains(config, user);
+    const domains = mapHestiaDomainsToInternal(hestiaDomains);
 
     const domainsWithMailboxes: DomainWithMailboxesData[] = domains.map(domain => ({
       domain,
       mailboxes: [],
       id: domain.id.toString(),
       name: domain.domain,
-      provider: 'nile',
-      reputation: 95,
+      provider: 'hestia',
+      reputation: domain.reputation || 95,
       spf: domain.records?.spf === 'verified',
       dkim: domain.records?.dkim === 'verified',
       dmarc: domain.records?.dmarc === 'verified',
@@ -117,13 +99,6 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
         avgDailyLimit: 100,
         totalSent: 0,
         avgWarmupProgress: 100
-      },
-      metrics: {
-        total24h: 0,
-        bounceRate: 0,
-        openRate: 0,
-        replyRate: 0,
-        spamRate: 0
       }
     }));
 
@@ -141,8 +116,13 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
       dnsRecords: defaultDnsRecords,
     };
   } catch (error) {
-    productionLogger.error("Error fetching domains data:", error);
-    throw new Error("Failed to fetch domains data");
+    productionLogger.error("Error fetching domains data from Hestia:", error);
+    // Fallback to empty if Hestia fails (to avoid crash during migration/misconfig)
+    return {
+      domains: [],
+      domainsWithMailboxes: [],
+      dnsRecords: [],
+    };
   }
 }
 
@@ -178,11 +158,24 @@ export async function createDomain(
   _req?: NextRequest
 ): Promise<Domain> {
   try {
-    // Mock implementation - create domain with generated ID
-    // TODO: Replace with actual NileDB query when backend is ready
+    const config = getHestiaConfig();
+    const user = process.env.SERVER_ADMIN_USER || 'admin';
+    const domainName = domainData.domain;
+
+    if (!domainName) {
+      throw new Error("Domain name is required");
+    }
+
+    const returnCode = await addWebDomain(config, user, domainName);
+    
+    // In Hestia v-add-domain, return code 0 means success
+    if (returnCode !== 0 && returnCode !== '0') {
+      throw new Error(`Hestia failed to add domain: Error code ${returnCode}`);
+    }
+
     const newDomain: Domain = {
       id: Math.floor(Math.random() * 10000),
-      domain: domainData.domain || 'new-domain.com',
+      domain: domainName,
       status: 'PENDING',
       createdAt: new Date().toISOString(),
       emailAccounts: 0,
@@ -197,9 +190,9 @@ export async function createDomain(
     // Revalidate the domains page cache
     revalidatePath("/dashboard/domains");
     return newDomain;
-  } catch (error) {
-    productionLogger.error("Error creating domain:", error);
-    throw new Error("Failed to create domain");
+  } catch (error: any) {
+    productionLogger.error("Error creating domain in Hestia:", error);
+    throw new Error(error.message || "Failed to create domain");
   }
 }
 

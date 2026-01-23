@@ -129,10 +129,18 @@ const CustomTooltip = ({
   return null;
 };
 
-function StatsTab() {
+import { Campaign } from "@features/campaigns/types";
+
+function StatsTab({ 
+  campaignId, 
+  initialCampaign 
+}: { 
+  campaignId: string;
+  initialCampaign?: Campaign;
+}) {
   const [timeRange, setTimeRange] = useState<7 | 14 | 30>(14);
   const chartRef = useRef<HTMLDivElement>(null);
-  const { data, loading, error } = useCampaignStats(timeRange);
+  const { data, loading, error } = useCampaignStats(timeRange, campaignId, initialCampaign);
   const chartColors = useChartColors();
 
   // MIGRATED: Updated metrics to use standardized field names
