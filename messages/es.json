@@ -472,6 +472,7 @@
     "companySizeDefault": "1-10 empleados",
     "errors": {
       "loadBilling": "Error al cargar los datos de facturación",
+      "loadBilling": "Error al cargar los datos de facturación",
       "updateBilling": "Error al actualizar la información de facturación",
       "loadCompany": "Error al cargar la información de la empresa",
       "updateCompany": "Error al actualizar el nombre de la empresa",

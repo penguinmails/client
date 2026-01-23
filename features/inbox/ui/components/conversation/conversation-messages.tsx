@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getMessages } from "@features/inbox/actions";
 import { type Message } from "@features/inbox/types";
 import { getRelativeTime } from "@/lib/utils/date";
 import { cn } from "@/lib/utils";
@@ -27,7 +26,8 @@ export default function ConversationMessages() {
 
       try {
         setLoading(true);
-        const result = await getMessages(conversationId.toString());
+        const response = await fetch(`/api/inbox/conversations/${conversationId}/messages`);
+        const result = await response.json();
         const messageData = result.success ? result.data || [] : [];
         setMessages(messageData);
       } catch (error) {
