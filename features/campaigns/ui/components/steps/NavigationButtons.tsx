@@ -11,20 +11,20 @@ function NavigationButtons() {
   const canProceed = () => {
     const values = form.getValues();
     switch (currentStep) {
-      case 0:
-        return values.name?.trim().length > 0;
       case 1:
-        return values.leadsList != null;
+        return values.name?.trim().length > 0;
       case 2:
-        return values.selectedMailboxes && values.selectedMailboxes.length > 0;
+        return values.leadsList != null;
       case 3:
         return (
           values.steps?.length > 0 &&
           values.steps.every((step) => step.emailSubject && step.emailBody)
         );
       case 4:
-        return true;
+        return values.selectedMailboxes && values.selectedMailboxes.length > 0;
       case 5:
+        return true;
+      case 6:
         return true;
       default:
         return false;
@@ -37,7 +37,7 @@ function NavigationButtons() {
       <div className="max-w-4xl mx-auto flex items-center justify-between">
         <Button
           onClick={prevStep}
-          disabled={currentStep === 0}
+          disabled={currentStep === 1}
           variant="outline"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -46,13 +46,19 @@ function NavigationButtons() {
 
         <div className="flex items-center space-x-4">
           <Button variant="outline">Save as Draft</Button>
-          {currentStep < steps.length - 1 ? (
+          {currentStep < steps.length ? (
             <Button onClick={nextStep} disabled={disabled}>
               <span>Continue</span>
               <ArrowRight className="w-5 h-5" />
             </Button>
           ) : (
-            <Button className=" bg-emerald-600  hover:bg-emerald-700 ">
+            <Button 
+              className=" bg-emerald-600  hover:bg-emerald-700 "
+              onClick={() => {
+                // For now, navigate to a placeholder campaign page
+                window.location.href = '/dashboard/campaigns/1';
+              }}
+            >
               <Play className="w-5 h-5" />
               <span>Launch Campaign</span>
             </Button>
