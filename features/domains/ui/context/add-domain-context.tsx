@@ -64,7 +64,7 @@ const steps: DomainStep[] = [
 ];
 
 export function AddDomainProvider({ children }: { children: ReactNode }) {
-  const [currentStep, setCurrentStep] = useState(1); // Changed to start at 1 to match components
+  const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<DomainFormData>(defaultFormData);
   const [_open, setOpen] = useState(false);
   const form = useForm<DomainFormData>({

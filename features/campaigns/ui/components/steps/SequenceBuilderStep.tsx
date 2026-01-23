@@ -160,7 +160,11 @@ function SequenceBuilderStep() {
         {sequence.map((step, index) => (
           <div key={step.id || index}>
             <EmailStep
-              step={step}
+              step={{
+                ...step,
+                subject: step.emailSubject,
+                content: step.emailBody
+              }}
               index={index}
               updateStep={updateStep}
               removeStep={removeStep}
