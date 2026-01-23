@@ -16,7 +16,7 @@ import { type Conversation } from "@features/inbox/types";
 
 // Visual component that only renders conversations
 function ConversationsListContent() {
-  const { conversations, loading, error } = useInbox();
+  const { conversations, loading, error, refreshConversations } = useInbox();
   const [localConversations, setLocalConversations] = useState<Conversation[]>([]);
 
   // Sync with context
@@ -103,7 +103,7 @@ function ConversationsListContent() {
               Failed to Load Conversations
             </h3>
             <p className="text-muted-foreground mb-4">{error}</p>
-            <Button onClick={() => window.location.reload()}>
+            <Button onClick={() => refreshConversations()}>
               Try Again
             </Button>
           </div>

@@ -9,10 +9,8 @@ import type { Conversation } from "@features/inbox/types";
 
 // Client wrapper to provide context for all inbox components
 function InboxPageClient({
-  _searchParams,
   initialConversations,
 }: {
-  _searchParams: Record<string, string | string[] | undefined>;
   initialConversations: Conversation[];
 }) {
   return (
@@ -47,7 +45,6 @@ export default async function InboxPage({
   return (
     <Suspense fallback={<InboxLoading />}>
       <InboxPageClient
-        _searchParams={params}
         initialConversations={initialConversations}
       />
     </Suspense>
