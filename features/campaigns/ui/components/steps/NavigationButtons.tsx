@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button/button";
 import { useAddCampaignContext } from "@features/campaigns/ui/context/add-campaign-context";
 import { ArrowLeft, ArrowRight, Play } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 function NavigationButtons() {
   const { currentStep, steps, prevStep, nextStep, form } =
     useAddCampaignContext();
+  const router = useRouter();
   form.watch(["name", "leadsList", "selectedMailboxes", "steps"]);
   const canProceed = () => {
     const values = form.getValues();
@@ -56,7 +58,7 @@ function NavigationButtons() {
               className=" bg-emerald-600  hover:bg-emerald-700 "
               onClick={() => {
                 // For now, navigate to a placeholder campaign page
-                window.location.href = '/dashboard/campaigns/1';
+                router.push('/dashboard/campaigns/1');
               }}
             >
               <Play className="w-5 h-5" />

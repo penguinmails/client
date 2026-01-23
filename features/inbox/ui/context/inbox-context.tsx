@@ -82,28 +82,37 @@ export function InboxProvider({
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
+  // Keep track of latest filterState with a ref
+  const filterStateRef = React.useRef(filterState);
+  React.useEffect(() => {
+    filterStateRef.current = filterState;
+  }, [filterState]);
+
   // Refresh conversations with current filters
   const refreshConversations = React.useCallback(async (params?: Record<string, unknown>) => {
     setLoading(true);
     setError(null);
 
     try {
+      // Get latest filter state from ref
+      const currentFilterState = filterStateRef.current;
+
       // Build search parameters from filter state and incoming params
       const searchParams = new URLSearchParams();
-      if (filterState.selectedFilter !== "all") {
-        searchParams.append("filter", filterState.selectedFilter);
+      if (currentFilterState.selectedFilter !== "all") {
+        searchParams.append("filter", currentFilterState.selectedFilter);
       }
-      filterState.campaignFilter.forEach((campaign) =>
+      currentFilterState.campaignFilter.forEach((campaign) =>
         searchParams.append("campaigns", campaign)
       );
-      filterState.mailboxFilter.forEach((mailbox) =>
+      currentFilterState.mailboxFilter.forEach((mailbox) =>
         searchParams.append("mailboxes", mailbox)
       );
-      filterState.tagFilter.forEach((tag) =>
+      currentFilterState.tagFilter.forEach((tag) =>
         searchParams.append("tags", tag)
       );
-      if (filterState.timeFilter !== "all") {
-        searchParams.append("time", filterState.timeFilter);
+      if (currentFilterState.timeFilter !== "all") {
+        searchParams.append("time", currentFilterState.timeFilter);
       }
 
       // Add additional params
@@ -138,7 +147,7 @@ export function InboxProvider({
     } finally {
       setLoading(false);
     }
-  }, [filterState]);
+  }, []);
 
   // Expose context value
   const value: InboxContextType = {

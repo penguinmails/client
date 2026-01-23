@@ -90,10 +90,7 @@ export default function InboxError({
             </p>
           </CardContent>
           <CardFooter className="justify-center">
-            <Button
-              onClick={reset}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
+            <Button onClick={reset}>
               Try Again
             </Button>
           </CardFooter>

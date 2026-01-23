@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getFilteredConversations } from "@features/inbox/actions";
+import { productionLogger } from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,18 +8,10 @@ export async function GET(request: NextRequest) {
     
     // Convert URLSearchParams to Record<string, unknown>
     const params: Record<string, unknown> = {};
-    searchParams.forEach((value, key) => {
-      const existing = params[key];
-      if (existing) {
-        params[key] = Array.isArray(existing) 
-          ? [...existing, value] 
-          : [existing, value];
-      } else {
-        // Check if parameter appears multiple times
-        const allValues = searchParams.getAll(key);
-        params[key] = allValues.length > 1 ? allValues : value;
-      }
-    });
+    for (const key of new Set(searchParams.keys())) {
+      const allValues = searchParams.getAll(key);
+      params[key] = allValues.length > 1 ? allValues : allValues[0];
+    }
 
     const conversationsResult = await getFilteredConversations(params, request);
 
@@ -36,7 +29,8 @@ export async function GET(request: NextRequest) {
       data: [],
       count: 0,
     }, { status: 500 });
-  } catch {
+  } catch (error) {
+    productionLogger.error("Failed to fetch conversations:", error);
     return NextResponse.json({
       success: false,
       error: "Internal server error",
