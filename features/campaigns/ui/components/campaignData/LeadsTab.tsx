@@ -18,8 +18,8 @@ const getStatusColor = (status: string) => {
   }
 };
 
-async function LeadsTab() {
-  const campaignLeadsResult = await getCampaignLeads();
+async function LeadsTab({ campaignId }: { campaignId: string }) {
+  const campaignLeadsResult = await getCampaignLeads(campaignId);
   const campaignLeads = campaignLeadsResult.success
     ? campaignLeadsResult.data || []
     : [];

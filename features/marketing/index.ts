@@ -7,3 +7,11 @@
 
 // UI Components - Public components for external use
 export * from './ui/components';
+
+// Server Actions - Marketing operations
+export * from './actions/campaigns';
+export * from './actions/contacts';
+export * from './actions/segments';
+
+// Types - Shared marketing types
+export * from './types/mautic';

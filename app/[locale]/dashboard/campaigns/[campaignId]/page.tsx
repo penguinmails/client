@@ -58,13 +58,13 @@ async function CampaignContent({ campaignId }: { campaignId: string }) {
         <div className="p-6 overflow-y-auto max-h-[60vh]">
         { }
           <TabsContent value="sequence">
-            <SequenceTab />
+            <SequenceTab campaignId={campaignId} />
           </TabsContent>
           <TabsContent value="stats">
-            <StatsTab />
+            <StatsTab campaignId={campaignId} initialCampaign={campaign} />
           </TabsContent>
           <TabsContent value="leads">
-            <LeadsTab />
+            <LeadsTab campaignId={campaignId} />
           </TabsContent>
         </div>
       </CampiagnTabs>

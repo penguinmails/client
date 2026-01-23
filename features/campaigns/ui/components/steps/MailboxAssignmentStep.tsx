@@ -6,8 +6,12 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAddCampaignContext } from "@features/campaigns/ui/context/add-campaign-context";
 import { CampaignFormValues } from "@/types";
 import { Mail, Info } from "lucide-react";
+import { listMailboxes } from "@features/mailboxes/actions";
+import { productionLogger } from "@/lib/logger";
+import { useEffect, useState } from "react";
+import Loader from "./compositions/loader";
 
-// Mailbox Interface
+// Mailbox Interface - keeping local to match component needs or importing if available
 interface Mailbox {
   id: string;
   email: string;
@@ -28,55 +32,45 @@ function MailboxAssignmentStep() {
   const { setValue, watch } = form;
   const selectedMailboxes = watch("selectedMailboxes") || [];
 
-  // Mock data for mailboxes
-  const mailboxes: Mailbox[] = [
-    {
-      id: '1',
-      email: 'john@company.com',
-      name: 'John Smith',
-      domain: 'company.com',
-      status: 'active' as const,
-      dailyLimit: 500,
-      currentSent: 150,
-      warmupProgress: 100,
-      healthScore: 95,
-      lastActivity: new Date(),
-      createdAt: new Date()
-    },
-    {
-      id: '2', 
-      email: 'sarah@company.com',
-      name: 'Sarah Johnson',
-      domain: 'company.com',
-      status: 'active' as const,
-      dailyLimit: 300,
-      currentSent: 89,
-      warmupProgress: 100,
-      healthScore: 87,
-      lastActivity: new Date(),
-      createdAt: new Date()
-    },
-    {
-      id: '3',
-      email: 'mike@company.com',
-      name: 'Mike Wilson',
-      domain: 'company.com',
-      status: 'inactive' as const,
-      dailyLimit: 200,
-      currentSent: 0,
-      warmupProgress: 0,
-      healthScore: 92,
-      lastActivity: new Date(),
-      createdAt: new Date()
-    }
-  ];
+  const [mailboxes, setMailboxes] = useState<Mailbox[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMailboxes = async () => {
+      try {
+        setLoading(true);
+        const result = await listMailboxes();
+        if (result.success && result.data) {
+          const mapped: Mailbox[] = result.data.map(mb => ({
+            id: mb.id,
+            email: mb.email,
+            name: mb.email.split('@')[0], // name is not in EmailAccount
+            domain: mb.domainId || mb.email.split('@')[1],
+            status: mb.status === 'active' ? 'active' : 'inactive',
+            dailyLimit: mb.analytics?.dailyLimit || 500, // dailyLimit is in analytics
+            currentSent: mb.analytics?.emailsSent || 0,
+            warmupProgress: mb.analytics?.warmupProgress || 0,
+            healthScore: mb.analytics?.healthScore || 100,
+            lastActivity: mb.analytics?.lastActivity || new Date(),
+            createdAt: new Date(mb.createdAt || Date.now())
+          }));
+          setMailboxes(mapped);
+        }
+      } catch (error) {
+        productionLogger.error("Failed to fetch mailboxes", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMailboxes();
+  }, []);
 
   const initiallySelectedEmails = editingMode
-    ? (campaign as CampaignFormValues)?.selectedMailboxes?.map((m: Mailbox) => m.email) || []
+    ? (campaign as CampaignFormValues)?.selectedMailboxes?.map((m: any) => m.email) || []
     : [];
 
   const handleMailboxToggle = (
-    mailbox: (typeof mailboxes)[0],
+    mailbox: Mailbox,
     checked: boolean
   ) => {
     if (editingMode && initiallySelectedEmails.includes(mailbox.email)) {
@@ -84,14 +78,24 @@ function MailboxAssignmentStep() {
     }
 
     if (checked) {
-      setValue("selectedMailboxes", [...selectedMailboxes, mailbox]);
+      // Cast to any to avoid strict type mismatch if Context expects slightly different Mailbox type
+      setValue("selectedMailboxes", [...selectedMailboxes, mailbox as any]);
     } else {
       setValue(
         "selectedMailboxes",
-        selectedMailboxes.filter((m) => m.email !== mailbox.email)
+        selectedMailboxes.filter((m: any) => m.email !== mailbox.email)
       );
     }
   };
+
+  if (loading) {
+    return (
+      <Card className="max-w-3xl mx-auto space-y-8 p-12">
+        <Loader />
+        <p className="text-center text-muted-foreground">Loading mailboxes...</p>
+      </Card>
+    );
+  }
 
   return (
     <>
@@ -120,9 +124,15 @@ function MailboxAssignmentStep() {
             </Alert>
           )}
 
+          {mailboxes.length === 0 && (
+             <div className="text-center p-6 border-2 border-dashed rounded-xl">
+               <p className="text-muted-foreground">No active mailboxes found in HestiaCP.</p>
+             </div>
+          )}
+
           {mailboxes.map((mailbox) => {
             const isSelected =
-              selectedMailboxes.some((m) => m.email === mailbox.email) ||
+              selectedMailboxes.some((m: any) => m.email === mailbox.email) ||
               initiallySelectedEmails.includes(mailbox.email);
             const isInitiallySelected =
               editingMode && initiallySelectedEmails.includes(mailbox.email);

@@ -55,6 +55,7 @@ export interface Client {
 export interface Campaign {
   id: string | number;
   name: string;
+  alias?: string;
   subject?: string;
   status?: string;
   fromName: string;

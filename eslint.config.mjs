@@ -56,6 +56,7 @@ const globalIgnores = {
     "docker-compose.yml",
     ".env*",
     "messages",
+    "email-sender/**/*.{js,jsx,ts,tsx}",
   ],
 };
 

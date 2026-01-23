@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { productionLogger } from "@/lib/logger";
-import { SequenceStep } from "@features/campaigns/types";
 import { ActionResult } from "@/types";
 
 
@@ -8,7 +7,8 @@ import { ActionResult } from "@/types";
  * Dashboard-related server actions
  */
 
-import { CampaignLead } from "../types";
+import { SequenceStep, CampaignLead } from "../types";
+import { getCampaignAction, listContactsAction } from "@/features/marketing";
 
 /**
  * Fetches campaign leads for dashboard
@@ -16,14 +16,32 @@ import { CampaignLead } from "../types";
  * @param req - NextRequest for session context (optional for client-side calls)
  * @returns Promise containing campaign leads result
  */
-export async function getCampaignLeads(_campaignId?: string, _req?: NextRequest): Promise<ActionResult<CampaignLead[]>> {
+export async function getCampaignLeads(campaignId?: string, _req?: NextRequest): Promise<ActionResult<CampaignLead[]>> {
   try {
-    // TODO: Implement actual data fetching from NileDB
-    // This is a placeholder implementation
+    // If we have a campaignId, we ideally want leads from those segments
+    // For now, we fetch latest contacts as a fallback if no specific segment integration is ready
+    const result = await listContactsAction({ limit: 50 });
+    
+    if (!result.success) {
+      return {
+        success: false,
+        error: (result as any).error || "Failed to fetch leads"
+      };
+    }
+
+    const leads: CampaignLead[] = result.data.data.map(contact => ({
+      id: contact.id,
+      name: `${contact.firstName} ${contact.lastName}`.trim() || 'Anonymous',
+      email: contact.email,
+      company: contact.company || 'N/A',
+      status: 'sent', // Default status for generic list
+      currentStep: 1,
+      lastActivity: contact.lastActive ? new Date(contact.lastActive).toLocaleDateString() : 'N/A'
+    }));
     
     return {
       success: true,
-      data: []
+      data: leads
     };
   } catch (error) {
     productionLogger.error("Error fetching campaign leads:", error);
@@ -40,14 +58,45 @@ export async function getCampaignLeads(_campaignId?: string, _req?: NextRequest)
  * @param req - NextRequest for session context (optional for client-side calls)
  * @returns Promise containing sequence steps result
  */
-export async function getSequenceSteps(_campaignId?: string, _req?: NextRequest): Promise<ActionResult<SequenceStep[]>> {
+export async function getSequenceSteps(campaignId?: string, _req?: NextRequest): Promise<ActionResult<SequenceStep[]>> {
   try {
-    // TODO: Implement actual data fetching from NileDB
-    // This is a placeholder implementation
+    if (!campaignId || campaignId === '1') { // Handling default/mock ID
+       return { success: true, data: [] };
+    }
+
+    const result = await getCampaignAction(Number(campaignId));
+    
+    if (!result.success) {
+      return {
+        success: false,
+        error: (result as any).error || "Failed to fetch steps"
+      };
+    }
+
+    // Map Mautic campaign events to sequence steps
+    const events = result.data.events || [];
+    const steps: SequenceStep[] = events.map((event, index) => ({
+      id: Number(event.id),
+      sequenceOrder: index + 1,
+      delayDays: 0,
+      delayHours: 0,
+      templateId: 0,
+      campaignId: Number(campaignId),
+      emailSubject: event.name,
+      type: event.eventType === 'action' ? 'email' : 'wait',
+      subject: event.name,
+      sent: 0,
+      opened_tracked: 0,
+      clicked_tracked: 0,
+      replied: 0,
+      completed: 0,
+      duration: 'Immediate',
+      condition: 'ALWAYS'
+    }));
     
     return {
       success: true,
-      data: []
+      data: steps
     };
   } catch (error) {
     productionLogger.error("Error fetching sequence steps:", error);
