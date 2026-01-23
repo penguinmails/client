@@ -20,11 +20,8 @@ import {
   AlertTriangle,
   RefreshCw,
 } from "lucide-react";
-import React, { useEffect, useMemo } from "react";
-import {
-  getBillingDataForSettings,
-  updateBillingInfo,
-} from "@features/billing/actions";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { updateBillingInfo } from "@features/billing/actions";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
   useServerAction,
@@ -125,23 +122,39 @@ function BillingTab() {
   const pathname = usePathname();
   const checkout = searchParams.get("checkout");
   const { userCompanies, selectedCompanyId, refreshCompanies } = useAuth();
+  const [billingData, setBillingData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Memoized options to keep stable references
-  const billingOptions = useMemo(
-    () => ({
-      onError: (error: string) => {
-        toast.error(t("BillingTab.errors.loadBilling"), { description: error });
-      },
-    }),
-    [t],
-  );
+  // Fetch billing data
+  const loadBilling = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch("/api/billing");
+      const result = await response.json();
+      if (result && result.success && result.data) {
+        setBillingData(result.data);
+      } else {
+        setError(t("BillingTab.errors.loadBilling"));
+        toast.error(t("BillingTab.errors.loadBilling"));
+      }
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : t("BillingTab.errors.errorOccurred");
+      setError(errorMessage);
+      toast.error(t("BillingTab.errors.loadBilling"), {
+        description: errorMessage,
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [t]);
 
-  // Server action hooks
-  const billingDataAction = useServerAction(
-    getBillingDataForSettings,
-    billingOptions,
-  );
-  const { execute: loadBilling } = billingDataAction;
+  // Load data on mount
+  useEffect(() => {
+    loadBilling();
+  }, [loadBilling]);
 
   const updateOptions = useMemo(
     () => ({
@@ -205,26 +218,17 @@ function BillingTab() {
   }, [checkout, router, pathname]);
 
   // Show loading skeleton while data is loading
-  if (billingDataAction.loading && !billingDataAction.data) {
+  if (loading && !billingData) {
     return <BillingLoadingSkeleton />;
   }
 
   // Show error state if data failed to load
-  if (billingDataAction.error && !billingDataAction.data) {
-    return (
-      <BillingErrorFallback
-        error={
-          typeof billingDataAction.error === "string"
-            ? billingDataAction.error
-            : t("BillingTab.errors.errorOccurred")
-        }
-        retry={loadBilling}
-      />
-    );
+  if (error && !billingData) {
+    return <BillingErrorFallback error={error} retry={loadBilling} />;
   }
 
   // Show fallback if no data available
-  if (!billingDataAction.data) {
+  if (!billingData) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
@@ -245,8 +249,6 @@ function BillingTab() {
       </div>
     );
   }
-
-  const billingData = billingDataAction.data;
 
   return (
     <BillingErrorBoundary>

@@ -1,5 +1,5 @@
 "use client";
-import { getDomainsData } from "@features/domains/actions";
+
 import { cn } from "@/lib/utils";
 import { CheckCircle, Clock, Globe, Mail } from "lucide-react";
 import { useAnalytics } from "@features/analytics/ui/context/analytics-context";
@@ -33,8 +33,13 @@ function OverviewCards() {
   useEffect(() => {
     const getDomains = async () => {
       try {
-        const { domains: domainsData } = await getDomainsData();
-        setDomains(domainsData);
+        const response = await fetch("/api/domains");
+        const result = await response.json();
+        if (result.success && result.data) {
+          setDomains(result.data.domains);
+        } else {
+          setDomains([]);
+        }
       } catch (error) {
         productionLogger.error("Failed to fetch domains:", error);
         // Set empty array on error to prevent UI from breaking

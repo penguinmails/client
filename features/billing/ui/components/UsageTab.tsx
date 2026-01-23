@@ -12,10 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  getUsageWithCalculations,
-  getStorageOptions,
-} from "@features/billing/actions";
+
 import { cn } from "@/lib/utils";
 import { Globe, HardDrive, Mail, Plus, Server, Users } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
@@ -96,7 +93,8 @@ function UsageTab() {
       setLoading(true);
       setError(null);
 
-      const result = await getUsageWithCalculations();
+      const response = await fetch("/api/billing/usage");
+      const result = await response.json();
 
       if (result && result.success && result.data) {
         // Transform the raw data to match UsageData interface
@@ -158,7 +156,8 @@ function UsageTab() {
   const fetchStorageOptions = useCallback(async () => {
     try {
       setLoadingStorage(true);
-      const result = await getStorageOptions();
+      const response = await fetch("/api/billing/storage-options");
+      const result = await response.json();
       if (result && result.success && result.data) {
         setStorageOptions(result.data);
       } else {
