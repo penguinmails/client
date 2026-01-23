@@ -14,14 +14,14 @@ function NotesPanel() {
   }
 
   return (
-    <div className="p-4 bg-yellow-50 border-b border-yellow-200">
+    <div className="p-4 bg-amber-50 dark:bg-amber-950/20 border-b border-border">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="font-medium text-yellow-900">Internal Notes</h3>
+        <h3 className="font-medium text-foreground">Internal Notes</h3>
         <Button
           variant="ghost"
           size="icon"
           onClick={handleClose}
-          className="text-yellow-600 hover:text-yellow-800"
+          className="text-muted-foreground hover:text-foreground"
         >
           <X className="w-4 h-4" />
         </Button>
@@ -30,12 +30,12 @@ function NotesPanel() {
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Add internal notes about this conversation..."
-        className="w-full p-3 border border-yellow-300 dark:border-border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent resize-none bg-white dark:bg-card"
+        className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent resize-none bg-background dark:bg-card"
         rows={3}
       />
       <div className="flex justify-end mt-2">
         <Button
-          className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+          className="bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800 text-white px-4 py-2 rounded-lg text-sm transition-colors"
           onClick={handleClose}
         >
           Save Notes

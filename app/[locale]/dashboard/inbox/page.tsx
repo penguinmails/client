@@ -19,7 +19,7 @@ export default async function InboxPage({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 dark:text-foreground">
-      <div className="rounded-tl-2xl overflow-hidden flex flex-col dark:bg-muted/50 dark:divide-border">
+      <div className="rounded-tl-2xl overflow-hidden flex flex-col dark:bg-muted/50 dark:divide-border border-r border-l border-b border-border">
         <SmartInsights />
         <InboxFilter />
       </div>

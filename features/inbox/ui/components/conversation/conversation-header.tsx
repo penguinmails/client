@@ -35,7 +35,7 @@ function ConversationHeader() {
 
       {/* Campaign and Status Info */}
       <div className="flex items-center space-x-4 ">
-        <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+        <Badge variant="secondary" className="bg-primary/10 text-primary dark:bg-primary/20">
           {selectedConversation.campaign}
         </Badge>
         <Badge
@@ -45,7 +45,7 @@ function ConversationHeader() {
           {selectedConversation.tag.replace("-", " ")}
         </Badge>
         {selectedConversation.followUpDate && (
-          <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+          <Badge variant="secondary" className="bg-orange-100 text-orange-700 dark:bg-orange-950/20 dark:text-orange-400">
             <Calendar className="w-3 h-3 mr-1" />
             Follow-up:{" "}
             {new Date(selectedConversation.followUpDate).toLocaleDateString()}
