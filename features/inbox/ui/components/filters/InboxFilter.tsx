@@ -24,13 +24,15 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useInbox } from "@features/inbox/ui/context/inbox-context";
 
 function InboxFilter() {
   const [campaignsData, setCampaignsData] = useState<Array<{ id: string; name: string }>>([]);
   const [mailboxes, setMailboxes] = useState<Array<{ id: string; email: string }>>([]);
   const [loading, setLoading] = useState(true);
+  const { filterState, dispatch, refreshConversations } = useInbox();
 
   // Fetch campaigns and mailboxes from API routes
   useEffect(() => {
@@ -62,39 +64,35 @@ function InboxFilter() {
     fetchInboxData();
   }, []);
 
-  const [filterState, setFilterState] = useReducer(
-    (state, action) => ({ ...state, ...action }),
-    {
-      selectedFilter: "all",
-      campaignFilter: [],
-      mailboxFilter: [],
-      tagFilter: [],
-      timeFilter: "all",
-    },
-  );
-
   const router = useRouter();
   const currentSearchParams = useSearchParams();
 
+  // Initialize filter state from URL params
   useEffect(() => {
     const params = new URLSearchParams(currentSearchParams);
-    setFilterState({
-      selectedFilter: params.get("filter") || "all",
-      campaignFilter: params.getAll("campaigns"),
-      mailboxFilter: params.getAll("mailboxes"),
-      tagFilter: params.getAll("tags"),
-      timeFilter: params.get("time") || "all",
+    dispatch({
+      type: "SET_SELECTED_FILTER",
+      payload: params.get("filter") || "all",
     });
-  }, [currentSearchParams]);
+    dispatch({
+      type: "SET_CAMPAIGN_FILTER",
+      payload: params.getAll("campaigns"),
+    });
+    dispatch({
+      type: "SET_MAILBOX_FILTER",
+      payload: params.getAll("mailboxes"),
+    });
+    dispatch({
+      type: "SET_TAG_FILTER",
+      payload: params.getAll("tags"),
+    });
+    dispatch({
+      type: "SET_TIME_FILTER",
+      payload: params.get("time") || "all",
+    });
+  }, [currentSearchParams, dispatch]);
 
-  const filters = [
-    { id: "all", label: "All Messages", count: 156, icon: Inbox },
-    { id: "unread", label: "Unread", count: 24, icon: Mail },
-    { id: "sent", label: "Sent", count: 89, icon: Send },
-    { id: "archived", label: "Archived", count: 43, icon: Archive },
-    { id: "trash", label: "Trash", count: 12, icon: Trash2 },
-    { id: "team", label: "Team", count: 8, icon: Users },
-  ];
+  // Sync filter state with URL and refresh conversations
   useEffect(() => {
     const params = new URLSearchParams();
     if (filterState.selectedFilter !== "all")
@@ -104,7 +102,9 @@ function InboxFilter() {
     filterState.mailboxFilter.forEach((m) => params.append("mailboxes", m));
     if (filterState.timeFilter !== "all")
       params.append("time", filterState.timeFilter);
+    
     router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
+    refreshConversations();
   }, [
     filterState.selectedFilter,
     filterState.campaignFilter,
@@ -112,7 +112,17 @@ function InboxFilter() {
     filterState.mailboxFilter,
     filterState.timeFilter,
     router,
+    refreshConversations,
   ]);
+
+  const filters = [
+    { id: "all", label: "All Messages", count: 156, icon: Inbox },
+    { id: "unread", label: "Unread", count: 24, icon: Mail },
+    { id: "sent", label: "Sent", count: 89, icon: Send },
+    { id: "archived", label: "Archived", count: 43, icon: Archive },
+    { id: "trash", label: "Trash", count: 12, icon: Trash2 },
+    { id: "team", label: "Team", count: 8, icon: Users },
+  ];
 
   const tags = ["Interested", "Not Interested", "Maybe Later", "Follow Up"];
 
@@ -234,7 +244,7 @@ function InboxFilter() {
               return (
                 <Button
                   key={filter.id}
-                  onClick={() => setFilterState({ selectedFilter: filter.id })}
+                  onClick={() => dispatch({ type: "SET_SELECTED_FILTER", payload: filter.id })}
                   variant={
                     filterState.selectedFilter === filter.id
                       ? "secondary"
@@ -284,7 +294,7 @@ function InboxFilter() {
               "Campaigns",
               campaignsData.map((c) => c.name),
               filterState.campaignFilter,
-              (campaignFilter) => setFilterState({ campaignFilter }),
+              (campaignFilter) => dispatch({ type: "SET_CAMPAIGN_FILTER", payload: campaignFilter }),
               TrendingUp,
             )}
 
@@ -293,7 +303,7 @@ function InboxFilter() {
               "Mailboxes",
               mailboxes.map((m) => m.email),
               filterState.mailboxFilter,
-              (mailboxFilter) => setFilterState({ mailboxFilter }),
+              (mailboxFilter) => dispatch({ type: "SET_MAILBOX_FILTER", payload: mailboxFilter }),
               AtSign,
             )}
 
@@ -302,7 +312,7 @@ function InboxFilter() {
               "Tags",
               tags,
               filterState.tagFilter,
-              (tagFilter) => setFilterState({ tagFilter }),
+              (tagFilter) => dispatch({ type: "SET_TAG_FILTER", payload: tagFilter }),
               Tag,
             )}
 
@@ -316,7 +326,7 @@ function InboxFilter() {
               </div>
               <Select
                 value={filterState.timeFilter}
-                onValueChange={(timeFilter) => setFilterState({ timeFilter })}
+                onValueChange={(timeFilter) => dispatch({ type: "SET_TIME_FILTER", payload: timeFilter })}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="All Time" />
@@ -336,4 +346,5 @@ function InboxFilter() {
     </>
   );
 }
+
 export default InboxFilter;

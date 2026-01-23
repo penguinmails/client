@@ -59,22 +59,25 @@ describe("QuickActions", () => {
   });
 
   it("renders Plus icon for create campaign", () => {
+    // Updated to check for design token classes (dark mode support)
     const blueIconContainer = container.querySelector(
-      ".bg-blue-100"
+      ".bg-blue-100, .dark\\:bg-blue-900\\/30"
     ) as HTMLElement | null;
     expect(blueIconContainer).toBeInTheDocument();
   });
 
   it("renders Upload icon for upload leads", () => {
+    // Updated to check for design token classes (dark mode support)
     const greenIconContainer = container.querySelector(
-      ".bg-green-100"
+      ".bg-green-100, .dark\\:bg-green-900\\/30"
     ) as HTMLElement | null;
     expect(greenIconContainer).toBeInTheDocument();
   });
 
   it("renders Globe icon for add domain", () => {
+    // Updated to check for design token classes (dark mode support)
     const purpleIconContainer = container.querySelector(
-      ".bg-purple-100"
+      ".bg-purple-100, .dark\\:bg-purple-900\\/30"
     ) as HTMLElement | null;
     expect(purpleIconContainer).toBeInTheDocument();
   });
@@ -106,14 +109,15 @@ describe("QuickActions", () => {
   });
 
   it("has proper icon styling for each action", () => {
+    // Updated to check for design token classes (dark mode support)
     const blueIcon = container.querySelector(
-      ".text-blue-600"
+      ".text-blue-600, .dark\\:text-blue-400"
     ) as HTMLElement | null;
     const greenIcon = container.querySelector(
-      ".text-green-600"
+      ".text-green-600, .dark\\:text-green-400"
     ) as HTMLElement | null;
     const purpleIcon = container.querySelector(
-      ".text-purple-600"
+      ".text-purple-600, .dark\\:text-purple-400"
     ) as HTMLElement | null;
     expect(blueIcon).toBeInTheDocument();
     expect(greenIcon).toBeInTheDocument();
@@ -121,8 +125,9 @@ describe("QuickActions", () => {
   });
 
   it("has responsive icon containers", () => {
+    // Updated to check for rounded-xl (from design tokens) instead of rounded-lg
     const iconContainers = container.querySelectorAll(
-      '[class*="size-8"][class*="rounded-lg"]'
+      '[class*="size-8"][class*="rounded-xl"]'
     );
     expect(iconContainers.length).toBe(3);
   });

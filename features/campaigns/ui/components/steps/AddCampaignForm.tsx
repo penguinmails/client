@@ -2,8 +2,8 @@
 import { useAddCampaignContext } from "@features/campaigns/ui/context/add-campaign-context";
 import CampaignDetailsStep from "./CampaignDetailsStep";
 import LeadsSelectionStep from "./LeadsSelectionStep";
-// import MailboxAssignmentStep from "./MailboxAssignmentStep";
-// import SequenceBuilderStep from "./SequenceBuilderStep";
+import MailboxAssignmentStep from "./MailboxAssignmentStep";
+import SequenceBuilderStep from "./SequenceBuilderStep";
 import ScheduleSettingStep from "./ScheduleSettingStep";
 import ReviewLaunchStep from "./ReviewLaunchStep";
 
@@ -15,9 +15,9 @@ function AddCampaignForm() {
     case 2:
       return <LeadsSelectionStep />;
     case 3:
-      return <div>Mailbox Assignment Step - Coming Soon</div>;
+      return <SequenceBuilderStep />;
     case 4:
-      return <div>Sequence Builder Step - Coming Soon</div>;
+      return <MailboxAssignmentStep />;
     case 5:
       return <ScheduleSettingStep />;
     case 6:

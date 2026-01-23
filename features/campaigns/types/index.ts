@@ -147,7 +147,8 @@ export interface StatsCardData {
   title: string;
   value: string;
   icon: LucideIcon;
-  color: string;
+  color?: string; // Deprecated: use colorScheme instead
+  colorScheme?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info';
 }
 
 export interface Step {

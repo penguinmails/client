@@ -30,15 +30,15 @@ const RecentCampaignsList: React.FC<RecentCampaignsListProps> = ({
         <ul className="divide-y divide-border">
           {campaigns.map((campaign, index) => (
             <li key={index} className="py-3">
-              <p className="text-sm font-medium text-gray-800 truncate mb-1">
+              <p className="text-sm font-medium text-foreground truncate mb-1">
                 <Link
                   href={`/dashboard/campaigns/${campaign.id}`}
-                  className="hover:text-blue-500"
+                  className="hover:text-primary"
                 >
                   {campaign.name}
                 </Link>
               </p>
-              <div className="flex items-center space-x-3 text-xs text-gray-500">
+              <div className="flex items-center space-x-3 text-xs text-muted-foreground">
                 <span className="flex items-center">
                   <Mail size={12} className="mr-1" /> {campaign.total}
                 </span>
@@ -57,7 +57,7 @@ const RecentCampaignsList: React.FC<RecentCampaignsListProps> = ({
           ))}
           {/* Add a message if no campaigns */}
           {campaigns.length === 0 && (
-            <li className="py-3 text-sm text-gray-500 text-center">
+            <li className="py-3 text-sm text-muted-foreground text-center">
               No recent campaigns found.
             </li>
           )}

@@ -478,7 +478,8 @@
       "loadCompany": "Failed to load company information",
       "updateCompany": "Failed to update company name",
       "noData": "No billing data available",
-      "errorOccurred": "An error occurred"
+      "errorOccurred": "An error occurred",
+      "unexpectedError": "An unexpected error occurred"
     },
     "success": {
       "billingUpdated": "Billing information updated successfully",

@@ -155,28 +155,19 @@ export const UnifiedStatsCard: React.FC<UnifiedStatsCardProps> = ({
         return (
             <Card
                 className={cn(
+                    "py-6", // Match reference Card padding for 106px height
                     "transition-all duration-200 hover:shadow-md",
                     statsCardVariants[variant],
                     className,
                 )}
                 aria-label={ariaLabel || `Statistics for ${title}`}
             >
-                <CardContent className="p-4">
-                    <div className="flex items-center gap-3">
-                        {/* Left side: Icon */}
-                        {Icon && (
-                            <div className={cn(
-                                "p-2.5 rounded-lg shrink-0",
-                                iconColor || `${colorToken.iconBg} ${colorToken.iconColor}`
-                            )}>
-                                <Icon className="h-5 w-5" />
-                            </div>
-                        )}
-
-                        {/* Right side: Title and Value */}
+                <CardContent>
+                    <div className="flex items-center justify-between gap-3">
+                        {/* Left side: Title and Value */}
                         <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-muted-foreground truncate">{title}</p>
-                            <p className="text-2xl font-bold text-foreground">
+                            <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+                            <p className="text-2xl font-bold text-foreground mt-1">
                                 {value}
                                 {unit && (
                                     <span className="text-sm font-normal text-muted-foreground ml-1">
@@ -191,6 +182,16 @@ export const UnifiedStatsCard: React.FC<UnifiedStatsCardProps> = ({
                                 </p>
                             )}
                         </div>
+
+                        {/* Right side: Icon */}
+                        {Icon && (
+                            <div className={cn(
+                                "h-12 w-12 p-3 rounded-xl shrink-0 flex items-center justify-center",
+                                iconColor || `${colorToken.iconBg} ${colorToken.iconColor}`
+                            )}>
+                                <Icon className="h-6 w-6" />
+                            </div>
+                        )}
                     </div>
                 </CardContent>
             </Card>

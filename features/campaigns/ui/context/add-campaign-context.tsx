@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { useForm, UseFormReturn, FormProvider } from 'react-hook-form';
 import { CampaignFormValues } from '@/types';
 import { 
   Users, 
@@ -112,16 +112,27 @@ export function AddCampaignProvider({
   editingMode?: boolean;
   campaign?: CampaignFormValues | null;
 }) {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(1);
   
   const form = useForm<CampaignFormValues>({
     defaultValues: {
       name: initialData?.name || '',
+      description: initialData?.description || '',
       fromName: initialData?.fromName || '',
       fromEmail: initialData?.fromEmail || '',
       status: initialData?.status || 'DRAFT',
-      clients: initialData?.clients || [],
+      companyId: initialData?.companyId,
+      createdById: initialData?.createdById,
       steps: initialData?.steps || [],
+      sendDays: initialData?.sendDays || [],
+      sendTimeStart: initialData?.sendTimeStart || '09:00',
+      sendTimeEnd: initialData?.sendTimeEnd || '17:00',
+      emailsPerDay: initialData?.emailsPerDay || 100,
+      timezone: initialData?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+      clients: initialData?.clients || [],
+      leadsList: initialData?.leadsList,
+      selectedMailboxes: initialData?.selectedMailboxes || [],
+      metrics: initialData?.metrics,
       ...initialData
     }
   });
@@ -131,16 +142,16 @@ export function AddCampaignProvider({
     return true;
   };
 
-  const currentStepData = steps[currentStep] || steps[0];
+  const currentStepData = steps.find(step => step.number === currentStep) || steps[0];
 
   const nextStep = () => {
-    if (currentStep < steps.length - 1) {
+    if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
     }
   };
 
   const prevStep = () => {
-    if (currentStep > 0) {
+    if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
@@ -158,7 +169,7 @@ export function AddCampaignProvider({
       nextStep,
       prevStep
     }}>
-      {children}
+      <FormProvider {...form}>{children}</FormProvider>
     </AddCampaignContext.Provider>
   );
 }

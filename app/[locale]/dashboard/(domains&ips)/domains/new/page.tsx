@@ -12,7 +12,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { AddDomainProvider } from "@/context/AddDomainContext";
+import { AddDomainProvider } from "@/features/domains/ui/context/add-domain-context";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
