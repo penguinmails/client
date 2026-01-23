@@ -253,7 +253,7 @@ function InboxFilter() {
                   className={cn(
                     "w-full justify-between h-auto py-2 px-3",
                     filterState.selectedFilter === filter.id
-                      ? "bg-[#eff6ff] text-blue-600 hover:bg-[#eff6ff]"
+                      ? "bg-primary/10 text-primary hover:bg-primary/10 dark:bg-primary/20"
                       : "text-muted-foreground hover:bg-muted dark:text-foreground dark:hover:bg-muted",
                   )}
                 >
@@ -262,7 +262,7 @@ function InboxFilter() {
                       className={cn(
                         "w-4 h-4",
                         filterState.selectedFilter === filter.id
-                          ? "text-blue-600"
+                          ? "text-primary"
                           : "text-muted-foreground dark:text-foreground",
                       )}
                     />
