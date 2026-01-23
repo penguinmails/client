@@ -158,11 +158,10 @@ function CampaignsTableRow({ campaign }: { campaign: CampaignDisplay }) {
           </span>
         </div>
         <div className="text-xs text-muted-foreground mt-1">
-          {campaign.assignedMailboxes
-            .slice(0, 2)
-            .map((email) => email.split("@")[0])
-            .join(", ")}
-          {campaign.assignedMailboxes.length > 2 &&
+          {campaign.assignedMailboxes?.slice(0, 2)
+            ?.map((email) => email.split("@")[0])
+            ?.join(", ")}
+          {campaign.assignedMailboxes?.length > 2 &&
             ` +${campaign.assignedMailboxes.length - 2} more`}
         </div>
       </td>

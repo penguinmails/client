@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getMockCampaigns, getMockMailboxes } from "@/lib/mocks/providers";
 import { cn } from "@/lib/utils";
 import {
   Archive,
@@ -24,37 +23,96 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useReducer } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useInbox } from "@features/inbox/ui/context/inbox-context";
 
 function InboxFilter() {
-  const campaignsData = getMockCampaigns();
-  const mailboxes = getMockMailboxes();
-  
-  const [filterState, setFilterState] = useReducer(
-    (state, action) => ({ ...state, ...action }),
-    {
-      selectedFilter: 'all',
-      campaignFilter: [],
-      mailboxFilter: [],
-      tagFilter: [],
-      timeFilter: 'all'
+  const [campaignsData, setCampaignsData] = useState<Array<{ id: string; name: string }>>([]);
+  const [mailboxes, setMailboxes] = useState<Array<{ id: string; email: string }>>([]);
+  const [loading, setLoading] = useState(true);
+  const { filterState, dispatch, refreshConversations } = useInbox();
+
+  // Fetch campaigns and mailboxes from API routes
+  useEffect(() => {
+    async function fetchInboxData() {
+      try {
+        const [campaignsResponse, mailboxesResponse] = await Promise.all([
+          fetch('/api/campaigns'),
+          fetch('/api/mailboxes'),
+        ]);
+
+        if (campaignsResponse.ok) {
+          const campaigns = await campaignsResponse.json();
+          setCampaignsData(campaigns.map((c: { id: string; name: string }) => ({ id: c.id, name: c.name })));
+        }
+
+        if (mailboxesResponse.ok) {
+          const mailboxesData = await mailboxesResponse.json();
+          // Handle both array and object responses
+          const mailboxesArray = Array.isArray(mailboxesData) ? mailboxesData : mailboxesData.mailboxes || [];
+          setMailboxes(mailboxesArray.map((m: { id: string; email: string }) => ({ id: m.id, email: m.email })));
+        }
+      } catch {
+        // Silently fail - component will show empty state
+      } finally {
+        setLoading(false);
+      }
     }
-  );
+
+    fetchInboxData();
+  }, []);
 
   const router = useRouter();
   const currentSearchParams = useSearchParams();
 
+  // Initialize filter state from URL params
   useEffect(() => {
     const params = new URLSearchParams(currentSearchParams);
-    setFilterState({
-      selectedFilter: params.get("filter") || "all",
-      campaignFilter: params.getAll("campaigns"),
-      mailboxFilter: params.getAll("mailboxes"),
-      tagFilter: params.getAll("tags"),
-      timeFilter: params.get("time") || "all"
+    dispatch({
+      type: "SET_SELECTED_FILTER",
+      payload: params.get("filter") || "all",
     });
-  }, [currentSearchParams]);
+    dispatch({
+      type: "SET_CAMPAIGN_FILTER",
+      payload: params.getAll("campaigns"),
+    });
+    dispatch({
+      type: "SET_MAILBOX_FILTER",
+      payload: params.getAll("mailboxes"),
+    });
+    dispatch({
+      type: "SET_TAG_FILTER",
+      payload: params.getAll("tags"),
+    });
+    dispatch({
+      type: "SET_TIME_FILTER",
+      payload: params.get("time") || "all",
+    });
+  }, [currentSearchParams, dispatch]);
+
+  // Sync filter state with URL and refresh conversations
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (filterState.selectedFilter !== "all")
+      params.append("filter", filterState.selectedFilter);
+    filterState.campaignFilter.forEach((c) => params.append("campaigns", c));
+    filterState.tagFilter.forEach((t) => params.append("tags", t));
+    filterState.mailboxFilter.forEach((m) => params.append("mailboxes", m));
+    if (filterState.timeFilter !== "all")
+      params.append("time", filterState.timeFilter);
+    
+    router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
+    refreshConversations();
+  }, [
+    filterState.selectedFilter,
+    filterState.campaignFilter,
+    filterState.tagFilter,
+    filterState.mailboxFilter,
+    filterState.timeFilter,
+    router,
+    refreshConversations,
+  ]);
 
   const filters = [
     { id: "all", label: "All Messages", count: 156, icon: Inbox },
@@ -64,30 +122,13 @@ function InboxFilter() {
     { id: "trash", label: "Trash", count: 12, icon: Trash2 },
     { id: "team", label: "Team", count: 8, icon: Users },
   ];
-  useEffect(() => {
-    const params = new URLSearchParams();
-    if (filterState.selectedFilter !== "all") params.append("filter", filterState.selectedFilter);
-    filterState.campaignFilter.forEach((c) => params.append("campaigns", c));
-    filterState.tagFilter.forEach((t) => params.append("tags", t));
-    filterState.mailboxFilter.forEach((m) => params.append("mailboxes", m));
-    if (filterState.timeFilter !== "all") params.append("time", filterState.timeFilter);
-    router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
-  }, [
-    filterState.selectedFilter,
-    filterState.campaignFilter,
-    filterState.tagFilter,
-    filterState.mailboxFilter,
-    filterState.timeFilter,
-    router,
-  ]);
-
 
   const tags = ["Interested", "Not Interested", "Maybe Later", "Follow Up"];
 
   const handleMultiSelectToggle = (
     value: string,
     currentSelection: string[],
-    setSelection: (selection: string[]) => void
+    setSelection: (selection: string[]) => void,
   ) => {
     if (currentSelection.includes(value)) {
       setSelection(currentSelection.filter((item) => item !== value));
@@ -105,7 +146,7 @@ function InboxFilter() {
     items: string[],
     selectedItems: string[],
     setSelectedItems: (items: string[]) => void,
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>,
   ) => {
     const Icon = icon;
     return (
@@ -182,7 +223,7 @@ function InboxFilter() {
     <>
       <Filter
         className={cn(
-          "bg-card dark:bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none"
+          "bg-card dark:bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none",
         )}
       >
         <SearchInput />
@@ -195,8 +236,12 @@ function InboxFilter() {
               return (
                 <Button
                   key={filter.id}
-                  onClick={() => setFilterState({ selectedFilter: filter.id })}
-                  variant={filterState.selectedFilter === filter.id ? "secondary" : "ghost"}
+                  onClick={() => dispatch({ type: "SET_SELECTED_FILTER", payload: filter.id })}
+                  variant={
+                    filterState.selectedFilter === filter.id
+                      ? "secondary"
+                      : "ghost"
+                  }
                   className={cn(
                     "w-full justify-between h-auto py-2.5 px-3",
                     filterState.selectedFilter === filter.id
@@ -210,14 +255,16 @@ function InboxFilter() {
                         "w-4 h-4",
                         filterState.selectedFilter === filter.id
                           ? "text-blue-600"
-                          : "text-gray-500"
+                          : "text-gray-500",
                       )}
                     />
                     <span className="text-sm font-medium">{filter.label}</span>
                   </div>
                   <Badge
                     variant={
-                      filterState.selectedFilter === filter.id ? "default" : "secondary"
+                      filterState.selectedFilter === filter.id
+                        ? "default"
+                        : "secondary"
                     }
                     className="text-xs"
                   >
@@ -235,21 +282,21 @@ function InboxFilter() {
             </h3>
 
             {/* Campaigns Filter */}
-            {renderMultiSelectFilter(
+            {!loading && campaignsData.length > 0 && renderMultiSelectFilter(
               "Campaigns",
               campaignsData.map((c) => c.name),
               filterState.campaignFilter,
-              (campaignFilter) => setFilterState({ campaignFilter }),
-              TrendingUp
+              (campaignFilter) => dispatch({ type: "SET_CAMPAIGN_FILTER", payload: campaignFilter }),
+              TrendingUp,
             )}
 
             {/* Mailboxes Filter */}
-            {renderMultiSelectFilter(
+            {!loading && mailboxes.length > 0 && renderMultiSelectFilter(
               "Mailboxes",
               mailboxes.map((m) => m.email),
               filterState.mailboxFilter,
-              (mailboxFilter) => setFilterState({ mailboxFilter }),
-              AtSign
+              (mailboxFilter) => dispatch({ type: "SET_MAILBOX_FILTER", payload: mailboxFilter }),
+              AtSign,
             )}
 
             {/* Tags Filter */}
@@ -257,8 +304,8 @@ function InboxFilter() {
               "Tags",
               tags,
               filterState.tagFilter,
-              (tagFilter) => setFilterState({ tagFilter }),
-              Tag
+              (tagFilter) => dispatch({ type: "SET_TAG_FILTER", payload: tagFilter }),
+              Tag,
             )}
 
             {/* Time Filter (single select) */}
@@ -269,7 +316,10 @@ function InboxFilter() {
                   Time
                 </span>
               </div>
-              <Select value={filterState.timeFilter} onValueChange={(timeFilter) => setFilterState({ timeFilter })}>
+              <Select
+                value={filterState.timeFilter}
+                onValueChange={(timeFilter) => dispatch({ type: "SET_TIME_FILTER", payload: timeFilter })}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="All Time" />
                 </SelectTrigger>
@@ -287,4 +337,5 @@ function InboxFilter() {
     </>
   );
 }
+
 export default InboxFilter;

@@ -5,23 +5,6 @@
  * External features should only import from this index file, not from internal modules.
  */
 
-// Actions - Server-side operations
-export {
-  getProfile,
-  updateProfileData,
-  uploadUserAvatar,
-  updateFullProfile,
-  getUserSettings,
-  updateCompanyInfo,
-  getComplianceSettings,
-  updateComplianceSettings,
-  getNotificationSettings,
-  updateNotificationSettings,
-  getSimpleNotificationPreferences,
-  updateSimpleNotificationPreferences,
-  getSecurityRecommendations,
-} from './actions';
-
 // Types - Public type definitions
 export type {
   SecuritySettings,
@@ -33,6 +16,36 @@ export type {
 export {
   profileFormSchema,
 } from './types';
+
+export {
+  userPreferencesSchema,
+} from './lib/validations';
+
+// Actions - Server-side operations
+export {
+  getUserSettings,
+  updateCompanyInfo,
+} from './lib/actions';
+
+export {
+  getProfile,
+  updateProfileData,
+  uploadUserAvatar,
+  updateFullProfile,
+  getComplianceSettings,
+  updateComplianceSettings,
+  getNotificationSettings,
+  updateNotificationSettings,
+  getSimpleNotificationPreferences,
+  updateSimpleNotificationPreferences,
+  getSecurityRecommendations,
+} from './actions';
+
+// Hooks - Public custom hooks
+export {
+  useProfileForm,
+  usePreferenceSync,
+} from './lib/hooks';
 
 // UI Components - Public components for external use
 export {
@@ -55,34 +68,21 @@ export {
   AlertSuccessTwoAuth,
   DialogTwoAuth,
   useTwoAuthContext,
+  SettingsLoadingSkeleton,
+  SettingsErrorState,
+  useSettingsNotifications,
 } from './ui';
 
-// Shared UI Components - Re-exported for convenience
-export { SettingsLoadingSkeleton } from './ui/components/common/SettingsLoadingSkeleton';
+// Error State Components - Specialized error components
 export {
-  SettingsErrorState,
   NetworkErrorState,
   AuthErrorState,
   ValidationErrorState,
   ServerErrorState,
 } from './ui/components/common/SettingsErrorState';
-export {
-  useSettingsNotifications,
-} from './ui/components/common/SettingsSuccessNotification';
 
 // Context - Public context providers
 export {
   ClientPreferencesProvider,
   useClientPreferences,
 } from './ui/context/client-preferences-context';
-
-// Hooks - Public custom hooks
-export {
-  useProfileForm,
-  usePreferenceSync,
-} from './lib/hooks';
-
-// Validations - Public validation schemas
-export {
-  userPreferencesSchema,
-} from './lib/validations';

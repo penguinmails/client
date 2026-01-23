@@ -883,3 +883,22 @@ export {
   type PerformanceBaseline,
 } from './regression-testing';
 
+// ============================================================================
+// MOCK PROVIDER UTILITIES
+// ============================================================================
+
+export {
+  // Generic mock provider for testing
+  BaseMockProvider,
+} from './mock-provider';
+
+// ============================================================================
+// FRAMEWORK MOCKS
+// ============================================================================
+
+export {
+  // Framework mock utilities and paths
+  frameworkMockPaths,
+  configureFrameworkMocks,
+} from './framework-mocks';
+

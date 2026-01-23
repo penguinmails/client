@@ -53,7 +53,7 @@ describe("CampaignCreatePage", () => {
       expect(screen.getByText("Create New Campaign")).toBeInTheDocument();
 
       // Check step indicator
-      expect(screen.getByText("Step 0 of 6")).toBeInTheDocument();
+      expect(screen.getByText("Step 1 of 6")).toBeInTheDocument();
 
       // Check current step details (multiple instances exist)
       expect(screen.getAllByText("Campaign Details").length).toBeGreaterThan(0);
@@ -125,7 +125,7 @@ describe("CampaignCreatePage", () => {
       expect(previousButton).toBeDisabled();
       
       // Verify the button structure is correct
-      expect(screen.getByText("Step 0 of 6")).toBeInTheDocument();
+      expect(screen.getByText("Step 1 of 6")).toBeInTheDocument();
     });
 
     it("should disable Continue button when required fields are empty", () => {
@@ -162,8 +162,8 @@ describe("CampaignCreatePage", () => {
         </AddCampaignProvider>
       );
 
-      // Verify initial state - step 0 shows Continue
-      expect(screen.getByTestId("current-step")).toHaveTextContent("0");
+      // Verify initial state - step 1 shows Continue
+      expect(screen.getByTestId("current-step")).toHaveTextContent("1");
       expect(screen.getByTestId("total-steps")).toHaveTextContent("6");
       expect(screen.getByTestId("action-button")).toHaveTextContent("Continue");
 
@@ -206,8 +206,8 @@ describe("CampaignCreatePage", () => {
       // The step indicator should be present
       expect(step1Button).toBeInTheDocument();
 
-      // Verify we're on step 1 (index 0)
-      expect(screen.getByText("Step 0 of 6")).toBeInTheDocument();
+      // Verify we're on step 1 (index 1)
+      expect(screen.getByText("Step 1 of 6")).toBeInTheDocument();
     });
 
     it("should disable steps that haven't been reached yet", () => {
@@ -297,7 +297,7 @@ describe("CampaignCreatePage", () => {
       fireEvent.click(screen.getByText("Next"));
 
       await waitFor(() => {
-        expect(screen.getByTestId("current-step")).toHaveTextContent("1"); // currentStep is 0-based, so step 0 becomes 1
+        expect(screen.getByTestId("current-step")).toHaveTextContent("2"); // currentStep is 1-based, so step 1 becomes 2
       });
 
       // Value should still be there
@@ -326,7 +326,7 @@ describe("CampaignCreatePage", () => {
         </AddCampaignProvider>
       );
 
-      expect(screen.getByTestId("current-step")).toHaveTextContent("0"); // 0-based index
+      expect(screen.getByTestId("current-step")).toHaveTextContent("1"); // 1-based index
       expect(screen.getByTestId("total-steps")).toHaveTextContent("6");
       expect(screen.getByTestId("step-title")).toHaveTextContent(
         "Campaign Details"
@@ -484,8 +484,8 @@ describe("CampaignCreatePage", () => {
         </AddCampaignProvider>
       );
 
-      // Default is step 0 (0-based index, shows as step 1 in UI)
-      expect(screen.getByTestId("current-step")).toHaveTextContent("0");
+      // Default is step 1 (1-based index, shows as step 1 in UI)
+      expect(screen.getByTestId("current-step")).toHaveTextContent("1");
 
       // Navigate through steps
       for (let step = 2; step <= 6; step++) {

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { fn } from "storybook/test";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -115,10 +116,7 @@ const EmailInputForm = () => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-80 space-y-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-80 space-y-4">
         <TextFormField
           control={form.control}
           name="email"
@@ -168,7 +166,7 @@ export const PasswordInput: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => console.log(data))}
+            onClick={fn()}
           >
             Submit
           </Button>
@@ -212,7 +210,7 @@ export const NumberInput: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => console.log(data))}
+            onClick={fn()}
           >
             Submit
           </Button>
@@ -284,7 +282,7 @@ export const UrlInput: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => console.log(data))}
+            onClick={fn()}
           >
             Submit
           </Button>
@@ -333,7 +331,7 @@ export const SelectDropdown: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => console.log(data))}
+            onClick={fn()}
           >
             Submit
           </Button>
@@ -372,7 +370,7 @@ export const CheckboxField: Story = {
           />
           <Button
             type="submit"
-            onClick={form.handleSubmit((data) => console.log(data))}
+            onClick={fn()}
           >
             Submit
           </Button>

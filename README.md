@@ -4,10 +4,6 @@ A modern email marketing platform built with Next.js, featuring real-time analyt
 
 ## \U0001f680 Quick Start
 
-**Automated Setup (Recommended):**
-
-### macOS / Linux
-
 ```bash
 # Install dependencies
 npm install
@@ -23,14 +19,9 @@ npm run build
 
 # Deploy to Cloudflare
 npm run deploy
-
-# This single command handles Docker, configure .env.local  and starts your dev server!
-npm run dev:local
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the application.
-
-**For detailed local setup instructions**, see [📖 Local Development Setup Guide](./docs/LOCAL_DEV.md)
 
 ## \U0001f3d7\ufe0f Architecture
 
@@ -54,93 +45,64 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## \U0001f4da Documentation
 
-### Getting Started
+### New Developer Resources
 
-- **Development Guide**: [`docs/README.md`](./docs/README.md) - Complete development setup and workflows
-- **🏠 Local Development Setup**: [`docs/LOCAL_DEV.md`](./docs/LOCAL_DEV.md) - Complete guide for setting up local development
-- **Architecture Overview**: [`docs/analytics/README.md`](./docs/analytics/README.md) - System design and data flow
-- **Best Practices**: [`docs/development/README.md`](./docs/development/README.md) - Coding standards and patterns
+- **[Getting Started Guide](docs/getting-started.md)** - Complete onboarding for new developers
+- **[Quick Reference](docs/quick-reference.md)** - Commands, patterns, and shortcuts
+- **[Architecture Overview](docs/architecture/README.md)** - System design and technical foundation
+- **[Development Workflow](docs/guides/development-workflow.md)** - Development processes and best practices
 
-### Development Resources
+### Technical Documentation
 
-- **Authentication Guide**: [`docs/development/authentication.md`](./docs/development/authentication.md) - Auth patterns and security
-- **Testing Strategies**: [`docs/development/testing.md`](./docs/development/testing.md) - Testing approaches and tools
-- **Troubleshooting**: [`docs/development/troubleshooting.md`](./docs/development/troubleshooting.md) - Common issues and solutions
-- **Migration Patterns**: [`docs/development/migration-patterns.md`](./docs/development/migration-patterns.md) - Data migration strategies
+- **[Component System](docs/components/README.md)** - Unified component library and design system
+- **[Feature Documentation](docs/features/README.md)** - Feature-specific guides and APIs
+- **[Testing Strategies](docs/testing/README.md)** - Testing approaches and best practices
+- **[Infrastructure Setup](docs/infrastructure/README.md)** - Deployment and configuration guides
 
-### Infrastructure
+### Specialized Guides
 
-- **Cloudflare Setup**: [`docs/infrastructure/cloudflare.md`](./docs/infrastructure/cloudflare.md) - Deployment and configuration
+- **[Troubleshooting](docs/troubleshooting/README.md)** - Common issues and debugging
+- **[Performance Optimization](docs/performance/README.md)** - Bundle analysis and optimization
+- **[Type System Guide](docs/architecture/type-system.md)** - TypeScript patterns and utilities
 
-- **NileDB Setup**: [`docs/infrastructure/docker-niledb.md`](./docs/infrastructure/docker-niledb.md) - Local database and Redis setup with Docker
+## 🛠️ Development
 
-## \U0001f6e0\ufe0f Development
+### Quick Start
 
-### Prerequisites
+```bash
+# Clone and setup
+git clone <repository-url>
+cd penguinmails-client
+npm install
 
-- Node.js 18+ and npm
-- Git for version control
+# Start development environment
+npm run db:start    # Start NileDB + Redis containers
+npm run dev         # Start development server
+```
 
-### Environment Setup
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-1. **Clone and install dependencies**:
+**For complete setup instructions, see the [Getting Started Guide](docs/getting-started.md).**
 
-   ```bash
-   git clone <repository-url>
-   cd penguinmails-client
-   npm install
-   ```
-
-2. **Set up environment variables**:
-
-   ```bash
-   cp .env.example .env.local
-   # Edit .env.local with your configuration
-   ```
-
-3. **Start development services**:
-
-   ```bash
-   # Start local infrastructure (NileDB + Redis)
-   docker compose up -d
-
-   # Start NileDB + Redis
-   npm run db:start
-
-   # Start Next.js frontend (in another terminal)
-   npm run dev
-   ```
-
-### Available Scripts
+### Essential Commands
 
 ```bash
 # Development
 npm run dev              # Start development server
+npm run db:start         # Start NileDB + Redis containers
+npm run db:stop          # Stop containers
 
-npm run db:start         # Start NileDB + Redis
-npm run db:stop          # Stop NileDB + Redis
-
-# Infrastructure
-docker compose up -d     # Start local NileDB + Redis containers
-docker compose down      # Stop local containers
-docker compose logs      # View container logs
-
-# Building
-npm run build            # Build Next.js application
-npm run build:open-next  # Build for Cloudflare Workers
-npm run build:dry        # Test build without deployment
-
-# Testing & Quality
+# Code Quality
 npm run test             # Run test suite
 npm run lint             # Run ESLint
-npm run typecheck        # Run TypeScript compiler
+npm run typecheck        # TypeScript type checking
 
-# Deployment
-npm run preview          # Preview Cloudflare deployment locally
+# Building & Deployment
+npm run build            # Build Next.js application
 npm run deploy           # Deploy to Cloudflare Workers
-npm run type-analysis     # Analyze TypeScript types and generate reports
-npm run docs:maintenance # Validate documentation
 ```
+
+**For complete command reference, see the [Quick Reference Guide](docs/quick-reference.md).**
 
 ### Project Structure
 
@@ -220,7 +182,7 @@ LOOP_NOTIFICATION_TRANSACTIONAL_ID=your_notification_id_here
 - **Queue Database**: Port 5446, Database: `queue`
 - **Redis Cache**: Port 6380, URL: `redis://localhost:6379`
 
-For complete setup instructions, see [`docs/infrastructure/cloudflare.md`](./docs/infrastructure/cloudflare.md).
+For complete setup instructions, see [`docs/architecture/build-validation-and-deployment.md`](docs/architecture/build-validation-and-deployment.md).
 
 ## \U0001f4e7 Email Service Integration
 
@@ -313,7 +275,7 @@ await loopService.sendNotificationEmail(
 ### Development Workflow
 
 1. **Fork** the repository and create a feature branch
-2. **Follow** the coding standards and patterns in [`docs/development/README.md`](./docs/development/README.md)
+2. **Follow** the coding standards and patterns in [`docs/guides/development-workflow.md`](docs/guides/development-workflow.md)
 3. **Test** your changes with `npm run test` and `npm run typecheck`
 4. **Document** any new features or changes
 5. **Submit** a pull request with a clear description
@@ -373,10 +335,12 @@ The generated report includes:
 - **Conflict Analysis**: Specific conflicts with resolution strategies
 - **Recommendations**: Actionable suggestions for type consolidation
 
-For more information, see the [Type Analysis Documentation](./docs/development/type-analysis.md).
+For more information, see the [Type Analysis Documentation](docs/guides/type-analysis.md).
 
-- **Documentation**: Comprehensive guides in [`docs/`](./docs/) directory
-- **Troubleshooting**: Common issues in [`docs/development/troubleshooting.md`](./docs/development/troubleshooting.md)
-- **Architecture**: System design in [`docs/analytics/README.md`](./docs/analytics/README.md)
+### Getting Help
+
+- **Documentation**: Comprehensive guides in [`docs/guides/`](docs/guides/) directory
+- **Troubleshooting**: Common issues in [`docs/guides/troubleshooting.md`](docs/guides/troubleshooting.md)
+- **Architecture**: System design in [`docs/architecture/README.md`](docs/architecture/README.md)
 
 Built with \u2764\ufe0f for modern email marketing workflows.

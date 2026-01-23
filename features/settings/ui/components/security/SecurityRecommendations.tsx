@@ -128,8 +128,8 @@ function SecurityRecommendations() {
       <Alert
         className={cn(
           isEnabled
-            ? "border-green-200 bg-green-50/50"
-            : "border-orange-200 bg-orange-50/50",
+            ? "border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/30"
+            : "border-orange-200 bg-orange-50/50 dark:border-orange-800 dark:bg-orange-950/30",
         )}
       >
         <AlertTitle className="flex items-center justify-between">
@@ -137,13 +137,13 @@ function SecurityRecommendations() {
             <div
               className={cn(
                 "p-1 rounded-full",
-                isEnabled ? "bg-green-100" : "bg-orange-100",
+                isEnabled ? "bg-green-100 dark:bg-green-900" : "bg-orange-100 dark:bg-orange-900",
               )}
             >
               {isEnabled ? (
-                <Check className="size-4 text-green-600" />
+                <Check className="size-4 text-green-600 dark:text-green-400" />
               ) : (
-                <AlertTriangle className="size-4 text-orange-600" />
+                <AlertTriangle className="size-4 text-orange-600 dark:text-orange-400" />
               )}
             </div>
             <span>Two-Factor Authentication</span>
@@ -152,8 +152,8 @@ function SecurityRecommendations() {
             variant="outline"
             className={cn(
               isEnabled
-                ? "bg-green-100 text-green-700 border-green-300"
-                : "bg-orange-100 text-orange-700 border-orange-300",
+                ? "bg-green-100 text-green-700 border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-700"
+                : "bg-orange-100 text-orange-700 border-orange-300 dark:bg-orange-900 dark:text-orange-300 dark:border-orange-700",
             )}
           >
             {isEnabled ? "Enabled" : "Recommended"}
@@ -166,17 +166,17 @@ function SecurityRecommendations() {
         </AlertDescription>
       </Alert>
 
-      <Alert className="border-green-200 bg-green-50/50">
+      <Alert className="border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/30">
         <AlertTitle className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-1 bg-green-100 rounded-full">
-              <Check className="size-4 text-green-600" />
+            <div className="p-1 bg-green-100 dark:bg-green-900 rounded-full">
+              <Check className="size-4 text-green-600 dark:text-green-400" />
             </div>
             <span>Strong Password</span>
           </div>
           <Badge
             variant="outline"
-            className="bg-green-100 text-green-700 border-green-300"
+            className="bg-green-100 text-green-700 border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-700"
           >
             Active
           </Badge>
@@ -186,17 +186,17 @@ function SecurityRecommendations() {
         </AlertDescription>
       </Alert>
 
-      <Alert className="border-green-200 bg-green-50/50">
+      <Alert className="border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/30">
         <AlertTitle className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-1 bg-green-100 rounded-full">
-              <Shield className="size-4 text-green-600" />
+            <div className="p-1 bg-green-100 dark:bg-green-900 rounded-full">
+              <Shield className="size-4 text-green-600 dark:text-green-400" />
             </div>
             <span>Recent Activity Monitoring</span>
           </div>
           <Badge
             variant="outline"
-            className="bg-green-100 text-green-700 border-green-300"
+            className="bg-green-100 text-green-700 border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-700"
           >
             Active
           </Badge>
@@ -222,10 +222,10 @@ function SecurityRecommendations() {
             key={uiRecommendation.id}
             className={cn(
               uiRecommendation.status === "enabled"
-                ? "border-green-200 bg-green-50/50"
+                ? "border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/30"
                 : uiRecommendation.status === "warning"
-                  ? "border-red-200 bg-red-50/50"
-                  : "border-orange-200 bg-orange-50/50",
+                  ? "border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/30"
+                  : "border-orange-200 bg-orange-50/50 dark:border-orange-800 dark:bg-orange-950/30",
             )}
           >
             <AlertTitle className="flex items-center justify-between">
@@ -234,18 +234,18 @@ function SecurityRecommendations() {
                   className={cn(
                     "p-1 rounded-full",
                     uiRecommendation.status === "enabled"
-                      ? "bg-green-100"
+                      ? "bg-green-100 dark:bg-green-900"
                       : uiRecommendation.status === "warning"
-                        ? "bg-red-100"
-                        : "bg-orange-100",
+                        ? "bg-red-100 dark:bg-red-900"
+                        : "bg-orange-100 dark:bg-orange-900",
                   )}
                 >
                   {uiRecommendation.status === "enabled" ? (
-                    <Check className="size-4 text-green-600" />
+                    <Check className="size-4 text-green-600 dark:text-green-400" />
                   ) : uiRecommendation.status === "warning" ? (
-                    <AlertTriangle className="size-4 text-red-600" />
+                    <AlertTriangle className="size-4 text-red-600 dark:text-red-400" />
                   ) : (
-                    <AlertTriangle className="size-4 text-orange-600" />
+                    <AlertTriangle className="size-4 text-orange-600 dark:text-orange-400" />
                   )}
                 </div>
                 <span>{uiRecommendation.title}</span>
@@ -254,10 +254,10 @@ function SecurityRecommendations() {
                 variant="outline"
                 className={cn(
                   uiRecommendation.status === "enabled"
-                    ? "bg-green-100 text-green-700 border-green-300"
+                    ? "bg-green-100 text-green-700 border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-700"
                     : uiRecommendation.status === "warning"
-                      ? "bg-red-100 text-red-700 border-red-300"
-                      : "bg-orange-100 text-orange-700 border-orange-300",
+                      ? "bg-red-100 text-red-700 border-red-300 dark:bg-red-900 dark:text-red-300 dark:border-red-700"
+                      : "bg-orange-100 text-orange-700 border-orange-300 dark:bg-orange-900 dark:text-orange-300 dark:border-orange-700",
                 )}
               >
                 {uiRecommendation.status === "enabled"

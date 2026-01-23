@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,21 +10,25 @@ import { getTagColor } from "@/lib/theme/ui";
 import { Eye, Star } from "lucide-react";
 import { Link } from "@/lib/config/i18n/navigation";
 import ConversationsListHeader from "./ConversationsListHeader";
+import { useInbox } from "../context/inbox-context";
 
 import { type Conversation } from "@features/inbox/types";
 
-function ConversationsList({
-  conversations: initialConversations,
-}: {
-  conversations: Conversation[];
-}) {
-  const [conversations, setConversations] = useState(initialConversations);
+// Visual component that only renders conversations
+function ConversationsListContent() {
+  const { conversations, loading, error, refreshConversations } = useInbox();
+  const [localConversations, setLocalConversations] = useState<Conversation[]>([]);
+
+  // Sync with context
+  useEffect(() => {
+    setLocalConversations(conversations);
+  }, [conversations]);
 
   const handleStarClick = (e: React.MouseEvent, conversationId: string | number) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setConversations(prev => 
+    setLocalConversations(prev => 
       prev.map(conv => 
         conv.id === conversationId 
           ? { ...conv, isStarred: !conv.isStarred }
@@ -37,7 +41,7 @@ function ConversationsList({
     e.preventDefault();
     e.stopPropagation();
     
-    setConversations(prev => 
+    setLocalConversations(prev => 
       prev.map(conv => 
         conv.id === conversationId 
           ? { ...conv, status: 'read' as const }
@@ -46,13 +50,76 @@ function ConversationsList({
     );
   };
 
+  // Render loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col h-full w-full">
+        <ConversationsListHeader title="All Conversations" count={0} />
+        <div className="flex-1 overflow-y-auto p-2">
+          <div className="space-y-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="p-6 border border-border rounded-lg">
+                <div className="flex items-start space-x-4">
+                  <div className="w-14 h-14 bg-gray-200 dark:bg-gray-700 rounded-full shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <div className="h-5 w-24 bg-gray-200 dark:bg-gray-700 rounded" />
+                        <div className="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded" />
+                      </div>
+                      <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded" />
+                    </div>
+                    <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+                    <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded mb-1" />
+                    <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700 rounded mb-4" />
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded-full" />
+                        <div className="h-4 w-12 bg-gray-200 dark:bg-gray-700 rounded-full" />
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded" />
+                        <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Render error state
+  if (error) {
+    return (
+      <div className="flex flex-col h-full w-full">
+        <ConversationsListHeader title="All Conversations" count={0} />
+        <div className="flex-1 overflow-y-auto p-2 flex items-center justify-center">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
+              Failed to Load Conversations
+            </h3>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <Button onClick={() => refreshConversations()}>
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Render conversations
   return (
     <div className="flex flex-col h-full w-full">
-      <ConversationsListHeader title="All Conversations" count={conversations.length} />
+      <ConversationsListHeader title="All Conversations" count={localConversations.length} />
 
       <div className="flex-1 overflow-y-auto p-2">
         <div className="space-y-4">
-          {conversations.map((conversation: Conversation) => (
+          {localConversations.map((conversation: Conversation) => (
             <Link
               key={conversation.id}
               href={`/dashboard/inbox/${conversation.id}`}
@@ -143,4 +210,14 @@ function ConversationsList({
     </div>
   );
 }
+
+// Container component that renders the content directly (provider is at page level)
+function ConversationsList({
+  conversations: _initialConversations,
+}: {
+  conversations: Conversation[];
+}) {
+  return <ConversationsListContent />;
+}
+
 export default ConversationsList;

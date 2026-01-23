@@ -472,6 +472,7 @@
     "companySizeDefault": "1-10 empleados",
     "errors": {
       "loadBilling": "Error al cargar los datos de facturación",
+      "loadBilling": "Error al cargar los datos de facturación",
       "updateBilling": "Error al actualizar la información de facturación",
       "loadCompany": "Error al cargar la información de la empresa",
       "updateCompany": "Error al actualizar el nombre de la empresa",
@@ -699,6 +700,70 @@
         "warmup": "Centro de Calentamiento"
       },
       "addDomainButton": "Añadir Dominio"
+    }
+  },
+  "domains": {
+    "new": {
+      "title": "Añadir Nuevo Dominio",
+      "description": "Conecta tu dominio para empezar a crear buzones y enviar correos en frío",
+      "subtitle": "Configura tu dominio para el envío de correos",
+      "step1": {
+        "title": "Introducir Dominio",
+        "subtitle": "Proporciona el nombre de tu dominio"
+      },
+      "step2": {
+        "title": "Configurar Registros DNS",
+        "subtitle": "Configura los ajustes DNS"
+      },
+      "step3": {
+        "title": "Confirmación",
+        "subtitle": "Dominio verificado exitosamente"
+      },
+      "form": {
+        "domain": {
+          "label": "Nombre del Dominio",
+          "placeholder": "ejemplo.com"
+        },
+        "submit": "Añadir Dominio",
+        "submitting": "Añadiendo Dominio..."
+      },
+      "dns": {
+        "title": "Configurar Registros DNS",
+        "description": "Configura los siguientes registros DNS en el panel de tu proveedor de dominio",
+        "error": {
+          "title": "Registros DNS No Verificados",
+          "description": "Por favor verifica todos los registros DNS antes de continuar"
+        },
+        "success": {
+          "title": "Registros DNS Verificados",
+          "description": "Todos los registros DNS han sido verificados exitosamente"
+        }
+      },
+      "confirmation": {
+        "title": "¡Dominio Añadido Exitosamente!",
+        "description": "Tu dominio está listo para usar",
+        "message": "Ahora puedes crear buzones y empezar a enviar correos desde este dominio"
+      },
+      "navigation": {
+        "back": "Atrás",
+        "next": "Siguiente",
+        "finish": "Finalizar"
+      },
+      "error": {
+        "title": "Error al Añadir Dominio"
+      },
+      "success": {
+        "title": "¡Dominio Añadido!",
+        "description": "Tu dominio {domain} ha sido añadido exitosamente"
+      }
+    },
+    "dns": {
+      "descriptions": {
+        "spf": "Sender Policy Framework - Previene el spoofing de correo",
+        "dkim": "DomainKeys Identified Mail - Autenticación de correo",
+        "dmarc": "Domain-based Message Authentication - Política de correo",
+        "mx": "Mail Exchange - Enruta correos entrantes"
+      }
     }
   },
   "Campaigns": {

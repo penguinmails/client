@@ -1,24 +1,36 @@
 /**
- * Admin Feature Public API
+ * Admin Feature - Public API
  * 
- * Main exports for the admin feature following FSD structure
+ * Provides centralized access to admin functionality following FSD architecture.
+ * External features should only import from this index file, not from internal modules.
  */
 
-// API Layer
+// Types - Public type definitions
+export type { 
+  AdminSystemHealthData,
+} from './api';
+
+export type {
+  AdminSystemHealthContextType,
+} from './model';
+
+export type {
+  SystemHealthStatus 
+} from './ui/components';
+
+// API - Data fetching operations
 export { 
   fetchAdminSystemHealth, 
   fetchBasicSystemHealth,
-  type AdminSystemHealthData 
 } from './api';
 
-// Model Layer
+// Context - Public context providers
 export { 
   AdminSystemHealthProvider, 
   useAdminSystemHealth,
-  type AdminSystemHealthContextType 
 } from './model';
 
-// UI Layer
+// UI Components - Public components for external use
 export { 
   AdminDashboard,
   AdminUserTable,
@@ -26,7 +38,6 @@ export {
   useSystemHealth,
   AdminSystemHealthIndicator,
   AdminSystemHealthBadge,
-  // NotificationsPopover moved to @/features/notifications/ui/components/NotificationsPopover
   useFormField,
   Form,
   FormItem,
@@ -35,5 +46,4 @@ export {
   FormDescription,
   FormMessage,
   FormField,
-  type SystemHealthStatus
 } from './ui/components';

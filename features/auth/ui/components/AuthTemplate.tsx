@@ -38,7 +38,7 @@ export function AuthTemplate({
   const IconComponent = icon;
 
   return (
-    <div className="flex-grow flex items-center justify-center py-12 px-4">
+    <div className="grow flex items-center justify-center py-12 px-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           {IconComponent && (

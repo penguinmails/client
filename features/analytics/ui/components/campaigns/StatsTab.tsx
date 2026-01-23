@@ -55,6 +55,7 @@ import {
   YAxis,
 } from "recharts";
 import { useCampaignStats } from "@features/campaigns/lib/hooks/use-campaign-stats";
+import { useChartColors } from "@/hooks/use-chart-colors";
 
 type TooltipPayloadItem = {
   color: string;
@@ -131,6 +132,7 @@ function StatsTab() {
   const [timeRange, setTimeRange] = useState<7 | 14 | 30>(14);
   const chartRef = useRef<HTMLDivElement>(null);
   const { data, loading, error } = useCampaignStats(timeRange);
+  const chartColors = useChartColors();
 
   // MIGRATED: Updated metrics to use standardized field names
   const [metrics, setMetrics] = useState<MetricToggle[]>([
@@ -394,13 +396,13 @@ function StatsTab() {
                     dataKey="formattedDate"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 12, fill: "text-muted-foreground" }}
+                    tick={{ fontSize: 12, fill: chartColors.textColor }}
                     dy={10}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 12, fill: "text-muted-foreground" }}
+                    tick={{ fontSize: 12, fill: chartColors.textColor }}
                     dx={-10}
                   />
                   <Tooltip content={<CustomTooltip />} />

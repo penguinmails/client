@@ -3,30 +3,11 @@
 import { NextRequest } from "next/server";
 import { productionLogger } from "@/lib/logger";
 import { ActionResult } from "@/types";
+import type { MailboxData } from "../types";
 
 /**
  * Mailbox-related server actions
  */
-
-export interface MailboxData {
-  id: string;
-  email: string;
-  domain: string;
-  status: 'active' | 'inactive' | 'warming' | 'paused';
-  warmupProgress: number;
-  dailyLimit: number;
-  emailsSent: number;
-  openRate: number;
-  replyRate: number;
-  lastActivity: Date;
-  name: string;
-  dailyVolume: number;
-  healthScore: number;
-  totalWarmups?: number;
-  spamFlags?: number;
-  replies?: number;
-  lastUpdated?: Date;
-}
 
 /**
  * Fetches all mailboxes

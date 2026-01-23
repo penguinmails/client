@@ -1,4 +1,6 @@
-# Testing Strategies and Best Practices
+# Testing Strategies and Best Practices (Legacy)
+
+> **Note**: This document has been superseded by the comprehensive testing documentation in `docs/testing/`. Please refer to the [Testing Documentation](../testing/README.md) for current testing practices and the [Best Practices Guide](../testing/best-practices.md) for detailed testing strategies.
 
 ## Overview
 
@@ -46,27 +48,27 @@ __tests__/
 
 ```typescript
 // Example: CampaignAnalyticsService.test.ts
-import { CampaignAnalyticsService } from '../CampaignAnalyticsService';
+import { CampaignAnalyticsService } from "../CampaignAnalyticsService";
 
-describe('CampaignAnalyticsService', () => {
+describe("CampaignAnalyticsService", () => {
   let service: CampaignAnalyticsService;
 
   beforeEach(() => {
     service = new CampaignAnalyticsService();
   });
 
-  describe('calculateOpenRate', () => {
-    it('should calculate open rate correctly', () => {
+  describe("calculateOpenRate", () => {
+    it("should calculate open rate correctly", () => {
       const result = service.calculateOpenRate(100, 25);
       expect(result).toBe(25);
     });
 
-    it('should handle zero sent emails', () => {
+    it("should handle zero sent emails", () => {
       const result = service.calculateOpenRate(0, 0);
       expect(result).toBe(0);
     });
 
-    it('should handle edge cases', () => {
+    it("should handle edge cases", () => {
       expect(() => service.calculateOpenRate(-1, 5)).toThrow();
     });
   });
@@ -77,20 +79,20 @@ describe('CampaignAnalyticsService', () => {
 
 ```typescript
 // Example: dateUtils.test.ts
-import { formatDate, isValidDate } from '../dateUtils';
+import { formatDate, isValidDate } from "../dateUtils";
 
-describe('dateUtils', () => {
-  describe('formatDate', () => {
-    it('should format date correctly', () => {
-      const date = new Date('2024-01-15');
-      expect(formatDate(date)).toBe('2024-01-15');
+describe("dateUtils", () => {
+  describe("formatDate", () => {
+    it("should format date correctly", () => {
+      const date = new Date("2024-01-15");
+      expect(formatDate(date)).toBe("2024-01-15");
     });
   });
 
-  describe('isValidDate', () => {
-    it('should validate dates correctly', () => {
+  describe("isValidDate", () => {
+    it("should validate dates correctly", () => {
       expect(isValidDate(new Date())).toBe(true);
-      expect(isValidDate('invalid')).toBe(false);
+      expect(isValidDate("invalid")).toBe(false);
       expect(isValidDate(null)).toBe(false);
     });
   });
@@ -167,28 +169,30 @@ describe('CampaignList', () => {
 
 ```typescript
 // Example: analyticsService.integration.test.ts
-import { rest } from 'msw';
-import { server } from '../../../__mocks__/server';
-import { analyticsService } from '../analyticsService';
+import { rest } from "msw";
+import { server } from "../../../__mocks__/server";
+import { analyticsService } from "../analyticsService";
 
-describe('Analytics Service Integration', () => {
-  it('should fetch campaign stats', async () => {
+describe("Analytics Service Integration", () => {
+  it("should fetch campaign stats", async () => {
     server.use(
-      rest.get('/api/analytics/campaign/:id', (req, res, ctx) => {
-        return res(ctx.json({
-          openRate: 25,
-          clickRate: 10,
-          bounceRate: 5
-        }));
-      })
+      rest.get("/api/analytics/campaign/:id", (req, res, ctx) => {
+        return res(
+          ctx.json({
+            openRate: 25,
+            clickRate: 10,
+            bounceRate: 5,
+          }),
+        );
+      }),
     );
 
-    const result = await analyticsService.getCampaignStats('campaign-1');
+    const result = await analyticsService.getCampaignStats("campaign-1");
 
     expect(result).toEqual({
       openRate: 25,
       clickRate: 10,
-      bounceRate: 5
+      bounceRate: 5,
     });
   });
 });
@@ -200,18 +204,18 @@ describe('Analytics Service Integration', () => {
 
 ```typescript
 // Example: campaignCreation.e2e.test.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Campaign Creation', () => {
-  test('should create a new campaign', async ({ page }) => {
-    await page.goto('/campaigns/new');
+test.describe("Campaign Creation", () => {
+  test("should create a new campaign", async ({ page }) => {
+    await page.goto("/campaigns/new");
 
-    await page.fill('[name="name"]', 'Test Campaign');
-    await page.selectOption('[name="type"]', 'email');
+    await page.fill('[name="name"]', "Test Campaign");
+    await page.selectOption('[name="type"]', "email");
     await page.click('[type="submit"]');
 
     await expect(page).toHaveURL(/\/campaigns\/.+/);
-    await expect(page.locator('h1')).toContainText('Test Campaign');
+    await expect(page.locator("h1")).toContainText("Test Campaign");
   });
 });
 ```
@@ -221,17 +225,17 @@ test.describe('Campaign Creation', () => {
 ### Test Structure
 
 ```typescript
-describe('Feature Name', () => {
-  describe('when condition', () => {
-    it('should behave correctly', () => {
+describe("Feature Name", () => {
+  describe("when condition", () => {
+    it("should behave correctly", () => {
       // Arrange
-      const input = 'test input';
+      const input = "test input";
 
       // Act
       const result = functionUnderTest(input);
 
       // Assert
-      expect(result).toBe('expected output');
+      expect(result).toBe("expected output");
     });
   });
 });
@@ -249,21 +253,21 @@ describe('Feature Name', () => {
 ```typescript
 // Test data factory
 const createCampaign = (overrides = {}) => ({
-  id: 'campaign-1',
-  name: 'Test Campaign',
-  status: 'active',
+  id: "campaign-1",
+  name: "Test Campaign",
+  status: "active",
   createdAt: new Date(),
-  ...overrides
+  ...overrides,
 });
 
-describe('CampaignService', () => {
-  it('should update campaign', async () => {
+describe("CampaignService", () => {
+  it("should update campaign", async () => {
     const campaign = createCampaign();
-    const updates = { name: 'Updated Campaign' };
+    const updates = { name: "Updated Campaign" };
 
     const result = await service.update(campaign.id, updates);
 
-    expect(result.name).toBe('Updated Campaign');
+    expect(result.name).toBe("Updated Campaign");
   });
 });
 ```
@@ -283,18 +287,18 @@ describe('CampaignService', () => {
 // jest.config.js
 module.exports = {
   collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/**/index.ts'
+    "src/**/*.{ts,tsx}",
+    "!src/**/*.d.ts",
+    "!src/**/index.ts",
   ],
   coverageThreshold: {
     global: {
       statements: 80,
       branches: 75,
       functions: 85,
-      lines: 80
-    }
-  }
+      lines: 80,
+    },
+  },
 };
 ```
 
@@ -319,6 +323,7 @@ npm test CampaignAnalyticsService.test.ts
 ### CI/CD Integration
 
 Tests run automatically on:
+
 - Pull requests
 - Main branch pushes
 - Release branches
@@ -344,17 +349,17 @@ Tests run automatically on:
 
 ```typescript
 // Example load test
-import { check } from 'k6';
-import http from 'k6/http';
+import { check } from "k6";
+import http from "k6/http";
 
 export let options = {
   vus: 10,
-  duration: '30s',
+  duration: "30s",
 };
 
 export default function () {
-  const response = http.get('http://localhost:3000/api/analytics');
-  check(response, { 'status is 200': (r) => r.status === 200 });
+  const response = http.get("http://localhost:3000/api/analytics");
+  check(response, { "status is 200": (r) => r.status === 200 });
 }
 ```
 

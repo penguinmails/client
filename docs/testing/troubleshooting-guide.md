@@ -4,16 +4,16 @@ This guide provides solutions to common issues encountered when implementing rea
 
 ## Table of Contents
 
-1. [Provider-Related Issues](#provider-related-issues)
-2. [Component Mocking Problems](#component-mocking-problems)
-3. [Test Assertion Failures](#test-assertion-failures)
-4. [Accessibility Testing Issues](#accessibility-testing-issues)
-5. [Performance Problems](#performance-problems)
-6. [Setup Helper Issues](#setup-helper-issues)
-7. [Mock Strategy Problems](#mock-strategy-problems)
-8. [Test Environment Issues](#test-environment-issues)
-9. [CI/CD and Build Issues](#cicd-and-build-issues)
-10. [Migration-Specific Problems](#migration-specific-problems)
+1. [Provider-Related Issues](docs/guides/actions-api.md#provider-related-issues)
+2. [Component Mocking Problems](docs/guides/actions-api.md#component-mocking-problems)
+3. [Test Assertion Failures](docs/guides/actions-api.md#test-assertion-failures)
+4. [Accessibility Testing Issues](docs/guides/actions-api.md#accessibility-testing-issues)
+5. [Performance Problems](docs/guides/actions-api.md#performance-problems)
+6. [Setup Helper Issues](docs/guides/actions-api.md#setup-helper-issues)
+7. [Mock Strategy Problems](docs/guides/actions-api.md#mock-strategy-problems)
+8. [Test Environment Issues](docs/guides/actions-api.md#test-environment-issues)
+9. [CI/CD and Build Issues](docs/guides/actions-api.md#cicd-and-build-issues)
+10. [Migration-Specific Problems](docs/guides/actions-api.md#migration-specific-problems)
 
 ## Provider-Related Issues
 

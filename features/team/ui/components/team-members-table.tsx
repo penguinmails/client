@@ -19,7 +19,7 @@ import {
 } from "@/hooks/use-server-action";
 import type { TeamMember, TeamInvite, TeamRole } from "@features/team/types";
 import { NextRequest } from "next/server";
-import { UnifiedDataTable } from "@/components/design-system/unified-data-table";
+import { UnifiedDataTable } from "@/components/design-system";
 import { EditMemberDialog } from "./dialogs/edit-member-dialog";
 import { AddMemberDialog } from "./dialogs/add-member-dialog";
 import { DeleteMemberDialog } from "./dialogs/delete-member-dialog";

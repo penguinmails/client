@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 export interface DomainStep {
   id: string;
@@ -66,6 +67,9 @@ export function AddDomainProvider({ children }: { children: ReactNode }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<DomainFormData>(defaultFormData);
   const [_open, setOpen] = useState(false);
+  const form = useForm<DomainFormData>({
+    defaultValues: defaultFormData
+  });
 
   const updateFormData = (data: Partial<DomainFormData>): void => {
     setFormData(prev => ({ ...prev, ...data }));
@@ -137,7 +141,7 @@ export function AddDomainProvider({ children }: { children: ReactNode }) {
       dnsRecords,
       currentStepData
     }}>
-      {children}
+      <FormProvider {...form}>{children}</FormProvider>
     </AddDomainContext.Provider>
   );
 }

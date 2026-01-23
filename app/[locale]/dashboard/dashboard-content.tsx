@@ -220,11 +220,11 @@ export default function DashboardContent({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <Card className="bg-white dark:bg-gray-900 p-0 gap-0 border-gray-200 dark:border-gray-700">
-            <CardHeader className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <Card className="bg-card p-0 gap-0 border-border">
+            <CardHeader className="p-6 border-b border-border">
               <CardTitle>{recentRepliesTitle}</CardTitle>
             </CardHeader>
-            <CardContent className="divide-y divide-gray-200 dark:divide-gray-700 p-0">
+            <CardContent className="divide-y divide-border p-0">
               <Suspense
                 fallback={
                   <div className="space-y-0">
@@ -303,25 +303,25 @@ function DashboardKpiCards({
       title: t("kpi.activeCampaigns"),
       value: totalCampaigns.toString(),
       icon: Send,
-      color: "bg-blue-500 text-blue-600",
+      colorScheme: "primary" as const,
     },
     {
       title: t("kpi.leadsContacted"),
       value: totalLeadsContacted.toLocaleString(),
       icon: Users,
-      color: "bg-green-500 text-green-600",
+      colorScheme: "success" as const,
     },
     {
       title: t("kpi.openRate"),
       value: `${avgOpenRate}%`,
       icon: Mail,
-      color: "bg-purple-500 text-purple-600",
+      colorScheme: "info" as const,
     },
     {
       title: t("kpi.replyRate"),
       value: `${avgReplyRate}%`,
       icon: TrendingUp,
-      color: "bg-orange-500 text-orange-600",
+      colorScheme: "warning" as const,
     },
   ];
 

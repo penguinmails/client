@@ -20,21 +20,14 @@ import {
   AlertTriangle,
   RefreshCw,
 } from "lucide-react";
-import { useEffect, useMemo } from "react";
-import {
-  getBillingDataForSettings,
-  updateBillingInfo,
-} from "@features/billing/actions";
-import { updateCompanyInfo, getUserSettings } from "@/lib/actions/settings";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { updateBillingInfo } from "@features/billing/actions";
+import { useAuth } from "@/lib/hooks/use-auth";
 import {
   useServerAction,
   useServerActionWithParams,
 } from "@/hooks/use-server-action";
 import { BillingLoadingSkeleton } from "@features/billing/ui/components/BillingLoadingSkeleton";
-import {
-  SettingsErrorBoundary,
-  SettingsErrorFallback,
-} from "@/features/settings";
 import { Button } from "@/components/ui/button/button";
 import { toast } from "sonner";
 import { useStripeCheckout } from "@features/billing/lib/hooks/use-stripe-checkout";
@@ -42,6 +35,84 @@ import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "@/lib/config/i18n/navigation";
 import CheckoutDialog from "@features/billing/ui/components/checkout-dialog";
 import { useTranslations } from "next-intl";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+// Local error boundary for billing feature
+class BillingErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback?: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: {
+    children: React.ReactNode;
+    fallback?: React.ReactNode;
+  }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // eslint-disable-next-line no-console
+    console.error("Billing Error Boundary caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
+      return (
+        <Card className="border-destructive/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Something went wrong
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription>
+                {this.state.error?.message ||
+                  "An unexpected error occurred while loading billing."}
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Simple error fallback component
+function BillingErrorFallback({
+  error,
+  retry,
+}: {
+  error: string;
+  retry?: () => void;
+}) {
+  return (
+    <Alert variant="destructive">
+      <AlertTriangle className="h-4 w-4" />
+      <AlertDescription className="flex items-center justify-between">
+        <span>{error}</span>
+        {retry && (
+          <Button onClick={retry} variant="outline" size="sm">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Retry
+          </Button>
+        )}
+      </AlertDescription>
+    </Alert>
+  );
+}
 
 function BillingTab() {
   const t = useTranslations();
@@ -50,23 +121,40 @@ function BillingTab() {
   const router = useRouter();
   const pathname = usePathname();
   const checkout = searchParams.get("checkout");
+  const { userCompanies, selectedCompanyId, refreshCompanies } = useAuth();
+  const [billingData, setBillingData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Memoized options to keep stable references
-  const billingOptions = useMemo(
-    () => ({
-      onError: (error: string) => {
-        toast.error(t("BillingTab.errors.loadBilling"), { description: error });
-      },
-    }),
-    [t],
-  );
+  // Fetch billing data
+  const loadBilling = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch("/api/billing");
+      const result = await response.json();
+      if (result && result.success && result.data) {
+        setBillingData(result.data);
+      } else {
+        setError(t("BillingTab.errors.loadBilling"));
+        toast.error(t("BillingTab.errors.loadBilling"));
+      }
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : t("BillingTab.errors.errorOccurred");
+      setError(errorMessage);
+      toast.error(t("BillingTab.errors.loadBilling"), {
+        description: errorMessage,
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [t]);
 
-  // Server action hooks
-  const billingDataAction = useServerAction(
-    getBillingDataForSettings,
-    billingOptions,
-  );
-  const { execute: loadBilling } = billingDataAction;
+  // Load data on mount
+  useEffect(() => {
+    loadBilling();
+  }, [loadBilling]);
 
   const updateOptions = useMemo(
     () => ({
@@ -89,56 +177,37 @@ function BillingTab() {
     updateOptions,
   );
 
-  const updateCompanyOptions = useMemo(
-    () => ({
-      onSuccess: () => {
-        toast.success(t("BillingTab.success.companyUpdated"));
-        // Refresh billing data in case it includes company info
-        loadBilling();
-      },
-      onError: (error: string) => {
-        toast.error(t("BillingTab.errors.updateCompany"), {
-          description: error,
-        });
-      },
-    }),
-    [loadBilling, t],
+  // Get current company from auth context
+  const currentCompany = userCompanies.find(
+    (company) => company.id === selectedCompanyId,
   );
-
-  const updateCompanyAction = useServerActionWithParams(
-    updateCompanyInfo,
-    updateCompanyOptions,
-  );
-
-  const companyOptions = useMemo(
-    () => ({
-      onError: (error: string) => {
-        toast.error(t("BillingTab.errors.loadCompany"), {
-          description: error,
-        });
-      },
-    }),
-    [t],
-  );
-
-  const companyDataAction = useServerAction(getUserSettings, companyOptions);
-  const { execute: loadCompanyData } = companyDataAction;
-
-  // Load billing data on component mount
-  useEffect(() => {
-    loadBilling();
-    loadCompanyData();
-  }, [loadBilling, loadCompanyData]);
 
   // Handle company name update
   const handleCompanyNameUpdate = async (newName: string) => {
-    if (!billingDataAction.data) return;
+    if (!currentCompany) return;
 
-    await updateCompanyAction.execute({
-      name: newName,
-    });
-    // Refresh company data after update
-    loadCompanyData();
+    // Update company info through API endpoint
+    try {
+      const response = await fetch(`/api/companies/${currentCompany.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: newName }),
+      });
+
+      if (response.ok) {
+        toast.success(t("BillingTab.success.companyUpdated"));
+        // Refresh companies in auth context
+        await refreshCompanies();
+      } else {
+        throw new Error("Failed to update company");
+      }
+    } catch (error) {
+      toast.error(t("BillingTab.errors.updateCompany"), {
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
   };
 
   useEffect(() => {
@@ -149,26 +218,17 @@ function BillingTab() {
   }, [checkout, router, pathname]);
 
   // Show loading skeleton while data is loading
-  if (billingDataAction.loading && !billingDataAction.data) {
+  if (loading && !billingData) {
     return <BillingLoadingSkeleton />;
   }
 
   // Show error state if data failed to load
-  if (billingDataAction.error && !billingDataAction.data) {
-    return (
-      <SettingsErrorFallback
-        error={
-          typeof billingDataAction.error === "string"
-            ? billingDataAction.error
-            : t("BillingTab.errors.errorOccurred")
-        }
-        retry={loadBilling}
-      />
-    );
+  if (error && !billingData) {
+    return <BillingErrorFallback error={error} retry={loadBilling} />;
   }
 
   // Show fallback if no data available
-  if (!billingDataAction.data) {
+  if (!billingData) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
@@ -190,11 +250,9 @@ function BillingTab() {
     );
   }
 
-  const billingData = billingDataAction.data;
-
   return (
-    <SettingsErrorBoundary>
-      <div className="space-y-5">
+    <BillingErrorBoundary>
+      <div className="space-y-6">
         {/* Current Plan Card */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -279,18 +337,18 @@ function BillingTab() {
           </CardHeader>
           <CardContent>
             {billingData.paymentMethod ? (
-              <div className="flex items-center justify-between bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-muted/30 rounded-lg p-4">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-white dark:bg-card p-2 rounded-lg border dark:border-border">
-                    <CreditCard className="w-5 h-5 text-gray-600 dark:text-muted-foreground" />
+                  <div className="bg-card p-2 rounded-lg border border-border">
+                    <CreditCard className="w-5 h-5 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-foreground">
+                    <p className="font-medium text-foreground">
                       {billingData.paymentMethod.brand}{" "}
                       {t("BillingTab.endingIn")}{" "}
                       {billingData.paymentMethod.lastFour}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
                       {t("BillingTab.expires", {
                         expiry: billingData.paymentMethod.expiry,
                       })}
@@ -300,16 +358,16 @@ function BillingTab() {
                 <UpdateCardDialogTrigger title={t("BillingTab.updateCard")} />
               </div>
             ) : (
-              <div className="flex items-center justify-between bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-muted/30 rounded-lg p-4">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-white dark:bg-card p-2 rounded-lg border dark:border-border">
-                    <CreditCard className="w-5 h-5 text-gray-600 dark:text-muted-foreground" />
+                  <div className="bg-card p-2 rounded-lg border border-border">
+                    <CreditCard className="w-5 h-5 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-foreground">
                       {t("BillingTab.noPaymentMethod")}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       {t("BillingTab.addPaymentMethod")}
                     </p>
                   </div>
@@ -327,12 +385,13 @@ function BillingTab() {
               <Building className="w-5 h-5 inline mr-2" />
               {t("BillingTab.companyInformation")}
             </CardTitle>
-            <button
-              className="text-sm text-blue-600 hover:text-blue-800 underline disabled:opacity-50"
+            <Button
+              variant="link"
+              className="text-primary hover:text-primary/80 underline"
               disabled={updateBillingAction.loading}
               onClick={() => {
                 const currentName =
-                  companyDataAction.data?.companyInfo.name ||
+                  currentCompany?.name ||
                   t("BillingTab.company");
                 const newCompanyName = prompt(
                   t("BillingTab.companyName") + ":",
@@ -350,38 +409,36 @@ function BillingTab() {
               {updateBillingAction.loading
                 ? t("Common.updating")
                 : t("BillingTab.editCompany")}
-            </button>
+            </Button>
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
-              <div className="space-y-3">
+            <div className="bg-muted/30 rounded-lg p-4">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-foreground">
+                    <label className="text-sm font-medium text-muted-foreground">
                       {t("BillingTab.companyName")}
                     </label>
-                    <p className="font-medium text-gray-900 dark:text-foreground">
-                      {companyDataAction.data?.companyInfo.name ||
+                    <p className="font-medium text-foreground">
+                      {currentCompany?.name ||
                         t("Common.loading")}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-foreground">
+                  <label className="text-sm font-medium text-muted-foreground">
                     {t("BillingTab.industry")}
                   </label>
-                  <p className="text-gray-600">
-                    {companyDataAction.data?.companyInfo.industry ||
-                      t("BillingTab.technologyServices")}
+                  <p className="text-muted-foreground">
+                    {t("BillingTab.technologyServices")}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-foreground">
+                  <label className="text-sm font-medium text-muted-foreground">
                     {t("BillingTab.companySize")}
                   </label>
-                  <p className="text-gray-600">
-                    {companyDataAction.data?.companyInfo.size ||
-                      t("BillingTab.companySizeDefault")}
+                  <p className="text-muted-foreground">
+                    {t("BillingTab.companySizeDefault")}
                   </p>
                 </div>
               </div>
@@ -391,27 +448,27 @@ function BillingTab() {
 
         {/* Billing Address Card */}
         <Card>
-          <CardHeader className="flex-center-between">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle>{t("BillingTab.billingAddress")}</CardTitle>
             <EditAddressTrigger title={t("BillingTab.editAddress")} />
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
+            <div className="bg-muted/30 rounded-lg p-4">
               <div className="space-y-1">
-                <p className="font-medium text-gray-900 dark:text-foreground">
-                  {companyDataAction.data?.companyInfo.name ||
+                <p className="font-medium text-foreground">
+                  {currentCompany?.name ||
                     t("BillingTab.company")}
                 </p>
-                <p className="text-gray-600 dark:text-muted-foreground">
+                <p className="text-muted-foreground">
                   {t("BillingTab.street")}
                 </p>
-                <p className="text-gray-600 dark:text-muted-foreground">
+                <p className="text-muted-foreground">
                   {t("BillingTab.city")}
                 </p>
-                <p className="text-gray-600 dark:text-muted-foreground">
+                <p className="text-muted-foreground">
                   {t("BillingTab.country")}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-muted-foreground mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   {t("BillingTab.vatId")}
                 </p>
               </div>
@@ -432,14 +489,14 @@ function BillingTab() {
         {/* Loading overlay for updates */}
         {updateBillingAction.loading && (
           <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-card p-4 rounded-lg shadow-lg flex items-center space-x-2">
+            <div className="bg-card p-4 rounded-lg shadow-lg flex items-center space-x-2">
               <RefreshCw className="h-4 w-4 animate-spin" />
               <span>{t("Common.loading")}</span>
             </div>
           </div>
         )}
       </div>
-    </SettingsErrorBoundary>
+    </BillingErrorBoundary>
   );
 }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { StatsCard as KpiCard } from "@/components/stats-card";
+import { UnifiedStatsCard } from "@/components/design-system";
 import { StatsCardData } from "@features/campaigns/types";
 
 interface KpiCardsProps {
@@ -10,15 +10,18 @@ function KpiCards({ cards }: KpiCardsProps): React.JSX.Element {
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 ">
       {cards.map((card) => (
-        <KpiCard
+        <UnifiedStatsCard
           key={card.title}
           title={card.title}
           value={card.value}
           icon={card.icon}
-          color={`${card.color} text-white`}
+          color={card.colorScheme}
+          iconColor={card.color}
+          layout="compact"
         />
       ))}
     </div>
   );
 }
 export default KpiCards;
+

@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Import the unified Conversation type from types
-import type { Conversation } from '../../types/conversation';
+import type { Conversation } from '@features/inbox/types';
 
 interface ConversationContextType {
   currentConversation: Conversation | null;

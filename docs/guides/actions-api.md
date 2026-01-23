@@ -6,14 +6,14 @@ This document provides comprehensive API documentation for all action modules in
 
 ## Table of Contents
 
-1. [Core Types and Interfaces](#core-types-and-interfaces)
-2. [Authentication Patterns](#authentication-patterns)
-3. [Error Handling](#error-handling)
-4. [Validation Patterns](#validation-patterns)
-5. [Module APIs](#module-apis)
-6. [Response Formats](#response-formats)
-7. [Rate Limiting](#rate-limiting)
-8. [Performance Monitoring](#performance-monitoring)
+1. [Core Types and Interfaces](docs/guides/actions-api.md#core-types-and-interfaces)
+2. [Authentication Patterns](docs/guides/actions-api.md#authentication-patterns)
+3. [Error Handling](docs/guides/actions-api.md#error-handling)
+4. [Validation Patterns](docs/guides/actions-api.md#validation-patterns)
+5. [Module APIs](docs/guides/actions-api.md#module-apis)
+6. [Response Formats](docs/guides/actions-api.md#response-formats)
+7. [Rate Limiting](docs/guides/actions-api.md#rate-limiting)
+8. [Performance Monitoring](docs/guides/actions-api.md#performance-monitoring)
 
 ## Core Types and Interfaces
 

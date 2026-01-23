@@ -1,11 +1,19 @@
+// Mock for next/navigation to support both Storybook and Jest
+// Simple mock function for cross-environment compatibility
+const mockFn = () => {
+  const fn = () => {};
+  fn.mock = { calls: [] };
+  return fn;
+};
+
 module.exports = {
   useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
+    push: mockFn(),
+    replace: mockFn(),
+    back: mockFn(),
   }),
-  usePathname: () => '/',
+  usePathname: () => "/",
   useSearchParams: () => ({
-    get: jest.fn(),
+    get: mockFn(),
   }),
 };
