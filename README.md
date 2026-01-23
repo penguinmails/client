@@ -51,6 +51,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 - **[Quick Reference](docs/quick-reference.md)** - Commands, patterns, and shortcuts
 - **[Architecture Overview](docs/architecture/README.md)** - System design and technical foundation
 - **[Development Workflow](docs/guides/development-workflow.md)** - Development processes and best practices
+- **[Local Development Setup](docs/guides/local_dev.md)** - Complete guide for setting up local development
 
 ### Technical Documentation
 
@@ -91,6 +92,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 npm run dev              # Start development server
 npm run db:start         # Start NileDB + Redis containers
 npm run db:stop          # Stop containers
+npm run db:local         # Start docker containers and run app on development server
 
 # Code Quality
 npm run test             # Run test suite
