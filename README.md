@@ -4,6 +4,10 @@ A modern email marketing platform built with Next.js, featuring real-time analyt
 
 ## \U0001f680 Quick Start
 
+**Automated Setup (Recommended):**
+
+### macOS / Linux
+
 ```bash
 # Install dependencies
 npm install
@@ -19,9 +23,14 @@ npm run build
 
 # Deploy to Cloudflare
 npm run deploy
+
+# This single command handles Docker, configure .env.local  and starts your dev server!
+npm run dev:local
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the application.
+
+**For detailed local setup instructions**, see [📖 Local Development Setup Guide](./docs/LOCAL_DEV.md)
 
 ## \U0001f3d7\ufe0f Architecture
 
@@ -48,6 +57,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ### Getting Started
 
 - **Development Guide**: [`docs/README.md`](./docs/README.md) - Complete development setup and workflows
+- **🏠 Local Development Setup**: [`docs/LOCAL_DEV.md`](./docs/LOCAL_DEV.md) - Complete guide for setting up local development
 - **Architecture Overview**: [`docs/analytics/README.md`](./docs/analytics/README.md) - System design and data flow
 - **Best Practices**: [`docs/development/README.md`](./docs/development/README.md) - Coding standards and patterns
 
@@ -264,7 +274,7 @@ await loopService.sendNotificationEmail(
   "user@example.com",
   "Your account has been updated successfully.",
   "Account Update Notification",
-  "John Doe"
+  "John Doe",
 );
 ```
 

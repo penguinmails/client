@@ -1,6 +1,7 @@
 services:
   niledb-oltp:
     image: ghcr.io/niledatabase/testingcontainer:latest
+    container_name: penguinmails-niledb-oltp
     ports:
       - "5443:5432"
       - "3005:3000"
@@ -11,9 +12,16 @@ services:
       - NILE_TESTING_DB_ID=01000000-0000-7000-8000-000000000000
       - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
       - NILE_TESTING_DB_PASSWORD=password
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "00000000-0000-7000-8000-000000000000", "-p", "5432"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   niledb-olap:
     image: ghcr.io/niledatabase/testingcontainer:latest
+    container_name: penguinmails-niledb-olap
     ports:
       - "5444:5432"
       - "3001:3000"
@@ -24,9 +32,16 @@ services:
       - NILE_TESTING_DB_ID=02000000-0000-7000-8000-000000000000
       - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
       - NILE_TESTING_DB_PASSWORD=password
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "00000000-0000-7000-8000-000000000000", "-p", "5432"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   niledb-messages:
     image: ghcr.io/niledatabase/testingcontainer:latest
+    container_name: penguinmails-niledb-messages
     ports:
       - "5445:5432"
       - "3002:3000"
@@ -37,9 +52,16 @@ services:
       - NILE_TESTING_DB_ID=03000000-0000-7000-8000-000000000000
       - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
       - NILE_TESTING_DB_PASSWORD=password
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "00000000-0000-7000-8000-000000000000", "-p", "5432"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   niledb-queue:
     image: ghcr.io/niledatabase/testingcontainer:latest
+    container_name: penguinmails-niledb-queue
     ports:
       - "5446:5432"
       - "3003:3000"
@@ -50,13 +72,26 @@ services:
       - NILE_TESTING_DB_ID=04000000-0000-7000-8000-000000000000
       - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
       - NILE_TESTING_DB_PASSWORD=password
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "00000000-0000-7000-8000-000000000000", "-p", "5432"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   redis:
     image: redis:7-alpine
+    container_name: penguinmails-redis
     ports:
       - "6380:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
 
 volumes:
   nile_oltp_data:

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:online": "dotenv -e .env.development -- next dev",
+    "dev:local": "node scripts/ensure-env.js && docker compose up -d && npm run dev",
     "build": "next build --turbopack",
     "build:online": "dotenv -e .env.production -- next build",
     "start": "next start",
