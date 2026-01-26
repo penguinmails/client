@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Copy, Info } from "lucide-react";
 import { toast } from "sonner";
 import { HestiaDnsRecordCollection } from "../../../infrastructure/types/hestia";
@@ -44,7 +44,7 @@ export function DnsRecordsTable({ records }: DnsRecordsTableProps) {
                                 return (
                                     <tr key={id} className="hover:bg-muted/50 transition-colors group">
                                         <td className="px-4 py-3 font-mono font-semibold">{rec.RECORD || '@'}</td>
-                                        <td className="px-4 py-3"><Badge variant="outline" className="text-[10px]">{rec.TYPE}</Badge></td>
+                                        <td className="px-4 py-3"><Badge variant="outline" className="text-xs">{rec.TYPE}</Badge></td>
                                         <td className="px-4 py-3 font-mono text-xs max-w-md truncate hover:whitespace-normal hover:overflow-visible hover:bg-background hover:z-10 relative">
                                             <div className="flex items-center justify-between gap-2">
                                                 <span className="truncate">{rec.VALUE}</span>
