@@ -88,12 +88,12 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
                   </Link>
                   <div className="flex gap-2">
                     {domain.categories?.includes('DNS') && (
-                      <Badge variant="outline" className="text-[10px] uppercase bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-900 px-1.5 py-0">
+                      <Badge variant="outline" className="text-xs uppercase bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-900 px-1.5 py-0">
                         DNS Managed
                       </Badge>
                     )}
                     {domain.categories?.includes('WEB') && (
-                      <Badge variant="outline" className="text-[10px] uppercase bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-900 px-1.5 py-0">
+                      <Badge variant="outline" className="text-xs uppercase bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-900 px-1.5 py-0">
                         Web Hosted
                       </Badge>
                     )}

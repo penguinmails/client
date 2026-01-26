@@ -1,5 +1,5 @@
-import { HestiaWebDomain, HestiaWebDomainCollection } from '../../infrastructure/types/hestia';
-import { Domain, DomainStatus } from '../types';
+import { HestiaWebDomainCollection } from '../../infrastructure/types/hestia';
+import { Domain } from '../types';
 
 /**
  * Maps Hestia domain collection to our internal Domain interface

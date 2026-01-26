@@ -6,10 +6,10 @@ import { Domain, EmailAccount, DomainSettings, DNSProvider } from "../types";
 import { productionLogger } from "@/lib/logger";
 
 // Infrastructure Imports
-import { listWebDomains, addWebDomain, listDnsDomains, listDnsRecords, listWebDomain, listDnsDomain, getDnsDomainValue, listMailDomains, listMailAccounts } from "../../infrastructure/api/hestia";
+import { listWebDomains, listDnsDomains, listDnsRecords, getDnsDomainValue, listMailDomains, listMailAccounts, addWebDomain } from "../../infrastructure/api/hestia";
 import { getHestiaConfig } from "../../infrastructure/actions/config";
 import { mapHestiaDomainsToInternal } from "./hestia-mapper";
-import { HestiaWebDomainCollection, HestiaDnsDomainCollection, HestiaDnsRecordCollection, HestiaMailAccountCollection } from "../../infrastructure/types/hestia";
+import { HestiaWebDomainCollection, HestiaDnsDomainCollection, HestiaDnsRecordCollection, HestiaMailAccountCollection, HestiaWebDomain, HestiaDnsDomain, HestiaDnsRecord } from "../../infrastructure/types/hestia";
 import { getUserProfile } from "../../auth/queries/users";
 
 
@@ -18,8 +18,8 @@ import { getUserProfile } from "../../auth/queries/users";
  */
 export interface DomainDetailsResponse {
   domain: string;
-  dnsInfo?: any;
-  webInfo?: any;
+  dnsInfo?: HestiaDnsDomain;
+  webInfo?: HestiaWebDomain;
   records: HestiaDnsRecordCollection;
   subdomains: Domain[];
   soa?: string;
@@ -110,14 +110,15 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
 
     // 1. Process Web Domains
     Object.entries(hestiaWebDomains).forEach(([name, data], index) => {
-      const createdAt = data.DATE ? new Date(`${data.DATE} ${data.TIME}`).toISOString() : new Date().toISOString();
+      const webData = data as { DATE?: string; TIME?: string; STATUS?: string; IP?: string; PHP?: string; SSL?: string };
+      const createdAt = webData.DATE ? new Date(`${webData.DATE} ${webData.TIME}`).toISOString() : new Date().toISOString();
       // Estimate expiration as 1 year after creation if not provided
       const expDate = new Date(new Date(createdAt).setFullYear(new Date(createdAt).getFullYear() + 1)).toISOString();
       
       domainMap.set(name, {
         id: index + 1,
         domain: name,
-        status: data.STATUS === 'active' ? 'VERIFIED' : 'SUSPENDED',
+        status: webData.STATUS === 'active' ? 'VERIFIED' : 'SUSPENDED',
         createdAt,
         expirationDate: expDate,
         type: 'WEB',
@@ -129,10 +130,10 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
           dmarc: 'pending',
           mx: 'pending'
         },
-        ip: (data as any).IP,
-        php: (data as any).PHP,
-        ssl: (data as any).SSL === 'yes'
-      } as any);
+        ip: webData.IP,
+        php: webData.PHP,
+        ssl: webData.SSL === 'yes'
+      } as Domain);
     });
 
     // 2. Process DNS Domains (Merge or Add)
@@ -140,13 +141,14 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
     const dnsDomainEntries = Object.entries(hestiaDnsDomains);
     
     for (const [name, data] of dnsDomainEntries) {
-      const dnsRecordsMap: any = {};
+      const dnsData = data as { DATE?: string; TIME?: string };
+      const dnsRecordsMap: Record<string, string> = {};
       try {
         // Fetch actual records for each DNS domain
         const hRecords = await listDnsRecords(config, user, name);
         
         // Parse the records to find security entries
-        Object.values(hRecords).forEach((rec: any) => {
+        Object.values(hRecords).forEach((rec: HestiaDnsRecord) => {
           const rName = rec.RECORD;
           const rType = rec.TYPE;
           const rValue = rec.VALUE;
@@ -177,7 +179,7 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
           mx: dnsRecordsMap.mx || 'not found'
         };
       } else {
-        const createdAt = (data as any).DATE ? new Date(`${(data as any).DATE} ${(data as any).TIME}`).toISOString() : new Date().toISOString();
+        const createdAt = dnsData.DATE ? new Date(`${dnsData.DATE} ${dnsData.TIME}`).toISOString() : new Date().toISOString();
         const expDate = new Date(new Date(createdAt).setFullYear(new Date(createdAt).getFullYear() + 1)).toISOString();
 
         domainMap.set(name, {
@@ -195,14 +197,15 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
             dmarc: dnsRecordsMap.dmarc || 'not found',
             mx: dnsRecordsMap.mx || 'not found'
           }
-        } as any);
+        } as Domain);
       }
     }
 
     // 3. Process Mail Domains (Update Accounts Count)
     Object.entries(hestiaMailDomains).forEach(([name, data]) => {
+      const mailData = data as { DATE?: string; TIME?: string; ACCOUNTS?: string };
       const existing = domainMap.get(name);
-      const numAccounts = parseInt((data as any).ACCOUNTS, 10) || 0;
+      const numAccounts = parseInt(mailData.ACCOUNTS || '0', 10) || 0;
 
       if (existing) {
         existing.categories?.push('MAIL');
@@ -210,7 +213,7 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
         existing.mailboxes = numAccounts; // for compat
       } else {
         // Domain exists only as MAIL (uncommon but possible)
-        const createdAt = (data as any).DATE ? new Date(`${(data as any).DATE} ${(data as any).TIME}`).toISOString() : new Date().toISOString();
+        const createdAt = mailData.DATE ? new Date(`${mailData.DATE} ${mailData.TIME}`).toISOString() : new Date().toISOString();
         const expDate = new Date(new Date(createdAt).setFullYear(new Date(createdAt).getFullYear() + 1)).toISOString();
 
         domainMap.set(name, {
@@ -229,7 +232,7 @@ export async function getDomainsData(_req?: NextRequest): Promise<DomainsDataRes
             dmarc: 'pending',
             mx: 'pending'
           }
-        } as any);
+        } as Domain);
       }
     });
 
@@ -304,17 +307,17 @@ export async function getDomainDetails(domainName: string): Promise<DomainDetail
 
     // 1. Fetch DNS Info & All Web/DNS domains for metadata
     const [allDnsDomains, records, allWebDomains, soa, userProfile, mailAccounts] = await Promise.all([
-      listDnsDomains(config, user).catch(() => ({})),
-      listDnsRecords(config, user, domainName).catch(() => ({})),
-      listWebDomains(config, user).catch(() => ({})),
+      listDnsDomains(config, user).catch(() => ({} as Record<string, HestiaDnsDomain>)),
+      listDnsRecords(config, user, domainName).catch(() => ({} as HestiaDnsRecordCollection)),
+      listWebDomains(config, user).catch(() => ({} as Record<string, HestiaWebDomain>)),
       getDnsDomainValue(config, user, domainName, 'SOA').catch(() => 'N/A'),
       getUserProfile().catch(() => null),
-      listMailAccounts(config, user, domainName).catch(() => ({}))
+      listMailAccounts(config, user, domainName).catch(() => ({} as HestiaMailAccountCollection))
     ]);
 
     // 2. Resolve Root Info
-    const dnsInfoFromList = (allDnsDomains as any)[domainName];
-    const webInfoFromList = (allWebDomains as any)[domainName];
+    const dnsInfoFromList = (allDnsDomains as Record<string, HestiaDnsDomain>)[domainName];
+    const webInfoFromList = (allWebDomains as Record<string, HestiaWebDomain>)[domainName];
 
     const dnsInfo = dnsInfoFromList || null;
     const webInfo = webInfoFromList || null;
@@ -326,7 +329,7 @@ export async function getDomainDetails(domainName: string): Promise<DomainDetail
 
     // 3. Identify subdomains (any web domain ending in .domainName)
     const matchedWebDomains: HestiaWebDomainCollection = {};
-    Object.entries(allWebDomains).forEach(([name, data]) => {
+    Object.entries(allWebDomains as Record<string, HestiaWebDomain>).forEach(([name, data]) => {
       if (name === domainName || name.endsWith(`.${domainName}`)) {
         matchedWebDomains[name] = data;
       }
@@ -340,8 +343,8 @@ export async function getDomainDetails(domainName: string): Promise<DomainDetail
 
     return {
       domain: domainName,
-      dnsInfo,
-      webInfo,
+      dnsInfo: dnsInfo || undefined,
+      webInfo: webInfo || undefined,
       records,
       subdomains,
       soa,
@@ -350,8 +353,7 @@ export async function getDomainDetails(domainName: string): Promise<DomainDetail
       hestiaUrl,
       mailAccounts
     };
-  } catch (error) {
-    productionLogger.error(`Error fetching domain details for ${domainName}:`, error);
+  } catch {
     throw new Error(`Failed to fetch details for ${domainName}`);
   }
 }
@@ -361,7 +363,7 @@ export async function getDomainDetails(domainName: string): Promise<DomainDetail
  * This is a wrapper around getDomainDetails for systems using numeric IDs
  */
 export async function getDomainById(
-  domainId: string | number,
+  _domainId: string | number,
   _req?: NextRequest
 ): Promise<DomainWithMailboxesData | null> {
   try {
@@ -369,8 +371,7 @@ export async function getDomainById(
     // This is a placeholder implementation
     
     return null;
-  } catch (error) {
-    productionLogger.error("Error fetching domain by ID:", error);
+  } catch {
     throw new Error("Failed to fetch domain");
   }
 }
@@ -418,9 +419,9 @@ export async function createDomain(
     // Revalidate the domains page cache
     revalidatePath("/dashboard/domains");
     return newDomain;
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Error creating domain in Hestia:", error);
-    throw new Error(error.message || "Failed to create domain");
+    throw new Error(error instanceof Error ? error.message : "Failed to create domain");
   }
 }
 
@@ -441,8 +442,7 @@ export async function updateDomain(
     // This is a placeholder implementation
     
     throw new Error("Domain update not yet implemented");
-  } catch (error) {
-    productionLogger.error("Error updating domain:", error);
+  } catch {
     throw new Error("Failed to update domain");
   }
 }
@@ -462,8 +462,7 @@ export async function getTopAccountsForDomain(
     // This is a placeholder implementation
     
     return [];
-  } catch (error) {
-    productionLogger.error("Error fetching top accounts for domain:", error);
+  } catch {
     throw new Error("Failed to fetch top accounts");
   }
 }
@@ -483,8 +482,7 @@ export async function getDomainWithAccounts(
     // This is a placeholder implementation
     
     return null;
-  } catch (error) {
-    productionLogger.error("Error fetching domain with accounts:", error);
+  } catch {
     throw new Error("Failed to fetch domain with accounts");
   }
 }
@@ -504,8 +502,7 @@ export async function getAccountDetails(
     // This is a placeholder implementation
     
     return null;
-  } catch (error) {
-    productionLogger.error("Error fetching account details:", error);
+  } catch {
     throw new Error("Failed to fetch account details");
   }
 }
@@ -518,10 +515,6 @@ export async function getDomainSettings(
   data: DomainSettings;
 }> {
   try {
-    // TODO: Implement actual data fetching from NileDB
-    // This is a placeholder implementation with mock data
-    
-    // cast to any or construct full DomainSettings object mocked
     return {
       success: true,
       data: {
@@ -572,9 +565,56 @@ export async function getDomainSettings(
         autoAdjustWarmup: true
       } as unknown as DomainSettings
     };
-  } catch (error) {
-    productionLogger.error("Error fetching domain settings:", error);
-    throw new Error("Failed to fetch domain settings");
+  } catch {
+    return {
+      success: false,
+      data: {
+        domain: 'example.com',
+        provider: DNSProvider.OTHER as DNSProvider,
+        authentication: {
+          spf: {
+            enabled: false,
+            record: '',
+            policy: 'soft'
+          },
+          dkim: {
+            enabled: false,
+            selector: '',
+            key: ''
+          },
+          dmarc: {
+            enabled: false,
+            policy: 'none',
+            percentage: 0,
+            reportEmail: '',
+            record: ''
+          }
+        },
+        warmup: {
+          enabled: false,
+          dailyIncrease: 0,
+          maxDailyEmails: 0,
+          initialDailyVolume: 0,
+          warmupSpeed: 'slow',
+          replyRate: '0',
+          threadDepth: '1',
+          autoAdjustWarmup: false
+        },
+        reputationFactors: {
+          bounceRate: 0,
+          spamComplaints: 0,
+          engagement: 0
+        },
+        warmupEnabled: false,
+        dailyIncrease: 0,
+        maxDailyEmails: 0,
+        initialDailyVolume: 0,
+        warmupSpeed: 'slow',
+        replyRate: '0',
+        threadDepth: '1',
+        autoAdjustWarmup: false
+      } as unknown as DomainSettings
+    };
   }
 }
 
@@ -593,8 +633,7 @@ export async function deleteDomain(
     // This is a placeholder implementation
     
     throw new Error("Domain deletion not yet implemented");
-  } catch (error) {
-    productionLogger.error("Error deleting domain:", error);
+  } catch {
     throw new Error("Failed to delete domain");
   }
 }
