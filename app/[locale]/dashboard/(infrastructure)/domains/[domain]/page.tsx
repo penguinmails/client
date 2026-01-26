@@ -84,9 +84,9 @@ async function DomainDetailPage({ params }: DomainPageProps) {
                       <CardTitle className="text-sm font-medium">SOA Record</CardTitle>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                          <Info className="h-3.5 w-3.5 text-blue-500 cursor-help" />
                         </TooltipTrigger>
-                        <TooltipContent className="max-w-[250px]">
+                        <TooltipContent className="max-w-[250px] bg-slate-100 text-slate-900 border-slate-300">
                           Start of Authority: Essential DNS record that identifies the primary name server and administrative details for the zone.
                         </TooltipContent>
                       </Tooltip>
@@ -146,10 +146,10 @@ async function DomainDetailPage({ params }: DomainPageProps) {
                       return (
                         <div key={type} className="flex items-center justify-between p-3 rounded-lg border bg-muted/20">
                           <div className="flex items-center gap-3">
-                            {hasRecord ? <ShieldCheck className="w-5 h-5 text-emerald-600" /> : <Activity className="w-5 h-5 text-orange-500" />}
+                            {hasRecord ? <ShieldCheck className="w-5 h-5 text-emerald-600" /> : <ShieldAlert className="w-5 h-5 text-orange-500" />}
                             <span className="font-semibold">{type} Record</span>
                           </div>
-                          <Badge variant={hasRecord ? "secondary" : "outline"}>
+                          <Badge variant={hasRecord ? "secondary" : "destructive"}>
                             {hasRecord ? "Valid Configuration" : "Configuration Required"}
                           </Badge>
                         </div>
@@ -161,9 +161,9 @@ async function DomainDetailPage({ params }: DomainPageProps) {
                         <span className="font-semibold text-sm">SOA Record Status</span>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                            <Info className="h-3.5 w-3.5 text-blue-500 cursor-help" />
                           </TooltipTrigger>
-                          <TooltipContent className="max-w-[250px]">
+                          <TooltipContent className="max-w-[250px] bg-slate-100 text-slate-900 border-slate-300">
                             The Start of Authority record is required for proper DNS zone propagation and authority verification.
                           </TooltipContent>
                         </Tooltip>
@@ -292,7 +292,7 @@ async function DomainDetailPage({ params }: DomainPageProps) {
                                   </div>
                                 </td>
                                 <td className="px-4 py-3">
-                                  <Badge variant={details.STATUS === 'active' ? 'secondary' : 'destructive'}>
+                                  <Badge variant={details.STATUS === 'active' ? 'default' : 'destructive'}>
                                     {details.STATUS === 'active' ? 'Active' : 'Suspended'}
                                   </Badge>
                                 </td>
