@@ -28,27 +28,27 @@ export async function GET() {
       // CampaignDisplay compatibility (for the table)
       createdDate: dateStr,
       lastSent: campaign.dateModified || dateStr,
-      mailboxes: 1,
+      mailboxes: 1, // Default value until mailbox integration is complete
       leadsSent: campaign.eventCount || 0,
-      replies: 0,
-      openRate: "0%",
-      replyRate: "0%",
-      assignedMailboxes: ['marketing@penguinmails.com'],
+      replies: 0, // Default value until reply tracking is implemented
+      openRate: "0%", // Default value until open tracking is implemented
+      replyRate: "0%", // Default value until reply tracking is implemented
+      assignedMailboxes: ['marketing@penguinmails.com'], // Default value
 
       // Compatibility for other detail views
-      fromEmail: 'marketing@penguinmails.com',
-      fromName: 'Penguin Mails',
+      fromEmail: 'marketing@penguinmails.com', // Default value
+      fromName: 'Penguin Mails', // Default value
       metrics: {
         recipients: { sent: campaign.eventCount || 0, total: campaign.segmentCount || 0 },
-        opens: { total: 0, rate: 0 },
-        clicks: { total: 0, rate: 0 },
-        replies: { total: 0, rate: 0 },
-        bounces: { total: 0, rate: 0 }
+        opens: { total: 0, rate: 0 }, // Default values until tracking is implemented
+        clicks: { total: 0, rate: 0 }, // Default values until tracking is implemented
+        replies: { total: 0, rate: 0 }, // Default values until tracking is implemented
+        bounces: { total: 0, rate: 0 } // Default values until tracking is implemented
       },
       createdAt: dateStr,
       scheduledAt: dateStr,
       leadListId: campaign.lists?.[0]?.id ? String(campaign.lists[0].id) : '1',
-      mailboxIds: ['1']
+      mailboxIds: ['1'] // Default value
     };
   });
 

@@ -34,8 +34,8 @@ export async function getCampaignLeads(_campaignId?: string, _req?: NextRequest)
       name: `${contact.firstName} ${contact.lastName}`.trim() || 'Anonymous',
       email: contact.email,
       company: contact.company || 'N/A',
-      status: 'sent', // Default status for generic list
-      currentStep: 1,
+      status: 'pending', // Default status until campaign-specific tracking is implemented
+      currentStep: 1, // Default value until campaign-specific tracking is implemented
       lastActivity: contact.lastActive ? new Date(contact.lastActive).toLocaleDateString() : 'N/A'
     }));
     
@@ -75,24 +75,30 @@ export async function getSequenceSteps(campaignId?: string, _req?: NextRequest):
 
     // Map Mautic campaign events to sequence steps
     const events = result.data.events || [];
-    const steps: SequenceStep[] = events.map((event, index) => ({
-      id: Number(event.id),
-      sequenceOrder: index + 1,
-      delayDays: 0,
-      delayHours: 0,
-      templateId: 0,
-      campaignId: Number(campaignId),
-      emailSubject: event.name,
-      type: event.eventType === 'action' ? 'email' : 'wait',
-      subject: event.name,
-      sent: 0,
-      opened_tracked: 0,
-      clicked_tracked: 0,
-      replied: 0,
-      completed: 0,
-      duration: 'Immediate',
-      condition: 'ALWAYS'
-    }));
+    const steps: SequenceStep[] = events.map((event, index) => {
+      // Extract delay information from event properties if available
+      const delayDays = event.triggerIntervalUnit === 'd' ? (event.triggerInterval as number) || 0 : 0;
+      const delayHours = event.triggerIntervalUnit === 'h' ? (event.triggerInterval as number) || 0 : 0;
+      
+      return {
+        id: Number(event.id),
+        sequenceOrder: index + 1,
+        delayDays,
+        delayHours,
+        templateId: Number(event.properties?.email) || 0,
+        campaignId: Number(campaignId),
+        emailSubject: event.name,
+        type: event.eventType === 'action' ? 'email' : 'wait',
+        subject: event.name,
+        sent: 0, // Default value until tracking is implemented
+        opened_tracked: 0, // Default value until tracking is implemented
+        clicked_tracked: 0, // Default value until tracking is implemented
+        replied: 0, // Default value until tracking is implemented
+        completed: 0, // Default value until tracking is implemented
+        duration: delayDays > 0 || delayHours > 0 ? `${delayDays}d ${delayHours}h` : 'Immediate',
+        condition: 'ALWAYS' // Default value
+      };
+    });
     
     return {
       success: true,

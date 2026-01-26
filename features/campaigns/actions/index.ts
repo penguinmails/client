@@ -83,15 +83,15 @@ export async function getCampaigns(_req?: NextRequest): Promise<ActionResult<Cam
       id: c.id.toString(),
       name: c.name,
       alias: c.alias || undefined,
-      fromEmail: 'marketing@penguinmails.com',
-      fromName: 'Penguin Mails',
+      fromEmail: 'marketing@penguinmails.com', // Default value until sender integration is complete
+      fromName: 'Penguin Mails', // Default value until sender integration is complete
       status: c.isPublished ? 'active' : 'draft',
       lastUpdated: c.dateModified || c.dateAdded,
       metrics: {
         recipients: { sent: c.eventCount || 0, total: c.segmentCount || 0 },
-        opens: { total: 0, rate: 0 },
-        clicks: { total: 0, rate: 0 },
-        replies: { total: 0, rate: 0 }
+        opens: { total: 0, rate: 0 }, // Default values until tracking is implemented
+        clicks: { total: 0, rate: 0 }, // Default values until tracking is implemented
+        replies: { total: 0, rate: 0 } // Default values until tracking is implemented
       }
     }));
 
@@ -232,8 +232,19 @@ export async function createCampaign(data: Partial<Campaign>, _req?: NextRequest
 
       // Only add intervals if not immediate
       if (triggerMode === 'interval') {
-        event.triggerInterval = step.delayDays || 0;
-        event.triggerIntervalUnit = 'd';
+        const delayDays = Number(step.delayDays) || 0;
+        const delayHours = Number(step.delayHours) || 0;
+        
+        if (delayDays > 0) {
+          event.triggerInterval = delayDays;
+          event.triggerIntervalUnit = 'd';
+        } else if (delayHours > 0) {
+          event.triggerInterval = delayHours;
+          event.triggerIntervalUnit = 'h';
+        } else {
+          // Default to immediate if no delay specified
+          event.triggerMode = 'immediate';
+        }
       }
 
       // Add to events list
