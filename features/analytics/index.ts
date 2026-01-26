@@ -40,6 +40,7 @@ export {
   getCrossDomainCorrelationAnalysis,
   generateCrossDomainInsights,
 } from './actions';
+export { getDashboardAnalyticsAction } from './actions/stats';
 
 // Data Access - Public data operations
 export {
@@ -47,11 +48,6 @@ export {
   getMailboxById,
 } from './lib/warmup';
 
-// Services - Public analytics services
-export {
-  analyticsService,
-  eventStorageService,
-} from './lib/services';
 
 // UI Components - Public components for external use
 export {
