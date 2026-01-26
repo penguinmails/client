@@ -13,8 +13,6 @@ import {
 } from "@/components/ui/table";
 import { fetchLeadLists } from "@features/leads/actions/lists";
 import { LeadListData } from "@/types/clients-leads";
-import type { ActionResult } from "@/types";
-import type { LeadList } from "@features/leads/actions";
 import { ArrowUpDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import ListTableRow from "./ListTableRow";
@@ -36,9 +34,11 @@ function ListsTab() {
   const [sortById, setSortById] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
-    fetchLeadLists()
-      .then((result: ActionResult<LeadList[]>) => {
+    let isMounted = true;
+    
+    const loadLists = async () => {
+      const result = await fetchLeadLists();
+      if (isMounted) {
         if (Array.isArray(result)) {
           setFilteredLists(result as unknown as LeadListData[]);
         } else if (result && result.success && result.data) {
@@ -46,14 +46,21 @@ function ListsTab() {
         } else {
           setFilteredLists([]);
         }
-      })
-      .catch((error: unknown) => {
+        setIsLoading(false);
+      }
+    };
+    
+    loadLists().catch((error: unknown) => {
+      if (isMounted) {
         productionLogger.error("Failed to load leads lists:", error);
         setFilteredLists([]);
-      })
-      .finally(() => {
         setIsLoading(false);
-      });
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   function handleSortBy(columnId: string) {

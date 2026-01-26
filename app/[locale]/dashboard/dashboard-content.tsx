@@ -29,7 +29,7 @@ import { useAuth } from "@features/auth/hooks/use-auth";
 
 // Module-level mock data with static timestamps (avoids Date.now() during render)
 const MOCK_TIMESTAMP = 1705420800000; // Static timestamp for mock data
-const MOCK_CAMPAIGN_ANALYTICS: CampaignAnalytics[] = [
+const _MOCK_CAMPAIGN_ANALYTICS: CampaignAnalytics[] = [
   {
     id: "1",
     name: "Q1 Outreach",
@@ -287,7 +287,7 @@ export default function DashboardContent({
 function DashboardKpiCards({
   analytics,
   loading,
-  error,
+  _error,
 }: {
   analytics: {
     activeCampaigns: number;
@@ -299,7 +299,7 @@ function DashboardKpiCards({
     systemHealth: number;
   } | null;
   loading: boolean;
-  error: string | null;
+  _error: string | null;
 }) {
   const t = useTranslations("Dashboard");
 

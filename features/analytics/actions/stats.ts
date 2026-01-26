@@ -76,11 +76,12 @@ export async function getDashboardAnalyticsAction() {
 
     // 2. Fetch global email stats from Mautic stats endpoint
     // We use the total from /stats/email_stats to get total sent
+    interface StatsResponse { total: number }
     const [sentStats, openedStats, clickedStats, bouncedStats] = await Promise.all([
-       makeMauticRequest<any>('GET', '/stats/email_stats', { params: { limit: 1 } }).catch(() => ({ total: 0 })),
-       makeMauticRequest<any>('GET', '/stats/email_stats', { params: { limit: 1, 'where[0][col]': 'is_read', 'where[0][expr]': 'eq', 'where[0][val]': 1 } }).catch(() => ({ total: 0 })),
-       makeMauticRequest<any>('GET', '/stats/page_hits', { params: { limit: 1, 'where[0][col]': 'email_id', 'where[0][expr]': 'isNotNull' } }).catch(() => ({ total: 0 })),
-       makeMauticRequest<any>('GET', '/stats/email_stats', { params: { limit: 1, 'where[0][col]': 'is_failed', 'where[0][expr]': 'eq', 'where[0][val]': 1 } }).catch(() => ({ total: 0 })),
+       makeMauticRequest<StatsResponse>('GET', '/stats/email_stats', { params: { limit: 1 } }).catch(() => ({ total: 0 })),
+       makeMauticRequest<StatsResponse>('GET', '/stats/email_stats', { params: { limit: 1, 'where[0][col]': 'is_read', 'where[0][expr]': 'eq', 'where[0][val]': 1 } }).catch(() => ({ total: 0 })),
+       makeMauticRequest<StatsResponse>('GET', '/stats/page_hits', { params: { limit: 1, 'where[0][col]': 'email_id', 'where[0][expr]': 'isNotNull' } }).catch(() => ({ total: 0 })),
+       makeMauticRequest<StatsResponse>('GET', '/stats/email_stats', { params: { limit: 1, 'where[0][col]': 'is_failed', 'where[0][expr]': 'eq', 'where[0][val]': 1 } }).catch(() => ({ total: 0 })),
     ]);
 
     const totalSent = Number(sentStats.total || 0);

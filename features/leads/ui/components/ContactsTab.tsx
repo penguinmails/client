@@ -76,9 +76,11 @@ function ContactsTab({ listId }: { listId?: string }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
-    getClients({ listId })
-      .then((result) => {
+    let isMounted = true;
+    
+    const loadContacts = async () => {
+      const result = await getClients({ listId });
+      if (isMounted) {
         if (result.success && result.data) {
           // Map Client to DisplayContact
           const contacts: DisplayContact[] = result.data.map((client: Client) => ({
@@ -93,13 +95,22 @@ function ContactsTab({ listId }: { listId?: string }) {
           }));
           setFilteredContacts(contacts);
         }
-      })
-      .catch((error) => {
+      }
+    };
+
+    loadContacts().catch((error) => {
+      if (isMounted) {
         productionLogger.error("Failed to load contacts:", error);
-      })
-      .finally(() => {
+      }
+    }).finally(() => {
+      if (isMounted) {
         setIsLoading(false);
-      });
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, [listId]);
 
   const handleSort = (field: string) => {

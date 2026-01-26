@@ -22,7 +22,7 @@ export async function importCSVContactsAction(params: {
 }): Promise<ActionResult<ImportResult>> {
   try {
     const { listName, tags, contacts, columnMapping } = params;
-    const tagList = tags.split(',').map(t => t.trim()).filter(Boolean);
+    const _tagList = tags.split(',').map(t => t.trim()).filter(Boolean);
     const errors: string[] = [];
 
     // 1. Create Segment
@@ -59,7 +59,7 @@ export async function importCSVContactsAction(params: {
              return;
           }
 
-          const contactFields: Record<string, any> = {
+          const contactFields: Record<string, string> = {
             firstName: row[columnMapping['firstName']] || '',
             lastName: row[columnMapping['lastName']] || '',
             company: row[columnMapping['company']] || '',
