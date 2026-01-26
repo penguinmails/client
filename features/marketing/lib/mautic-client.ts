@@ -1,5 +1,4 @@
 import { getMauticConfig } from "../../infrastructure/actions/config";
-import { MauticApiResponse } from "../types/mautic";
 
 /**
  * Mautic API Client (Fetch-based)
@@ -63,31 +62,21 @@ export async function makeMauticRequest<T>(
         
         const errorData = await response.json().catch(() => ({}));
         
-        // Log the full error context
-        console.error('Mautic API Error Context:', JSON.stringify({
-          status: response.status,
-          url: url.toString(),
-          method,
-          errorData
-        }, null, 2));
-
-        const errorMessage = errorData.error?.message || 
-                           errorData.errors?.map((e: any) => e.message).join(', ') || 
+        const errorMessage = (errorData.error as Record<string, unknown>)?.message as string || 
+                           (errorData.errors as Array<Record<string, unknown>>)?.map((e: Record<string, unknown>) => e.message as string).join(', ') || 
                            `Mautic API error: ${response.status}`;
                            
         throw new Error(errorMessage);
       }
 
       return await response.json();
-    } catch (error: any) {
+    } catch (error: unknown) {
       attempt++;
-      if (attempt >= MAX_RETRIES || !error.message.startsWith('HTTP')) {
-        console.error(`[Mautic API] Request failed after ${attempt} attempts:`, error.message);
+      if (attempt >= MAX_RETRIES || !(error instanceof Error) || !error.message.startsWith('HTTP')) {
         throw error;
       }
       
       const backoff = Math.pow(2, attempt) * 1000 + Math.random() * 200;
-      console.log(`[Mautic API] Retrying in ${Math.round(backoff)}ms...`);
       await delay(backoff);
     }
   }
@@ -98,7 +87,7 @@ export async function makeMauticRequest<T>(
 /**
  * Parse standard Mautic API response
  */
-export function parseMauticResponse<T>(response: any): T {
+export function parseMauticResponse<T>(response: unknown): T {
   // Mautic often returns an object where the key is the entity type (e.g. 'contact' or 'campaign')
   // or 'success' if it's an action.
   return response as T;
