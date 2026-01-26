@@ -66,7 +66,7 @@ export function DnsRecordsTable({ records }: DnsRecordsTableProps) {
                                                                 <Info className="h-3 w-3" />
                                                             </Button>
                                                         </TooltipTrigger>
-                                                        <TooltipContent side="left" className="p-3 text-xs">
+                                                        <TooltipContent side="left" className="p-3 text-xs bg-slate-100 text-slate-900 border-slate-300">
                                                             <p className="font-semibold mb-1">DNS Record</p>
                                                             <div className="space-y-1 text-muted-foreground">
                                                                 <div className="flex justify-between gap-4">
