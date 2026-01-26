@@ -1,6 +1,6 @@
 import { listMailboxes } from "@features/mailboxes/actions";
 import { MailboxesTable } from "@features/mailboxes/ui/components/mailboxes-table";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail } from "lucide-react";
 
 export const dynamic = 'force-dynamic';

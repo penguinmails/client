@@ -1,5 +1,6 @@
 import DomainsTab from "@features/domains/ui/components/domains-tab";
 import { getDomainsData } from "@features/domains/actions";
+import { Domain } from "@features/domains/types";
 import { productionLogger } from "@/lib/logger";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -8,7 +9,7 @@ async function page() {
     const data = await getDomainsData();
     const { domains, dnsRecords } = data;
 
-    const transform = (domainList: any[]) => domainList.map((domain) => ({
+    const transform = (domainList: Domain[]) => domainList.map((domain: Domain) => ({
       id: domain.id,
       domain: domain.domain,
       status: domain.status,

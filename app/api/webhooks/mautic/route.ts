@@ -16,8 +16,7 @@ export async function POST(req: NextRequest) {
         { status: result.error === "Invalid signature" ? 401 : 400 }
       );
     }
-  } catch (error: any) {
-    console.error("[Mautic Webhook Route] Unexpected error:", error);
+  } catch {
     return NextResponse.json(
       { success: false, error: "Internal server error" },
       { status: 500 }
