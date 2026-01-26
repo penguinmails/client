@@ -1,8 +1,7 @@
 "use client";
 
 import { AdminGuard } from "@/features/admin/lib/admin-guard";
-import { AdminRole } from "@/features/auth/types/base";
-import { SessionTimeoutWarning } from "@/features/auth/ui/components/SessionTimeoutWarning";
+import { AdminRole, SessionTimeoutWarning } from "@/features/auth";
 
 interface AdminPageWrapperProps {
   children: React.ReactNode;
