@@ -19,6 +19,8 @@ function normalizeSegment(raw: Record<string, unknown>, key?: string): SegmentDT
     description: (raw.description as string) || '',
     isPublished: raw.isPublished !== undefined ? (raw.isPublished as boolean) : true,
     contactCount: Number(raw.contactCount || 0),
+    dateAdded: (raw.dateAdded as string) || undefined,
+    dateModified: (raw.dateModified as string) || undefined,
   };
 }
 
@@ -80,3 +82,54 @@ export async function getSegmentAction(id: number | string): Promise<ActionResul
     };
   }
 }
+/**
+ * Create segment action
+ */
+export async function createSegmentAction(data: {
+  name: string;
+  alias?: string;
+  description?: string;
+}): Promise<ActionResult<SegmentDTO>> {
+  try {
+    const response = await makeMauticRequest<Record<string, unknown>>('POST', '/segments/new', {
+      body: JSON.stringify({
+        ...data,
+        isPublished: 1,
+      }),
+    });
+
+    return {
+      success: true,
+      data: normalizeSegment((response.list as Record<string, unknown>) || (response.segment as Record<string, unknown>)),
+    };
+  } catch (error: unknown) {
+    productionLogger.error("Error creating Mautic segment:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to create segment",
+    };
+  }
+}
+
+/**
+ * Add contact to segment action
+ */
+export async function addContactToSegmentAction(
+  segmentId: number | string,
+  contactId: number
+): Promise<ActionResult<{ success: boolean }>> {
+  try {
+    await makeMauticRequest('POST', `/segments/${segmentId}/contact/${contactId}/add`);
+    return {
+      success: true,
+      data: { success: true },
+    };
+  } catch (error: unknown) {
+    productionLogger.error(`Error adding contact ${contactId} to segment ${segmentId}:`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to add contact to segment",
+    };
+  }
+}
+

@@ -104,6 +104,8 @@ export interface SegmentDTO {
   description: string;
   isPublished: boolean;
   contactCount: number;
+  dateAdded?: string;
+  dateModified?: string;
 }
 
 export interface RawMauticSegment {
