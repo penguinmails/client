@@ -9,8 +9,8 @@ import * as billManager from "../api/billmanager";
  */
 export async function getBillingDashboardAction(): Promise<ActionResult<{
   balance: string;
-  unpaidInvoices: any[];
-  paymentHistory: any[];
+  unpaidInvoices: Array<Record<string, unknown>>;
+  paymentHistory: Array<Record<string, unknown>>;
 }>> {
   try {
     const balance = await billManager.getBalance();
@@ -25,11 +25,11 @@ export async function getBillingDashboardAction(): Promise<ActionResult<{
         paymentHistory: Array.isArray(paymentHistory) ? paymentHistory : [],
       }
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Failed to fetch billing dashboard from BillManager:", error);
     return {
       success: false,
-      error: error.message || "Failed to fetch billing data"
+      error: error instanceof Error ? error.message : "Failed to fetch billing data"
     };
   }
 }
@@ -37,18 +37,18 @@ export async function getBillingDashboardAction(): Promise<ActionResult<{
 /**
  * Lists VPS instances from BillManager
  */
-export async function listVpsInstancesAction(): Promise<ActionResult<any[]>> {
+export async function listVpsInstancesAction(): Promise<ActionResult<Array<Record<string, unknown>>>> {
   try {
     const instances = await billManager.listVpsInstances();
     return {
       success: true,
       data: Array.isArray(instances) ? instances : []
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Failed to list VPS instances from BillManager:", error);
     return {
       success: false,
-      error: error.message || "Failed to list VPS instances"
+      error: error instanceof Error ? error.message : "Failed to list VPS instances"
     };
   }
 }
@@ -56,36 +56,36 @@ export async function listVpsInstancesAction(): Promise<ActionResult<any[]>> {
 /**
  * Lists registered domains from BillManager
  */
-export async function listBillManagerDomainsAction(): Promise<ActionResult<any[]>> {
+export async function listBillManagerDomainsAction(): Promise<ActionResult<Array<Record<string, unknown>>>> {
   try {
     const domains = await billManager.listDomains();
     return {
       success: true,
       data: Array.isArray(domains) ? domains : []
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Failed to list domains from BillManager:", error);
     return {
       success: false,
-      error: error.message || "Failed to list domains"
+      error: error instanceof Error ? error.message : "Failed to list domains"
     };
   }
 }
 /**
  * Gets details for a specific VPS instance
  */
-export async function getVpsDetailsAction(id: string): Promise<ActionResult<any>> {
+export async function getVpsDetailsAction(id: string): Promise<ActionResult<unknown>> {
   try {
     const details = await billManager.getVpsDetails(id);
     return {
       success: true,
       data: details
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error(`Failed to fetch VPS details for ${id} from BillManager:`, error);
     return {
       success: false,
-      error: error.message || "Failed to fetch VPS details"
+      error: error instanceof Error ? error.message : "Failed to fetch VPS details"
     };
   }
 }
@@ -93,18 +93,18 @@ export async function getVpsDetailsAction(id: string): Promise<ActionResult<any>
 /**
  * Gets details for a specific domain
  */
-export async function getBillManagerDomainDetailsAction(id: string): Promise<ActionResult<any>> {
+export async function getBillManagerDomainDetailsAction(id: string): Promise<ActionResult<unknown>> {
   try {
     const details = await billManager.getDomainDetails(id);
     return {
       success: true,
       data: details
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error(`Failed to fetch domain details for ${id} from BillManager:`, error);
     return {
       success: false,
-      error: error.message || "Failed to fetch domain details"
+      error: error instanceof Error ? error.message : "Failed to fetch domain details"
     };
   }
 }
@@ -112,18 +112,18 @@ export async function getBillManagerDomainDetailsAction(id: string): Promise<Act
 /**
  * Lists available TLDs and their pricing from BillManager
  */
-export async function listTldsAction(): Promise<ActionResult<any[]>> {
+export async function listTldsAction(): Promise<ActionResult<Array<Record<string, unknown>>>> {
   try {
     const tlds = await billManager.listTlds();
     return {
       success: true,
       data: Array.isArray(tlds) ? tlds : []
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Failed to list TLDs from BillManager:", error);
     return {
       success: false,
-      error: error.message || "Failed to list TLDs"
+      error: error instanceof Error ? error.message : "Failed to list TLDs"
     };
   }
 }

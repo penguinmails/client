@@ -35,12 +35,11 @@ function mapHestiaUsers(users: HestiaUserCollection): PanelUserData[] {
     email: data.EMAIL,
     status: data.STATUS === 'active' ? 'active' : 'suspended',
     createdAt: `${data.DATE} ${data.TIME || ''}`.trim(),
-    // These might be present in the raw data but not in our HestiaUser type yet
-    diskUsage: (data as any).U_DISK,
-    bandwidthUsage: (data as any).U_BANDWIDTH,
-    webDomains: Number((data as any).WEB_DOMAINS) || 0,
-    mailDomains: Number((data as any).MAIL_DOMAINS) || 0,
-    databases: Number((data as any).DATABASES) || 0,
+    diskUsage: data.U_DISK,
+    bandwidthUsage: data.U_BANDWIDTH,
+    webDomains: Number(data.WEB_DOMAINS) || 0,
+    mailDomains: Number(data.MAIL_DOMAINS) || 0,
+    databases: Number(data.DATABASES) || 0,
   }));
 }
 
@@ -57,11 +56,11 @@ export async function listPanelUsersAction(): Promise<ActionResult<PanelUserData
       success: true,
       data: mapped
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Error fetching panel users from Hestia:", error);
     return {
       success: false,
-      error: error.message || "Failed to fetch panel users"
+      error: error instanceof Error ? error.message : "Failed to fetch panel users"
     };
   }
 }
@@ -103,11 +102,11 @@ export async function createPanelUserAction(data: {
       success: true,
       data: { success: true }
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Error creating panel user:", error);
     return {
       success: false,
-      error: error.message || "Failed to create panel user"
+      error: error instanceof Error ? error.message : "Failed to create panel user"
     };
   }
 }
@@ -140,11 +139,11 @@ export async function deletePanelUserAction(username: string): Promise<ActionRes
       success: true,
       data: { success: true }
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error(`Error deleting panel user ${username}:`, error);
     return {
       success: false,
-      error: error.message || "Failed to delete panel user"
+      error: error instanceof Error ? error.message : "Failed to delete panel user"
     };
   }
 }

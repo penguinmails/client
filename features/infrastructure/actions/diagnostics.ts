@@ -4,14 +4,13 @@ import { getHestiaConfig, getKumoConfig } from './config';
 import { listWebDomains } from '../api/hestia';
 import { getSystemServicesAction } from './monitoring';
 import { listContactsAction } from '@/features/marketing';
-import { productionLogger } from '@/lib/logger';
 
 export interface DiagnosticResult {
   service: string;
   status: 'healthy' | 'unhealthy' | 'not_configured';
   message: string;
   latency?: number;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 /**
@@ -32,11 +31,11 @@ export async function runInfrastructureDiagnostics(): Promise<DiagnosticResult[]
       message: 'Successfully connected and listed domains',
       latency: Date.now() - start
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     results.push({
       service: 'HestiaCP (Infrastructure)',
       status: 'unhealthy',
-      message: error.message || 'Failed to connect to HestiaCP',
+      message: error instanceof Error ? error.message : 'Failed to connect to HestiaCP',
     });
   }
 
@@ -53,7 +52,7 @@ export async function runInfrastructureDiagnostics(): Promise<DiagnosticResult[]
         status: response.ok || response.status === 401 || response.status === 405 ? 'healthy' : 'unhealthy',
         message: `API endpoint reached (Status: ${response.status})`,
     });
-  } catch (error: any) {
+  } catch {
     results.push({
       service: 'KumoMTA (SMTP)',
       status: 'unhealthy',
@@ -81,7 +80,7 @@ export async function runInfrastructureDiagnostics(): Promise<DiagnosticResult[]
         latency: Date.now() - start
       });
     }
-  } catch (error: any) {
+  } catch {
     results.push({
       service: 'Mautic (Marketing)',
       status: 'unhealthy',
@@ -109,7 +108,7 @@ export async function runInfrastructureDiagnostics(): Promise<DiagnosticResult[]
         latency: Date.now() - start
       });
     }
-  } catch (error: any) {
+  } catch {
     results.push({
       service: 'System Services',
       status: 'unhealthy',

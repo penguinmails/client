@@ -1,6 +1,6 @@
 "use server";
 
-import { sendSingleEmail, sendBulkEmails } from '../api/kumo';
+import { sendBulkEmails } from '../api/kumo';
 import { EmailRecipient, EmailResult } from '../types/kumo';
 import { productionLogger } from '@/lib/logger';
 import { getKumoConfig } from './config';
@@ -38,13 +38,13 @@ export async function sendTransactionalEmail(
     );
 
     return results[0];
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Failed to send transactional email:", error);
     return {
       success: false,
       status: 'failed',
       recipient: recipient.email,
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
       message: 'Failed to send transactional email'
     };
   }

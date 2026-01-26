@@ -71,6 +71,11 @@ export interface HestiaUser {
   STATUS: 'active' | 'suspended';
   DATE: string;
   TIME: string;
+  U_DISK?: string;
+  U_BANDWIDTH?: string;
+  WEB_DOMAINS?: string | number;
+  MAIL_DOMAINS?: string | number;
+  DATABASES?: string | number;
 }
 
 export type HestiaUserCollection = Record<string, HestiaUser>;

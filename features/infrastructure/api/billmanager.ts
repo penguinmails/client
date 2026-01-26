@@ -3,7 +3,7 @@ import { getBillManagerConfig } from "../actions/config";
 /**
  * Deeply traverses an object/array and simplifies BILLmanager's {"$": "value"} structure
  */
-function simplifyValues(obj: any): any {
+function simplifyValues(obj: unknown): unknown {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
@@ -13,13 +13,13 @@ function simplifyValues(obj: any): any {
   }
 
   // Handle BILLmanager's special object structure
-  if (obj.$ !== undefined) {
+  if (typeof obj === 'object' && '$' in obj) {
     return obj.$;
   }
 
   // Recursively handle all properties
-  const simplified: any = {};
-  for (const [key, value] of Object.entries(obj)) {
+  const simplified: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
     simplified[key] = simplifyValues(value);
   }
   return simplified;
@@ -31,7 +31,7 @@ function simplifyValues(obj: any): any {
 export async function runBillManagerCommand(
   funcName: string,
   params: Record<string, string | number> = {}
-): Promise<any> {
+): Promise<unknown> {
   const config = getBillManagerConfig();
   const { url, username, password } = config;
 
@@ -81,8 +81,7 @@ export async function runBillManagerCommand(
     }
 
     return simplifyValues(result);
-  } catch (error: any) {
-    console.error(`[BillManager] API error executing ${funcName}:`, error.message);
+  } catch (error: unknown) {
     throw error;
   }
 }
