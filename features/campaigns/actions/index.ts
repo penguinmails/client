@@ -75,7 +75,7 @@ export async function getCampaigns(_req?: NextRequest): Promise<ActionResult<Cam
     if (!result.success) {
       return {
         success: false,
-        error: (result as any).error || "Failed to fetch campaigns"
+        error: (result as { error?: string }).error || "Failed to fetch campaigns"
       };
     }
 
@@ -118,7 +118,7 @@ export async function getCampaign(id: string | number, _req?: NextRequest): Prom
     if (!result.success) {
       return {
         success: false,
-        error: (result as any).error || "Campaign not found"
+        error: (result as { error?: string }).error || "Campaign not found"
       };
     }
 
@@ -167,27 +167,27 @@ export async function createCampaign(data: Partial<Campaign>, _req?: NextRequest
     }
     
     // Fallback if data comes with leadsList object
-    const formData = data as any;
-    if (formData.leadsList?.id) {
-       const listId = Number(formData.leadsList.id);
+    const formData = data as Record<string, unknown>;
+    if ((formData.leadsList as Record<string, unknown>)?.id) {
+       const listId = Number((formData.leadsList as Record<string, unknown>).id);
        if (!isNaN(listId) && !segmentIds.includes(listId)) {
          segmentIds.push(listId);
        }
     }
 
     // 1. Process Steps & Create Emails
-    const campaignEvents: any[] = [];
-    const steps = formData.steps || [];
+    const campaignEvents: Array<Record<string, unknown>> = [];
+    const steps = (formData.steps as Array<Record<string, unknown>>) || [];
     
     // We need to keep track of the previous node for linking in canvasSettings
     let previousNodeId = 'lists'; // The source node
     const canvasNodes = [{ id: 'lists', positionX: '50', positionY: '50' }];
-    const canvasConnections = [];
+    const canvasConnections: Array<{ sourceId: string; targetId: string; anchors: { source: string; target: string } }> = [];
 
     // Filter for valid email steps
-    const emailSteps = steps.filter((step: any) => 
-      step.emailSubject?.trim() && step.emailBody?.trim()
-    ).sort((a: any, b: any) => a.sequenceOrder - b.sequenceOrder);
+    const emailSteps = steps.filter((step: Record<string, unknown>) => 
+      (step.emailSubject as string)?.trim() && (step.emailBody as string)?.trim()
+    ).sort((a: Record<string, unknown>, b: Record<string, unknown>) => (a.sequenceOrder as number) - (b.sequenceOrder as number));
 
     if (emailSteps.length === 0) {
       return {
@@ -203,11 +203,11 @@ export async function createCampaign(data: Partial<Campaign>, _req?: NextRequest
       // Create Email Template in Mautic
       const emailResult = await createEmailAction({
         name: `${data.name} - Email ${i + 1}`, // Unique name for the template
-        subject: step.emailSubject,
-        customHtml: step.emailBody, // Mautic uses customHtml for the body
+        subject: step.emailSubject as string,
+        customHtml: step.emailBody as string, // Mautic uses customHtml for the body
         isPublished: true,
         emailType: 'template'
-      } as any);
+      });
 
       if (!emailResult.success) {
         throw new Error(`Failed to create email template for step ${i + 1}: ${emailResult.error}`);
@@ -215,12 +215,12 @@ export async function createCampaign(data: Partial<Campaign>, _req?: NextRequest
 
       // Configure Event
       const isFirst = i === 0;
-      const triggerMode = (isFirst && step.delayDays === 0 && step.delayHours === 0) ? 'immediate' : 'interval';
+      const triggerMode = (isFirst && (step.delayDays as number) === 0 && (step.delayHours as number) === 0) ? 'immediate' : 'interval';
       
-      const event: any = {
+      const event: Record<string, unknown> = {
         id: tempId,
-        name: `Step ${i + 1}: ${step.emailSubject}`,
-        description: step.emailSubject,
+        name: `Step ${i + 1}: ${step.emailSubject as string}`,
+        description: step.emailSubject as string,
         type: 'email.send',
         eventType: 'action',
         order: i + 1,
@@ -282,7 +282,7 @@ export async function createCampaign(data: Partial<Campaign>, _req?: NextRequest
     if (!result.success) {
       return {
         success: false,
-        error: (result as any).error || "Failed to create campaign in Mautic"
+        error: (result as { error?: string }).error || "Failed to create campaign in Mautic"
       };
     }
 
@@ -306,11 +306,11 @@ export async function createCampaign(data: Partial<Campaign>, _req?: NextRequest
       success: true,
       data: campaign
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Error creating campaign:", error);
     return {
       success: false,
-      error: error.message || "Failed to create campaign"
+      error: error instanceof Error ? error.message : "Failed to create campaign"
     };
   }
 }

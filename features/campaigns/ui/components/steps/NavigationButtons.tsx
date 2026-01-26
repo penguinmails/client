@@ -26,16 +26,15 @@ function NavigationButtons() {
         ...values,
         leadListId: values.leadsList?.id,
         status: status, // Pass status to force isPublished flag
-      } as any);
+      } as Record<string, unknown>);
 
       if (result.success && result.data) {
         toast.success(status === 'active' ? "Campaign launched successfully!" : "Campaign saved as draft!");
         router.push(`/dashboard/campaigns/${result.data.id}`);
       } else {
-        toast.error((result as any).error || "Failed to save campaign");
+        toast.error((result as { error?: string }).error || "Failed to save campaign");
       }
-    } catch (error) {
-      console.error("Error saving campaign:", error);
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setLoading(false);
@@ -52,7 +51,7 @@ function NavigationButtons() {
       case 3:
         return (
           values.steps?.length > 0 &&
-          values.steps.every((step: any) => step.emailSubject && step.emailBody)
+          values.steps.every((step: Record<string, unknown>) => step.emailSubject && step.emailBody)
         );
       case 4:
         return values.selectedMailboxes && values.selectedMailboxes.length > 0;
