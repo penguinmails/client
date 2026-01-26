@@ -421,6 +421,10 @@ export async function createDomain(
     return newDomain;
   } catch (error: unknown) {
     productionLogger.error("Error creating domain in Hestia:", error);
+    // Log full error object for debugging unexpected issues
+    if (!(error instanceof Error)) {
+      productionLogger.error("Full error object:", JSON.stringify(error));
+    }
     throw new Error(error instanceof Error ? error.message : "Failed to create domain");
   }
 }
@@ -565,54 +569,26 @@ export async function getDomainSettings(
         autoAdjustWarmup: true
       } as unknown as DomainSettings
     };
-  } catch {
+  } catch (error) {
+    productionLogger.error("Error fetching domain settings:", error);
+    // Return minimal fallback that clearly indicates no settings are available
     return {
       success: false,
       data: {
-        domain: 'example.com',
+        domain: 'unknown',
         provider: DNSProvider.OTHER as DNSProvider,
         authentication: {
-          spf: {
-            enabled: false,
-            record: '',
-            policy: 'soft'
-          },
-          dkim: {
-            enabled: false,
-            selector: '',
-            key: ''
-          },
-          dmarc: {
-            enabled: false,
-            policy: 'none',
-            percentage: 0,
-            reportEmail: '',
-            record: ''
-          }
+          spf: { enabled: false, record: '', policy: 'soft' },
+          dkim: { enabled: false, selector: '', key: '' },
+          dmarc: { enabled: false, policy: 'none', percentage: 0, reportEmail: '', record: '' }
         },
         warmup: {
-          enabled: false,
-          dailyIncrease: 0,
-          maxDailyEmails: 0,
-          initialDailyVolume: 0,
-          warmupSpeed: 'slow',
-          replyRate: '0',
-          threadDepth: '1',
-          autoAdjustWarmup: false
+          enabled: false, dailyIncrease: 0, maxDailyEmails: 0, initialDailyVolume: 0,
+          warmupSpeed: 'slow', replyRate: '0', threadDepth: '1', autoAdjustWarmup: false
         },
-        reputationFactors: {
-          bounceRate: 0,
-          spamComplaints: 0,
-          engagement: 0
-        },
-        warmupEnabled: false,
-        dailyIncrease: 0,
-        maxDailyEmails: 0,
-        initialDailyVolume: 0,
-        warmupSpeed: 'slow',
-        replyRate: '0',
-        threadDepth: '1',
-        autoAdjustWarmup: false
+        reputationFactors: { bounceRate: 0, spamComplaints: 0, engagement: 0 },
+        warmupEnabled: false, dailyIncrease: 0, maxDailyEmails: 0, initialDailyVolume: 0,
+        warmupSpeed: 'slow', replyRate: '0', threadDepth: '1', autoAdjustWarmup: false
       } as unknown as DomainSettings
     };
   }
