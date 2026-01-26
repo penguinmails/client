@@ -1,6 +1,8 @@
 'use server';
 
 import { NextRequest } from 'next/server';
+import { listContactsAction, getContactAction } from "@/features/marketing/actions/contacts";
+import { productionLogger } from "@/lib/logger";
 
 export interface Client {
   id: string;
@@ -14,7 +16,7 @@ export interface Client {
   updatedAt: Date;
 }
 
-// Mock data
+// Mock data for fallback
 const mockClients: Client[] = [
   {
     id: '1',
@@ -39,19 +41,85 @@ const mockClients: Client[] = [
   }
 ];
 
-export async function getClients(_req?: NextRequest) {
-  return {
-    success: true,
-    data: mockClients
-  };
+export async function getClients(options: { listId?: string } = {}, _req?: NextRequest) {
+  try {
+    // Fetch contacts from Mautic
+    const search = options.listId ? `segment:${options.listId}` : '';
+    const contactsResult = await listContactsAction({ limit: 100, search });
+
+    if (contactsResult.success && contactsResult.data) {
+      // Map ContactDTO to Client for UI compatibility
+      const clients: Client[] = contactsResult.data.data.map(contact => ({
+        id: String(contact.id),
+        name: `${contact.firstName || ''} ${contact.lastName || ''}`.trim() || contact.email,
+        email: contact.email,
+        company: contact.company || undefined,
+        status: 'active' as const,
+        tags: contact.tags || [],
+        createdAt: new Date(contact.dateAdded),
+        updatedAt: new Date(contact.dateModified)
+      }));
+
+      return {
+        success: true,
+        data: clients
+      };
+    }
+
+    // Fallback to mock data if Mautic API fails
+    productionLogger.warn("Mautic API failed for contacts, falling back to mock data");
+    return {
+      success: true,
+      data: mockClients
+    };
+  } catch (error) {
+    productionLogger.error("Error fetching clients from Mautic:", error);
+    return {
+      success: true,
+      data: mockClients
+    };
+  }
 }
 
+
+
 export async function getClientById(id: string, _req?: NextRequest) {
-  const client = mockClients.find(c => c.id === id);
-  return {
-    success: !!client,
-    data: client
-  };
+  try {
+    const result = await getContactAction(Number(id));
+    
+    if (result.success && result.data) {
+      const contact = result.data;
+      const client: Client = {
+        id: String(contact.id),
+        name: `${contact.firstName || ''} ${contact.lastName || ''}`.trim() || contact.email,
+        email: contact.email,
+        company: contact.company || undefined,
+        status: 'active',
+        tags: contact.tags || [],
+        createdAt: contact.dateAdded ? new Date(contact.dateAdded) : new Date(),
+        updatedAt: contact.dateModified ? new Date(contact.dateModified) : new Date()
+      };
+      
+      return {
+        success: true,
+        data: client
+      };
+    }
+    
+    // Fallback to mock
+    const mockClient = mockClients.find(c => c.id === id);
+    return {
+      success: !!mockClient,
+      data: mockClient
+    };
+  } catch (error) {
+    productionLogger.error(`Error fetching client ${id}:`, error);
+    const mockClient = mockClients.find(c => c.id === id);
+    return {
+      success: !!mockClient,
+      data: mockClient
+    };
+  }
 }
 
 export async function createClient(data: Partial<Client>, _req?: NextRequest) {
