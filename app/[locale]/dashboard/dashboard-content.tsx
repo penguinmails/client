@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/KpiCardSkeleton";
 import RecentReplySkeleton from "@features/inbox/ui/components/RecentReply/RecentReplySkeleton";
 import WarmupSummarySkeleton from "@/features/analytics/ui/components/dashboard/summaries/WarmupSummarySkeleton";
+import ServerHealthCard from "@/features/analytics/ui/components/dashboard/summaries/ServerHealthCard";
 import { cn } from "@/lib/utils";
 
 // Import existing KPI cards component
@@ -156,6 +157,8 @@ interface DashboardContentProps {
   recentRepliesTitle: string;
 }
 
+import { getDashboardAnalyticsAction } from "@features/analytics";
+
 /**
  * Dashboard Content - Client Component
  * Receives translated strings from server component parent.
@@ -167,12 +170,28 @@ export default function DashboardContent({
   recentRepliesTitle,
 }: DashboardContentProps) {
   const { user, loading: authLoading } = useAuth();
+  const [analytics, setAnalytics] = useState<{
+    activeCampaigns: number;
+    totalLeadsContacted: number;
+    openRate: number;
+    clickRate: number;
+    replyRate: number;
+    bounceRate: number;
+    systemHealth: number;
+  } | null>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
 
-  // Demo data matching the approved dashboard baseline
-  // TODO: Replace with actual analytics hook when backend is ready
-  const campaignAnalytics = MOCK_CAMPAIGN_ANALYTICS;
-  const analyticsLoading = false;
-  const analyticsError = null;
+  useEffect(() => {
+    getDashboardAnalyticsAction().then((result) => {
+      if (result.success && result.data) {
+        setAnalytics(result.data);
+      } else {
+        setAnalyticsError(result.error || "Failed to load analytics");
+      }
+      setAnalyticsLoading(false);
+    });
+  }, []);
 
   if (authLoading) {
     return (
@@ -212,9 +231,9 @@ export default function DashboardContent({
         }
       >
         <DashboardKpiCards
-          campaignAnalytics={campaignAnalytics}
-          _loading={analyticsLoading}
-          _error={analyticsError}
+          analytics={analytics}
+          loading={analyticsLoading}
+          error={analyticsError}
         />
       </Suspense>
 
@@ -242,6 +261,12 @@ export default function DashboardContent({
 
         {/* Sidebar */}
         <div className="space-y-6">
+          {/* Server Health */}
+          <ServerHealthCard
+            healthScore={analytics?.systemHealth ?? 0}
+            loading={analyticsLoading}
+          />
+
           {/* Warmup Summary */}
           <Suspense fallback={<WarmupSummarySkeleton />}>
             <WarmupSummaryWrapper />
@@ -260,66 +285,65 @@ export default function DashboardContent({
  * Shows the approved baseline metrics: Active Campaigns, Leads Contacted, Open Rate, Reply Rate
  */
 function DashboardKpiCards({
-  campaignAnalytics,
-  _loading,
-  _error,
+  analytics,
+  loading,
+  error,
 }: {
-  campaignAnalytics: CampaignAnalytics[];
-  _loading: boolean;
-  _error: string | null;
+  analytics: {
+    activeCampaigns: number;
+    totalLeadsContacted: number;
+    openRate: number;
+    clickRate: number;
+    replyRate: number;
+    bounceRate: number;
+    systemHealth: number;
+  } | null;
+  loading: boolean;
+  error: string | null;
 }) {
   const t = useTranslations("Dashboard");
 
-  // Calculate aggregated metrics from campaign analytics
-  const totalCampaigns = campaignAnalytics.length;
-  const totalLeadsContacted = campaignAnalytics.reduce(
-    (sum, campaign) => sum + campaign.sent,
-    0,
-  );
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <StatsCardSkeleton key={index} />
+        ))}
+      </div>
+    );
+  }
 
-  // Calculate rates from raw data: opened_tracked / delivered * 100
-  const totalOpened = campaignAnalytics.reduce(
-    (sum, c) => sum + c.opened_tracked,
-    0,
-  );
-  const totalDelivered = campaignAnalytics.reduce(
-    (sum, c) => sum + c.delivered,
-    0,
-  );
-  const totalReplied = campaignAnalytics.reduce((sum, c) => sum + c.replied, 0);
+  // Fallback if no analytics or error
+  const data = analytics || {
+    activeCampaigns: 0,
+    totalLeadsContacted: 0,
+    openRate: 0,
+    replyRate: 0,
+    systemHealth: 0
+  };
 
-  const avgOpenRate =
-    totalDelivered > 0
-      ? ((totalOpened / totalDelivered) * 100).toFixed(1)
-      : "0";
-  const avgReplyRate =
-    totalDelivered > 0
-      ? ((totalReplied / totalDelivered) * 100).toFixed(1)
-      : "0";
-
-  // KPI cards matching the approved baseline design
   const kpiData = [
     {
       title: t("kpi.activeCampaigns"),
-      value: totalCampaigns.toString(),
+      value: data.activeCampaigns.toString(),
       icon: Send,
       colorScheme: "primary" as const,
     },
     {
       title: t("kpi.leadsContacted"),
-      value: totalLeadsContacted.toLocaleString(),
+      value: data.totalLeadsContacted.toLocaleString(),
       icon: Users,
       colorScheme: "success" as const,
     },
     {
       title: t("kpi.openRate"),
-      value: `${avgOpenRate}%`,
+      value: `${data.openRate.toFixed(1)}%`,
       icon: Mail,
       colorScheme: "info" as const,
     },
     {
       title: t("kpi.replyRate"),
-      value: `${avgReplyRate}%`,
+      value: `${data.replyRate.toFixed(1)}%`,
       icon: TrendingUp,
       colorScheme: "warning" as const,
     },

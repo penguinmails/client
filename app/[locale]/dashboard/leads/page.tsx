@@ -15,15 +15,24 @@ import { getTranslations } from "next-intl/server";
 export const dynamic = "force-dynamic";
 
 // Server Component
-async function LeadsPage() {
+async function LeadsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const t = await getTranslations("Leads");
   const leadsStatsData = await getLeadsStats();
   const leadListsData = await getLeadLists();
+  const resolvedSearchParams = await searchParams;
+  const listId = typeof resolvedSearchParams.listId === 'string' ? resolvedSearchParams.listId : undefined;
+  const activeTab = typeof resolvedSearchParams.tab === 'string' ? resolvedSearchParams.tab : "lists";
 
-  const totalContacts = leadListsData.reduce(
-    (sum, list) => sum + list.contacts,
-    0,
+  const totalContactsEntry = leadsStatsData.find(
+    (stat) => stat.title === "Total Contacts",
   );
+  const totalContacts = totalContactsEntry
+    ? parseInt(totalContactsEntry.value.replace(/,/g, ""))
+    : 0;
 
   const leadsTabs = [
     {
@@ -65,7 +74,7 @@ async function LeadsPage() {
         </div>
       </Suspense>
       <Card>
-        <Tabs defaultValue={leadsTabs[0].id}>
+        <Tabs defaultValue={activeTab}>
           <Suspense fallback={<StatsCardSkeleton />}>
             <CardHeader>
               <TabsList className="tabs-list">
@@ -93,7 +102,7 @@ async function LeadsPage() {
               <CSVUploadTab />
             </TabsContent>
             <TabsContent value="contacts">
-              <ContactsTab />
+              <ContactsTab listId={listId} />
             </TabsContent>
           </CardContent>
         </Tabs>
