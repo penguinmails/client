@@ -39,8 +39,10 @@ export const runHestiaCommand = async (
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       cache: 'no-store',
-      // Note: In Node.js environment, handling self-signed certs with native fetch
-      // might require NODE_TLS_REJECT_UNAUTHORIZED=0 if not using a custom agent/dispatcher.
+      // Security Note: In production, ensure proper SSL certificates are used.
+      // For development with self-signed certs, consider using a custom agent/dispatcher
+      // or NODE_TLS_REJECT_UNAUTHORIZED=0 ONLY in development environments.
+      // Never disable certificate validation in production.
     });
 
     if (!response.ok) {
