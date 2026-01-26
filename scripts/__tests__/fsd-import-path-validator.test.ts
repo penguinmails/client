@@ -16,7 +16,11 @@ describe('FSD Import Path Validator', () => {
   });
   
   afterEach(() => {
-    rmSync(testDir, { recursive: true, force: true });
+    try {
+      rmSync(testDir, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+    } catch (e) {
+      console.warn('Failed to cleanup test directory:', e);
+    }
   });
   
   describe('FSD_LAYERS configuration', () => {

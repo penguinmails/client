@@ -6,38 +6,28 @@
  */
 
 // Types - Public type definitions
-export type {
-  AuthUser,
-  TenantMembership,
-  UserRole,
-} from './types';
-
-// Values/Functions - Public type utilities
 export {
+  UserRole,
   AdminRole,
   isAdminRole,
-} from './types';
+  type AuthUser,
+  type TenantMembership,
+} from '@/types/auth';
 
-// Queries - Data fetching operations
-export {
-  getCurrentUser,
-  validateSession,
-  getUserProfile,
-} from './queries';
 
 // Hooks - Public custom hooks
-export { useAuth } from './hooks/use-auth';
-export { useSession } from './hooks/use-session';
-export { useEnrichment } from './hooks/use-enrichment';
+export { useAuth } from '@/hooks/auth/use-auth';
+export { useSession } from '@/hooks/auth/use-session';
+export { useEnrichment } from '@/hooks/auth/use-enrichment';
 export {
   useAuthState,
   useUserPermissions,
   useTenantContext,
-} from './hooks/use-auth-state';
+} from '@/hooks/auth/use-auth-state';
 export {
   useTwoFactorAuth,
   twoFactorValidation,
-} from './hooks/use-two-factor-auth';
+} from '@/hooks/auth/use-two-factor-auth';
 
 // UI Components - Public components for external use
 export {
@@ -46,8 +36,9 @@ export {
   PasswordInput,
   TenantCompanySelector,
   UserMenu,
-  SessionTimeoutWarning,
 } from './ui/components';
+
+export { SessionTimeoutWarning } from '@/components/auth/SessionTimeoutWarning';
 
 // Context - Public context providers
 export {

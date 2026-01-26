@@ -1,6 +1,6 @@
 "use client";
 
-import { useSessionTimeout } from "@/features/auth/hooks/use-session-timeout";
+import { useSessionTimeout } from "@/hooks/auth/use-session-timeout";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Clock, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";

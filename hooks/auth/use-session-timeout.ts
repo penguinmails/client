@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useState } from "react";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useAuth } from "./use-auth";
 import { productionLogger } from "@/lib/logger";
 
 // Default inactivity timeout: 15 minutes (B2B standard for sensitive data apps)
@@ -42,7 +42,7 @@ export function useSessionTimeout({
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const warningRef = useRef<NodeJS.Timeout | null>(null);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
-  const lastActivityRef = useRef<number>(Date.now());
+  const lastActivityRef = useRef<number>(0);
   
   const [isWarning, setIsWarning] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState(0);
@@ -85,11 +85,10 @@ export function useSessionTimeout({
     }, 1000);
   }, [warningMs, onWarning]);
 
-  // Reset timer on activity
-  const resetTimer = useCallback(() => {
+  // Internal function to refresh timers without triggering state updates
+  // This helps avoid lint warnings about setState in effects
+  const refreshInternalTimers = useCallback(() => {
     lastActivityRef.current = Date.now();
-    setIsWarning(false);
-    setRemainingSeconds(0);
 
     // Clear existing timers
     if (timeoutRef.current) {
@@ -111,6 +110,13 @@ export function useSessionTimeout({
     // Set timeout timer
     timeoutRef.current = setTimeout(handleTimeout, timeoutMs);
   }, [enabled, user, timeoutMs, warningMs, handleWarning, handleTimeout]);
+
+  // Public reset function that also clears UI warning states
+  const resetTimer = useCallback(() => {
+    setIsWarning(false);
+    setRemainingSeconds(0);
+    refreshInternalTimers();
+  }, [refreshInternalTimers]);
 
   // Setup activity listeners
   useEffect(() => {
@@ -140,8 +146,8 @@ export function useSessionTimeout({
       window.addEventListener(event, handleActivity, { passive: true });
     });
 
-    // Initial timer setup
-    resetTimer();
+    // Initial timer setup - call internal function only to avoid setState warning
+    refreshInternalTimers();
 
     // Cleanup
     return () => {
@@ -153,7 +159,7 @@ export function useSessionTimeout({
       if (warningRef.current) clearTimeout(warningRef.current);
       if (countdownRef.current) clearInterval(countdownRef.current);
     };
-  }, [enabled, user, resetTimer]);
+  }, [enabled, user, resetTimer, refreshInternalTimers]);
 
   return {
     isWarning,

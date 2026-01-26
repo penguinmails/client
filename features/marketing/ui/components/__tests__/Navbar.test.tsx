@@ -3,11 +3,11 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import Navbar from "../Navbar";
-import { useAuth } from "@features/auth/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Mock dependencies
-jest.mock("@features/auth/hooks/use-auth");
+jest.mock("@/hooks/auth/use-auth");
 jest.mock("@/hooks/use-mobile");
 jest.mock("next/image", () => ({
   __esModule: true,

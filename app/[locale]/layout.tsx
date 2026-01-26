@@ -1,4 +1,4 @@
-import { AuthProvider } from "@features/auth/ui/context/auth-provider";
+import { AuthProvider } from "@/features/auth";
 import { AppProviders } from "@/components/providers";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages } from "next-intl/server";

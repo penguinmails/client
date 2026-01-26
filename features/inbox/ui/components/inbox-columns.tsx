@@ -2,7 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Client, Email } from "@features/inbox/types";
 import { Campaign } from "@features/campaigns/types";
-import { AuthUser } from "@features/auth/types";
+import { AuthUser } from "@/types/auth";
 import { Button } from "@/components/ui/button/button";
 import { toast } from "sonner";
 import { InboxColumnAction } from "./inbox-column-action";

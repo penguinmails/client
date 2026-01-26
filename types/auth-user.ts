@@ -1,4 +1,4 @@
-import { Tenant } from "./base";
+import { Tenant } from "./auth-base";
 import { CompanyInfo } from "@/types/company";
 
 /**

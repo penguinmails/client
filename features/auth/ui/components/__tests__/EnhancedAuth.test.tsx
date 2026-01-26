@@ -165,7 +165,7 @@ const mockAuthContext = {
   restoreSession: jest.fn().mockResolvedValue(true),
 };
 
-jest.mock("@features/auth/hooks/use-auth", () => ({
+jest.mock("@/hooks/auth/use-auth", () => ({
   useAuth: () => mockAuthContext,
   AuthProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="auth-provider">{children}</div>
@@ -175,7 +175,7 @@ jest.mock("@features/auth/hooks/use-auth", () => ({
 // Import components to test - using real components
 import { TenantCompanySelector } from "../TenantCompanySelector";
 // import StaffDashboard from "@/features/auth/ui/components/StaffDashboard"; // Component doesn't exist yet
-import { useAuth } from "@features/auth/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useTenantAccess, useCompanyAccess } from "@features/auth/lib/hooks/use-enhanced-auth";
 
 // Test wrapper with QueryClient

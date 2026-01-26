@@ -2,11 +2,11 @@
  * @fileoverview Tests for DashboardLayout component using real UI components
  */
 
-import React from 'react';
-import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { DashboardLayout } from '@/components/design-system/dashboard-layout';
 import { setupDashboardTest } from '@/lib/test-utils/setup-helpers';
+import { screen } from '@testing-library/react'; // Keep screen for tests
+import React from 'react'; // Keep React for JSX
 
 // Mock the sidebar components to avoid provider requirements
 jest.mock('@/components/ui/sidebar', () => ({
@@ -37,7 +37,7 @@ jest.mock('@/components/ui/sidebar', () => ({
 }));
 
 // Mock the auth context to provide a mock implementation
-jest.mock('@features/auth/hooks/use-auth', () => ({
+jest.mock('@/hooks/auth/use-auth', () => ({
   useAuth: () => ({
     user: {
       id: 'test-user-1',

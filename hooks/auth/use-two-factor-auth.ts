@@ -1,3 +1,4 @@
+"use client";
 /**
  * Two-Factor Authentication Hook
  * 

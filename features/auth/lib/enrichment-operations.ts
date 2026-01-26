@@ -1,4 +1,4 @@
-import { AuthUser, TenantMembership } from "../types/auth-user";
+import { AuthUser, TenantMembership } from "@/types/auth";
 import { CompanyInfo } from "@/types";
 import { productionLogger } from "@/lib/logger";
 import { 

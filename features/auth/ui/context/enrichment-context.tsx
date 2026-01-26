@@ -8,13 +8,12 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { useSession } from "../../hooks/use-session";
+import { useSession } from "@/hooks/auth/use-session";
 import { useSystemHealth } from "@/hooks";
 import { productionLogger } from "@/lib/logger";
 import { fetchEnrichedUser } from "../../lib/enrichment-operations";
-import { AuthUser } from "../../types/auth-user";
+import { AuthUser, Tenant } from "@/types/auth";
 import { CompanyInfo } from "@/types/company";
-import { Tenant } from "../../types/base";
 import { EnrichmentError } from "../../types/auth-errors";
 
 // ============================================================================

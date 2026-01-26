@@ -1,18 +1,22 @@
-import { render, screen, act } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { AdminGuard } from "../admin-guard";
 import { useRouter } from "next/navigation";
-import { useAuth, AdminRole } from "@/features/auth";
+import { useAuth } from "@/hooks/auth/use-auth";
+import { AdminRole } from "@/types/auth";
 
 // Mocks
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock("@/features/auth", () => {
-  const actual = jest.requireActual("@/features/auth");
+jest.mock("@/hooks/auth/use-auth", () => ({
+  useAuth: jest.fn(),
+}));
+
+jest.mock("@/types/auth", () => {
+  const actual = jest.requireActual("@/types/auth");
   return {
     ...actual,
-    useAuth: jest.fn(),
   };
 });
 

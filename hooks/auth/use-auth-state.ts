@@ -1,3 +1,4 @@
+"use client";
 /**
  * Shared Auth State Hook
  * 
@@ -5,7 +6,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { BaseUser, TenantInfo, CompanyInfo } from '@/types';
+import { BaseUser, AuthUser, TenantInfo, CompanyInfo } from '@/types';
 import { productionLogger } from '@/lib/logger';
 
 interface AuthState {
@@ -153,7 +154,7 @@ export function useAuthState(): UseAuthStateReturn {
 /**
  * Hook for checking user roles and permissions
  */
-export function useUserPermissions(user: BaseUser | null) {
+export function useUserPermissions(user: AuthUser | null) {
   return {
     isAdmin: user?.role === 'admin' || user?.role === 'super_admin',
     isManager: user?.role === 'manager',

@@ -119,7 +119,7 @@ const mockAuthContext = {
   restoreSession: jest.fn().mockResolvedValue(true),
 };
 
-jest.mock('@features/auth/hooks/use-auth', () => ({
+jest.mock('@/hooks/auth/use-auth', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="auth-provider">{children}</div>
   ),
@@ -170,7 +170,8 @@ import {
   useStaffAccess,
   useErrorRecovery,
 } from "@features/auth/lib/hooks/use-enhanced-auth";
-import { useAuth } from "@features/auth/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
+
 import { TenantCompanySelector } from "../TenantCompanySelector";
 // import EnhancedErrorBoundary from "@/features/auth/ui/components/EnhancedErrorBoundary"; // Component doesn't exist yet
 // import StaffDashboard from "@/features/auth/ui/components/StaffDashboard"; // Component doesn't exist yet

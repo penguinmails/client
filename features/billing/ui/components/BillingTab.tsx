@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { updateBillingInfo } from "@features/billing/actions";
-import { useAuth } from "@/lib/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
 import {
   useServerActionWithParams,
 } from "@/hooks/use-server-action";
@@ -88,6 +88,23 @@ class BillingErrorBoundary extends React.Component<
 
     return this.props.children;
   }
+}
+
+interface BillingData {
+  planDetails: {
+    name: string;
+    price: string;
+    isMonthly: boolean;
+    maxEmailAccounts: number;
+    maxCampaigns: number;
+  };
+  emailAccountsUsed: number;
+  campaignsUsed: number;
+  paymentMethod?: {
+    brand: string;
+    lastFour: string;
+    expiry: string;
+  };
 }
 
 // Simple error fallback component

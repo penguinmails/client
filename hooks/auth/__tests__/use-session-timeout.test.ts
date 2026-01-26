@@ -1,9 +1,9 @@
 import { renderHook, act } from "@testing-library/react";
 import { useSessionTimeout } from "../use-session-timeout";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
 
 // Mocks
-jest.mock("@/features/auth/hooks/use-auth", () => ({
+jest.mock("@/hooks/auth/use-auth", () => ({
   useAuth: jest.fn(),
 }));
 
@@ -37,7 +37,7 @@ describe("useSessionTimeout", () => {
       logout: mockLogout,
     });
 
-    const { result } = renderHook(() => useSessionTimeout({ enabled: true }));
+    renderHook(() => useSessionTimeout({ enabled: true }));
     
     // Fast forward time
     act(() => {

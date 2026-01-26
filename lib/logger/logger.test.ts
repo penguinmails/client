@@ -48,32 +48,32 @@ describe('Logger Utilities', () => {
     global.console = _originalConsole;
     
     // Restore original NODE_ENV
-    Object.defineProperty(process.env, 'NODE_ENV', { value: originalEnv });
+    (process.env as any).NODE_ENV = originalEnv;
   });
 
   describe('getEnvironment', () => {
     it('should return development for development NODE_ENV', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
+      (process.env as any).NODE_ENV = 'development';
       expect(getEnvironment()).toBe('development');
     });
 
     it('should return production for production NODE_ENV', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'production' });
+      (process.env as any).NODE_ENV = 'production';
       expect(getEnvironment()).toBe('production');
     });
 
     it('should return staging for staging NODE_ENV', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'staging' });
+      (process.env as any).NODE_ENV = 'staging';
       expect(getEnvironment()).toBe('staging');
     });
 
     it('should default to development for unknown NODE_ENV', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'unknown' });
+      (process.env as any).NODE_ENV = 'unknown';
       expect(getEnvironment()).toBe('development');
     });
 
     it('should default to development for undefined NODE_ENV', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: undefined });
+      (process.env as any).NODE_ENV = undefined;
       expect(getEnvironment()).toBe('development');
     });
   });
@@ -91,7 +91,7 @@ describe('Logger Utilities', () => {
     });
 
     it('should create production config for production environment', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'production' });
+      (process.env as any).NODE_ENV = 'production';
       const config = createLoggerConfig();
       
       expect(config).toEqual({
@@ -102,7 +102,7 @@ describe('Logger Utilities', () => {
     });
 
     it('should create staging config for staging environment', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'staging' });
+      (process.env as any).NODE_ENV = 'staging';
       const config = createLoggerConfig();
       
       expect(config).toEqual({
@@ -139,7 +139,7 @@ describe('Logger Utilities', () => {
     });
 
     it('should not log in production environment', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'production' });
+      (process.env as any).NODE_ENV = 'production';
       
       developmentLogger.debug('Test debug');
       developmentLogger.info('Test info');
@@ -152,7 +152,7 @@ describe('Logger Utilities', () => {
     });
 
     it('should not log in staging environment', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'staging' });
+      (process.env as any).NODE_ENV = 'staging';
       
       developmentLogger.debug('Test debug');
       developmentLogger.info('Test info');
@@ -171,7 +171,7 @@ describe('Logger Utilities', () => {
       productionLogger.debug('Test debug');
       expect(mockConsole.log).not.toHaveBeenCalled();
 
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'production' });
+      (process.env as any).NODE_ENV = 'production';
       productionLogger.debug('Test debug');
       expect(mockConsole.log).not.toHaveBeenCalled();
     });
@@ -181,13 +181,13 @@ describe('Logger Utilities', () => {
       productionLogger.info('Test info');
       expect(mockConsole.log).not.toHaveBeenCalled();
 
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'production' });
+      (process.env as any).NODE_ENV = 'production';
       productionLogger.info('Test info');
       expect(mockConsole.log).not.toHaveBeenCalled();
     });
 
     it('should log warn messages in production', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'production' });
+      (process.env as any).NODE_ENV = 'production';
       productionLogger.warn('Test warn message', { data: 'test' });
       expect(mockConsole.warn).toHaveBeenCalledWith('[WARN] Test warn message', { data: 'test' });
     });
@@ -202,7 +202,7 @@ describe('Logger Utilities', () => {
       mockConsole.error.mockClear();
 
       // Test production
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'production' });
+      (process.env as any).NODE_ENV = 'production';
       productionLogger.error('Test error prod', { data: 'test' });
       expect(mockConsole.error).toHaveBeenCalledWith('[ERROR] Test error prod', { data: 'test' });
     });
@@ -257,7 +257,7 @@ describe('Logger Utilities', () => {
     });
 
     it('should only log warn and error in production', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'production' });
+      (process.env as any).NODE_ENV = 'production';
       
       logger.debug('Debug message');
       logger.info('Info message');
@@ -333,17 +333,17 @@ describe('Logger Utilities', () => {
 
   describe('environment detection edge cases', () => {
     it('should handle empty string NODE_ENV', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: '' });
+      (process.env as any).NODE_ENV = '';
       expect(getEnvironment()).toBe('development');
     });
 
     it('should handle whitespace NODE_ENV', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: '   ' });
+      (process.env as any).NODE_ENV = '   ';
       expect(getEnvironment()).toBe('development');
     });
 
     it('should handle case sensitivity', () => {
-      Object.defineProperty(process.env, 'NODE_ENV', { value: 'PRODUCTION' });
+      (process.env as any).NODE_ENV = 'PRODUCTION';
       expect(getEnvironment()).toBe('development'); // Should default to development for unknown values
     });
   });

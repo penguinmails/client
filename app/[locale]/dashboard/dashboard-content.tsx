@@ -25,7 +25,7 @@ import {
 } from "@features/campaigns/actions/dashboard";
 
 // Import auth hook
-import { useAuth } from "@features/auth/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
 
 // Module-level mock data with static timestamps (avoids Date.now() during render)
 const MOCK_TIMESTAMP = 1705420800000; // Static timestamp for mock data

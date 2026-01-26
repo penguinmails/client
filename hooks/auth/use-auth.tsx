@@ -1,7 +1,9 @@
+"use client";
+
 import { useMemo, useCallback } from "react";
 import { useSession } from "./use-session";
 import { useEnrichment } from "./use-enrichment";
-import { AuthUser, AuthLoadingState, AuthContextValue } from "../types/auth-user";
+import { AuthUser, AuthLoadingState, AuthContextValue } from "@/types/auth";
 
 /**
  * Unified auth hook that combines Session + Enrichment contexts.

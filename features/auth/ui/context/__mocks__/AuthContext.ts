@@ -1,5 +1,5 @@
 // Mock for AuthContext
-import { useAuth as useAuthOriginal } from '@features/auth/hooks/use-auth';
+import { useAuth as useAuthOriginal } from '@/hooks/auth/use-auth';
 
 
 // Mock implementation

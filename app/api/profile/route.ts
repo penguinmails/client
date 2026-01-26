@@ -11,7 +11,7 @@ import { withQueryErrorCatch, withMutationErrorCatch, manualErrorResponse } from
 import {
   EnhancedApiResponse
 } from '@/types';
-import { AuthUser } from "@/features/auth/types";
+import { AuthUser } from "@/types/auth";
 
 // Enhanced profile type - using AuthUser directly instead of extending
 // Nile tenant interface to replace 'any' types

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth, AdminRole, isAdminRole } from "@/features/auth";
+import { useAuth } from "@/hooks/auth/use-auth";
+import { AdminRole, isAdminRole } from "@/types/auth";
 import { Loader2 } from "lucide-react";
 
 interface AdminGuardProps {
@@ -24,38 +25,28 @@ export function AdminGuard({
 }: AdminGuardProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
+
+  const isAuthorized = React.useMemo(() => {
+    if (!user) return false;
+    const userRole = user.role;
+    return userRole && isAdminRole(userRole) && allowedRoles.includes(userRole as AdminRole);
+  }, [user, allowedRoles]);
 
   useEffect(() => {
     if (loading) return;
 
-    // No user = not authenticated
     if (!user) {
       router.replace("/login");
       return;
     }
 
-    // Check if user has admin role
-    const userRole = user.role;
-    
-    if (!userRole || !isAdminRole(userRole)) {
+    if (!isAuthorized) {
       router.replace(fallbackPath);
-      return;
     }
-
-    // Check if user's role is in allowed roles
-    if (!allowedRoles.includes(userRole as AdminRole)) {
-      router.replace(fallbackPath);
-      return;
-    }
-
-    setIsAuthorized(true);
-    setIsChecking(false);
-  }, [user, loading, allowedRoles, fallbackPath, router]);
+  }, [user, loading, isAuthorized, fallbackPath, router]);
 
   // Show loading state while checking
-  if (loading || isChecking) {
+  if (loading || (!user && !isAuthorized)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">

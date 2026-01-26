@@ -18,7 +18,7 @@ import {
   performLogout,
 } from "../../lib/session-operations";
 import { signupWithVerification } from "../../lib/signup-operations";
-import { BaseUser } from "../../types/auth-user";
+import { BaseUser } from "@/types/auth";
 import { SessionRecoveryError } from "../../types/auth-errors";
 
 export interface SessionContextValue {
