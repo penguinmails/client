@@ -62,12 +62,12 @@ export const sendSingleEmail = async (
       messageId,
       message: 'Email sent successfully'
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
       status: 'failed',
       recipient: typeof payload.recipients[0] === 'string' ? payload.recipients[0] : payload.recipients[0].email,
-      error: error.message || 'Unknown network error',
+      error: error instanceof Error ? error.message : 'Unknown network error',
       message: 'Email sending failed',
     };
   }
@@ -114,12 +114,12 @@ export const sendBulkEmails = async (
 
         const result = await sendSingleEmail(payload, apiConfig);
         results.push(result);
-      } catch (error: any) {
+      } catch (error: unknown) {
         results.push({
           success: false,
           status: 'failed',
           recipient: recipient.email,
-          error: error.message,
+          error: error instanceof Error ? error.message : 'Unknown error',
           message: 'Email preparation or sending failed',
         });
       }
@@ -173,7 +173,7 @@ export const sendBulkEmails = async (
       message_id: bulkMessageId
     } = data;
 
-    return recipients.map((recipient, index) => {
+    return recipients.map((recipient, _index) => {
       const isFailure = failed_recipients.some(
         (failedEmail: string) => failedEmail === recipient.email || failedEmail.includes(recipient.email)
       );
@@ -202,12 +202,12 @@ export const sendBulkEmails = async (
         };
       }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return recipients.map(r => ({
       success: false,
       status: 'failed',
       recipient: r.email,
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
       message: 'Bulk email sending failed',
     }));
   }

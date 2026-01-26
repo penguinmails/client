@@ -100,11 +100,11 @@ export async function createDatabaseAction(data: {
         createdAt: new Date().toISOString(),
       }
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Error creating database:", error);
     return {
       success: false,
-      error: error.message || "Failed to create database"
+      error: error instanceof Error ? error.message : "Failed to create database"
     };
   }
 }

@@ -56,7 +56,7 @@ export default function PanelUserManager() {
       } else {
         toast.error(result.error || "Failed to fetch panel users");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while fetching users");
     } finally {
       setLoading(false);
@@ -86,7 +86,7 @@ export default function PanelUserManager() {
       } else {
         toast.error(result.error || "Failed to delete user");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while deleting user");
     } finally {
       setDeleting(null);

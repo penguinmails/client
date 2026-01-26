@@ -13,8 +13,8 @@ export const InfrastructureDiagnostics = () => {
         try {
             const data = await runInfrastructureDiagnostics();
             setResults(data);
-        } catch (err) {
-            console.error("Diagnostic failure:", err);
+        } catch {
+            // Silently fail - diagnostics are optional
         } finally {
             setLoading(false);
         }
