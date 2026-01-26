@@ -20,14 +20,15 @@ export function mapHestiaAccountsToMailboxData(
       usage: parseInt(data.U_DISK) || 0,
       quota: data.QUOTA,
       createdAt: data.DATE ? new Date(`${data.DATE} ${data.TIME || '00:00:00'}`) : undefined,
-      // Analytics fields with defaults (Hestia doesn't provide these)
+      // Analytics fields - Hestia doesn't provide these, so we use defaults
+      // In production, these should be populated from NileDB or Mautic event tracking
       analytics: {
-        warmupProgress: 100,
-        dailyLimit: parseInt(data.QUOTA) || 0,
+        warmupProgress: 0, // Start at 0, not 100
+        dailyLimit: parseInt(data.QUOTA) || 500, // Default to 500 if no quota set
         emailsSent: 0,
         openRate: 0,
         replyRate: 0,
-        lastActivity: new Date(),
+        lastActivity: data.DATE ? new Date(`${data.DATE} ${data.TIME || '00:00:00'}`) : new Date(),
         dailyVolume: 0,
         healthScore: 100,
       }
