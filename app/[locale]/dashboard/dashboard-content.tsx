@@ -233,7 +233,7 @@ export default function DashboardContent({
         <DashboardKpiCards
           analytics={analytics}
           loading={analyticsLoading}
-          error={analyticsError}
+          _error={analyticsError}
         />
       </Suspense>
 
