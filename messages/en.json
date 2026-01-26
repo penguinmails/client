@@ -694,6 +694,18 @@
     "title": "Admin Dashboard",
     "description": "Cross-tenant user management and analytics"
   },
+  "SessionTimeout": {
+    "title": "Session Expiring Soon",
+    "message": "Your session will expire due to inactivity. Click the button below to stay logged in.",
+    "stayLoggedIn": "Stay Logged In"
+  },
+  "AccessDenied": {
+    "title": "Access Denied",
+    "description": "You don't have permission to access this page. Please contact your administrator if you believe this is an error.",
+    "contactMessage": "If you need access to this section, please contact your system administrator or request the appropriate permissions.",
+    "homeButton": "Go Home",
+    "loginButton": "Sign In"
+  },
   "Infrastructure": {
     "layout": {
       "title": "Domains & Mailboxes",

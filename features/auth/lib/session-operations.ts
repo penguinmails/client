@@ -63,7 +63,7 @@ export async function recoverSessionWithRetry(
       if (session) {
         return session;
       }
-      
+
       // If checkSession returned null
       if (!retryOnNull) {
         return null;
