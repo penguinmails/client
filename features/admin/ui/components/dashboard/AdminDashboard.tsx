@@ -5,12 +5,16 @@ import { AdminUsersResponse } from "@/types/admin";
 import { AdminUserTable } from "../users/AdminUserTable";
 import { AdminUserFilters } from "../users/AdminUserFilters";
 import { AdminDashboardSkeleton } from "./AdminDashboardSkeleton";
+import { useAuth } from "@/hooks/auth/use-auth";
+import { AdminRole } from "@/types/auth";
+import { Info } from "lucide-react";
 
 interface AdminDashboardProps {
   initialData?: AdminUsersResponse;
 }
 
 export function AdminDashboard({ initialData }: AdminDashboardProps) {
+  const { user } = useAuth();
   const [data, setData] = useState<AdminUsersResponse | null>(
     initialData || null
   );
@@ -130,8 +134,25 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
     return <AdminDashboardSkeleton />;
   }
 
+  const isSupport = user?.role === AdminRole.SUPPORT;
+
   return (
     <div className="space-y-6">
+      {isSupport && (
+        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+          <div className="flex items-center">
+            <div className="shrink-0">
+              <Info className="h-5 w-5 text-blue-400" aria-hidden="true" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-blue-700">
+                Usted tiene acceso de <strong>Soporte (Lectura)</strong>. Algunas acciones de edición y gestión están restringidas.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div className="bg-white dark:bg-card overflow-hidden shadow rounded-lg">

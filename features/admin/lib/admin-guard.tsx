@@ -29,7 +29,7 @@ export function AdminGuard({
   const isAuthorized = React.useMemo(() => {
     if (!user) return false;
     const userRole = user.role;
-    return userRole && isAdminRole(userRole) && allowedRoles.includes(userRole as AdminRole);
+    return typeof userRole === "string" && isAdminRole(userRole) && allowedRoles.includes(userRole as AdminRole);
   }, [user, allowedRoles]);
 
   useEffect(() => {

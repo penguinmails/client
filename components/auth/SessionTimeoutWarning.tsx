@@ -30,7 +30,7 @@ export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningP
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
       <div className="bg-card border rounded-lg shadow-lg p-6 max-w-md w-full mx-4 space-y-4">
-        <div className="flex items-center gap-3 text-warning">
+        <div className="flex items-center gap-3 text-yellow-500">
           <AlertTriangle className="h-6 w-6 text-yellow-500" />
           <h2 className="text-lg font-semibold">{t("title")}</h2>
         </div>

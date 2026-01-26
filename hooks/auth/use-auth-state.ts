@@ -6,11 +6,11 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { BaseUser, AuthUser, TenantInfo, CompanyInfo } from '@/types';
+import { AuthUser, TenantInfo, CompanyInfo } from '@/types';
 import { productionLogger } from '@/lib/logger';
 
 interface AuthState {
-  user: BaseUser | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -19,7 +19,7 @@ interface AuthState {
 interface UseAuthStateReturn extends AuthState {
   refreshAuth: () => Promise<void>;
   clearError: () => void;
-  setUser: (user: BaseUser | null) => void;
+  setUser: (user: AuthUser | null) => void;
 }
 
 /**
@@ -84,7 +84,7 @@ export function useAuthState(): UseAuthStateReturn {
     setAuthState(prev => ({ ...prev, error: null }));
   }, []);
 
-  const setUser = useCallback((user: BaseUser | null) => {
+  const setUser = useCallback((user: AuthUser | null) => {
     setAuthState(prev => ({
       ...prev,
       user,
