@@ -14,10 +14,10 @@ export const mapHestiaDomainsToInternal = (
       status: data.STATUS === 'active' ? 'VERIFIED' : 'SUSPENDED',
       createdAt: data.DATE ? new Date(`${data.DATE} ${data.TIME}`).toISOString() : new Date().toISOString(),
       records: {
-        spf: 'verified', // Placeholder, Hestia management implies some level of setup
-        dkim: 'verified',
-        dmarc: 'verified',
-        mx: 'verified'
+        spf: 'pending', // Will be determined by actual DNS record lookup
+        dkim: 'pending',
+        dmarc: 'pending',
+        mx: 'pending'
       },
       // Hestia-specific metadata
       ip: data.IP,
