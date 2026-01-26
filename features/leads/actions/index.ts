@@ -119,8 +119,6 @@ export async function maskClientPII(_clientId: string, _req?: NextRequest) {
 }
 
 // Lead List Actions
-import { leadLists } from '../data/mock';
-
 import { listSegmentsAction } from '@/features/marketing';
 
 export async function getLeadLists(_req?: NextRequest): Promise<ActionResult<LeadList[]>> {
@@ -130,7 +128,7 @@ export async function getLeadLists(_req?: NextRequest): Promise<ActionResult<Lea
     if (!result.success) {
       return {
         success: false,
-        error: (result as any).error || "Failed to fetch segments from Mautic"
+        error: result.error || "Failed to fetch segments from Mautic"
       };
     }
 
@@ -149,8 +147,7 @@ export async function getLeadLists(_req?: NextRequest): Promise<ActionResult<Lea
       success: true,
       data
     };
-  } catch (error) {
-    console.error("Error fetching lead lists:", error);
+  } catch {
     return {
       success: false,
       error: "Failed to fetch segments"
