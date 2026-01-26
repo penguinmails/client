@@ -401,6 +401,45 @@ export interface BillingSummary {
   usageSummary: UsageSummary;
 }
 
+/**
+ * Billing data for settings page
+ */
+export interface BillingData {
+  renewalDate: string;
+  emailAccountsUsed: number;
+  campaignsUsed: number;
+  emailsPerMonthUsed: number;
+  balance: number;
+  unpaidInvoicesCount: number;
+  planDetails: {
+    id: string;
+    name: string;
+    isMonthly: boolean;
+    price: number;
+    description: string;
+    maxEmailAccounts: number;
+    maxCampaigns: number;
+    maxEmailsPerMonth: number;
+  };
+  paymentMethod: {
+    lastFour: string;
+    expiry: string;
+    brand: string;
+  };
+  billingHistory: Array<{
+    date: string;
+    description: string;
+    amount: string;
+    method: string;
+  }>;
+  unpaidInvoices: Array<{
+    id: unknown;
+    amount: unknown;
+    currency: unknown;
+    date: unknown;
+  }>;
+}
+
 // ============================================================================
 // TYPE EXPORTS
 // ============================================================================

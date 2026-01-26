@@ -141,13 +141,13 @@ export async function getBillingInfo(_req?: NextRequest) {
           expiry: mockBillingInfo.paymentMethod.expiry ?? `${mockBillingInfo.paymentMethod.expiryMonth}/${mockBillingInfo.paymentMethod.expiryYear}`,
           brand: mockBillingInfo.paymentMethod.brand ?? 'Visa',
         },
-        billingHistory: paymentHistory.map((item: any) => ({
-          date: item.date || item.paydate || new Date().toISOString(),
-          description: item.name || item.itemname || "Service payment",
-          amount: `${item.amount || '0.00'} ${item.currency || 'USD'}`,
+        billingHistory: paymentHistory.map((item: Record<string, unknown>) => ({
+          date: (item.date as string) || (item.paydate as string) || new Date().toISOString(),
+          description: (item.name as string) || (item.itemname as string) || "Service payment",
+          amount: `${(item.amount as string) || '0.00'} ${(item.currency as string) || 'USD'}`,
           method: mockBillingInfo.paymentMethod.type,
         })),
-        unpaidInvoices: unpaidInvoices.map((inv: any) => ({
+        unpaidInvoices: unpaidInvoices.map((inv: Record<string, unknown>) => ({
           id: inv.id,
           amount: inv.amount,
           currency: inv.currency,
@@ -230,7 +230,7 @@ export async function getUsageWithCalculations(_req?: NextRequest) {
         domainsCount: domainsResult.success ? domainsResult.data?.length : 0,
       }
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: "Failed to fetch usage calculations"
