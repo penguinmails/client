@@ -191,7 +191,7 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
                                 <Info className="w-3.5 h-3.5" />
                               </Button>
                             </TooltipTrigger>
-                            <TooltipContent side="right" className="max-w-[280px] p-3 text-xs">
+                            <TooltipContent side="right" className="max-w-[280px] p-3 text-xs bg-slate-100 text-slate-900 border-slate-300">
                               <p className="font-semibold mb-1">{record.name}</p>
                               <div className="space-y-1 text-muted-foreground">
                                 <div className="flex justify-between gap-4">
