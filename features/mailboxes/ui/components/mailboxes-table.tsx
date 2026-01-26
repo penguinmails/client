@@ -112,7 +112,7 @@ export const columns: ColumnDef<MailboxData>[] = [
 
             return (
                 <div className="w-[140px] space-y-1">
-                    <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>{usage} MB</span>
                         <span>of {isUnlimited ? '∞' : `${quota} MB`}</span>
                     </div>

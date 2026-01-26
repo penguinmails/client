@@ -161,11 +161,11 @@ export async function createMailbox(data: {
         createdAt: new Date(),
       } as MailboxData
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Error creating mailbox:", error);
     return {
       success: false,
-      error: error.message || "Failed to create mailbox"
+      error: error instanceof Error ? error.message : "Failed to create mailbox"
     };
   }
 }
@@ -212,11 +212,11 @@ export async function deleteMailbox(id: string): Promise<ActionResult<void>> {
       success: true,
       data: undefined as unknown as void
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error(`Error deleting mailbox ${id}:`, error);
     return {
       success: false,
-      error: error.message || "Failed to delete mailbox"
+      error: error instanceof Error ? error.message : "Failed to delete mailbox"
     };
   }
 }
