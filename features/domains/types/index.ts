@@ -126,6 +126,8 @@ export interface Domain {
   name?: string;
   provider?: string;
   status: DomainStatus | string;
+  type?: 'WEB' | 'DNS' | 'BOTH';
+  categories?: string[];
   daysActive?: number;
   reputation?: number;
   emailAccounts?: number;
@@ -139,6 +141,11 @@ export interface Domain {
     dmarc: string | DNSRecordStatus;
     mx: string | DNSRecordStatus;
   };
+  ip?: string;
+  php?: string;
+  ssl?: boolean;
+  expirationDate?: string;
+  soa?: string;
   metrics?: {
     total24h: number;
     bounceRate: number;

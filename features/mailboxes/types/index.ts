@@ -12,6 +12,8 @@ export interface EmailAccount {
   status: 'active' | 'inactive' | 'warming' | 'paused' | 'error';
   smtpSettings?: Record<string, unknown>;
   imapSettings?: Record<string, unknown>;
+  usage?: number; // Disk usage in MB
+  quota?: string; // Quota in MB or 'unlimited'
   createdAt?: Date;
   updatedAt?: Date;
 }

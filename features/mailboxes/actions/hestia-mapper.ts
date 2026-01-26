@@ -17,6 +17,8 @@ export function mapHestiaAccountsToMailboxData(
       email,
       provider: 'hestia',
       status: data.STATUS === 'active' ? 'active' : 'inactive',
+      usage: parseInt(data.U_DISK) || 0,
+      quota: data.QUOTA,
       createdAt: data.DATE ? new Date(`${data.DATE} ${data.TIME || '00:00:00'}`) : undefined,
       // Analytics fields with defaults (Hestia doesn't provide these)
       analytics: {

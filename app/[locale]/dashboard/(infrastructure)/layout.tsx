@@ -66,7 +66,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             </TabsList>
           </div>
 
-          <div className="mt-6">
+          <div>
             {activeTab === "domains" && (
               <div className="flex justify-end mb-4">
                 <Button

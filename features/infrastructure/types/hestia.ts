@@ -15,6 +15,32 @@ export interface HestiaWebDomain {
 
 export type HestiaWebDomainCollection = Record<string, HestiaWebDomain>;
 
+export interface HestiaDnsDomain {
+  IP: string;
+  TPL: string;
+  TTL: string;
+  RECORDS: string;
+  STATUS: 'active' | 'suspended';
+  DATE: string;
+  TIME: string;
+}
+
+export type HestiaDnsDomainCollection = Record<string, HestiaDnsDomain>;
+
+export interface HestiaDnsRecord {
+  ID: string;
+  RECORD: string;
+  TYPE: string;
+  PRIORITY: string;
+  VALUE: string;
+  TTL: string;
+  DATE: string;
+  TIME: string;
+  STATUS: 'active' | 'suspended';
+}
+
+export type HestiaDnsRecordCollection = Record<string, HestiaDnsRecord>;
+
 export interface HestiaMailDomain {
   ANTIVIRUS: 'yes' | 'no';
   ANTISPAM: 'yes' | 'no';
