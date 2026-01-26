@@ -8,8 +8,8 @@ export interface MarketingEvent {
   contactId?: number;
   campaignId?: number;
   emailId?: number;
-  eventPayload: any;
-  metadata?: any;
+  eventPayload: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
   timestamp?: Date;
   processed?: boolean;
 }
@@ -18,7 +18,7 @@ export class EventStorageService {
   /**
    * Saves a marketing event to NileDB
    */
-  async saveEvent(event: MarketingEvent): Promise<boolean> {
+  async saveEvent(_event: MarketingEvent): Promise<boolean> {
     try {
       // NOTE: Direct event storage to NileDB is currently disabled as per user request.
       // We may rely on Mautic's internal tracking or integrate this later if high-performance 
@@ -59,14 +59,14 @@ export class EventStorageService {
   /**
    * Normalizes a Mautic webhook event and saves it
    */
-  async saveMauticWebhook(webhookEvent: MauticWebhookEvent, metadata: any = {}): Promise<boolean> {
+  async saveMauticWebhook(webhookEvent: MauticWebhookEvent, metadata: Record<string, unknown> = {}): Promise<boolean> {
     const type = webhookEvent['mautic.event_type'];
     const payload = webhookEvent['mautic.event_payload'];
     
     // Extract common fields
-    const contactId = payload.contact?.id;
-    const campaignId = payload.campaign?.id;
-    const emailId = payload.email?.id;
+    const contactId = (payload.contact as Record<string, unknown>)?.id;
+    const campaignId = (payload.campaign as Record<string, unknown>)?.id;
+    const emailId = (payload.email as Record<string, unknown>)?.id;
 
     return this.saveEvent({
       eventType: type,
@@ -111,12 +111,10 @@ export class EventStorageService {
    */
   async getAggregatedStats(campaignId?: number) {
     try {
-      let whereClause = '';
-      const params: any[] = [];
+      const params: string[] = [];
       
       if (campaignId) {
-        whereClause = 'WHERE campaign_id = $1';
-        params.push(campaignId);
+        params.push(campaignId.toString());
       }
 
       // NOTE: NileDB analytics are currently bypassed. 
@@ -164,12 +162,10 @@ export class EventStorageService {
    */
   async getTimeSeriesData(campaignId?: number) {
     try {
-      let whereClause = '';
-      const params: any[] = [];
+      const params: string[] = [];
       
       if (campaignId) {
-        whereClause = 'AND campaign_id = $1';
-        params.push(campaignId);
+        params.push(campaignId.toString());
       }
 
       // NOTE: Time series analytics are currently bypassed.
