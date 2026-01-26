@@ -9,7 +9,7 @@ export interface MauticApiResponse<T> {
   success: boolean;
   data?: T;
   error?: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 /**
@@ -41,8 +41,8 @@ export interface RawMauticContact {
   id: number | string;
   points: number;
   fields: {
-    all: Record<string, any>;
-    core: Record<string, any>;
+    all: Record<string, unknown>;
+    core: Record<string, unknown>;
   };
   lastActive: string | null;
   tags: Array<{
@@ -64,7 +64,7 @@ export interface RawMauticCampaignEvent {
   type: string;
   eventType: 'action' | 'condition' | 'decision';
   order: number;
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
   triggerMode: 'immediate' | 'interval' | 'date';
   triggerDate: string | null;
   triggerInterval: number | null;
@@ -163,6 +163,7 @@ export interface EmailCreateInput {
   isPublished?: boolean;
   category?: number | string;
   language?: string;
+  emailType?: string;
 }
 
 export interface CampaignCreateInput {
@@ -184,15 +185,15 @@ export interface CampaignCreateInput {
 export interface MauticWebhookEvent {
   'mautic.event_type': string;
   'mautic.event_payload': {
-    email?: any;
-    contact?: any;
-    campaign?: any;
-    page?: any;
-    bounce?: any;
-    form?: any;
-    submission?: any;
+    email?: unknown;
+    contact?: unknown;
+    campaign?: unknown;
+    page?: unknown;
+    bounce?: unknown;
+    form?: unknown;
+    submission?: unknown;
     points?: number;
-    segment?: any;
+    segment?: unknown;
   };
   timestamp: string;
 }

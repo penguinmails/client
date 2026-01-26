@@ -61,11 +61,11 @@ export async function processMauticWebhookAction(
       success: true,
       data: { processed: true }
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("[Mautic Webhook] Processing failed:", error);
     return {
       success: false,
-      error: error.message || "Webhook processing failed"
+      error: error instanceof Error ? error.message : "Webhook processing failed"
     };
   }
 }
@@ -74,10 +74,10 @@ export async function processMauticWebhookAction(
  * Secondary processing logic for specific event types
  * Ported from email-sender/lib/services/webhooks.js
  */
-async function handleEventDetails(type: string, payload: any): Promise<void> {
-  const contactEmail = payload.contact?.email || 'Unknown';
-  const campaignName = payload.campaign?.name || 'Unknown';
-  const subject = payload.email?.subject || 'Unknown';
+async function handleEventDetails(type: string, payload: Record<string, unknown>): Promise<void> {
+  const contactEmail = (payload.contact as Record<string, unknown>)?.email as string || 'Unknown';
+  const campaignName = (payload.campaign as Record<string, unknown>)?.name as string || 'Unknown';
+  const subject = (payload.email as Record<string, unknown>)?.subject as string || 'Unknown';
 
   switch (type) {
     case MauticEventType.EMAIL_SENT:
@@ -89,11 +89,11 @@ async function handleEventDetails(type: string, payload: any): Promise<void> {
       break;
 
     case MauticEventType.EMAIL_CLICKED:
-      productionLogger.info(`[Mautic Webhook] Email clicked: ${payload.page?.url || 'Unknown URL'} by ${contactEmail}`);
+      productionLogger.info(`[Mautic Webhook] Email clicked: ${(payload.page as Record<string, unknown>)?.url || 'Unknown URL'} by ${contactEmail}`);
       break;
 
     case MauticEventType.EMAIL_BOUNCED:
-      productionLogger.warn(`[Mautic Webhook] Email bounced: "${subject}" for ${contactEmail}. Reason: ${payload.bounce?.reason || 'Unknown'}`);
+      productionLogger.warn(`[Mautic Webhook] Email bounced: "${subject}" for ${contactEmail}. Reason: ${(payload.bounce as Record<string, unknown>)?.reason || 'Unknown'}`);
       break;
 
     case MauticEventType.EMAIL_UNSUBSCRIBED:
@@ -110,11 +110,11 @@ async function handleEventDetails(type: string, payload: any): Promise<void> {
       break;
 
     case MauticEventType.CONTACT_DELETED:
-      productionLogger.info(`[Mautic Webhook] Contact deleted: ${payload.contact?.id}`);
+      productionLogger.info(`[Mautic Webhook] Contact deleted: ${(payload.contact as Record<string, unknown>)?.id}`);
       break;
 
     case MauticEventType.FORM_SUBMITTED:
-      productionLogger.info(`[Mautic Webhook] Form submitted: "${payload.form?.name || 'Unknown'}" by ${contactEmail}`);
+      productionLogger.info(`[Mautic Webhook] Form submitted: "${(payload.form as Record<string, unknown>)?.name || 'Unknown'}" by ${contactEmail}`);
       break;
 
     case MauticEventType.CAMPAIGN_TRIGGERED:
@@ -122,7 +122,7 @@ async function handleEventDetails(type: string, payload: any): Promise<void> {
       break;
 
     case MauticEventType.SEGMENT_CONTACT_ADDED:
-      productionLogger.info(`[Mautic Webhook] Contact added to segment: ${contactEmail} -> "${payload.segment?.name || 'Unknown'}"`);
+      productionLogger.info(`[Mautic Webhook] Contact added to segment: ${contactEmail} -> "${(payload.segment as Record<string, unknown>)?.name || 'Unknown'}"`);
       break;
 
     case MauticEventType.POINT_GAINED:

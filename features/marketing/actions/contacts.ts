@@ -4,7 +4,6 @@ import { makeMauticRequest } from "../lib/mautic-client";
 import { 
   ContactDTO, 
   RawMauticContact, 
-  MauticApiResponse,
   NormalizedCollection 
 } from "../types/mautic";
 import { ActionResult } from "@/types";
@@ -17,10 +16,10 @@ function normalizeContact(raw: RawMauticContact): ContactDTO {
   const coreFields = raw.fields.core || {};
   return {
     id: Number(raw.id),
-    email: coreFields.email?.value || '',
-    firstName: coreFields.firstname?.value || '',
-    lastName: coreFields.lastname?.value || '',
-    company: coreFields.company?.value || null,
+    email: (coreFields.email as Record<string, unknown>)?.value as string || '',
+    firstName: (coreFields.firstname as Record<string, unknown>)?.value as string || '',
+    lastName: (coreFields.lastname as Record<string, unknown>)?.value as string || '',
+    company: (coreFields.company as Record<string, unknown>)?.value as string || null,
     points: raw.points,
     tags: Array.isArray(raw.tags) ? raw.tags.map(t => t.tag) : [],
     lastActive: raw.lastActive,
@@ -38,7 +37,7 @@ export async function listContactsAction(params: {
   search?: string;
 } = {}): Promise<ActionResult<NormalizedCollection<ContactDTO>>> {
   try {
-    const response = await makeMauticRequest<any>('GET', '/contacts', {
+    const response = await makeMauticRequest<Record<string, unknown>>('GET', '/contacts', {
       params: {
         limit: params.limit || 30,
         start: params.start || 0,
@@ -46,21 +45,21 @@ export async function listContactsAction(params: {
       },
     });
 
-    const contactsMap = response.contacts || {};
-    const data: ContactDTO[] = Object.values(contactsMap).map((raw: any) => normalizeContact(raw));
+    const contactsMap = (response.contacts as Record<string, unknown>) || {};
+    const data: ContactDTO[] = Object.values(contactsMap).map((raw: unknown) => normalizeContact(raw as RawMauticContact));
 
     return {
       success: true,
       data: {
         data,
-        total: Number(response.total || data.length),
+        total: Number((response.total as number) || data.length),
       },
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error("Error listing Mautic contacts:", error);
     return {
       success: false,
-      error: error.message || "Failed to list contacts",
+      error: error instanceof Error ? error.message : "Failed to list contacts",
     };
   }
 }
@@ -70,18 +69,18 @@ export async function listContactsAction(params: {
  */
 export async function getContactAction(id: number): Promise<ActionResult<ContactDTO>> {
   try {
-    const response = await makeMauticRequest<any>('GET', `/contacts/${id}`);
-    const contact = normalizeContact(response.contact);
+    const response = await makeMauticRequest<Record<string, unknown>>('GET', `/contacts/${id}`);
+    const contact = normalizeContact(response.contact as RawMauticContact);
 
     return {
       success: true,
       data: contact,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error(`Error fetching Mautic contact ${id}:`, error);
     return {
       success: false,
-      error: error.message || "Failed to fetch contact",
+      error: error instanceof Error ? error.message : "Failed to fetch contact",
     };
   }
 }
@@ -97,11 +96,11 @@ export async function upsertContactAction(
     // 1. Search for existing contact
     const searchResult = await listContactsAction({ search: `email:${email}`, limit: 1 });
     
-    let response: any;
+    let response: Record<string, unknown>;
     if (searchResult.success && searchResult.data && searchResult.data.data.length > 0) {
       // 2. Update existing
       const existingId = searchResult.data.data[0].id;
-      response = await makeMauticRequest<any>('PATCH', `/contacts/${existingId}/edit`, {
+      response = await makeMauticRequest<Record<string, unknown>>('PATCH', `/contacts/${existingId}/edit`, {
         body: JSON.stringify({
           email,
           firstname: fields.firstName,
@@ -111,7 +110,7 @@ export async function upsertContactAction(
       });
     } else {
       // 3. Create new
-      response = await makeMauticRequest<any>('POST', '/contacts/new', {
+      response = await makeMauticRequest<Record<string, unknown>>('POST', '/contacts/new', {
         body: JSON.stringify({
           email,
           firstname: fields.firstName,
@@ -123,13 +122,13 @@ export async function upsertContactAction(
 
     return {
       success: true,
-      data: normalizeContact(response.contact),
+      data: normalizeContact(response.contact as RawMauticContact),
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error(`Error upserting Mautic contact ${email}:`, error);
     return {
       success: false,
-      error: error.message || "Failed to upsert contact",
+      error: error instanceof Error ? error.message : "Failed to upsert contact",
     };
   }
 }
@@ -144,11 +143,11 @@ export async function deleteContactAction(id: number): Promise<ActionResult<{ id
       success: true,
       data: { id },
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     productionLogger.error(`Error deleting Mautic contact ${id}:`, error);
     return {
       success: false,
-      error: error.message || "Failed to delete contact",
+      error: error instanceof Error ? error.message : "Failed to delete contact",
     };
   }
 }
