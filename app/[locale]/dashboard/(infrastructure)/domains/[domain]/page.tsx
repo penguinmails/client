@@ -1,11 +1,11 @@
 import { getDomainDetails } from "@features/domains/actions";
 import { DnsRecordsTable } from "@features/domains/ui/components/dns-records-table";
+import { HestiaDnsRecord, HestiaMailAccount } from "@features/infrastructure/types/hestia";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button/button";
-import { ShieldCheck, ChevronRight, ExternalLink, Activity, Server, Lock, Info, ShieldAlert, Copy } from "lucide-react";
+import { ShieldCheck, ChevronRight, ExternalLink, Activity, Server, Lock, Info, ShieldAlert } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -136,7 +136,7 @@ async function DomainDetailPage({ params }: DomainPageProps) {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {['SPF', 'DKIM', 'DMARC', 'MX'].map(type => {
-                      const hasRecord = Object.values(records).some(r => {
+                      const hasRecord = Object.values(records).some((r: HestiaDnsRecord) => {
                         if (type === 'SPF') return r.TYPE === 'TXT' && r.VALUE.includes('v=spf1');
                         if (type === 'DMARC') return r.TYPE === 'TXT' && r.RECORD === '_dmarc';
                         if (type === 'DKIM') return r.TYPE === 'TXT' && r.RECORD.includes('_domainkey');
@@ -219,8 +219,8 @@ async function DomainDetailPage({ params }: DomainPageProps) {
                       </CardHeader>
                       <CardContent className="p-4 pt-0 space-y-3">
                         <div className="flex gap-2">
-                          <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700">Web Hosted</Badge>
-                          {sub.ssl && <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700">SSL</Badge>}
+                          <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700">Web Hosted</Badge>
+                          {sub.ssl && <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">SSL</Badge>}
                         </div>
                         <div className="text-xs text-muted-foreground space-y-1">
                           <p>IP: {sub.ip}</p>
@@ -258,7 +258,7 @@ async function DomainDetailPage({ params }: DomainPageProps) {
                             </td>
                           </tr>
                         ) : (
-                          Object.entries(mailAccounts).map(([account, details]: [string, any]) => {
+                          Object.entries(mailAccounts).map(([account, details]: [string, HestiaMailAccount]) => {
                             const quota = details.QUOTA === 'unlimited' ? '∞' : `${details.QUOTA} MB`;
                             const usage = `${details.U_DISK} MB`;
                             const percent = details.QUOTA !== 'unlimited' && parseInt(details.QUOTA) > 0
@@ -313,7 +313,7 @@ async function DomainDetailPage({ params }: DomainPageProps) {
         </div>
       </TooltipProvider>
     );
-  } catch (error) {
+  } catch {
     return (
       <div className="container mx-auto py-10">
         <Card className="border-destructive">

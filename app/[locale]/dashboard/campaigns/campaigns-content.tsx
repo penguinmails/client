@@ -10,7 +10,7 @@ import {
 import StatsCardSkeleton from "@/features/analytics/ui/components/dashboard/cards/StatsCardSkeleton";
 import { StatsCards } from "@features/campaigns/ui/components/reports/StatsCards";
 import { Button } from "@/components/ui/button/button";
-import { Plus, Send, Mail, TrendingUp, Eye, Users, MousePointer } from "lucide-react";
+import { Plus, Send, Mail, Eye, Users, MousePointer } from "lucide-react";
 import { Link } from "@/lib/config/i18n/navigation";
 import { Suspense } from "react";
 import { CampaignDisplay } from "@features/campaigns/types";
