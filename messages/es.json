@@ -472,7 +472,6 @@
     "companySizeDefault": "1-10 empleados",
     "errors": {
       "loadBilling": "Error al cargar los datos de facturación",
-      "loadBilling": "Error al cargar los datos de facturación",
       "updateBilling": "Error al actualizar la información de facturación",
       "loadCompany": "Error al cargar la información de la empresa",
       "updateCompany": "Error al actualizar el nombre de la empresa",
@@ -689,6 +688,18 @@
   "Admin": {
     "title": "Panel de Administración",
     "description": "Gestión de usuarios y análisis entre inquilinos"
+  },
+  "SessionTimeout": {
+    "title": "Sesión Expirando Pronto",
+    "message": "Tu sesión expirará por inactividad. Haz clic en el botón para mantenerte conectado.",
+    "stayLoggedIn": "Mantenerse Conectado"
+  },
+  "AccessDenied": {
+    "title": "Acceso Denegado",
+    "description": "No tienes permiso para acceder a esta página. Por favor, contacta a tu administrador si crees que esto es un error.",
+    "contactMessage": "Si necesitas acceso a esta sección, por favor contacta a tu administrador del sistema o solicita los permisos apropiados.",
+    "homeButton": "Ir al Inicio",
+    "loginButton": "Iniciar Sesión"
   },
   "Infrastructure": {
     "layout": {
