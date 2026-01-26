@@ -1,5 +1,5 @@
 "use client";
-import { getMockLeads, type MockLead as Lead } from "@/features/leads";
+import { getClients, type Client } from "@/features/leads/actions/clients";
 import {
   ArrowUpDown,
   Download,
@@ -9,7 +9,8 @@ import {
   Tag,
   Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 import {
   DropDownFilter,
   Filter,
@@ -35,6 +36,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { productionLogger } from "@/lib/logger";
+import LeadTableSkeleton from "./tables/LeadTableSkeleton";
+
+// Map Client to a display-friendly contact type
+interface DisplayContact {
+  id: string;
+  name: string;
+  email: string;
+  company?: string;
+  status: string;
+  source: string;
+  tags: string[];
+  createdAt: Date;
+}
 
 const getStatusColor = (status: string | undefined) => {
   const statusLower = (status || "new").toLowerCase();
@@ -46,17 +61,46 @@ const getStatusColor = (status: string | undefined) => {
     contacted: "bg-blue-100 text-blue-800 border-blue-200",
     qualified: "bg-green-100 text-green-800 border-green-200",
     converted: "bg-purple-100 text-purple-800 border-purple-200",
+    active: "bg-green-100 text-green-800 border-green-200",
+    inactive: "bg-gray-100 text-gray-800 border-gray-200",
+    prospect: "bg-yellow-100 text-yellow-800 border-yellow-200",
   };
   return colors[statusLower] || colors.new;
 };
 
-function ContactsTab() {
-  const sampleLeads = getMockLeads();
-
+function ContactsTab({ listId }: { listId?: string }) {
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
-  const [filteredContacts, setFilteredContacts] = useState([...sampleLeads]);
+  const [filteredContacts, setFilteredContacts] = useState<DisplayContact[]>([]);
   const [sortField, setSortField] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(true);
+    getClients({ listId })
+      .then((result) => {
+        if (result.success && result.data) {
+          // Map Client to DisplayContact
+          const contacts: DisplayContact[] = result.data.map((client: Client) => ({
+            id: client.id,
+            name: client.name,
+            email: client.email,
+            company: client.company,
+            status: client.status,
+            source: client.tags?.[0] || 'Mautic',
+            tags: client.tags || [],
+            createdAt: new Date(client.createdAt),
+          }));
+          setFilteredContacts(contacts);
+        }
+      })
+      .catch((error) => {
+        productionLogger.error("Failed to load contacts:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [listId]);
 
   const handleSort = (field: string) => {
     let newSortDirection: "asc" | "desc" = "asc";
@@ -96,7 +140,7 @@ function ContactsTab() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedContacts(filteredContacts.map((c: Lead) => String(c.id)));
+      setSelectedContacts(filteredContacts.map((c: DisplayContact) => String(c.id)));
     } else {
       setSelectedContacts([]);
     }
@@ -217,88 +261,103 @@ function ContactsTab() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredContacts.map((contact) => (
-                <TableRow key={contact.id} className="group">
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedContacts.includes(String(contact.id))}
-                      onCheckedChange={(checked) =>
-                        handleSelectContact(contact.id, checked as boolean)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-linear-to-br from-blue-500 to-purple-600 text-white">
-                          {contact.name
-                            .split(" ")
-                            .map((n: string) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-semibold">{contact.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {contact.email}
-                        </div>
-                      </div>
-                    </div>
-                  </TableCell>
-
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={getStatusColor(contact.status)}
-                    >
-                      {contact.status
-                        .replace("-", " ")
-                        .replace(/\b\w/g, (l) => l.toUpperCase())}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      <Badge
-                        key="default"
-                        variant="secondary"
-                        className="text-xs"
-                      >
-                        {contact.source}
-                      </Badge>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-sm">
-                      {contact.company || "No company"}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {contact.createdAt
-                      ? new Date(contact.createdAt).toLocaleDateString()
-                      : "Not Used Yet"}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end space-x-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        title="View Contact"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        title="Edit Contact"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                    </div>
+              {isLoading ? (
+                <LeadTableSkeleton columns={7} />
+              ) : filteredContacts.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={7}
+                    className="h-24 text-center text-muted-foreground"
+                  >
+                    No contacts found.
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                filteredContacts.map((contact) => (
+                  <TableRow key={contact.id} className="group">
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedContacts.includes(String(contact.id))}
+                        onCheckedChange={(checked) =>
+                          handleSelectContact(contact.id, checked as boolean)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarFallback className="bg-linear-to-br from-blue-500 to-purple-600 text-white">
+                            {contact.name
+                              .split(" ")
+                              .map((n: string) => n[0])
+                              .join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-semibold">{contact.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {contact.email}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className={getStatusColor(contact.status)}
+                      >
+                        {contact.status
+                          .replace("-", " ")
+                          .replace(/\b\w/g, (l) => l.toUpperCase())}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        <Badge
+                          key="default"
+                          variant="secondary"
+                          className="text-xs"
+                        >
+                          {contact.source}
+                        </Badge>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        {contact.company || "No company"}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {contact.createdAt
+                        ? new Date(contact.createdAt).toLocaleDateString()
+                        : "Not Used Yet"}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end space-x-1">
+                        <Link href={`/dashboard/leads/contacts/${contact.id}`}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            title="View Contact"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          title="Edit Contact"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>

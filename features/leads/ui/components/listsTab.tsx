@@ -6,6 +6,7 @@ import { productionLogger } from "@/lib/logger";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -18,6 +19,7 @@ import { ArrowUpDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import ListTableRow from "./ListTableRow";
 import { cn } from "@/lib/utils";
+import LeadTableSkeleton from "./tables/LeadTableSkeleton";
 const listTableColumn = [
   { id: "name", label: "List Name", canSort: true },
   { id: "contacts", label: "Contacts", canSort: true },
@@ -30,9 +32,11 @@ const listTableColumn = [
 
 function ListsTab() {
   const [filteredLists, setFilteredLists] = useState<LeadListData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [sortById, setSortById] = useState<string | null>(null);
 
   useEffect(() => {
+    setIsLoading(true);
     fetchLeadLists()
       .then((result: ActionResult<LeadList[]>) => {
         if (Array.isArray(result)) {
@@ -46,6 +50,9 @@ function ListsTab() {
       .catch((error: unknown) => {
         productionLogger.error("Failed to load leads lists:", error);
         setFilteredLists([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -116,9 +123,22 @@ function ListsTab() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredLists.map((list) => (
-              <ListTableRow key={list.id} list={list} />
-            ))}
+            {isLoading ? (
+              <LeadTableSkeleton columns={listTableColumn.length} />
+            ) : filteredLists.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={listTableColumn.length}
+                  className="h-24 text-center text-muted-foreground"
+                >
+                  No lists found.
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredLists.map((list) => (
+                <ListTableRow key={list.id} list={list} />
+              ))
+            )}
           </TableBody>
         </Table>
       </div>

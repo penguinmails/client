@@ -30,6 +30,7 @@ import Papa from "papaparse";
 import { useRef, useState } from "react";
 import { CSV_COLUMNS, CSVRecord } from "@/types/clients-leads";
 import { developmentLogger, productionLogger } from "@/lib/logger";
+import { importCSVContactsAction } from "@/features/leads/actions/import";
 
 const downloadSampleCSV = () => {
   try {
@@ -463,7 +464,13 @@ export default function CSVUploadTab() {
     }
   };
 
-  const handleImport = ({
+  const [importResult, setImportResult] = useState<{
+    success: number;
+    failed: number;
+    errors?: string[];
+  } | null>(null);
+
+  const handleImport = async ({
     listName,
     tags,
     columnMapping,
@@ -474,26 +481,97 @@ export default function CSVUploadTab() {
     columnMapping: Record<string, string>;
     customColumns: Array<{ key: string; label: string; required: boolean }>;
   }) => {
-    developmentLogger.debug("Importing CSV leads", {
-      listName,
-      tags,
-      columnMapping,
-      customColumns,
-      rowCount: csvData.length,
-    });
-    // Send to backend here
+    setIsUploading(true);
+    setImportResult(null);
 
-    // Reset after import
-    setCsvFile(null);
-    setCsvData([]);
-    setError("");
+    try {
+      developmentLogger.debug("Importing CSV leads", {
+        listName,
+        tags,
+        columnMapping,
+        customColumns,
+        rowCount: csvData.length,
+      });
+
+      const response = await importCSVContactsAction({
+        listName,
+        tags,
+        contacts: csvData,
+        columnMapping,
+      });
+
+      if (!response.success) {
+        setError(response.error || "Import failed");
+      } else if (response.data) {
+        setImportResult({
+          success: response.data.success,
+          failed: response.data.failed,
+          errors: response.data.errors,
+        });
+
+        // Clear file on success
+        setCsvFile(null);
+        setCsvData([]);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to import contacts");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const clearFile = () => {
     setCsvFile(null);
     setCsvData([]);
     setError("");
+    setImportResult(null);
   };
+
+  if (importResult) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-8">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-center text-green-600 flex items-center justify-center gap-2">
+              Import Complete
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6 text-center">
+            <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+              <div className="bg-green-50 p-4 rounded-lg">
+                <div className="text-2xl font-bold text-green-700">{importResult.success}</div>
+                <div className="text-sm text-green-600">Imported Successfully</div>
+              </div>
+              <div className="bg-red-50 p-4 rounded-lg">
+                <div className="text-2xl font-bold text-red-700">{importResult.failed}</div>
+                <div className="text-sm text-red-600">Failed</div>
+              </div>
+            </div>
+
+            {importResult.errors && importResult.errors.length > 0 && (
+              <div className="text-left bg-gray-50 p-4 rounded-lg mt-4">
+                <h4 className="font-semibold text-red-600 mb-2">Errors:</h4>
+                <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  {importResult.errors.map((err, i) => (
+                    <li key={i}>{err}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className="flex justify-center gap-4 mt-6">
+              <Button onClick={() => window.location.reload()} variant="outline">
+                Upload Another
+              </Button>
+              <Button onClick={() => window.location.href = '/dashboard/leads?tab=lists'}>
+                View Segments
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -582,3 +660,4 @@ export default function CSVUploadTab() {
     </div>
   );
 }
+

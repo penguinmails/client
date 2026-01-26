@@ -1,4 +1,5 @@
 import { TableCell, TableRow } from "@/components/ui/table";
+import Link from "next/link";
 import {
   CheckCircle,
   Clock,
@@ -19,6 +20,7 @@ const getStatusColor = (status: string) => {
   switch (status) {
     case "used":
     case "being-used":
+    case "active":
       return "bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-500/30";
     case "not-used":
       return "bg-muted/50 dark:bg-muted text-muted-foreground border-border";
@@ -31,6 +33,7 @@ const getStatusIcon = (status: string) => {
   switch (status) {
     case "used":
     case "being-used":
+    case "active":
       return <CheckCircle className="w-3 h-3" />;
     case "not-used":
       return <Clock className="w-3 h-3" />;
@@ -43,7 +46,8 @@ const getStatusLabel = (status: string) => {
   switch (status) {
     case "used":
     case "being-used":
-      return "Being Used";
+    case "active":
+      return "Active";
     case "not-used":
       return "Not Used Yet";
     default:
@@ -147,14 +151,16 @@ function ListTableRow({ list }: { list: LeadListData }) {
       </TableCell>
       <TableCell className="text-right">
         <div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className=" hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/20"
-            title="View Contacts"
-          >
-            <Eye className="w-4 h-4" />
-          </Button>
+          <Link href={`/dashboard/leads?tab=contacts&listId=${list.id}`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className=" hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/20"
+              title="View Contacts"
+            >
+              <Eye className="w-4 h-4" />
+            </Button>
+          </Link>
           <Button
             variant="ghost"
             size="icon"
