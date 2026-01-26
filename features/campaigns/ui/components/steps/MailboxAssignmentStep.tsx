@@ -44,7 +44,7 @@ function MailboxAssignmentStep() {
           const mapped: Mailbox[] = result.data.map(mb => ({
             id: mb.id,
             email: mb.email,
-            name: mb.email.split('@')[0], // name is not in EmailAccount
+            name: mb.email.split('@')[0], // Fallback to email local part until name field is available
             domain: mb.domainId || mb.email.split('@')[1],
             status: mb.status === 'active' ? 'active' : 'inactive',
             dailyLimit: mb.analytics?.dailyLimit || 500, // dailyLimit is in analytics
