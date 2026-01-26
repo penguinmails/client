@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/features/auth/hooks/use-auth";
-import { AdminRole, isAdminRole } from "@/features/auth/types/base";
+import { useAuth, AdminRole, isAdminRole } from "@/features/auth";
 import { Loader2 } from "lucide-react";
 
 interface AdminGuardProps {

@@ -1,17 +1,20 @@
 import { render, screen, act } from "@testing-library/react";
-import { AdminGuard, useAdminAccess } from "../admin-guard";
-import { AdminRole } from "@/features/auth/types/base";
+import { AdminGuard } from "../admin-guard";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useAuth, AdminRole } from "@/features/auth";
 
 // Mocks
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock("@/features/auth/hooks/use-auth", () => ({
-  useAuth: jest.fn(),
-}));
+jest.mock("@/features/auth", () => {
+  const actual = jest.requireActual("@/features/auth");
+  return {
+    ...actual,
+    useAuth: jest.fn(),
+  };
+});
 
 jest.mock("lucide-react", () => ({
   Loader2: () => <div data-testid="loader" />,

@@ -12,6 +12,12 @@ export type {
   UserRole,
 } from './types';
 
+// Values/Functions - Public type utilities
+export {
+  AdminRole,
+  isAdminRole,
+} from './types';
+
 // Queries - Data fetching operations
 export {
   getCurrentUser,
@@ -40,6 +46,7 @@ export {
   PasswordInput,
   TenantCompanySelector,
   UserMenu,
+  SessionTimeoutWarning,
 } from './ui/components';
 
 // Context - Public context providers
