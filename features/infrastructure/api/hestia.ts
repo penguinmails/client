@@ -4,7 +4,9 @@ import {
   HestiaMailDomainCollection, 
   HestiaMailAccountCollection,
   HestiaUserCollection,
-  HestiaDatabaseCollection
+  HestiaDatabaseCollection,
+  HestiaDnsDomainCollection,
+  HestiaDnsRecordCollection
 } from '../types/hestia';
 
 /**
@@ -64,8 +66,27 @@ export const runHestiaCommand = async (
 export const listWebDomains = (config: HestiaConfig, user: string): Promise<HestiaWebDomainCollection> => 
   runHestiaCommand(config, 'v-list-web-domains', [user, 'json']);
 
+export const listWebDomain = (config: HestiaConfig, user: string, domain: string): Promise<any> => 
+  runHestiaCommand(config, 'v-list-web-domain', [user, domain, 'json']);
+
 export const addWebDomain = (config: HestiaConfig, user: string, domain: string): Promise<string | number> => 
   runHestiaCommand(config, 'v-add-domain', [user, domain], true);
+
+// ==========================================
+// DNS
+// ==========================================
+
+export const listDnsDomains = (config: HestiaConfig, user: string): Promise<HestiaDnsDomainCollection> => 
+  runHestiaCommand(config, 'v-list-dns-domains', [user, 'json']);
+
+export const listDnsDomain = (config: HestiaConfig, user: string, domain: string): Promise<any> => 
+  runHestiaCommand(config, 'v-list-dns-domain', [user, domain, 'json']);
+
+export const listDnsRecords = (config: HestiaConfig, user: string, domain: string): Promise<HestiaDnsRecordCollection> => 
+  runHestiaCommand(config, 'v-list-dns-records', [user, domain, 'json']);
+
+export const getDnsDomainValue = (config: HestiaConfig, user: string, domain: string, key: string): Promise<string> =>
+  runHestiaCommand(config, 'v-get-dns-domain-value', [user, domain, key]);
 
 // ==========================================
 // Mail

@@ -1,13 +1,14 @@
 import DomainsTab from "@features/domains/ui/components/domains-tab";
 import { getDomainsData } from "@features/domains/actions";
 import { productionLogger } from "@/lib/logger";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 async function page() {
   try {
-    const { domains, dnsRecords } = await getDomainsData();
+    const data = await getDomainsData();
+    const { domains, dnsRecords } = data;
 
-    // Transform domains to match DomainsTab expected interface
-    const transformedDomains = domains.map((domain) => ({
+    const transform = (domainList: any[]) => domainList.map((domain) => ({
       id: domain.id,
       domain: domain.domain,
       status: domain.status,
@@ -19,13 +20,25 @@ async function page() {
         mx: domain.records?.mx || "pending",
       },
       addedDate: domain.createdAt || null,
+      expirationDate: domain.expirationDate || null,
     }));
+    const transformedUnified = transform(domains);
 
-    return <DomainsTab domains={transformedDomains} dnsRecords={dnsRecords} />;
+    return (
+      <DomainsTab domains={transformedUnified} dnsRecords={dnsRecords} />
+    );
   } catch (error) {
     productionLogger.error("Error loading domains page:", error);
-    // Return empty state on error
-    return <DomainsTab domains={[]} dnsRecords={[]} />;
+    return (
+      <div className="container mx-auto py-10">
+        <Card className="border-destructive">
+          <CardHeader>
+            <CardTitle>Error Loading Domains</CardTitle>
+            <CardDescription>Failed to connect to HestiaCP infrastructure.</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
   }
 }
 export default page;
