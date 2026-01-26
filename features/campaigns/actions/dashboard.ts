@@ -16,7 +16,7 @@ import { getCampaignAction, listContactsAction } from "@/features/marketing";
  * @param req - NextRequest for session context (optional for client-side calls)
  * @returns Promise containing campaign leads result
  */
-export async function getCampaignLeads(campaignId?: string, _req?: NextRequest): Promise<ActionResult<CampaignLead[]>> {
+export async function getCampaignLeads(_campaignId?: string, _req?: NextRequest): Promise<ActionResult<CampaignLead[]>> {
   try {
     // If we have a campaignId, we ideally want leads from those segments
     // For now, we fetch latest contacts as a fallback if no specific segment integration is ready
@@ -25,7 +25,7 @@ export async function getCampaignLeads(campaignId?: string, _req?: NextRequest):
     if (!result.success) {
       return {
         success: false,
-        error: (result as any).error || "Failed to fetch leads"
+        error: (result as { error?: string }).error || "Failed to fetch leads"
       };
     }
 
@@ -69,7 +69,7 @@ export async function getSequenceSteps(campaignId?: string, _req?: NextRequest):
     if (!result.success) {
       return {
         success: false,
-        error: (result as any).error || "Failed to fetch steps"
+        error: (result as { error?: string }).error || "Failed to fetch steps"
       };
     }
 

@@ -37,8 +37,8 @@ export function useCampaignStats(
         const days = typeof timeRange === 'number' ? timeRange : parseInt(timeRange, 10) || 14;
         
         let realTotalSent = initialData?.metrics?.recipients?.sent || 0;
-        let realTotalOpened = initialData?.metrics?.opens?.total || 0;
-        let realTotalClicked = initialData?.metrics?.clicks?.total || 0;
+        const _realTotalOpened = initialData?.metrics?.opens?.total || 0;
+        const _realTotalClicked = initialData?.metrics?.clicks?.total || 0;
 
         // If campaignId is provided and we don't have initialData, fetch real totals
         if (campaignId && !initialData) {
@@ -46,8 +46,8 @@ export function useCampaignStats(
           const result = await getCampaign(campaignId);
           if (result.success && result.data) {
             realTotalSent = result.data.metrics?.recipients?.sent || 0;
-            realTotalOpened = result.data.metrics?.opens?.total || 0;
-            realTotalClicked = result.data.metrics?.clicks?.total || 0;
+            // realTotalOpened = result.data.metrics?.opens?.total || 0;
+            // realTotalClicked = result.data.metrics?.clicks?.total || 0;
           }
         }
 
@@ -88,7 +88,7 @@ export function useCampaignStats(
           setData(mockData);
           setLoading(false);
         }
-      } catch (err) {
+      } catch {
         if (isMounted) {
           _setError("Failed to fetch stats");
           setLoading(false);
@@ -98,7 +98,7 @@ export function useCampaignStats(
 
     fetchStats();
     return () => { isMounted = false; };
-  }, [timeRange, campaignId]);
+  }, [timeRange, campaignId, initialData]);
 
   return { data, loading, error };
 }

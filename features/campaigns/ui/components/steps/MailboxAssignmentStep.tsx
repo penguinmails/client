@@ -66,7 +66,7 @@ function MailboxAssignmentStep() {
   }, []);
 
   const initiallySelectedEmails = editingMode
-    ? (campaign as CampaignFormValues)?.selectedMailboxes?.map((m: any) => m.email) || []
+    ? (campaign as CampaignFormValues)?.selectedMailboxes?.map((m: Record<string, unknown>) => m.email as string) || []
     : [];
 
   const handleMailboxToggle = (
@@ -78,12 +78,11 @@ function MailboxAssignmentStep() {
     }
 
     if (checked) {
-      // Cast to any to avoid strict type mismatch if Context expects slightly different Mailbox type
-      setValue("selectedMailboxes", [...selectedMailboxes, mailbox as any]);
+      setValue("selectedMailboxes", [...selectedMailboxes, mailbox]);
     } else {
       setValue(
         "selectedMailboxes",
-        selectedMailboxes.filter((m: any) => m.email !== mailbox.email)
+        selectedMailboxes.filter((m: Record<string, unknown>) => (m.email as string) !== mailbox.email)
       );
     }
   };
@@ -132,7 +131,7 @@ function MailboxAssignmentStep() {
 
           {mailboxes.map((mailbox) => {
             const isSelected =
-              selectedMailboxes.some((m: any) => m.email === mailbox.email) ||
+              selectedMailboxes.some((m: Record<string, unknown>) => (m.email as string) === mailbox.email) ||
               initiallySelectedEmails.includes(mailbox.email);
             const isInitiallySelected =
               editingMode && initiallySelectedEmails.includes(mailbox.email);
