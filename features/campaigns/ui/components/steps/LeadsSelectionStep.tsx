@@ -8,7 +8,10 @@ import { useAddCampaignContext } from "@features/campaigns/ui/context/add-campai
 import { cn } from "@/lib/utils";
 import { Users } from "lucide-react";
 
-// Lead List Interface
+import { useEffect, useState } from "react";
+import { getLeadLists } from "@features/leads/actions";
+import { productionLogger } from "@/lib/logger";
+
 interface LeadList {
   id: string;
   name: string;
@@ -20,28 +23,30 @@ function LeadsSelectionStep() {
   const { form, editingMode } = useAddCampaignContext();
   const { setValue, watch } = form;
   const selectedLeadsList = watch("leadsList");
-  
-  // Mock data for lead lists
-  const leadLists: LeadList[] = [
-    {
-      id: '1',
-      name: 'Marketing Qualified Leads',
-      description: 'High-quality leads from marketing campaigns',
-      contacts: 245
-    },
-    {
-      id: '2', 
-      name: 'Sales Qualified Leads',
-      description: 'Pre-qualified leads from sales team',
-      contacts: 156
-    },
-    {
-      id: '3',
-      name: 'Event Attendees',
-      description: 'Leads from recent webinars and events',
-      contacts: 89
-    }
-  ];
+  const [leadLists, setLeadLists] = useState<LeadList[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLists = async () => {
+      try {
+        setLoading(true);
+        const result = await getLeadLists();
+        if (result.success && result.data) {
+          setLeadLists(result.data.map(l => ({
+            id: l.id,
+            name: l.name,
+            description: l.description || '',
+            contacts: l.contacts
+          })));
+        }
+      } catch (error) {
+        productionLogger.error("Failed to fetch lead lists", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLists();
+  }, []);
   
   const handleLeadsListChange = (listId: string) => {
     const selectedList = leadLists.find((list: LeadList) => String(list.id) === listId);
@@ -66,7 +71,7 @@ function LeadsSelectionStep() {
             Select Lead List
           </h2>
           <p className="text-muted-foreground">
-            Choose which leads you want to target with this campaign
+            {loading ? "Loading Mautic segments..." : "Choose which leads you want to target with this campaign"}
           </p>
           {editingMode ? (
             <Alert className="mt-4 bg-blue-100 dark:bg-blue-500/20">

@@ -4,6 +4,7 @@ import { ChangePlanTrigger } from "@features/billing/ui/components/change-plan-d
 import EditAddressTrigger from "@features/billing/ui/components/edit-trigger-dialog";
 import InvoicesTable from "@features/billing/ui/components/invocies-table";
 import UpdateCardDialogTrigger from "@features/billing/ui/components/update-card-dialog";
+import { BillingData } from "@features/billing/types";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -24,7 +25,6 @@ import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { updateBillingInfo } from "@features/billing/actions";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
-  useServerAction,
   useServerActionWithParams,
 } from "@/hooks/use-server-action";
 import { BillingLoadingSkeleton } from "@features/billing/ui/components/BillingLoadingSkeleton";
@@ -122,7 +122,7 @@ function BillingTab() {
   const pathname = usePathname();
   const checkout = searchParams.get("checkout");
   const { userCompanies, selectedCompanyId, refreshCompanies } = useAuth();
-  const [billingData, setBillingData] = useState<any>(null);
+  const [billingData, setBillingData] = useState<BillingData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

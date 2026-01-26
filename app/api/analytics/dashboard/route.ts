@@ -1,16 +1,31 @@
 import { NextResponse } from "next/server";
-import { MOCK_STATS, MOCK_CHART_DATA } from "@features/analytics/lib/mocks/dashboard";
+import { getGlobalStatsAction, getAnalyticsChartDataAction } from "@/features/analytics/actions/stats";
+import { productionLogger } from "@/lib/logger";
 
 /**
  * GET /api/analytics/dashboard
- * Returns mock analytics dashboard data with simulated delay
+ * Returns real metrics from NileDB
  */
 export async function GET() {
-  // Simulate network delay (500ms)
-  await new Promise(resolve => setTimeout(resolve, 500));
+  try {
+    const [statsResult, chartResult] = await Promise.all([
+      getGlobalStatsAction(),
+      getAnalyticsChartDataAction()
+    ]);
 
-  return NextResponse.json({
-    stats: MOCK_STATS,
-    chartData: MOCK_CHART_DATA,
-  });
+    if (!statsResult.success || !chartResult.success) {
+      throw new Error("Failed to fetch analytics data");
+    }
+
+    return NextResponse.json({
+      stats: statsResult.data,
+      chartData: chartResult.data,
+    });
+  } catch (error) {
+    productionLogger.error("API /api/analytics/dashboard failed:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch dashboard data" },
+      { status: 500 }
+    );
+  }
 }

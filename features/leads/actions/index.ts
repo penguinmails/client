@@ -119,30 +119,40 @@ export async function maskClientPII(_clientId: string, _req?: NextRequest) {
 }
 
 // Lead List Actions
-import { leadLists } from '../data/mock';
+import { listSegmentsAction } from '@/features/marketing';
 
 export async function getLeadLists(_req?: NextRequest): Promise<ActionResult<LeadList[]>> {
-  // Map mock data to expected interface, including all fields
-  const data: LeadList[] = leadLists.map(list => ({
-    id: list.id.toString(),
-    name: list.name,
-    description: list.description || list.campaign || '',
-    leadCount: list.contacts,
-    contacts: list.contacts,
-    tags: list.tags,
-    status: list.status as 'active' | 'inactive' | 'used' | 'being-used',
-    campaign: list.campaign || undefined,
-    bounced: list.bounced,
-    performance: list.performance,
-    uploadDate: list.uploadDate,
-    createdAt: new Date(list.uploadDate),
-    updatedAt: new Date(list.uploadDate)
-  }));
+  try {
+    const result = await listSegmentsAction({ limit: 100 });
+    
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error || "Failed to fetch segments from Mautic"
+      };
+    }
 
-  return {
-    success: true,
-    data
-  };
+    const data: LeadList[] = result.data.data.map(segment => ({
+      id: segment.id.toString(),
+      name: segment.name,
+      description: segment.description || '',
+      leadCount: segment.contactCount,
+      contacts: segment.contactCount,
+      status: segment.isPublished ? 'active' : 'inactive',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }));
+
+    return {
+      success: true,
+      data
+    };
+  } catch {
+    return {
+      success: false,
+      error: "Failed to fetch segments"
+    };
+  }
 }
 
 export async function getLeadsLists(req?: NextRequest) {

@@ -21,6 +21,7 @@ import {
   getCampaignSendingAccounts,
   getTimezones,
 } from "@features/campaigns/actions";
+import { getLeadLists, LeadList } from "@features/leads/actions";
 import {
   CampaignFormProps,
   CampaignFormValues,
@@ -68,6 +69,10 @@ export function CampaignForm({
   >([]);
   const [timezones, setTimezones] = useState<string[]>([]);
   const [loadingAccounts, setLoadingAccounts] = useState<boolean>(true);
+  const [leadLists, setLeadLists] = useState<LeadList[]>([]);
+  const [selectedLeadListId, setSelectedLeadListId] = useState<string | number>(
+    initialData?.leadsList?.id || "none"
+  );
   const [currentEditingStep, setCurrentEditingStep] = useState<number | null>(
     null
   );
@@ -123,6 +128,20 @@ export function CampaignForm({
       }
     };
     fetchTimezones();
+  }, []);
+
+  useEffect(() => {
+    const fetchLeadLists = async () => {
+      try {
+        const result = await getLeadLists();
+        if (result.success && result.data) {
+          setLeadLists(result.data);
+        }
+      } catch (error) {
+        productionLogger.error('Error fetching lead lists:', error);
+      }
+    };
+    fetchLeadLists();
   }, []);
 
   // Handle form submission
@@ -321,6 +340,26 @@ export function CampaignForm({
                 <RecipientsSettings
                   recipients={recipients}
                   handleChangeRecipients={updateRecipients}
+                  leadLists={leadLists}
+                  selectedLeadListId={selectedLeadListId}
+                  onSelectLeadList={(listId) => {
+                    setSelectedLeadListId(listId);
+                    if (listId !== 'none') {
+                      const list = leadLists.find(l => l.id.toString() === listId.toString());
+                      if (list) {
+                        form.setValue('leadsList', {
+                          id: list.id,
+                          name: list.name,
+                          description: list.description || '',
+                          contacts: list.contacts
+                        }, { shouldValidate: true });
+                        form.setValue('clients', [], { shouldValidate: true });
+                        setRecipients("");
+                      }
+                    } else {
+                      form.setValue('leadsList', undefined, { shouldValidate: true });
+                    }
+                  }}
                 />
               </TabsContent>
             </Tabs>

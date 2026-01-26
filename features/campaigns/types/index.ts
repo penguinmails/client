@@ -369,6 +369,9 @@ export interface EmailSecuenceSettingsProps {
 export interface RecipientsSettingsProps {
   recipients: string;
   handleChangeRecipients: (evt: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  leadLists?: Array<{ id: string; name: string; contacts: number }>;
+  selectedLeadListId?: string | number;
+  onSelectLeadList?: (listId: string) => void;
 }
 
 export interface EmailStepType {

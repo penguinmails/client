@@ -10,13 +10,20 @@ import { useState, useEffect } from "react";
 import { Clock, Mail } from "lucide-react";
 import { SequenceStep as SequenceStepType } from "@/types";
 
-function SequenceTab() {
+interface SequenceTabProps {
+  campaignId: string;
+}
+
+function SequenceTab({ campaignId }: SequenceTabProps) {
   const [sequenceSteps, setSequenceSteps] = useState<SequenceStepType[]>([]);
 
   useEffect(() => {
     // Defensive: ensure we always set an array
-    getSequenceSteps().then((s) => setSequenceSteps(Array.isArray(s) ? s : []));
-  }, []);
+    getSequenceSteps(campaignId).then((s) => {
+      const data = s.success ? s.data || [] : [];
+      setSequenceSteps(Array.isArray(data) ? data : []);
+    });
+  }, [campaignId]);
 
   return (
     <div className="space-y-6">

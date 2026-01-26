@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { productionLogger } from "@/lib/logger";
-import { SequenceStep } from "@features/campaigns/types";
 import { ActionResult } from "@/types";
 
 
@@ -8,7 +7,8 @@ import { ActionResult } from "@/types";
  * Dashboard-related server actions
  */
 
-import { CampaignLead } from "../types";
+import { SequenceStep, CampaignLead } from "../types";
+import { getCampaignAction, listContactsAction } from "@/features/marketing";
 
 /**
  * Fetches campaign leads for dashboard
@@ -18,12 +18,30 @@ import { CampaignLead } from "../types";
  */
 export async function getCampaignLeads(_campaignId?: string, _req?: NextRequest): Promise<ActionResult<CampaignLead[]>> {
   try {
-    // TODO: Implement actual data fetching from NileDB
-    // This is a placeholder implementation
+    // If we have a campaignId, we ideally want leads from those segments
+    // For now, we fetch latest contacts as a fallback if no specific segment integration is ready
+    const result = await listContactsAction({ limit: 50 });
+    
+    if (!result.success) {
+      return {
+        success: false,
+        error: (result as { error?: string }).error || "Failed to fetch leads"
+      };
+    }
+
+    const leads: CampaignLead[] = result.data.data.map(contact => ({
+      id: contact.id,
+      name: `${contact.firstName} ${contact.lastName}`.trim() || 'Anonymous',
+      email: contact.email,
+      company: contact.company || 'N/A',
+      status: 'pending', // Default status until campaign-specific tracking is implemented
+      currentStep: 1, // Default value until campaign-specific tracking is implemented
+      lastActivity: contact.lastActive ? new Date(contact.lastActive).toLocaleDateString() : 'N/A'
+    }));
     
     return {
       success: true,
-      data: []
+      data: leads
     };
   } catch (error) {
     productionLogger.error("Error fetching campaign leads:", error);
@@ -40,14 +58,51 @@ export async function getCampaignLeads(_campaignId?: string, _req?: NextRequest)
  * @param req - NextRequest for session context (optional for client-side calls)
  * @returns Promise containing sequence steps result
  */
-export async function getSequenceSteps(_campaignId?: string, _req?: NextRequest): Promise<ActionResult<SequenceStep[]>> {
+export async function getSequenceSteps(campaignId?: string, _req?: NextRequest): Promise<ActionResult<SequenceStep[]>> {
   try {
-    // TODO: Implement actual data fetching from NileDB
-    // This is a placeholder implementation
+    if (!campaignId || campaignId === '1') { // Handling default/mock ID
+       return { success: true, data: [] };
+    }
+
+    const result = await getCampaignAction(Number(campaignId));
+    
+    if (!result.success) {
+      return {
+        success: false,
+        error: (result as { error?: string }).error || "Failed to fetch steps"
+      };
+    }
+
+    // Map Mautic campaign events to sequence steps
+    const events = result.data.events || [];
+    const steps: SequenceStep[] = events.map((event, index) => {
+      // Extract delay information from event properties if available
+      const delayDays = event.triggerIntervalUnit === 'd' ? (event.triggerInterval as number) || 0 : 0;
+      const delayHours = event.triggerIntervalUnit === 'h' ? (event.triggerInterval as number) || 0 : 0;
+      
+      return {
+        id: Number(event.id),
+        sequenceOrder: index + 1,
+        delayDays,
+        delayHours,
+        templateId: Number(event.properties?.email) || 0,
+        campaignId: Number(campaignId),
+        emailSubject: event.name,
+        type: event.eventType === 'action' ? 'email' : 'wait',
+        subject: event.name,
+        sent: 0, // Default value until tracking is implemented
+        opened_tracked: 0, // Default value until tracking is implemented
+        clicked_tracked: 0, // Default value until tracking is implemented
+        replied: 0, // Default value until tracking is implemented
+        completed: 0, // Default value until tracking is implemented
+        duration: delayDays > 0 || delayHours > 0 ? `${delayDays}d ${delayHours}h` : 'Immediate',
+        condition: 'ALWAYS' // Default value
+      };
+    });
     
     return {
       success: true,
-      data: []
+      data: steps
     };
   } catch (error) {
     productionLogger.error("Error fetching sequence steps:", error);
