@@ -102,7 +102,7 @@ function InboxFilter() {
     filterState.mailboxFilter.forEach((m) => params.append("mailboxes", m));
     if (filterState.timeFilter !== "all")
       params.append("time", filterState.timeFilter);
-    
+
     router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
     refreshConversations();
   }, [
@@ -218,6 +218,7 @@ function InboxFilter() {
         </Select>
       </div>
     );
+    
   };
 
   return (
@@ -229,12 +230,12 @@ function InboxFilter() {
       >
         <div className="flex items-center space-x-2 border shadow-sm rounded-lg px-2 bg-muted/50 dark:bg-muted peer-focus-within:border-ring-primary focus-within:ring-1 focus-within:ring-primary w-full lg:w-auto border-input">
           <Search className="h-4 w-4 text-muted-foreground pointer-events-none" />
-            <Input
-              type="text"
-              placeholder="Search"
-              className="w-full bg-transparent border-0 h-9 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
-            />
-          </div>
+          <Input
+            type="text"
+            placeholder="Search"
+            className="w-full bg-transparent border-0 h-9 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+        </div>
 
         {/* Filters */}
         <div className="flex-1 p-4 overflow-y-auto">
