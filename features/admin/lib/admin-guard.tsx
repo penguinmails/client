@@ -27,9 +27,25 @@ export function AdminGuard({
   const router = useRouter();
 
   const isAuthorized = React.useMemo(() => {
-    if (!user) return false;
+    console.log('[AdminGuard] ===== CHECKING AUTHORIZATION =====');
+    console.log('[AdminGuard] User:', user);
+    console.log('[AdminGuard] User role:', user?.role);
+    console.log('[AdminGuard] Allowed roles:', allowedRoles);
+    if (!user) {
+      console.log('[AdminGuard]  No user');
+      return false;
+    }
     const userRole = user.role;
-    return typeof userRole === "string" && isAdminRole(userRole) && allowedRoles.includes(userRole as AdminRole);
+    if (!userRole || typeof userRole !== "string") {
+    console.log('[AdminGuard]  Invalid user role');
+    return false;
+  }
+    console.log('[AdminGuard] User role type:', typeof userRole);
+    console.log('[AdminGuard] isAdminRole result:', isAdminRole(userRole));
+    console.log('[AdminGuard] Includes check:', allowedRoles.includes(userRole as AdminRole));
+    const result = typeof userRole === "string" && isAdminRole(userRole) && allowedRoles.includes(userRole as AdminRole);
+    console.log('[AdminGuard]  Final authorization result:', result);
+    return result;
   }, [user, allowedRoles]);
 
   useEffect(() => {
