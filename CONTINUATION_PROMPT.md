@@ -13,45 +13,42 @@ You are working on **PenguinMails**, a modern email marketing platform built wit
 
 ## Recently Completed Features
 
-We have just finished a major effort on the **Leads and Contacts Management**:
+We have finished the **Advanced Leads & Segments Management** implementation:
 
-1. **Leads Migration to Mautic**:
-   - Replaced all NileDB queries with direct Mautic API calls (`listContactsAction`, `listSegmentsAction`).
-   - Dashboard stats (Total Contacts, Total Segments) and lead lists are now real-time from Mautic.
-   - Refactored `ContactsTab` and `ListsTab` to use async server actions instead of mock data.
+1. **Individual Contact Management**:
+   - Polished `ContactDetail` view showing Mautic-specific metrics like star-rated engagement points and relative "last active" timestamps.
+   - Dedicated `LeadEditForm` for real-time contact metadata synchronization (names, emails, company, phone).
 
-2. **CSV Upload for Leads**:
-   - Implemented full server-side CSV import flow (`importCSVContactsAction`).
-   - Users can upload files, map columns to Mautic fields, and create new segments automatically.
-   - Added a summary screen with success/failure counts.
+2. **Segment Management Flow**:
+   - Dedicated `SegmentDetail` view to manage memberships directly from the dashboard.
+   - Full membership lifecycle: implemented reliable contact removal and a searchable "Add Contact" dialog to assign existing contacts to segments.
+   - Metadata Editing: Users can now update segment names, machine-readable aliases, and descriptions with immediate Mautic sync.
 
-3. **UI Data Consistency**:
-   - Synced dashboard tab counts with Mautic statistics.
+3. **Data Integrity & UX**:
+   - **Background Sync**: The segment list view now asynchronously verifies contact counts to bypass Mautic's stale cache, using a subtle "pulse" animation during live sync.
+   - **Fixed membership search**: Resolved a critical issue by switching contact filtering from numeric IDs to machine-readable **Aliases**, as required by the Mautic 5 API.
 
 ## Current State
 
-- The **Infrastructure** and **Leads (Core)** sections are effectively complete and verified.
-- The **Campaigns** section (Mautic integration) is complete.
-- CSV Upload is functional but needs more robust field mapping (e.g., custom fields).
+- **Infrastructure**: Complete and verified (Domains, Mailboxes, Databases, System Health).
+- **Campaigns**: Creation flow with sequence support and automated template generation is fully functional.
+- **Leads & Segments**: Advanced management cycle is complete and synchronized with Mautic 5.
 
 ## Next Priority Tasks
 
-The next session should focus on polishing the **Leads & Segments** integration and starting the **Analytics** dashboard:
+The next session should focus on the **Analytics Dashboard** and finishing up **Settings**:
 
-1. **Leads & Segments Polish**:
-   - **Data Completeness**: Some columns in the segments/lists view are currently empty or using placeholders; need to map missing Mautic fields.
-   - **"View" Actions**: Implement the "View" button logic for both the **Segments/Lists** and **Contacts** tabs (currently non-functional).
-   - **Contact Details**: Create a dedicated contact detail view page.
+1. **Analytics Dashboard** (`/dashboard` root):
+   - Connect dashboard widgets to real Mautic/Hestia metrics (Open rates, Click rates from webhooks, Server Health).
+   - Visualize data from the `marketing_events` table in NileDB.
 
-2. **Analytics Dashboard** (`/dashboard` root):
-   - Connect dashboard widgets to real Mautic/Hestia metrics (Open rates, Click rates, Server Health).
-
-3. **Settings & Billing**:
-   - User profile and subscription management.
+2. **Settings & Billing**:
+   - Complete user profile and subscription management.
+   - Finalize integration of BillManager data for real-time balance and invoice displays.
 
 ## Rules for Continuation
 
 1. **Always use Server Actions** for backend logic.
 2. **Verify Mautic API calls** in `features/marketing/actions` and `features/leads/actions`.
 3. **Keep UI consistent** with the existing "Premium/Glassmorphic" aesthetic.
-4. **Check `task.md`** in the artifacts directory for history.
+4. **Use specific search prefixes** (like `segment:alias`) for reliable Mautic filtering.
