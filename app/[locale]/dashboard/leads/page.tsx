@@ -93,15 +93,15 @@ async function LeadsPage({
             </CardHeader>
           </Suspense>
           <CardContent>
-            <TabsContent value="lists">
+            <TabsContent value="lists" className="mt-0 pt-4">
               <Suspense fallback={<StatsCardSkeleton />}>
                 <ListsTab />
               </Suspense>
             </TabsContent>
-            <TabsContent value="upload">
+            <TabsContent value="upload" className="mt-0 pt-4">
               <CSVUploadTab />
             </TabsContent>
-            <TabsContent value="contacts">
+            <TabsContent value="contacts" className="mt-0 pt-4">
               <ContactsTab listId={listId} />
             </TabsContent>
           </CardContent>

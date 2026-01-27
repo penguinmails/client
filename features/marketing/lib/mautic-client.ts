@@ -1,4 +1,5 @@
 import { getMauticConfig } from "../../infrastructure/actions/config";
+import { productionLogger } from "@/lib/logger";
 
 /**
  * Mautic API Client (Fetch-based)
@@ -76,8 +77,18 @@ export async function makeMauticRequest<T>(
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        
         const errorData = await response.json().catch(() => ({}));
+        
+        // Handle 429 Too Many Requests specifically
+        if (response.status === 429) {
+          const retryAfter = response.headers.get('Retry-After');
+          const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : Math.pow(2, attempt + 1) * 2000;
+          
+          productionLogger.warn(`Mautic API rate limited (429). Retrying in ${waitTime}ms...`);
+          await delay(waitTime);
+          attempt++;
+          continue;
+        }
         
         const errorMessage = (errorData.error as Record<string, unknown>)?.message as string || 
                            (errorData.errors as Array<Record<string, unknown>>)?.map((e: Record<string, unknown>) => e.message as string).join(', ') || 
