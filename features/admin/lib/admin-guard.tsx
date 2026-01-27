@@ -23,7 +23,7 @@ export function AdminGuard({
   allowedRoles,
   fallbackPath = "/access-denied",
 }: AdminGuardProps) {
-  const { user, loading } = useAuth();
+  const { user, loading, authLoading } = useAuth();
   const router = useRouter();
 
   const isAuthorized = React.useMemo(() => {
@@ -31,6 +31,7 @@ export function AdminGuard({
     console.log('[AdminGuard] User:', user);
     console.log('[AdminGuard] User role:', user?.role);
     console.log('[AdminGuard] Allowed roles:', allowedRoles);
+    console.log('[AdminGuard] Loading states:', authLoading);
     if (!user) {
       console.log('[AdminGuard]  No user');
       return false;
@@ -46,10 +47,10 @@ export function AdminGuard({
     const result = typeof userRole === "string" && isAdminRole(userRole) && allowedRoles.includes(userRole as AdminRole);
     console.log('[AdminGuard]  Final authorization result:', result);
     return result;
-  }, [user, allowedRoles]);
+  }, [user, allowedRoles, authLoading]);
 
   useEffect(() => {
-    if (loading) return;
+    if (loading || authLoading.enrichment) return;
 
     if (!user) {
       router.replace("/login");
@@ -59,10 +60,10 @@ export function AdminGuard({
     if (!isAuthorized) {
       router.replace(fallbackPath);
     }
-  }, [user, loading, isAuthorized, fallbackPath, router]);
+  }, [user, loading, authLoading.enrichment, isAuthorized, fallbackPath, router]);
 
   // Show loading state while checking
-  if (loading || (!user && !isAuthorized)) {
+  if (loading || authLoading.enrichment || (!user && !isAuthorized)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
@@ -85,20 +86,20 @@ export function AdminGuard({
  * Hook to check if user has admin access
  */
 export function useAdminAccess(allowedRoles: AdminRole[]) {
-  const { user, loading } = useAuth();
+  const { user, loading, authLoading } = useAuth();
   
   const isAuthorized = React.useMemo(() => {
-    if (loading || !user) return false;
+    if (loading || authLoading.enrichment || !user) return false;
     
     const userRole = user.role;
     if (!userRole || !isAdminRole(userRole)) return false;
     
     return allowedRoles.includes(userRole as AdminRole);
-  }, [user, loading, allowedRoles]);
+  }, [user, loading, authLoading.enrichment, allowedRoles]);
 
   return {
     isAuthorized,
-    isLoading: loading,
+    isLoading: loading || authLoading.enrichment,
     userRole: user?.role,
   };
 }
