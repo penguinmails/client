@@ -56,7 +56,7 @@ export const UserEnrichmentProvider: React.FC<{
 
   // State
   const [enrichedUser, setEnrichedUser] = useState<AuthUser | null>(null);
-  const [isLoadingEnrichment, setIsLoadingEnrichment] = useState(false);
+  const [isLoadingEnrichment, setIsLoadingEnrichment] = useState(true);
   const [enrichmentError, setEnrichmentError] = useState<Error | null>(null);
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
