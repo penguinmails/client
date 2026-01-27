@@ -59,9 +59,7 @@ export const UserEnrichmentProvider: React.FC<{
   const [isLoadingEnrichment, setIsLoadingEnrichment] = useState(false);
   const [enrichmentError, setEnrichmentError] = useState<Error | null>(null);
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
-    null
-  );
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const retryCountRef = useRef(0);
 
   // ============================================================================
@@ -77,21 +75,31 @@ export const UserEnrichmentProvider: React.FC<{
 
       try {
         const data = await fetchEnrichedUser(userId);
+        
+        console.log('[Enrichment] ===== ENRICHMENT DATA =====');
+        console.log('[Enrichment] Data from fetchEnrichedUser:', data);
+        console.log('[Enrichment] Data.role:', data.role);
 
         // Merge base user with enrichment
         if (session) {
-            setEnrichedUser({
-                ...session,
-                // data is Partial<AuthUser>.
-                ...(data as Record<string, unknown>),
-                id: userId,
-                email: session.email,
-            } as AuthUser);
+          console.log('[Enrichment] Session:', session);
+          
+          const merged = {
+            ...session,
+            ...(data as Record<string, unknown>),
+            id: userId,
+            email: session.email,
+          } as AuthUser;
+
+          console.log('[Enrichment] Merged user:', merged);
+          console.log('[Enrichment] Merged user.role:', merged.role);
+
+          setEnrichedUser(merged);
         }
 
         // Auto-select tenant
         if (data.tenantMembership?.tenantId) {
-            setSelectedTenantId(data.tenantMembership.tenantId);
+          setSelectedTenantId(data.tenantMembership.tenantId);
         }
 
         retryCountRef.current = 0;
@@ -128,8 +136,6 @@ export const UserEnrichmentProvider: React.FC<{
   // ============================================================================
   useEffect(() => {
     if (session?.id) {
-       // Only enrich if we have a session
-       // Initialize with base data
        setEnrichedUser(prev => ({
            id: session.id,
            email: session.email,
@@ -139,7 +145,6 @@ export const UserEnrichmentProvider: React.FC<{
        
        enrichUser(session.id);
     } else if (!isSessionLoading && !session) {
-      // Clear if no session
       setEnrichedUser(null);
       setSelectedTenantId(null);
       setSelectedCompanyId(null);
