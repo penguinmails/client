@@ -1,181 +1,239 @@
+"use client";
 import { TableCell, TableRow } from "@/components/ui/table";
+import Link from "next/link";
+import { productionLogger } from "@/lib/logger";
 import {
   CheckCircle,
   Clock,
-  Download,
   Edit,
   Eye,
   Trash2,
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/button";
-
-// Type for performance metrics
-type PerformanceMetrics = {
-  openRate: number;
-  replyRate: number;
-};
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "used":
-    case "being-used":
-      return "bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-500/30";
-    case "not-used":
-      return "bg-muted/50 dark:bg-muted text-muted-foreground border-border";
-    default:
-      return "bg-muted/50 dark:bg-muted text-muted-foreground border-border";
-  }
-};
-
-const getStatusIcon = (status: string) => {
-  switch (status) {
-    case "used":
-    case "being-used":
-      return <CheckCircle className="w-3 h-3" />;
-    case "not-used":
-      return <Clock className="w-3 h-3" />;
-    default:
-      return <Clock className="w-3 h-3" />;
-  }
-};
-
-const getStatusLabel = (status: string) => {
-  switch (status) {
-    case "used":
-    case "being-used":
-      return "Being Used";
-    case "not-used":
-      return "Not Used Yet";
-    default:
-      return "Not Used Yet";
-  }
-};
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { LeadListData } from "@/types/clients-leads";
+import { getLeadListCountAction } from "@/features/leads/actions/lists";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+
+const getStatusColor = (status: string, isPublished?: boolean) => {
+  const published = isPublished ?? (status === "active");
+  if (published) {
+    return "bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-500/30";
+  }
+  return "bg-muted/50 dark:bg-muted text-muted-foreground border-border";
+};
+
+const getStatusIcon = (status: string, isPublished?: boolean) => {
+  const published = isPublished ?? (status === "active");
+  return published ? <CheckCircle className="w-3 h-3" /> : <Clock className="w-3 h-3" />;
+};
+
+const getStatusLabel = (status: string, isPublished?: boolean) => {
+  const published = isPublished ?? (status === "active");
+  return published ? "Published" : "Unpublished";
+};
+
+/**
+ * Format a date string to a readable format
+ */
+function formatDate(dateString?: string): string {
+  if (!dateString) return "—";
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return "—";
+  }
+}
+
+/**
+ * Format a date to relative time (e.g., "2 days ago")
+ */
+function formatRelativeTime(dateString?: string): string {
+  if (!dateString) return "—";
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+    return `${Math.floor(diffDays / 365)} years ago`;
+  } catch {
+    return "—";
+  }
+}
+
+/**
+ * Truncate text with ellipsis
+ */
+function truncateText(text: string, maxLength: number = 40): string {
+  if (!text) return "—";
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + "…";
+}
 
 function ListTableRow({ list }: { list: LeadListData }) {
-  const isUsed = list.status === "used" || list.status === "being-used";
+  const [actualCount, setActualCount] = useState<number>(list.contacts || 0);
+  const [isCounting, setIsCounting] = useState(false);
+
+  const isPublished = list.isPublished ?? (list.status === "active");
+  const description = (list as { description?: string }).description || "";
+  const alias = (list as { alias?: string }).alias || "";
+  const dateAdded = (list as { dateAdded?: string }).dateAdded;
+  const dateModified = (list as { dateModified?: string }).dateModified;
+
+  useEffect(() => {
+    // Stale counts are common in Mautic's list endpoint
+    // We fetch the real count in the background for consistency
+    let isMounted = true;
+
+    const updateCount = async () => {
+      // 1. Only sync if count is 0/undefined (most likely stale)
+      if (!alias || list.contacts! > 0) return;
+
+      // 2. Add random stagger (0-3s) to avoid mass-firing on mount
+      const delayMs = Math.floor(Math.random() * 3000);
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+
+      if (!isMounted) return;
+      setIsCounting(true);
+
+      try {
+        const result = await getLeadListCountAction(alias);
+        if (isMounted && result.success && result.data !== undefined) {
+          setActualCount(result.data);
+        }
+      } catch (error) {
+        productionLogger.error("Failed to update contact count:", error);
+      } finally {
+        if (isMounted) setIsCounting(false);
+      }
+    };
+
+    updateCount();
+    return () => { isMounted = false; };
+  }, [alias, list.contacts]);
 
   return (
     <TableRow key={list.id}>
+      {/* Segment Name */}
       <TableCell>
-        <div>
+        <Link href={`/dashboard/leads/segments/${list.id}`} className="hover:underline">
           <h3 className="font-semibold text-foreground">{list.name}</h3>
-          {/* Only show bounced if the list is being used */}
-          {isUsed && list.bounced && list.bounced > 0 && (
-            <div className="flex items-center space-x-4 mt-1">
-              <span className="text-sm text-red-600 dark:text-red-400">
-                {list.bounced} bounced
-              </span>
-            </div>
+          {alias && (
+            <span className="text-xs text-muted-foreground font-mono">
+              {alias}
+            </span>
           )}
-          <div className="flex flex-wrap gap-1 mt-2">
-            {list.tags?.map((tag, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-muted/50 dark:bg-muted text-muted-foreground text-xs rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
+        </Link>
       </TableCell>
+
+      {/* Contacts Count */}
       <TableCell>
         <div className="flex items-center space-x-2">
-          <Users className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm font-medium text-foreground">
-            {list.contacts?.toLocaleString() || '0'}
+          <Users className={cn("w-4 h-4 text-muted-foreground", isCounting && "animate-pulse")} />
+          <span className={cn("text-sm font-medium text-foreground transition-opacity", isCounting && "opacity-50")}>
+            {actualCount.toLocaleString()}
           </span>
         </div>
       </TableCell>
+
+      {/* Description */}
+      <TableCell>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="text-sm text-muted-foreground cursor-default">
+                {truncateText(description)}
+              </span>
+            </TooltipTrigger>
+            {description.length > 40 && (
+              <TooltipContent>
+                <p className="max-w-xs">{description}</p>
+              </TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
+      </TableCell>
+
+      {/* Status */}
       <TableCell>
         <span
           className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-            list.status || 'inactive'
+            list.status || "inactive",
+            isPublished
           )}`}
         >
-          {getStatusIcon(list.status || 'inactive')}
-          <span>{getStatusLabel(list.status || 'inactive')}</span>
+          {getStatusIcon(list.status || "inactive", isPublished)}
+          <span>{getStatusLabel(list.status || "inactive", isPublished)}</span>
         </span>
       </TableCell>
-      <TableCell>
-        <div className="text-sm font-medium text-foreground">
-          {isUsed ? (
-            list.campaign
-          ) : (
-            <span className="text-muted-foreground italic">Not used yet</span>
-          )}
-        </div>
-      </TableCell>
-      <TableCell>
-        {isUsed ? (
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                {("performance" in list &&
-                  list.performance &&
-                  typeof list.performance === "object" &&
-                  "openRate" in list.performance
-                  ? (list.performance as PerformanceMetrics).openRate
-                  : 0) || 0}
-                %
-              </span>
-              <span className="text-xs text-muted-foreground">open</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                {("performance" in list &&
-                  list.performance &&
-                  typeof list.performance === "object" &&
-                  "replyRate" in list.performance
-                  ? (list.performance as PerformanceMetrics).replyRate
-                  : 0) || 0}
-                %
-              </span>
-              <span className="text-xs text-muted-foreground">reply</span>
-            </div>
-          </div>
-        ) : (
-          <span className="text-sm text-muted-foreground italic">
-            Not used yet
-          </span>
-        )}
-      </TableCell>
+
+      {/* Created Date */}
       <TableCell className="text-sm text-muted-foreground">
-        {list.uploadDate ? new Date(list.uploadDate).toLocaleDateString() : 'N/A'}
+        {formatDate(dateAdded)}
       </TableCell>
+
+      {/* Modified Date */}
+      <TableCell className="text-sm text-muted-foreground">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="cursor-default">
+                {formatRelativeTime(dateModified)}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{formatDate(dateModified)}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </TableCell>
+
+      {/* Actions */}
       <TableCell className="text-right">
-        <div>
+        <div className="flex items-center justify-end space-x-1">
+          <Link href={`/dashboard/leads/segments/${list.id}`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/20"
+              title="View Segment Details"
+            >
+              <Eye className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Link href={`/dashboard/leads/segments/${list.id}/edit`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:text-foreground hover:bg-accent dark:hover:bg-accent"
+              title="Edit Segment"
+            >
+              <Edit className="w-4 h-4" />
+            </Button>
+          </Link>
           <Button
             variant="ghost"
             size="icon"
-            className=" hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/20"
-            title="View Contacts"
-          >
-            <Eye className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className=" hover:text-foreground hover:bg-accent dark:hover:bg-accent"
-            title="Edit List"
-          >
-            <Edit className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className=" hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-500/20"
-            title="Download CSV"
-          >
-            <Download className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className=" hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/20"
-            title="Delete List"
+            className="hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/20"
+            title="Delete Segment"
           >
             <Trash2 className="w-4 h-4" />
           </Button>
@@ -184,4 +242,5 @@ function ListTableRow({ list }: { list: LeadListData }) {
     </TableRow>
   );
 }
+
 export default ListTableRow;

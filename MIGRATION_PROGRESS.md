@@ -59,3 +59,20 @@ The Mautic Campaign creation flow is now fully implemented with sequence support
 - Mautic Webhooks & Analytics.
 - Billing & User Management UI.
 - **Deep Campaign Integration**: Full creation workflow.
+
+## 🚀 Status: Leads & Segments Management Completed ✅
+
+Comprehensive management experience for contacts and segments directly synced with Mautic.
+
+### What is working
+
+1.  **Individual Contact Management**:
+    - Polished `ContactDetail` view with Mautic engagement points and last activity tracking.
+    - Dedicated `LeadEditForm` for real-time contact metadata updates.
+2.  **Segment Management**:
+    - Dedicated `SegmentDetail` view showing all members and metadata.
+    - Contact Membership Lifecycle: Single-click removal and searchable "Add Contact" dialog.
+    - Segment Metadata Editing: Integrated form for name, alias, and published status updates.
+3.  **Real-time Data Sync**:
+    - Background synchronization for segment contact counts in the main list view.
+    - Fixed segment membership sync by correctly utilizing Mautic's alias-based filtering.

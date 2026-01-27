@@ -2,10 +2,11 @@
 
 import { leadsStats, leadLists } from "@/features/leads/data/mock";
 import { LeadStats } from "@/types/clients-leads";
-import { query } from "@/lib/nile/nile";
 import { getCurrentUser } from "@/lib/auth";
-import { DbLeadList, DbLeadListRow } from "@/types/clients-leads";
+import { DbLeadList } from "@/types/clients-leads";
 import { developmentLogger, productionLogger } from "@/lib/logger";
+import { listContactsAction } from "@/features/marketing/actions/contacts";
+import { listSegmentsAction } from "@/features/marketing/actions/segments";
 
 export async function getLeadsStats(): Promise<LeadStats> {
   try {
@@ -24,27 +25,20 @@ export async function getLeadsStats(): Promise<LeadStats> {
       return leadsStats;
     }
 
-    // Fetch lead statistics from database
-    // Nile automatically scopes queries to the current tenant
+    // Fetch lead statistics from Mautic
     try {
-      const leadsQuery = `
-        SELECT COUNT(*) as total_contacts
-        FROM leads
-      `;
-
-      const campaignQuery = `
-        SELECT COUNT(DISTINCT c.lead_id) as contacts_in_campaigns
-        FROM campaign_leads c
-      `;
-
-      // Use lib/nile query function which returns rows directly
-      const [leadsResult, campaignResult] = await Promise.all([
-        query<{ total_contacts: number | string }>(leadsQuery),
-        query<{ contacts_in_campaigns: number | string }>(campaignQuery)
+      const [contactsResult, segmentsResult] = await Promise.all([
+        listContactsAction({ limit: 1 }), // We only need the total count
+        listSegmentsAction({ limit: 100 }),
       ]);
 
-      const totalContacts = leadsResult?.[0]?.total_contacts ? Number(leadsResult[0].total_contacts) : 0;
-      const inCampaignContacts = campaignResult?.[0]?.contacts_in_campaigns ? Number(campaignResult[0].contacts_in_campaigns) : 0;
+      const totalContacts = contactsResult.success && contactsResult.data 
+        ? contactsResult.data.total 
+        : 0;
+      
+      const totalSegments = segmentsResult.success && segmentsResult.data 
+        ? segmentsResult.data.total 
+        : 0;
 
       // Return calculated stats in the expected format
       return [
@@ -55,14 +49,14 @@ export async function getLeadsStats(): Promise<LeadStats> {
           color: "text-blue-600 bg-blue-500",
         },
         {
-          title: "In Campaigns",
-          value: inCampaignContacts.toLocaleString(),
+          title: "Total Segments",
+          value: totalSegments.toLocaleString(),
           icon: "mail",
           color: "bg-purple-100 text-purple-600",
         },
       ];
-    } catch (dbError) {
-      productionLogger.error("Database error in getLeadsStats, falling back to mock data:", dbError);
+    } catch (apiError) {
+      productionLogger.error("Mautic API error in getLeadsStats, falling back to mock data:", apiError);
       return leadsStats;
     }
   } catch (error) {
@@ -86,7 +80,7 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
         id: list.id.toString(),
         name: list.name,
         contacts: list.contacts || 0,
-        description: list.campaign || "" 
+        description: list.description || "" 
       }));
     }
 
@@ -97,36 +91,39 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
         id: list.id.toString(),
         name: list.name,
         contacts: list.contacts || 0,
-        description: list.campaign || ""
+        description: list.description || ""
       }));
     }
 
-    // Fetch lead lists from database
+    // Fetch lead lists (segments) from Mautic
     try {
-      const dbLeadLists = await query<DbLeadListRow>(`
-        SELECT
-          id,
-          name,
-          contacts,
-          description
-        FROM lead_lists
-        ORDER BY name
-      `).then(rows => rows.map((row) => ({
-        id: row.id,
-        name: row.name,
-        contacts: parseInt(String(row.contacts)) || 0,
-        description: row.description || "",
-      })));
+      const segmentsResult = await listSegmentsAction({ limit: 100 });
 
-      return dbLeadLists;
-    } catch (dbError) {
-      productionLogger.error("Database error in getLeadLists, falling back to mock data:", dbError);
+      if (segmentsResult.success && segmentsResult.data) {
+        // Map SegmentDTO to DbLeadList for UI compatibility
+        return segmentsResult.data.data.map(segment => ({
+          id: String(segment.id),
+          name: segment.name,
+          contacts: segment.contactCount || 0,
+          description: segment.description || "",
+        }));
+      }
+
+      // Fallback to mock data if API call wasn't successful
+      return leadLists.map(list => ({
+        id: list.id.toString(),
+        name: list.name,
+        contacts: list.contacts || 0,
+        description: list.description || ""
+      }));
+    } catch (apiError) {
+      productionLogger.error("Mautic API error in getLeadLists, falling back to mock data:", apiError);
       // Transform LeadList[] to DbLeadList[] to match expected interface
       return leadLists.map(list => ({
         id: list.id.toString(),
         name: list.name,
         contacts: list.contacts || 0,
-        description: list.campaign || ""
+        description: list.description || ""
       }));
     }
   } catch (error) {
@@ -137,7 +134,8 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
       id: list.id.toString(),
       name: list.name,
       contacts: list.contacts || 0,
-      description: list.campaign || ""
+      description: list.description || ""
     }));
   }
 }
+

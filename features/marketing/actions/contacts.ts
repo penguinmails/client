@@ -35,6 +35,7 @@ export async function listContactsAction(params: {
   limit?: number;
   start?: number;
   search?: string;
+  where?: Array<{ col: string; expr: string; val: unknown }>;
 } = {}): Promise<ActionResult<NormalizedCollection<ContactDTO>>> {
   try {
     const response = await makeMauticRequest<Record<string, unknown>>('GET', '/contacts', {
@@ -42,6 +43,7 @@ export async function listContactsAction(params: {
         limit: params.limit || 30,
         start: params.start || 0,
         search: params.search || '',
+        ...params.where && { where: params.where },
       },
     });
 
@@ -148,6 +150,36 @@ export async function deleteContactAction(id: number): Promise<ActionResult<{ id
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to delete contact",
+    };
+  }
+}
+/**
+ * Update contact action
+ */
+export async function updateContactAction(
+  id: number,
+  data: Partial<Omit<ContactDTO, 'id' | 'tags' | 'dateAdded' | 'dateModified'>>
+): Promise<ActionResult<ContactDTO>> {
+  try {
+    const response = await makeMauticRequest<Record<string, unknown>>('PATCH', `/contacts/${id}/edit`, {
+      body: JSON.stringify({
+        email: data.email,
+        firstname: data.firstName,
+        lastname: data.lastName,
+        company: data.company,
+        // Any other fields you want to support can be added here
+      }),
+    });
+
+    return {
+      success: true,
+      data: normalizeContact(response.contact as RawMauticContact),
+    };
+  } catch (error: unknown) {
+    productionLogger.error(`Error updating Mautic contact ${id}:`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to update contact",
     };
   }
 }

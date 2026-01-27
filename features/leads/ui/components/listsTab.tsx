@@ -6,35 +6,39 @@ import { productionLogger } from "@/lib/logger";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { fetchLeadLists } from "@features/leads/actions/lists";
 import { LeadListData } from "@/types/clients-leads";
-import type { ActionResult } from "@/types";
-import type { LeadList } from "@features/leads/actions";
 import { ArrowUpDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import ListTableRow from "./ListTableRow";
 import { cn } from "@/lib/utils";
+import LeadTableSkeleton from "./tables/LeadTableSkeleton";
 const listTableColumn = [
-  { id: "name", label: "List Name", canSort: true },
+  { id: "name", label: "Segment Name", canSort: true },
   { id: "contacts", label: "Contacts", canSort: true },
+  { id: "description", label: "Description" },
   { id: "status", label: "Status" },
-  { id: "campaign", label: "Campaign" },
-  { id: "performance", label: "Performance" },
-  { id: "uploadDate", label: "Upload Date", canSort: true },
+  { id: "dateAdded", label: "Created", canSort: true },
+  { id: "dateModified", label: "Modified", canSort: true },
   { id: "actions", label: "Actions" },
 ];
 
 function ListsTab() {
   const [filteredLists, setFilteredLists] = useState<LeadListData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [sortById, setSortById] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchLeadLists()
-      .then((result: ActionResult<LeadList[]>) => {
+    let isMounted = true;
+
+    const loadLists = async () => {
+      const result = await fetchLeadLists();
+      if (isMounted) {
         if (Array.isArray(result)) {
           setFilteredLists(result as unknown as LeadListData[]);
         } else if (result && result.success && result.data) {
@@ -42,11 +46,21 @@ function ListsTab() {
         } else {
           setFilteredLists([]);
         }
-      })
-      .catch((error: unknown) => {
+        setIsLoading(false);
+      }
+    };
+
+    loadLists().catch((error: unknown) => {
+      if (isMounted) {
         productionLogger.error("Failed to load leads lists:", error);
         setFilteredLists([]);
-      });
+        setIsLoading(false);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   function handleSortBy(columnId: string) {
@@ -116,9 +130,22 @@ function ListsTab() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredLists.map((list) => (
-              <ListTableRow key={list.id} list={list} />
-            ))}
+            {isLoading ? (
+              <LeadTableSkeleton columns={listTableColumn.length} />
+            ) : filteredLists.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={listTableColumn.length}
+                  className="h-24 text-center text-muted-foreground"
+                >
+                  No lists found.
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredLists.map((list) => (
+                <ListTableRow key={list.id} list={list} />
+              ))
+            )}
           </TableBody>
         </Table>
       </div>

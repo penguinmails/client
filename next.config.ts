@@ -45,15 +45,6 @@ const nextConfig: NextConfig = {
     // Optimize for stability over aggressive caching
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
-  // Turbopack configuration (replaces experimental.turbo)
-  turbopack: {
-    rules: {
-      "*.svg": {
-        loaders: ["@svgr/webpack"],
-        as: "*.js",
-      },
-    },
-  },
   // Webpack optimizations for chunk loading
   webpack: (config, { isServer }) => {
     if (!isServer) {

@@ -4,7 +4,7 @@
  * @deprecated Import from '@features/leads' instead
  */
 
-import { Lead, LeadList, LeadListData, LeadStatus, LeadListStatus } from '@features/leads/types';
+import { Lead, LeadList, LeadListData, LeadStatus } from '@features/leads/types';
 
 export type { Lead, LeadList };
 
@@ -44,82 +44,67 @@ export const sampleLeads: Lead[] = [
   }
 ];
 
-// Mock lead lists matching reference design
-export const leadLists: (LeadListData & { description?: string })[] = [
+// Mock lead lists matching Mautic segment structure
+export const leadLists: LeadListData[] = [
   {
     id: 1,
     name: "Q1 Tech Prospects",
+    alias: "q1-tech-prospects",
+    description: "Tech sector prospects for Q1 outreach campaign",
     contacts: 524,
-    status: LeadListStatus.BEING_USED,
-    campaign: "Q1 Tech Outreach",
-    uploadDate: "2024-12-15T09:00:00Z",
-    bounced: 12,
-    tags: ["Tech", "North America", "Q1"],
-    performance: {
-      openRate: 45.2,
-      replyRate: 12.5
-    },
-    description: "Tech sector prospects for Q1 outreach campaign"
+    status: 'active',
+    isPublished: true,
+    dateAdded: "2024-12-15T09:00:00Z",
+    dateModified: "2024-12-20T14:30:00Z",
+    createdByUser: "Admin User",
+    modifiedByUser: "Admin User"
   },
   {
     id: 2,
     name: "Enterprise Decision Makers",
+    alias: "enterprise-decision-makers",
+    description: "High-value enterprise decision makers",
     contacts: 687,
-    status: LeadListStatus.BEING_USED,
-    campaign: "Enterprise Outreach",
-    uploadDate: "2024-12-18T11:30:00Z",
-    bounced: 8,
-    tags: ["Enterprise", "Decision Maker"],
-    performance: {
-      openRate: 38.7,
-      replyRate: 9.2
-    },
-    description: "High-value enterprise decision makers"
+    status: 'active',
+    isPublished: true,
+    dateAdded: "2024-12-18T11:30:00Z",
+    dateModified: "2024-12-22T10:00:00Z",
+    createdByUser: "Admin User",
+    modifiedByUser: "Admin User"
   },
   {
     id: 3,
     name: "SMB Follow-up List",
+    alias: "smb-followup",
+    description: "Small and medium businesses for follow-up",
     contacts: 456,
-    status: LeadListStatus.USED,
-    campaign: "SMB Campaign",
-    uploadDate: "2024-11-20T15:45:00Z",
-    bounced: 5,
-    tags: ["SMB", "Follow-up"],
-    performance: {
-      openRate: 52.3,
-      replyRate: 15.8
-    },
-    description: "Small and medium businesses for follow-up"
+    status: 'active',
+    isPublished: true,
+    dateAdded: "2024-11-20T15:45:00Z",
+    dateModified: "2024-12-01T09:00:00Z",
+    createdByUser: "Admin User"
   },
   {
     id: 4,
     name: "Healthcare Prospects",
+    alias: "healthcare-prospects",
+    description: "Healthcare industry prospects",
     contacts: 412,
-    status: LeadListStatus.NOT_USED,
-    campaign: null,
-    uploadDate: "2024-12-01T10:00:00Z",
-    bounced: 0,
-    tags: ["Healthcare", "Medical"],
-    performance: {
-      openRate: 0,
-      replyRate: 0
-    },
-    description: "Healthcare industry prospects"
+    status: 'inactive',
+    isPublished: false,
+    dateAdded: "2024-12-01T10:00:00Z",
+    createdByUser: "Admin User"
   },
   {
     id: 5,
     name: "Education Sector List",
+    alias: "education-sector",
+    description: "Education sector contacts",
     contacts: 463,
-    status: LeadListStatus.NOT_USED,
-    campaign: null,
-    uploadDate: "2024-12-05T14:30:00Z",
-    bounced: 0,
-    tags: ["Education", "Academic"],
-    performance: {
-      openRate: 0,
-      replyRate: 0
-    },
-    description: "Education sector contacts"
+    status: 'inactive',
+    isPublished: false,
+    dateAdded: "2024-12-05T14:30:00Z",
+    createdByUser: "Admin User"
   }
 ];
 

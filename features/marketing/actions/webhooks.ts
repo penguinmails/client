@@ -4,7 +4,7 @@ import crypto from "crypto";
 import { productionLogger } from "@/lib/logger";
 import { ActionResult } from "@/types";
 import { MauticWebhookEvent, MauticEventType } from "../types/mautic";
-import { eventStorageService } from "@/features/analytics";
+import { eventStorageService } from "@/features/analytics/lib/services/EventStorageService";
 
 /**
  * Validates the Mautic webhook signature

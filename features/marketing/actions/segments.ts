@@ -16,9 +16,16 @@ function normalizeSegment(raw: Record<string, unknown>, key?: string): SegmentDT
     id: (raw.id as string | number) || key || '',
     name: (raw.name as string) || 'Untitled Segment',
     alias: (raw.alias as string) || '',
+    publicName: (raw.publicName as string) || undefined,
     description: (raw.description as string) || '',
     isPublished: raw.isPublished !== undefined ? (raw.isPublished as boolean) : true,
     contactCount: Number(raw.contactCount || 0),
+    dateAdded: (raw.dateAdded as string) || undefined,
+    dateModified: (raw.dateModified as string) || undefined,
+    createdByUser: (raw.createdByUser as string) || undefined,
+    modifiedByUser: (raw.modifiedByUser as string) || undefined,
+    isGlobal: raw.isGlobal !== undefined ? (raw.isGlobal as boolean) : undefined,
+    isPreferenceCenter: raw.isPreferenceCenter !== undefined ? (raw.isPreferenceCenter as boolean) : undefined,
   };
 }
 
@@ -77,6 +84,108 @@ export async function getSegmentAction(id: number | string): Promise<ActionResul
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to fetch segment",
+    };
+  }
+}
+/**
+ * Create segment action
+ */
+export async function createSegmentAction(data: {
+  name: string;
+  alias?: string;
+  description?: string;
+}): Promise<ActionResult<SegmentDTO>> {
+  try {
+    const response = await makeMauticRequest<Record<string, unknown>>('POST', '/segments/new', {
+      body: JSON.stringify({
+        ...data,
+        isPublished: 1,
+      }),
+    });
+
+    return {
+      success: true,
+      data: normalizeSegment((response.list as Record<string, unknown>) || (response.segment as Record<string, unknown>)),
+    };
+  } catch (error: unknown) {
+    productionLogger.error("Error creating Mautic segment:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to create segment",
+    };
+  }
+}
+
+/**
+ * Add contact to segment action
+ */
+export async function addContactToSegmentAction(
+  segmentId: number | string,
+  contactId: number
+): Promise<ActionResult<{ success: boolean }>> {
+  try {
+    await makeMauticRequest('POST', `/segments/${segmentId}/contact/${contactId}/add`);
+    return {
+      success: true,
+      data: { success: true },
+    };
+  } catch (error: unknown) {
+    productionLogger.error(`Error adding contact ${contactId} to segment ${segmentId}:`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to add contact to segment",
+    };
+  }
+}
+
+/**
+ * Update segment action
+ */
+export async function updateSegmentAction(
+  id: number | string,
+  data: Partial<Omit<SegmentDTO, 'id' | 'contactCount' | 'dateAdded' | 'dateModified'>>
+): Promise<ActionResult<SegmentDTO>> {
+  try {
+    const response = await makeMauticRequest<Record<string, unknown>>('PATCH', `/segments/${id}/edit`, {
+      body: JSON.stringify({
+        name: data.name,
+        alias: data.alias,
+        description: data.description,
+        isPublished: data.isPublished,
+      }),
+    });
+
+    return {
+      success: true,
+      data: normalizeSegment((response.list as Record<string, unknown>) || (response.segment as Record<string, unknown>)),
+    };
+  } catch (error: unknown) {
+    productionLogger.error(`Error updating Mautic segment ${id}:`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to update segment",
+    };
+  }
+}
+
+/**
+ * Remove contact from segment action
+ */
+export async function removeContactFromSegmentAction(
+  segmentId: number | string,
+  contactId: number
+): Promise<ActionResult<{ success: boolean }>> {
+  try {
+    await makeMauticRequest('POST', `/segments/${segmentId}/contact/${contactId}/remove`);
+    return {
+      success: true,
+      data: { success: true },
+    };
+  } catch (error: unknown) {
+    productionLogger.error(`Error removing contact ${contactId} from segment ${segmentId}:`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to remove contact from segment",
     };
   }
 }

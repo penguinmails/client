@@ -18,15 +18,17 @@ export interface Client {
 export interface LeadList {
   id: string;
   name: string;
+  alias?: string;
   description?: string;
   leadCount: number;
   contacts: number;
   tags?: string[];
-  status?: 'active' | 'inactive' | 'used' | 'being-used';
-  campaign?: string;
-  bounced?: number;
-  performance?: { openRate: number; replyRate: number };
-  uploadDate?: string;
+  status?: 'active' | 'inactive';
+  isPublished?: boolean;
+  dateAdded?: string;
+  dateModified?: string;
+  createdByUser?: string;
+  modifiedByUser?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

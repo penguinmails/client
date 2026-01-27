@@ -35,7 +35,7 @@ export const InfrastructureDiagnostics = () => {
         <div className="p-6 space-y-6 max-w-4xl">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+                    <h1 className="text-2xl font-bold bg-linear-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
                         Infrastructure Diagnostics
                     </h1>
                     <p className="text-slate-400 text-sm">Verifying connectivity to Flynet Pro backend services</p>
