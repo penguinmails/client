@@ -66,18 +66,17 @@ export const LeadListSchema = z.object({
 export type LeadList = z.infer<typeof LeadListSchema>;
 
 export const LeadListDataSchema = z.object({
-  id: z.number(),
+  id: z.union([z.number(), z.string()]),
   name: z.string(),
+  alias: z.string().optional(),
+  description: z.string().optional(),
   contacts: z.number(),
-  status: z.nativeEnum(LeadListStatus),
-  campaign: z.string().nullable(),
-  uploadDate: z.string(),
-  bounced: z.number(),
-  tags: z.array(z.string()),
-  performance: z.object({
-    openRate: z.number(),
-    replyRate: z.number(),
-  }),
+  status: z.enum(['active', 'inactive', 'published', 'unpublished']),
+  isPublished: z.boolean().optional(),
+  dateAdded: z.string().optional(),
+  dateModified: z.string().optional(),
+  createdByUser: z.string().optional(),
+  modifiedByUser: z.string().optional(),
 });
 
 export type LeadListData = z.infer<typeof LeadListDataSchema>;

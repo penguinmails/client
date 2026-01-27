@@ -1,7 +1,7 @@
 'use server';
 
 import { NextRequest } from 'next/server';
-import { listContactsAction, getContactAction } from "@/features/marketing/actions/contacts";
+import { listContactsAction, getContactAction, updateContactAction } from "@/features/marketing/actions/contacts";
 import { productionLogger } from "@/lib/logger";
 
 export interface Client {
@@ -12,6 +12,8 @@ export interface Client {
   company?: string;
   status: 'active' | 'inactive' | 'prospect';
   tags: string[];
+  points?: number;
+  lastActive?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -41,10 +43,11 @@ const mockClients: Client[] = [
   }
 ];
 
-export async function getClients(options: { listId?: string } = {}, _req?: NextRequest) {
+export async function getClients(options: { listId?: string, listAlias?: string } = {}, _req?: NextRequest) {
   try {
     // Fetch contacts from Mautic
-    const search = options.listId ? `segment:${options.listId}` : '';
+    const segmentFilter = options.listAlias ? `${options.listAlias}` : (options.listId ? `${options.listId}` : '');
+    const search = segmentFilter ? `segment:${segmentFilter}` : '';
     const contactsResult = await listContactsAction({ limit: 100, search });
 
     if (contactsResult.success && contactsResult.data) {
@@ -56,6 +59,8 @@ export async function getClients(options: { listId?: string } = {}, _req?: NextR
         company: contact.company || undefined,
         status: 'active' as const,
         tags: contact.tags || [],
+        points: contact.points || 0,
+        lastActive: contact.lastActive || null,
         createdAt: new Date(contact.dateAdded),
         updatedAt: new Date(contact.dateModified)
       }));
@@ -96,8 +101,10 @@ export async function getClientById(id: string, _req?: NextRequest) {
         company: contact.company || undefined,
         status: 'active',
         tags: contact.tags || [],
-        createdAt: contact.dateAdded ? new Date(contact.dateAdded) : new Date(),
-        updatedAt: contact.dateModified ? new Date(contact.dateModified) : new Date()
+        points: contact.points || 0,
+        lastActive: contact.lastActive || null,
+        createdAt: new Date(contact.dateAdded),
+        updatedAt: new Date(contact.dateModified)
       };
       
       return {
@@ -142,10 +149,48 @@ export async function createClient(data: Partial<Client>, _req?: NextRequest) {
 }
 
 export async function updateClient(id: string, data: Partial<Client>, _req?: NextRequest) {
-  return {
-    success: true,
-    data: { ...data, id, updatedAt: new Date() }
-  };
+  try {
+    const mauticData = {
+      email: data.email,
+      firstName: data.name ? data.name.split(' ')[0] : undefined,
+      lastName: data.name ? data.name.split(' ').slice(1).join(' ') : undefined,
+      company: data.company,
+    };
+
+    const result = await updateContactAction(Number(id), mauticData);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error || "Failed to update client in Mautic"
+      };
+    }
+
+    const contact = result.data;
+    const client: Client = {
+      id: String(contact.id),
+      name: `${contact.firstName || ''} ${contact.lastName || ''}`.trim() || contact.email,
+      email: contact.email,
+      company: contact.company || undefined,
+      status: 'active',
+      tags: contact.tags || [],
+      points: contact.points || 0,
+      lastActive: contact.lastActive || null,
+      createdAt: new Date(contact.dateAdded),
+      updatedAt: new Date(contact.dateModified)
+    };
+
+    return {
+      success: true,
+      data: client
+    };
+  } catch (error: unknown) {
+    productionLogger.error(`Error updating client ${id}:`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to update client"
+    };
+  }
 }
 
 export async function deleteClient(_id: string, _req?: NextRequest) {

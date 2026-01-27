@@ -19,12 +19,12 @@ import ListTableRow from "./ListTableRow";
 import { cn } from "@/lib/utils";
 import LeadTableSkeleton from "./tables/LeadTableSkeleton";
 const listTableColumn = [
-  { id: "name", label: "List Name", canSort: true },
+  { id: "name", label: "Segment Name", canSort: true },
   { id: "contacts", label: "Contacts", canSort: true },
+  { id: "description", label: "Description" },
   { id: "status", label: "Status" },
-  { id: "campaign", label: "Campaign" },
-  { id: "performance", label: "Performance" },
-  { id: "uploadDate", label: "Upload Date", canSort: true },
+  { id: "dateAdded", label: "Created", canSort: true },
+  { id: "dateModified", label: "Modified", canSort: true },
   { id: "actions", label: "Actions" },
 ];
 
@@ -35,7 +35,7 @@ function ListsTab() {
 
   useEffect(() => {
     let isMounted = true;
-    
+
     const loadLists = async () => {
       const result = await fetchLeadLists();
       if (isMounted) {
@@ -49,7 +49,7 @@ function ListsTab() {
         setIsLoading(false);
       }
     };
-    
+
     loadLists().catch((error: unknown) => {
       if (isMounted) {
         productionLogger.error("Failed to load leads lists:", error);

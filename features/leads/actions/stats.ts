@@ -80,7 +80,7 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
         id: list.id.toString(),
         name: list.name,
         contacts: list.contacts || 0,
-        description: list.campaign || "" 
+        description: list.description || "" 
       }));
     }
 
@@ -91,7 +91,7 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
         id: list.id.toString(),
         name: list.name,
         contacts: list.contacts || 0,
-        description: list.campaign || ""
+        description: list.description || ""
       }));
     }
 
@@ -114,7 +114,7 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
         id: list.id.toString(),
         name: list.name,
         contacts: list.contacts || 0,
-        description: list.campaign || ""
+        description: list.description || ""
       }));
     } catch (apiError) {
       productionLogger.error("Mautic API error in getLeadLists, falling back to mock data:", apiError);
@@ -123,7 +123,7 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
         id: list.id.toString(),
         name: list.name,
         contacts: list.contacts || 0,
-        description: list.campaign || ""
+        description: list.description || ""
       }));
     }
   } catch (error) {
@@ -134,7 +134,7 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
       id: list.id.toString(),
       name: list.name,
       contacts: list.contacts || 0,
-      description: list.campaign || ""
+      description: list.description || ""
     }));
   }
 }

@@ -6,6 +6,7 @@ import {
   Edit,
   Eye,
   Send,
+  Star,
   Tag,
   Trash2,
 } from "lucide-react";
@@ -36,6 +37,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { productionLogger } from "@/lib/logger";
 import LeadTableSkeleton from "./tables/LeadTableSkeleton";
 
@@ -45,28 +52,50 @@ interface DisplayContact {
   name: string;
   email: string;
   company?: string;
-  status: string;
-  source: string;
+  points: number;
   tags: string[];
-  createdAt: Date;
+  lastActive: string | null;
+  dateAdded: Date;
 }
 
-const getStatusColor = (status: string | undefined) => {
-  const statusLower = (status || "new").toLowerCase();
-  const colors: Record<string, string> = {
-    replied: "bg-green-100 text-green-800 border-green-200",
-    sent: "bg-blue-100 text-blue-800 border-blue-200",
-    bounced: "bg-red-100 text-red-800 border-red-200",
-    new: "bg-yellow-100 text-yellow-800 border-yellow-200",
-    contacted: "bg-blue-100 text-blue-800 border-blue-200",
-    qualified: "bg-green-100 text-green-800 border-green-200",
-    converted: "bg-purple-100 text-purple-800 border-purple-200",
-    active: "bg-green-100 text-green-800 border-green-200",
-    inactive: "bg-gray-100 text-gray-800 border-gray-200",
-    prospect: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  };
-  return colors[statusLower] || colors.new;
-};
+/**
+ * Format a date to relative time (e.g., "2 days ago")
+ */
+function formatRelativeTime(dateString?: string | null): string {
+  if (!dateString) return "Never";
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+    return `${Math.floor(diffDays / 365)} years ago`;
+  } catch {
+    return "Never";
+  }
+}
+
+/**
+ * Format a date string to a readable format
+ */
+function formatDate(date?: Date | string): string {
+  if (!date) return "—";
+  try {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return "—";
+  }
+}
 
 function ContactsTab({ listId }: { listId?: string }) {
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
@@ -77,7 +106,7 @@ function ContactsTab({ listId }: { listId?: string }) {
 
   useEffect(() => {
     let isMounted = true;
-    
+
     const loadContacts = async () => {
       const result = await getClients({ listId });
       if (isMounted) {
@@ -88,10 +117,10 @@ function ContactsTab({ listId }: { listId?: string }) {
             name: client.name,
             email: client.email,
             company: client.company,
-            status: client.status,
-            source: client.tags?.[0] || 'Mautic',
+            points: client.points || 0,
             tags: client.tags || [],
-            createdAt: new Date(client.createdAt),
+            lastActive: client.lastActive || null,
+            dateAdded: new Date(client.createdAt),
           }));
           setFilteredContacts(contacts);
         }
@@ -130,9 +159,15 @@ function ContactsTab({ listId }: { listId?: string }) {
       if (field === "name") {
         aValue = a.name?.toLowerCase() || "";
         bValue = b.name?.toLowerCase() || "";
-      } else if (field === "lastContact") {
-        aValue = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        bValue = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      } else if (field === "points") {
+        aValue = a.points || 0;
+        bValue = b.points || 0;
+      } else if (field === "dateAdded") {
+        aValue = a.dateAdded ? new Date(a.dateAdded).getTime() : 0;
+        bValue = b.dateAdded ? new Date(b.dateAdded).getTime() : 0;
+      } else if (field === "lastActive") {
+        aValue = a.lastActive ? new Date(a.lastActive).getTime() : 0;
+        bValue = b.lastActive ? new Date(b.lastActive).getTime() : 0;
       } else {
         return 0;
       }
@@ -171,6 +206,7 @@ function ContactsTab({ listId }: { listId?: string }) {
   const isAllSelected =
     selectedContacts.length === filteredContacts.length &&
     filteredContacts.length > 0;
+
   return (
     <Card className="border-none shadow-none">
       <CardHeader>
@@ -180,23 +216,10 @@ function ContactsTab({ listId }: { listId?: string }) {
             <DropDownFilter
               options={[
                 { value: "all", label: "All" },
-                { value: "bounced", label: "Bounced" },
-                { value: "replied", label: "Replied" },
-                { value: "sent", label: "Sent" },
-                { value: "not-used", label: "Not Used" },
+                { value: "with-points", label: "Has Points" },
+                { value: "recently-active", label: "Recently Active" },
               ]}
-              placeholder="Status"
-            />
-            <DropDownFilter
-              options={[
-                { value: "Q1 SaaS Outreach", label: "Q1 SaaS Outreach" },
-                {
-                  value: "Enterprise Prospects",
-                  label: "Enterprise Prospects",
-                },
-                { value: "SMB Follow-up", label: "SMB Follow-up" },
-              ]}
-              placeholder="Campaigns"
+              placeholder="Filter"
             />
             {isSelect > 0 && (
               <div className="flex items-center space-x-2">
@@ -254,17 +277,38 @@ function ContactsTab({ listId }: { listId?: string }) {
                     <ArrowUpDown className="ml-2 h-3 w-3" />
                   </Button>
                 </TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Tags</TableHead>
-                <TableHead>List</TableHead>
+                <TableHead>Company</TableHead>
                 <TableHead>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleSort("lastContact")}
+                    onClick={() => handleSort("points")}
                     className="h-auto p-0 font-semibold"
                   >
-                    Last Contact
+                    Points
+                    <ArrowUpDown className="ml-2 h-3 w-3" />
+                  </Button>
+                </TableHead>
+                <TableHead>Tags</TableHead>
+                <TableHead>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSort("lastActive")}
+                    className="h-auto p-0 font-semibold"
+                  >
+                    Last Active
+                    <ArrowUpDown className="ml-2 h-3 w-3" />
+                  </Button>
+                </TableHead>
+                <TableHead>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSort("dateAdded")}
+                    className="h-auto p-0 font-semibold"
+                  >
+                    Added
                     <ArrowUpDown className="ml-2 h-3 w-3" />
                   </Button>
                 </TableHead>
@@ -273,11 +317,11 @@ function ContactsTab({ listId }: { listId?: string }) {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <LeadTableSkeleton columns={7} />
+                <LeadTableSkeleton columns={8} />
               ) : filteredContacts.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={7}
+                    colSpan={8}
                     className="h-24 text-center text-muted-foreground"
                   >
                     No contacts found.
@@ -294,6 +338,7 @@ function ContactsTab({ listId }: { listId?: string }) {
                         }
                       />
                     </TableCell>
+                    {/* Contact - Name & Email */}
                     <TableCell>
                       <div className="flex items-center space-x-3">
                         <Avatar className="h-10 w-10">
@@ -301,7 +346,8 @@ function ContactsTab({ listId }: { listId?: string }) {
                             {contact.name
                               .split(" ")
                               .map((n: string) => n[0])
-                              .join("")}
+                              .join("")
+                              .slice(0, 2)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
@@ -313,37 +359,67 @@ function ContactsTab({ listId }: { listId?: string }) {
                       </div>
                     </TableCell>
 
+                    {/* Company */}
                     <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={getStatusColor(contact.status)}
-                      >
-                        {contact.status
-                          .replace("-", " ")
-                          .replace(/\b\w/g, (l) => l.toUpperCase())}
-                      </Badge>
+                      <span className="text-sm text-foreground">
+                        {contact.company || "—"}
+                      </span>
                     </TableCell>
+
+                    {/* Points */}
+                    <TableCell>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex items-center space-x-1">
+                              <Star className="w-4 h-4 text-yellow-500" />
+                              <span className="text-sm font-medium">
+                                {contact.points}
+                              </span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Mautic engagement score</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </TableCell>
+
+                    {/* Tags */}
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        <Badge
-                          key="default"
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {contact.source}
-                        </Badge>
+                        {contact.tags.length > 0 ? (
+                          contact.tags.slice(0, 2).map((tag, idx) => (
+                            <Badge
+                              key={idx}
+                              variant="secondary"
+                              className="text-xs"
+                            >
+                              {tag}
+                            </Badge>
+                          ))
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
+                        {contact.tags.length > 2 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{contact.tags.length - 2}
+                          </Badge>
+                        )}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className="text-sm">
-                        {contact.company || "No company"}
-                      </div>
-                    </TableCell>
+
+                    {/* Last Active */}
                     <TableCell className="text-sm text-muted-foreground">
-                      {contact.createdAt
-                        ? new Date(contact.createdAt).toLocaleDateString()
-                        : "Not Used Yet"}
+                      {formatRelativeTime(contact.lastActive)}
                     </TableCell>
+
+                    {/* Added Date */}
+                    <TableCell className="text-sm text-muted-foreground">
+                      {formatDate(contact.dateAdded)}
+                    </TableCell>
+
+                    {/* Actions */}
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end space-x-1">
                         <Link href={`/dashboard/leads/contacts/${contact.id}`}>

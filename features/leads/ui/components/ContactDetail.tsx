@@ -5,8 +5,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button/button";
-import { ArrowLeft, Building, Calendar, Mail, Phone, Tag, User } from "lucide-react";
+import {
+    ArrowLeft,
+    Building,
+    Calendar,
+    Mail,
+    Phone,
+    Tag,
+    User,
+    Edit,
+    Star,
+    Clock
+} from "lucide-react";
 import Link from "next/link";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ContactDetailProps {
     client: Client;
@@ -29,16 +46,46 @@ const getStatusColor = (status: string | undefined) => {
     return colors[statusLower] || colors.new;
 };
 
+/**
+ * Format a date to relative time (e.g., "2 days ago")
+ */
+function formatRelativeTime(dateString?: string | null): string {
+    if (!dateString) return "Never";
+    try {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now.getTime() - date.getTime();
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return "Today";
+        if (diffDays === 1) return "Yesterday";
+        if (diffDays < 7) return `${diffDays} days ago`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+        if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+        return `${Math.floor(diffDays / 365)} years ago`;
+    } catch {
+        return "Never";
+    }
+}
+
 export default function ContactDetail({ client }: ContactDetailProps) {
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <Link href="/dashboard/leads?tab=contacts">
-                    <Button variant="ghost" size="icon">
-                        <ArrowLeft className="w-5 h-5" />
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <Link href="/dashboard/leads?tab=contacts">
+                        <Button variant="ghost" size="icon">
+                            <ArrowLeft className="w-5 h-5" />
+                        </Button>
+                    </Link>
+                    <h1 className="text-2xl font-bold">Contact Details</h1>
+                </div>
+                <Link href={`/dashboard/leads/contacts/${client.id}/edit`}>
+                    <Button variant="outline" className="gap-2">
+                        <Edit className="w-4 h-4" />
+                        Edit Contact
                     </Button>
                 </Link>
-                <h1 className="text-2xl font-bold">Contact Details</h1>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -76,34 +123,60 @@ export default function ContactDetail({ client }: ContactDetailProps) {
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1">
                                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                     <Building className="w-4 h-4" /> Company
                                 </label>
-                                <p>{client.company || "N/A"}</p>
+                                <p className="font-medium">{client.company || "—"}</p>
                             </div>
                             <div className="space-y-1">
                                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                     <Phone className="w-4 h-4" /> Phone
                                 </label>
-                                <p>{client.phone || "N/A"}</p>
+                                <p className="font-medium">{client.phone || "—"}</p>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                                    <Star className="w-4 h-4 text-yellow-500" /> Engagement Points
+                                </label>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-lg font-bold">{client.points || 0}</span>
+                                    <span className="text-xs text-muted-foreground">Mautic Engagement Score</span>
+                                </div>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                                    <Clock className="w-4 h-4" /> Last Activity
+                                </label>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <p className="font-medium cursor-default">
+                                                {formatRelativeTime(client.lastActive)}
+                                            </p>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>{client.lastActive ? new Date(client.lastActive).toLocaleString() : "Never active"}</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             </div>
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-2 border-t pt-4">
                             <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                 <Tag className="w-4 h-4" /> Tags
                             </label>
                             <div className="flex flex-wrap gap-2">
                                 {client.tags && client.tags.length > 0 ? (
                                     client.tags.map((tag) => (
-                                        <Badge key={tag} variant="secondary">
+                                        <Badge key={tag} variant="secondary" className="px-2 py-0.5">
                                             {tag}
                                         </Badge>
                                     ))
                                 ) : (
-                                    <span className="text-sm text-muted-foreground">No tags</span>
+                                    <span className="text-sm text-muted-foreground italic">No tags assigned</span>
                                 )}
                             </div>
                         </div>
@@ -122,23 +195,23 @@ export default function ContactDetail({ client }: ContactDetailProps) {
                             </label>
                             <p className="text-sm">
                                 {client.createdAt
-                                    ? new Date(client.createdAt).toLocaleString()
+                                    ? new Date(client.createdAt).toLocaleString("en-US", {
+                                        month: "long",
+                                        day: "numeric",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit"
+                                    })
                                     : "Unknown"}
                             </p>
                         </div>
                         <div className="space-y-1">
                             <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                                <User className="w-4 h-4" /> ID
+                                <User className="w-4 h-4" /> Mautic ID
                             </label>
                             <p className="text-sm font-mono text-muted-foreground">
                                 {client.id}
                             </p>
-                        </div>
-
-                        <div className="pt-4 border-t">
-                            <Button className="w-full" variant="outline" disabled>
-                                Edit Contact (Coming Soon)
-                            </Button>
                         </div>
                     </CardContent>
                 </Card>
