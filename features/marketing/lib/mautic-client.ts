@@ -5,7 +5,26 @@ import { getMauticConfig } from "../../infrastructure/actions/config";
  */
 
 interface RequestOptions extends RequestInit {
-  params?: Record<string, string | number>;
+  params?: Record<string, unknown>;
+}
+
+/**
+ * Recursively append parameters to URL search params
+ */
+function appendParams(urlParams: URLSearchParams, data: unknown, prefix = "") {
+  if (data === null || data === undefined) return;
+
+  if (Array.isArray(data)) {
+    data.forEach((value, index) => {
+      appendParams(urlParams, value, `${prefix}[${index}]`);
+    });
+  } else if (typeof data === "object" && !(data instanceof Date)) {
+    Object.entries(data as Record<string, unknown>).forEach(([key, value]) => {
+      appendParams(urlParams, value, prefix ? `${prefix}[${key}]` : key);
+    });
+  } else {
+    urlParams.append(prefix, String(data));
+  }
 }
 
 /**
@@ -27,9 +46,7 @@ export async function makeMauticRequest<T>(
   // Build URL with query parameters
   const url = new URL(`${baseUrl}/api${endpoint}`);
   if (options.params) {
-    Object.entries(options.params).forEach(([key, value]) => {
-      url.searchParams.append(key, String(value));
-    });
+    appendParams(url.searchParams, options.params);
   }
 
   const authHeader = `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`;

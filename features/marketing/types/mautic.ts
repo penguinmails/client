@@ -101,11 +101,16 @@ export interface SegmentDTO {
   id: string | number;
   name: string;
   alias: string;
+  publicName?: string;
   description: string;
   isPublished: boolean;
   contactCount: number;
   dateAdded?: string;
   dateModified?: string;
+  createdByUser?: string;
+  modifiedByUser?: string;
+  isGlobal?: boolean;
+  isPreferenceCenter?: boolean;
 }
 
 export interface RawMauticSegment {
