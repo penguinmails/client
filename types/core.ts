@@ -46,9 +46,9 @@ export interface CoreTenant {
 }
 
 export enum CoreUserRole {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-  SUPER_ADMIN = 'SUPER_ADMIN'
+  USER = 'user',
+  ADMIN = 'admin',
+  SUPER_ADMIN = 'super_admin'
 }
 
 export enum CoreTeamRole {

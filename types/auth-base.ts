@@ -34,11 +34,13 @@ export enum Permission {
 
 /**
  * Admin roles for access control
+ * - SUPER_ADMIN: Full system access, internal Penguin Mails staff
  * - OWNER: Full system access, can manage other admins
  * - ADMIN: User and campaign management, settings access
  * - SUPPORT: Read-only access for customer support
  */
 export enum AdminRole {
+  SUPER_ADMIN = "super_admin",
   OWNER = "owner",
   ADMIN = "admin",
   SUPPORT = "support",
@@ -48,6 +50,7 @@ export enum AdminRole {
  * Permission mappings for each admin role
  */
 export const AdminRolePermissions: Record<AdminRole, Permission[]> = {
+  [AdminRole.SUPER_ADMIN]: Object.values(Permission), // All permissions
   [AdminRole.OWNER]: Object.values(Permission), // All permissions
   [AdminRole.ADMIN]: [
     Permission.CREATE_USER,
