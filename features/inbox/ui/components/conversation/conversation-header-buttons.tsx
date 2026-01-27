@@ -28,7 +28,7 @@ function ConversationHeaderButtons() {
         <Star
           className={cn(
             "w-5 h-5",
-            selectedConversation.isStarred && "text-yellow-500 fill-current",
+            selectedConversation.isStarred && "text-amber-500 fill-current",
           )}
         />
       </Button>
@@ -36,7 +36,7 @@ function ConversationHeaderButtons() {
         <Pin
           className={cn(
             "w-5 h-5",
-            selectedConversation.isPinned && "text-blue-600",
+            selectedConversation.isPinned && "text-primary",
           )}
         />
       </Button>
@@ -53,7 +53,7 @@ function ConversationHeaderButtons() {
                 key={tag}
                 className={cn(
                   selectedConversation.tag === tag &&
-                    "bg-blue-50 text-blue-700",
+                    "bg-primary/10 text-primary dark:bg-primary/20",
                 )}
               >
                 {tag.replace("-", " ")}

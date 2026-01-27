@@ -72,14 +72,14 @@ function ConversationReplay() {
       <div className="border-t bg-background w-full p-2 space-y-4 overflow-hidden">
         {/* Quick Actions */}
         <div className="flex items-center gap-2">
-          <Button className="bg-green-600 hover:bg-green-700 gap-2">
+          <Button className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-800 gap-2">
             <Calendar className="h-4 w-4" />
             Schedule Follow-up
           </Button>
 
           <Popover open={showQuickReplies} onOpenChange={setShowQuickReplies}>
             <PopoverTrigger asChild>
-              <Button className="bg-purple-600 hover:bg-purple-700 gap-2">
+              <Button className="bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 gap-2">
                 <Zap className="h-4 w-4" />
                 Quick Reply
                 <ChevronDown className="h-3 w-3" />

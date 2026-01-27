@@ -133,7 +133,7 @@ function ConversationsListContent() {
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
                     <div className="relative">
-                      <div className="w-14 h-14 bg-linear-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shrink-0">
+                      <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shrink-0">
                         <span className="text-lg font-semibold text-white">
                           {conversation.avatar}
                         </span>

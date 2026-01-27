@@ -116,7 +116,7 @@ export function InboxDataTable<TData>({
                 className={
                   (row.original as Email).read
                     ? "bg-white dark:bg-card text-gray-500 dark:text-muted-foreground"
-                    : "bg-blue-50 text-black font-semibold"
+                    : "bg-primary/10 dark:bg-primary/20 text-foreground font-semibold"
                 }
               >
                 {row.getVisibleCells().map((cell, cellIndex) => {

@@ -17,7 +17,7 @@ type SmartInsightItem = {
 function SmartInsights() {
   const { smartInsightsList } = useAnalytics();
   return (
-    <div className="p-6 border-b border-border bg-gradient-to-r from-blue-50 dark:from-blue-500/10 to-purple-50 dark:to-purple-500/10">
+    <div className="p-6 border-b border-border bg-gradient-to-r from-blue-50 to-purple-50 dark:bg-muted dark:from-transparent dark:to-transparent">
       <h2 className="text-lg font-semibold text-foreground mb-4">
         Smart Insights
       </h2>
