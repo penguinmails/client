@@ -12,7 +12,7 @@ export default async function AdminPage() {
 
   return (
     <AdminGuard 
-      allowedRoles={[AdminRole.OWNER, AdminRole.ADMIN, AdminRole.SUPPORT]}
+      allowedRoles={[AdminRole.SUPER_ADMIN, AdminRole.OWNER, AdminRole.ADMIN, AdminRole.SUPPORT]}
       fallbackPath="/access-denied"
     >
       <SessionTimeoutWarning enabled />
