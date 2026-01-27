@@ -4,6 +4,7 @@ import { useSessionTimeout } from "@/hooks/auth/use-session-timeout";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Clock, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 interface SessionTimeoutWarningProps {
   enabled?: boolean;
@@ -17,8 +18,12 @@ interface SessionTimeoutWarningProps {
  */
 export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningProps) {
   const t = useTranslations("SessionTimeout");
+  const router = useRouter();
   const { isWarning, remainingSeconds, resetTimer } = useSessionTimeout({
     enabled,
+     onTimeout: () => {
+      router.push("/login"); // Redirect to login on timeout
+    },
   });
 
   if (!isWarning) return null;
