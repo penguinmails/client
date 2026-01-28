@@ -98,6 +98,7 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
     if (!initialData) {
       fetchUsers();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData]);
 
   if (loading && !data) {
@@ -105,9 +106,6 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
   }
 
   if (error) {
-    // Check if it's a permission error
-    const isPermissionError = error.includes("permission") || error.includes("Permission") || error.includes("Forbidden");
-
     return (
       <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950 dark:border-amber-800 p-6">
         <div className="flex">
