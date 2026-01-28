@@ -101,25 +101,29 @@ function ListTableRow({ list }: { list: LeadListData }) {
   useEffect(() => {
     // Stale counts are common in Mautic's list endpoint
     // We fetch the real count in the background for consistency
-    let isMounted = true;
+    const controller = new AbortController();
 
     const updateCount = async () => {
       if (!alias) return;
       setIsCounting(true);
       try {
         const result = await getLeadListCountAction(alias);
-        if (isMounted && result.success && result.data !== undefined) {
+        if (controller.signal.aborted) return;
+        if (result.success && result.data !== undefined) {
           setActualCount(result.data);
         }
       } catch (error) {
+        if (controller.signal.aborted) return;
         productionLogger.error("Failed to update contact count:", error);
       } finally {
-        if (isMounted) setIsCounting(false);
+        if (!controller.signal.aborted) {
+          setIsCounting(false);
+        }
       }
     };
 
     updateCount();
-    return () => { isMounted = false; };
+    return () => controller.abort();
   }, [alias]);
 
   return (
