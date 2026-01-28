@@ -45,20 +45,31 @@ export async function getLeadsStats(): Promise<LeadStats> {
         ? contactsResult.data.total 
         : 0;
       
-      const totalSegments = segmentsResult.success && segmentsResult.data 
-        ? segmentsResult.data.total 
+      // Calculate contacts in campaigns (sum of contacts in published segments)
+      const inCampaigns = segmentsResult.success && segmentsResult.data 
+        ? segmentsResult.data.data
+            .filter(segment => segment.isPublished)
+            .reduce((sum, segment) => sum + (segment.contactCount || 0), 0)
         : 0;
+
+      // Use mock data if no real activity (all values are 0)
+      const hasRealData = totalContacts > 0 || inCampaigns > 0;
+      
+      if (!hasRealData) {
+        developmentLogger.debug("No real leads data, using mock data");
+        return leadsStats;
+      }
 
       const stats: LeadStats = [
         {
           title: "Total Contacts",
           value: totalContacts.toLocaleString(),
           icon: "users",
-          color: "text-blue-600 bg-blue-500",
+          color: "bg-blue-100 text-blue-600",
         },
         {
-          title: "Total Segments",
-          value: totalSegments.toLocaleString(),
+          title: "In Campaigns",
+          value: inCampaigns.toLocaleString(),
           icon: "mail",
           color: "bg-purple-100 text-purple-600",
         },

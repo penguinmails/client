@@ -19,12 +19,12 @@ import ListTableRow from "./ListTableRow";
 import { cn } from "@/lib/utils";
 import LeadTableSkeleton from "./tables/LeadTableSkeleton";
 const listTableColumn = [
-  { id: "name", label: "Segment Name", canSort: true },
+  { id: "name", label: "List Name", canSort: true },
   { id: "contacts", label: "Contacts", canSort: true },
-  { id: "description", label: "Description" },
   { id: "status", label: "Status" },
-  { id: "dateAdded", label: "Created", canSort: true },
-  { id: "dateModified", label: "Modified", canSort: true },
+  { id: "campaign", label: "Campaign" },
+  { id: "performance", label: "Performance" },
+  { id: "dateAdded", label: "Upload Date", canSort: true },
   { id: "actions", label: "Actions" },
 ];
 

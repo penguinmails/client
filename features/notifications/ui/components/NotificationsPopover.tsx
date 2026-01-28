@@ -28,8 +28,8 @@ export function NotificationsPopover() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" className=" group relative">
-          <Bell className="w-5 h-5 font-bold   group-hover:scale-110 transition-transform" />
+        <Button variant="ghost" className="group relative text-muted-foreground hover:text-foreground">
+          <Bell className="w-5 h-5 font-bold group-hover:scale-110 transition-transform" />
           {unreadCount > 0 && (
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 dark:bg-red-400 rounded-full border border-background" />
           )}

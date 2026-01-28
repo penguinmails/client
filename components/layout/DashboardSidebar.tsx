@@ -191,8 +191,8 @@ export function DashboardSidebar() {
                         collapsed ? "justify-center px-0" : "gap-3 px-3",
                         "rounded-md py-2 text-sm",
                         isActive
-                          ? "bg-blue-50 text-blue-700 font-medium"
-                          : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-gray-100",
+                          ? "bg-accent text-accent-foreground font-medium"
+                          : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-100",
                       )}
                       onClick={() => isMobile && setMobileOpen(false)}
                     >
@@ -200,7 +200,7 @@ export function DashboardSidebar() {
                         className={cn(
                           "transition-all",
                           collapsed ? "size-6 p-1" : "h-4 w-4",
-                          isActive && "text-blue-600",
+                          isActive && "text-accent-foreground",
                         )}
                       />
                       {!collapsed && <span>{item.title}</span>}
@@ -209,18 +209,18 @@ export function DashboardSidebar() {
                           className={cn(
                             "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium",
                             item.badge.variant === "default" &&
-                              "bg-blue-600 text-white",
+                            "bg-blue-600 text-white",
                             item.badge.variant === "success" &&
-                              "bg-green-600 text-white dark:bg-green-500",
+                            "bg-green-600 text-white dark:bg-green-500",
                             item.badge.variant === "destructive" &&
-                              "bg-destructive text-destructive-foreground",
+                            "bg-destructive text-destructive-foreground",
                           )}
                         >
                           {item.badge.text}
                         </span>
                       )}
                       {!collapsed && isActive && (
-                        <div className="ml-auto w-1 h-5 bg-blue-600 rounded-full" />
+                        <div className="ml-auto w-1 h-5 bg-border rounded-full" />
                       )}
                     </Link>
                   );
@@ -234,9 +234,8 @@ export function DashboardSidebar() {
       {/* User Info */}
       <div className="mt-auto p-4 border-t border-gray-200 dark:border-gray-800">
         <div
-          className={`flex items-start md:items-center justify-between rounded-md p-2 ${
-            collapsed ? "flex-col" : "flex-row"
-          }`}
+          className={`flex items-start md:items-center justify-between rounded-md p-2 ${collapsed ? "flex-col" : "flex-row"
+            }`}
         >
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-full overflow-hidden relative">
