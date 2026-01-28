@@ -57,10 +57,10 @@ The next session should focus on the **Analytics Dashboard**, finishing up **Set
    - Complete user profile and subscription management.
    - Finalize integration of BillManager data for real-time balance and invoice displays.
 
-3. **Data Fetching Optimization**:
-   - **Switch to GET/Fetch**: Transition Leads/Segments list fetching from POST-based Server Actions to standard GET fetches where possible to leverage browser and CDN caching.
-   - **Redis Caching**: Utilize the available Redis instance for shared server-side caching (5-minute windows are acceptable for leads).
-   - **Cache Control**: Implement proper invalidation logic and frontend cache headers (e.g., leveraging 304 Not Modified) for maximum performance.
+3. **Analytics & Settings Enhancement**:
+   - **Dashboard Widgets**: Connect remaining dashboard widgets to real Mautic/Hestia metrics (Open rates, Click rates from webhooks, Server Health).
+   - **Settings Completion**: Finalize user profile management and subscription settings integration.
+   - **Visualizations**: Implement data visualization from the `marketing_events` table in NileDB.
 
 ## Rules for Continuation
 

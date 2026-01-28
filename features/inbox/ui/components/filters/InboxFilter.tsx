@@ -101,7 +101,7 @@ function InboxFilter() {
     filterState.mailboxFilter.forEach((m) => params.append("mailboxes", m));
     if (filterState.timeFilter !== "all")
       params.append("time", filterState.timeFilter);
-    
+
     router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
     refreshConversations();
   }, [
@@ -245,7 +245,7 @@ function InboxFilter() {
                   className={cn(
                     "w-full justify-between h-auto py-2.5 px-3",
                     filterState.selectedFilter === filter.id
-                      ? "bg-[#eff6ff] text-blue-600 hover:bg-[#eff6ff]"
+                      ? "bg-blue-50 text-blue-600 hover:bg-blue-50"
                       : "text-gray-600 dark:text-muted-foreground hover:bg-gray-100",
                   )}
                 >
