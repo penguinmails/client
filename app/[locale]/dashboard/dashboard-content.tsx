@@ -127,6 +127,14 @@ const _MOCK_CAMPAIGN_ANALYTICS: CampaignAnalytics[] = [
   },
 ];
 
+const MOCK_DASHBOARD_ANALYTICS = {
+  activeCampaigns: 12,
+  totalLeadsContacted: 2847,
+  openRate: 34.2,
+  replyRate: 8.7,
+  systemHealth: 0
+};
+
 // Helper function to format time ago
 function formatTimeAgo(
   date: Date,
@@ -322,13 +330,7 @@ function DashboardKpiCards({
     analytics.replyRate > 0
   );
 
-  const data = hasRealData ? analytics : {
-    activeCampaigns: 12,
-    totalLeadsContacted: 2847,
-    openRate: 34.2,
-    replyRate: 8.7,
-    systemHealth: 0
-  };
+  const data = hasRealData ? analytics : MOCK_DASHBOARD_ANALYTICS;
 
   const kpiData = [
     {

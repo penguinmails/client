@@ -84,6 +84,13 @@ const MOCK_CAMPAIGNS: CampaignDisplay[] = [
   },
 ];
 
+const MOCK_CAMPAIGN_STATS = {
+  totalSent: 2980,
+  openRate: 0.342,
+  clickRate: 0.156,
+  replyRate: 0.087,
+};
+
 interface CampaignsContentProps {
   title: string;
   subtitle: string;
@@ -153,11 +160,7 @@ export default function CampaignsContent({
         const data = await response.json();
 
         // Use mock data if no campaigns found
-        if (!data || data.length === 0) {
-          setCampaigns(MOCK_CAMPAIGNS);
-        } else {
-          setCampaigns(data);
-        }
+        setCampaigns(data && data.length > 0 ? data : MOCK_CAMPAIGNS);
       } catch {
         // Use mock data on error
         setCampaigns(MOCK_CAMPAIGNS);
@@ -173,21 +176,11 @@ export default function CampaignsContent({
           setStatsData(data.stats);
         } else {
           // Use mock stats if API fails
-          setStatsData({
-            totalSent: 2980,
-            openRate: 0.342,
-            clickRate: 0.156,
-            replyRate: 0.087,
-          });
+          setStatsData(MOCK_CAMPAIGN_STATS);
         }
       } catch {
         // Use mock stats on error
-        setStatsData({
-          totalSent: 2980,
-          openRate: 0.342,
-          clickRate: 0.156,
-          replyRate: 0.087,
-        });
+        setStatsData(MOCK_CAMPAIGN_STATS);
       } finally {
         setLoadingStats(false);
       }

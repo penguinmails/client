@@ -57,37 +57,6 @@ function formatDate(dateString?: string): string {
   }
 }
 
-/**
- * Format a date to relative time (e.g., "2 days ago")
- */
-function formatRelativeTime(dateString?: string): string {
-  if (!dateString) return "—";
-  try {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "Yesterday";
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
-    return `${Math.floor(diffDays / 365)} years ago`;
-  } catch {
-    return "—";
-  }
-}
-
-/**
- * Truncate text with ellipsis
- */
-function truncateText(text: string, maxLength: number = 40): string {
-  if (!text) return "—";
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + "…";
-}
-
 function ListTableRow({ list }: { list: LeadListData }) {
   const [actualCount, setActualCount] = useState<number>(list.contacts || 0);
   const [isCounting, setIsCounting] = useState(false);
