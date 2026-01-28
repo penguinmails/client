@@ -86,7 +86,7 @@ async function LeadsPage({
                   >
                     <Icon icon={tab.icon} className="mr-2" />
                     {tab.label}
-                    {tab.count && <span className="ml-1 ">({tab.count})</span>}
+                    {tab.count && <span className="ml-1"> ({tab.count})</span>}
                   </TabsTrigger>
                 ))}
               </TabsList>

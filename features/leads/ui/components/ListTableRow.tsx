@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 const getStatusColor = (status: string, isPublished?: boolean) => {
   const published = isPublished ?? (status === "active");
   if (published) {
-    return "bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-500/30";
+    return "bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/30";
   }
   return "bg-muted/50 dark:bg-muted text-muted-foreground border-border";
 };
@@ -37,7 +37,7 @@ const getStatusIcon = (status: string, isPublished?: boolean) => {
 
 const getStatusLabel = (status: string, isPublished?: boolean) => {
   const published = isPublished ?? (status === "active");
-  return published ? "Published" : "Unpublished";
+  return published ? "Being Used" : "Not Used Yet";
 };
 
 /**
@@ -93,10 +93,8 @@ function ListTableRow({ list }: { list: LeadListData }) {
   const [isCounting, setIsCounting] = useState(false);
 
   const isPublished = list.isPublished ?? (list.status === "active");
-  const description = (list as { description?: string }).description || "";
-  const alias = (list as { alias?: string }).alias || "";
-  const dateAdded = (list as { dateAdded?: string }).dateAdded;
-  const dateModified = (list as { dateModified?: string }).dateModified;
+  const alias = list.alias || "";
+  const dateAdded = list.dateAdded;
 
   useEffect(() => {
     // Stale counts are common in Mautic's list endpoint
@@ -125,17 +123,32 @@ function ListTableRow({ list }: { list: LeadListData }) {
     updateCount();
     return () => controller.abort();
   }, [alias]);
-
   return (
     <TableRow key={list.id}>
-      {/* Segment Name */}
-      <TableCell>
-        <Link href={`/dashboard/leads/segments/${list.id}`} className="hover:underline">
-          <h3 className="font-semibold text-foreground">{list.name}</h3>
-          {alias && (
-            <span className="text-xs text-muted-foreground font-mono">
-              {alias}
-            </span>
+      {/* List Name & Details */}
+      <TableCell className="py-4">
+        <Link href={`/dashboard/leads/segments/${list.id}`} className="block group">
+          <h3 className="font-semibold text-foreground group-hover:text-blue-600 transition-colors">
+            {list.name}
+          </h3>
+
+          {list.bouncedCount !== undefined && list.bouncedCount > 0 && (
+            <div className="text-xs text-red-500 font-medium mt-1">
+              {list.bouncedCount} bounced
+            </div>
+          )}
+
+          {list.tags && list.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-2">
+              {list.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           )}
         </Link>
       </TableCell>
@@ -148,24 +161,6 @@ function ListTableRow({ list }: { list: LeadListData }) {
             {actualCount.toLocaleString()}
           </span>
         </div>
-      </TableCell>
-
-      {/* Description */}
-      <TableCell>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="text-sm text-muted-foreground cursor-default">
-                {truncateText(description)}
-              </span>
-            </TooltipTrigger>
-            {description.length > 40 && (
-              <TooltipContent>
-                <p className="max-w-xs">{description}</p>
-              </TooltipContent>
-            )}
-          </Tooltip>
-        </TooltipProvider>
       </TableCell>
 
       {/* Status */}
@@ -181,25 +176,37 @@ function ListTableRow({ list }: { list: LeadListData }) {
         </span>
       </TableCell>
 
-      {/* Created Date */}
-      <TableCell className="text-sm text-muted-foreground">
-        {formatDate(dateAdded)}
+      {/* Campaign */}
+      <TableCell className="text-sm text-foreground">
+        {list.campaign || <span className="italic text-muted-foreground">Not used yet</span>}
       </TableCell>
 
-      {/* Modified Date */}
-      <TableCell className="text-sm text-muted-foreground">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="cursor-default">
-                {formatRelativeTime(dateModified)}
+      {/* Performance */}
+      <TableCell>
+        {list.openRate !== undefined && list.openRate !== null &&
+          list.replyRate !== undefined && list.replyRate !== null ? (
+          <div className="space-y-1">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                {list.openRate}%
               </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{formatDate(dateModified)}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+              <span className="text-xs text-muted-foreground">open</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                {list.replyRate}%
+              </span>
+              <span className="text-xs text-muted-foreground">reply</span>
+            </div>
+          </div>
+        ) : (
+          <span className="text-sm italic text-muted-foreground">Not used yet</span>
+        )}
+      </TableCell>
+
+      {/* Upload Date */}
+      <TableCell className="text-sm text-muted-foreground">
+        {formatDate(dateAdded)}
       </TableCell>
 
       {/* Actions */}

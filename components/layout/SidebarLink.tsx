@@ -21,7 +21,7 @@ function SidebarLink({ link }: { link: NavLinkItem }) {
         {
           "bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-500 dark:to-blue-500 text-white shadow-lg hover:from-purple-700 hover:to-blue-700 dark:hover:from-purple-600 dark:hover:to-blue-600 hover:text-white":
             isActive && link.highlight,
-          "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-r-2 border-blue-600 dark:border-blue-400 shadow-sm hover:bg-blue-100 dark:hover:bg-blue-900/50":
+          "bg-accent text-accent-foreground border-r-2 border-border shadow-sm hover:bg-accent/80":
             isActive && !link.highlight,
           "text-foreground hover:bg-accent hover:text-accent-foreground":
             !isActive,
@@ -35,7 +35,7 @@ function SidebarLink({ link }: { link: NavLinkItem }) {
           isActive
             ? link.highlight
               ? "text-white"
-              : "text-blue-600 dark:text-blue-400"
+              : "text-accent-foreground"
             : "text-muted-foreground",
         )}
       />

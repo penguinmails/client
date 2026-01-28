@@ -31,6 +31,10 @@ export interface LeadList {
   modifiedByUser?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  campaign?: string | null;
+  openRate?: number | null;
+  replyRate?: number | null;
+  bouncedCount?: number;
 }
 
 // Mock data

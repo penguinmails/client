@@ -23,11 +23,11 @@ const RecentRepliesList = ({
       {recentReplies.map((reply) => (
         <div
           key={reply.email}
-          className="p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="py-7 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="flex items-start space-x-4">
-            <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-sm font-medium text-muted-foreground">
+            <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 {reply.name
                   .split(" ")
                   .map((n) => n[0])
@@ -42,11 +42,10 @@ const RecentRepliesList = ({
                   {reply.company}
                 </span>
                 <span
-                  className={`px-2 py-0.5 rounded text-xs font-medium ${
-                    reply.type === "positive"
-                      ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                      : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
-                  }`}
+                  className={`px-2 py-0.5 rounded text-xs font-medium ${reply.type === "positive"
+                    ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                    }`}
                 >
                   {reply.type === "positive" ? "Interested" : "Not Interested"}
                 </span>

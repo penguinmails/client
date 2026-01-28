@@ -77,6 +77,11 @@ export const LeadListDataSchema = z.object({
   dateModified: z.string().optional(),
   createdByUser: z.string().optional(),
   modifiedByUser: z.string().optional(),
+  campaign: z.string().nullable().optional(),
+  openRate: z.number().nullable().optional(),
+  replyRate: z.number().nullable().optional(),
+  tags: z.array(z.string()).optional(),
+  bouncedCount: z.number().optional(),
 });
 
 export type LeadListData = z.infer<typeof LeadListDataSchema>;

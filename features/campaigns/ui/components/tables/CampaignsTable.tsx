@@ -149,35 +149,20 @@ function CampaignsTableRow({ campaign }: { campaign: CampaignDisplay }) {
         </span>
       </td>
 
-      {/* Mailboxes */}
-      <td className="px-6 py-6">
-        <div className="flex items-center space-x-2">
-          <Server className="size-4 text-muted-foreground" />
-          <span className="text-sm font-medium text-foreground">
-            {campaign.mailboxes} mailboxes
-          </span>
-        </div>
-        <div className="text-xs text-muted-foreground mt-1">
-          {campaign.assignedMailboxes?.slice(0, 2)
-            ?.map((email) => email.split("@")[0])
-            ?.join(", ")}
-          {campaign.assignedMailboxes?.length > 2 &&
-            ` +${campaign.assignedMailboxes.length - 2} more`}
-        </div>
-      </td>
+
 
       {/* Performance */}
       <td className="px-6 py-6">
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
             <span className="text-sm font-medium text-foreground">
-              {campaign.openRate}
+              {campaign.openRate}%
             </span>
             <span className="text-xs text-muted-foreground">open rate</span>
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-sm font-medium text-green-600 dark:text-green-400">
-              {campaign.replyRate}
+              {campaign.replyRate}%
             </span>
             <span className="text-xs text-muted-foreground">reply rate</span>
           </div>
@@ -207,7 +192,6 @@ function CampaignsTableRow({ campaign }: { campaign: CampaignDisplay }) {
 export const campaignColumns = [
   { name: "Campaign Name", key: "name" },
   { name: "Status", key: "status" },
-  { name: "Mailboxes", key: "mailboxes" },
   { name: "Performance", key: "performance" },
   { name: "Last Sent", key: "lastSent" },
   { name: "Actions", key: "actions" },
@@ -268,7 +252,7 @@ export function CampaignsTable({
       <CardContent className="overflow-x-auto p-0">
         <table className="w-full">
           <thead className="bg-muted/50 dark:bg-muted/30">
-            <tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b border-border">
               {campaignColumns.map((column) => (
                 <th key={column.key} className="px-8 py-4">
                   {column.name}

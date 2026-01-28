@@ -211,7 +211,12 @@ export async function fetchLeadLists(): Promise<ActionResult<LeadList[]>> {
       createdByUser: list.createdByUser,
       modifiedByUser: list.modifiedByUser,
       createdAt: list.dateAdded ? new Date(list.dateAdded) : new Date(),
-      updatedAt: list.dateModified ? new Date(list.dateModified) : new Date()
+      updatedAt: list.dateModified ? new Date(list.dateModified) : new Date(),
+      campaign: list.campaign,
+      openRate: list.openRate,
+      replyRate: list.replyRate,
+      bouncedCount: list.bouncedCount,
+      tags: list.tags
     }));
 
     return {

@@ -12,15 +12,15 @@ function Header() {
   const t = useTranslations("Components.DashboardHeader");
 
   return (
-    <header className="flex items-center justify-between p-4.5  ">
+    <header className="flex items-center justify-between p-4.5 bg-background rounded-xl border shadow-sm">
       <div className="flex items-center ">
         <SidebarTrigger className="mr-4" />
       </div>
       <div className="flex h-5 items-center space-x-1">
-        <div className="flex items-center space-x-1 ">
+        <div className="flex items-center space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center justify-center p-1 rounded-md hover:bg-accent">
+              <button className="flex items-center justify-center p-1 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground">
                 <HelpCircle className="w-5 h-5 font-bold group-hover:scale-110 transition-transform" />
               </button>
             </DropdownMenuTrigger>
@@ -41,7 +41,7 @@ function Header() {
             </LinkIcon>
           </DropdownMenu>
         </div>
-        <Separator orientation="vertical" className="mx-2 -ml-1.5" />
+        <Separator orientation="vertical" className="mx-3" />
         <UserMenu />
       </div>
     </header>
