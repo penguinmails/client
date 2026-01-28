@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, Clock, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface SessionTimeoutWarningProps {
   enabled?: boolean;
@@ -22,15 +23,23 @@ export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningP
   const { isWarning, remainingSeconds, resetTimer } = useSessionTimeout({
     enabled,
      onTimeout: () => {
+      console.log('[SessionTimeout]  TIMEOUT - Redirecting to login');
       router.push("/login"); // Redirect to login on timeout
     },
   });
+  
+    useEffect(() => {
+    console.log('[SessionTimeout] isWarning:', isWarning);
+    console.log('[SessionTimeout] remainingSeconds:', remainingSeconds);
+  }, [isWarning, remainingSeconds]);
 
   if (!isWarning) return null;
 
   const minutes = Math.floor(remainingSeconds / 60);
   const seconds = remainingSeconds % 60;
   const timeDisplay = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+   console.log('[SessionTimeout]  Rendering warning - timeDisplay:', timeDisplay);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
@@ -53,7 +62,10 @@ export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningP
 
         <div className="flex gap-3">
           <Button
-            onClick={resetTimer}
+            onClick={() => {
+              console.log('[SessionTimeout]  User clicked Stay Logged In');
+              resetTimer();
+            }}
             className="flex-1"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
