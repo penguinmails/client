@@ -99,16 +99,6 @@ function AppSideBar() {
         },
       ],
     },
-    {
-      title: t("sections.admin"),
-      items: [
-        {
-          to: "/dashboard/admin",
-          label: t("items.diagnostics"),
-          icon: Server,
-        },
-      ],
-    },
   ];
 
   // Skeleton for nav items
