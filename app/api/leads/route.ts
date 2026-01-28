@@ -26,6 +26,21 @@ export interface LeadApiResponse {
   error?: string;
 }
 
+// Extended contact interface with optional phone property from Mautic
+interface MauticContact extends Record<string, unknown> {
+  id: number;
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  tags?: string[];
+  points?: number;
+  lastActive?: string;
+  dateAdded?: string;
+  dateModified?: string;
+}
+
 /**
  * GET /api/leads
  * 
@@ -74,7 +89,7 @@ export async function GET(request: Request) {
       id: String(contact.id),
       name: `${contact.firstName || ''} ${contact.lastName || ''}`.trim() || contact.email,
       email: contact.email,
-      phone: (contact as any).phone || undefined,
+      phone: (contact as MauticContact).phone || undefined,
       company: contact.company || undefined,
       status: 'active' as const,
       tags: contact.tags || [],
