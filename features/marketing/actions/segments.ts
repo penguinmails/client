@@ -87,6 +87,13 @@ export async function getSegmentAction(id: number | string): Promise<ActionResul
     };
   }
 }
+import { 
+  invalidateCache, 
+  buildSegmentsCacheKey,
+  buildLeadsCacheKey,
+  buildContactCacheKey
+} from "@/lib/cache/cache-service";
+
 /**
  * Create segment action
  */
@@ -102,6 +109,9 @@ export async function createSegmentAction(data: {
         isPublished: 1,
       }),
     });
+
+    // Invalidate segments list
+    await invalidateCache(buildSegmentsCacheKey());
 
     return {
       success: true,
@@ -125,6 +135,14 @@ export async function addContactToSegmentAction(
 ): Promise<ActionResult<{ success: boolean }>> {
   try {
     await makeMauticRequest('POST', `/segments/${segmentId}/contact/${contactId}/add`);
+
+    // Invalidate keys that might be affected
+    await invalidateCache(buildContactCacheKey(contactId));
+    // Leads in a specific list might change
+    await invalidateCache(`${buildLeadsCacheKey()}:*`);
+    // Segment counts change
+    await invalidateCache(buildSegmentsCacheKey());
+
     return {
       success: true,
       data: { success: true },
@@ -155,6 +173,9 @@ export async function updateSegmentAction(
       }),
     });
 
+    // Invalidate segments list
+    await invalidateCache(buildSegmentsCacheKey());
+
     return {
       success: true,
       data: normalizeSegment((response.list as Record<string, unknown>) || (response.segment as Record<string, unknown>)),
@@ -177,6 +198,12 @@ export async function removeContactFromSegmentAction(
 ): Promise<ActionResult<{ success: boolean }>> {
   try {
     await makeMauticRequest('POST', `/segments/${segmentId}/contact/${contactId}/remove`);
+
+    // Invalidate keys that might be affected
+    await invalidateCache(buildContactCacheKey(contactId));
+    await invalidateCache(`${buildLeadsCacheKey()}:*`);
+    await invalidateCache(buildSegmentsCacheKey());
+
     return {
       success: true,
       data: { success: true },
