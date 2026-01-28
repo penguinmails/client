@@ -135,6 +135,7 @@ export function useSessionTimeout({
     const THROTTLE_MS = 1000;
 
     const handleActivity = () => {
+      if (isWarning) return;
       const now = Date.now();
       if (now - lastThrottledUpdate < THROTTLE_MS) return;
       lastThrottledUpdate = now;
@@ -159,7 +160,7 @@ export function useSessionTimeout({
       if (warningRef.current) clearTimeout(warningRef.current);
       if (countdownRef.current) clearInterval(countdownRef.current);
     };
-  }, [enabled, user, resetTimer, refreshInternalTimers]);
+  }, [enabled, user, resetTimer, refreshInternalTimers, isWarning]);
 
   return {
     isWarning,
