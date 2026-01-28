@@ -30,7 +30,6 @@ export interface ContactDTO {
   firstName: string;
   lastName: string;
   company: string | null;
-  phone?: string;
   points: number;
   tags: string[];
   lastActive: string | null;

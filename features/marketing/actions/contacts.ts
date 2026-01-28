@@ -20,7 +20,6 @@ function normalizeContact(raw: RawMauticContact): ContactDTO {
     firstName: (coreFields.firstname as Record<string, unknown>)?.value as string || '',
     lastName: (coreFields.lastname as Record<string, unknown>)?.value as string || '',
     company: (coreFields.company as Record<string, unknown>)?.value as string || null,
-    phone: (coreFields.phone as Record<string, unknown>)?.value as string || undefined,
     points: raw.points,
     tags: Array.isArray(raw.tags) ? raw.tags.map(t => t.tag) : [],
     lastActive: raw.lastActive,
@@ -88,12 +87,6 @@ export async function getContactAction(id: number): Promise<ActionResult<Contact
   }
 }
 
-import { 
-  invalidateCache, 
-  buildLeadsCacheKey, 
-  buildContactCacheKey 
-} from "@/lib/cache/cache-service";
-
 /**
  * Upsert contact action (Create or Update by email)
  */
@@ -117,9 +110,6 @@ export async function upsertContactAction(
           company: fields.company,
         }),
       });
-
-      // Invalidate specific contact cache
-      await invalidateCache(buildContactCacheKey(existingId));
     } else {
       // 3. Create new
       response = await makeMauticRequest<Record<string, unknown>>('POST', '/contacts/new', {
@@ -131,9 +121,6 @@ export async function upsertContactAction(
         }),
       });
     }
-
-    // Invalidate leads list cache (using prefix match)
-    await invalidateCache(`${buildLeadsCacheKey()}:*`);
 
     return {
       success: true,
@@ -154,11 +141,6 @@ export async function upsertContactAction(
 export async function deleteContactAction(id: number): Promise<ActionResult<{ id: number }>> {
   try {
     await makeMauticRequest('DELETE', `/contacts/${id}/delete`);
-    
-    // Invalidate caches
-    await invalidateCache(buildContactCacheKey(id));
-    await invalidateCache(`${buildLeadsCacheKey()}:*`);
-
     return {
       success: true,
       data: { id },
@@ -188,10 +170,6 @@ export async function updateContactAction(
         // Any other fields you want to support can be added here
       }),
     });
-
-    // Invalidate caches
-    await invalidateCache(buildContactCacheKey(id));
-    await invalidateCache(`${buildLeadsCacheKey()}:*`);
 
     return {
       success: true,
