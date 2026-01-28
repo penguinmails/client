@@ -64,6 +64,7 @@ export function useSessionTimeout({
 
   // Handle warning - notify user
   const handleWarning = useCallback(() => {
+    console.log('[SessionTimeout]  WARNING TRIGGERED');
     setIsWarning(true);
     setRemainingSeconds(Math.floor(warningMs / 1000));
     
@@ -71,9 +72,13 @@ export function useSessionTimeout({
       onWarning(warningMs);
     }
 
+    console.log('[SessionTimeout]  Starting countdown interval');
+
     // Start countdown
     countdownRef.current = setInterval(() => {
+      console.log('[SessionTimeout]  Countdown tick');
       setRemainingSeconds((prev) => {
+        console.log('[SessionTimeout] prev seconds:', prev);
         if (prev <= 1) {
           if (countdownRef.current) {
             clearInterval(countdownRef.current);
