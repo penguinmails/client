@@ -6,6 +6,7 @@
 import { NextRequest } from 'next/server';
 import { getUserProfile, getUserTenants } from '../queries';
 import { AuthUser } from '@/types/auth';
+import { productionLogger } from '@/lib/logger';
 
 export async function getSessionData(req?: NextRequest) {
   try {
@@ -50,7 +51,7 @@ export async function getSessionData(req?: NextRequest) {
 
     return { user: authUser, isAuthenticated: true };
   } catch (error) {
-    console.error('[Session API] Error:', error);
+    productionLogger.error('[Session API] Error:', error);
     return { user: null, isAuthenticated: false };
   }
 }

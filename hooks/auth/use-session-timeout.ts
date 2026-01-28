@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useAuth } from "./use-auth";
-import { productionLogger } from "@/lib/logger";
+import { productionLogger, developmentLogger } from "@/lib/logger";
 
 // Default inactivity timeout: 15 minutes (B2B standard for sensitive data apps)
 const DEFAULT_TIMEOUT_MS = 15 * 60 * 1000;
@@ -64,7 +64,7 @@ export function useSessionTimeout({
 
   // Handle warning - notify user
   const handleWarning = useCallback(() => {
-    console.log('[SessionTimeout]  WARNING TRIGGERED');
+    developmentLogger.debug('[SessionTimeout] WARNING TRIGGERED');
     setIsWarning(true);
     setRemainingSeconds(Math.floor(warningMs / 1000));
     
@@ -72,13 +72,13 @@ export function useSessionTimeout({
       onWarning(warningMs);
     }
 
-    console.log('[SessionTimeout]  Starting countdown interval');
+    developmentLogger.debug('[SessionTimeout] Starting countdown interval');
 
     // Start countdown
     countdownRef.current = setInterval(() => {
-      console.log('[SessionTimeout]  Countdown tick');
+      developmentLogger.debug('[SessionTimeout] Countdown tick');
       setRemainingSeconds((prev) => {
-        console.log('[SessionTimeout] prev seconds:', prev);
+        developmentLogger.debug('[SessionTimeout] prev seconds:', prev);
         if (prev <= 1) {
           if (countdownRef.current) {
             clearInterval(countdownRef.current);
@@ -167,13 +167,13 @@ export function useSessionTimeout({
   }, [enabled, user, resetTimer, refreshInternalTimers, isWarning]);
   
   useEffect(() => {
-  return () => {
-    if (countdownRef.current) {
-      console.log('[SessionTimeout] 🧹 Cleaning up countdown on unmount');
-      clearInterval(countdownRef.current);
-    }
-  };
-}, []);
+    return () => {
+      if (countdownRef.current) {
+        developmentLogger.debug('[SessionTimeout] Cleaning up countdown on unmount');
+        clearInterval(countdownRef.current);
+      }
+    };
+  }, []);
   return {
     isWarning,
     remainingSeconds,

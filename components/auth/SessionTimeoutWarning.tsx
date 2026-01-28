@@ -6,6 +6,7 @@ import { AlertTriangle, Clock, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { developmentLogger } from "@/lib/logger";
 
 interface SessionTimeoutWarningProps {
   enabled?: boolean;
@@ -22,15 +23,15 @@ export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningP
   const router = useRouter();
   const { isWarning, remainingSeconds, resetTimer } = useSessionTimeout({
     enabled,
-     onTimeout: () => {
-      console.log('[SessionTimeout]  TIMEOUT - Redirecting to login');
+    onTimeout: () => {
+      developmentLogger.debug("[SessionTimeout] TIMEOUT - Redirecting to login");
       router.push("/login"); // Redirect to login on timeout
     },
   });
-  
-    useEffect(() => {
-    console.log('[SessionTimeout] isWarning:', isWarning);
-    console.log('[SessionTimeout] remainingSeconds:', remainingSeconds);
+
+  useEffect(() => {
+    developmentLogger.debug("[SessionTimeout] isWarning:", isWarning);
+    developmentLogger.debug("[SessionTimeout] remainingSeconds:", remainingSeconds);
   }, [isWarning, remainingSeconds]);
 
   if (!isWarning) return null;
@@ -39,7 +40,7 @@ export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningP
   const seconds = remainingSeconds % 60;
   const timeDisplay = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
-   console.log('[SessionTimeout]  Rendering warning - timeDisplay:', timeDisplay);
+  developmentLogger.debug("[SessionTimeout] Rendering warning - timeDisplay:", timeDisplay);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
@@ -63,7 +64,7 @@ export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningP
         <div className="flex gap-3">
           <Button
             onClick={() => {
-              console.log('[SessionTimeout]  User clicked Stay Logged In');
+              developmentLogger.debug("[SessionTimeout] User clicked Stay Logged In");
               resetTimer();
             }}
             className="flex-1"

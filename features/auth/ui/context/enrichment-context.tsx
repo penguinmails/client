@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { useSession } from "@/hooks/auth/use-session";
 import { useSystemHealth } from "@/hooks";
-import { productionLogger } from "@/lib/logger";
+import { productionLogger, developmentLogger } from "@/lib/logger";
 import { fetchEnrichedUser } from "../../lib/enrichment-operations";
 import { AuthUser, Tenant } from "@/types/auth";
 import { CompanyInfo } from "@/types/company";
@@ -50,7 +50,7 @@ const RETRY_DELAY_MS = 2000;
 export const UserEnrichmentProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { session, isLoading: isSessionLoading } = useSession(); 
+  const { session, isLoading: isSessionLoading } = useSession();
   const { systemHealth } = useSystemHealth();
   const isHealthy = systemHealth.status === "healthy";
 
@@ -75,15 +75,15 @@ export const UserEnrichmentProvider: React.FC<{
 
       try {
         const data = await fetchEnrichedUser(userId);
-        
-        console.log('[Enrichment] ===== ENRICHMENT DATA =====');
-        console.log('[Enrichment] Data from fetchEnrichedUser:', data);
-        console.log('[Enrichment] Data.role:', data.role);
+
+        developmentLogger.debug('[Enrichment] ===== ENRICHMENT DATA =====');
+        developmentLogger.debug('[Enrichment] Data from fetchEnrichedUser:', data);
+        developmentLogger.debug('[Enrichment] Data.role:', data.role);
 
         // Merge base user with enrichment
         if (session) {
-          console.log('[Enrichment] Session:', session);
-          
+          developmentLogger.debug('[Enrichment] Session:', session);
+
           const merged = {
             ...session,
             ...(data as Record<string, unknown>),
@@ -91,8 +91,8 @@ export const UserEnrichmentProvider: React.FC<{
             email: session.email,
           } as AuthUser;
 
-          console.log('[Enrichment] Merged user:', merged);
-          console.log('[Enrichment] Merged user.role:', merged.role);
+          developmentLogger.debug('[Enrichment] Merged user:', merged);
+          developmentLogger.debug('[Enrichment] Merged user.role:', merged.role);
 
           setEnrichedUser(merged);
         }
@@ -136,14 +136,14 @@ export const UserEnrichmentProvider: React.FC<{
   // ============================================================================
   useEffect(() => {
     if (session?.id) {
-       setEnrichedUser(prev => ({
-           id: session.id,
-           email: session.email,
-           emailVerified: session.emailVerified,
-           ...prev
-       } as AuthUser));
-       
-       enrichUser(session.id);
+      setEnrichedUser(prev => ({
+        id: session.id,
+        email: session.email,
+        emailVerified: session.emailVerified,
+        ...prev
+      } as AuthUser));
+
+      enrichUser(session.id);
     } else if (!isSessionLoading && !session) {
       setEnrichedUser(null);
       setSelectedTenantId(null);
@@ -152,7 +152,7 @@ export const UserEnrichmentProvider: React.FC<{
       setIsLoadingEnrichment(false);
       retryCountRef.current = 0;
     }
-  }, [session, isSessionLoading, enrichUser]); 
+  }, [session, isSessionLoading, enrichUser]);
 
   // ============================================================================
   // Derived Values
@@ -161,12 +161,12 @@ export const UserEnrichmentProvider: React.FC<{
     () =>
       enrichedUser?.tenantMembership?.tenant
         ? [
-            {
-              id: enrichedUser.tenantMembership.tenantId,
-              name: enrichedUser.tenantMembership.tenant.name,
-              created: "",
-            },
-          ]
+          {
+            id: enrichedUser.tenantMembership.tenantId,
+            name: enrichedUser.tenantMembership.tenant.name,
+            created: "",
+          },
+        ]
         : [],
     [enrichedUser]
   );
