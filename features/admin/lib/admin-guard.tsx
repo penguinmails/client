@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { AdminRole, isAdminRole } from "@/types/auth";
 import { Loader2 } from "lucide-react";
+import { developmentLogger } from "@/lib/logger";
 
 interface AdminGuardProps {
   children: React.ReactNode;
@@ -27,25 +28,25 @@ export function AdminGuard({
   const router = useRouter();
 
   const isAuthorized = React.useMemo(() => {
-    console.log('[AdminGuard] ===== CHECKING AUTHORIZATION =====');
-    console.log('[AdminGuard] User:', user);
-    console.log('[AdminGuard] User role:', user?.role);
-    console.log('[AdminGuard] Allowed roles:', allowedRoles);
-    console.log('[AdminGuard] Loading states:', authLoading);
+    developmentLogger.debug('[AdminGuard] ===== CHECKING AUTHORIZATION =====');
+    developmentLogger.debug('[AdminGuard] User:', user);
+    developmentLogger.debug('[AdminGuard] User role:', user?.role);
+    developmentLogger.debug('[AdminGuard] Allowed roles:', allowedRoles);
+    developmentLogger.debug('[AdminGuard] Loading states:', authLoading);
     if (!user) {
-      console.log('[AdminGuard]  No user');
+      developmentLogger.debug('[AdminGuard] No user');
       return false;
     }
     const userRole = user.role;
     if (!userRole || typeof userRole !== "string") {
-    console.log('[AdminGuard]  Invalid user role');
-    return false;
-  }
-    console.log('[AdminGuard] User role type:', typeof userRole);
-    console.log('[AdminGuard] isAdminRole result:', isAdminRole(userRole));
-    console.log('[AdminGuard] Includes check:', allowedRoles.includes(userRole as AdminRole));
+      developmentLogger.debug('[AdminGuard] Invalid user role');
+      return false;
+    }
+    developmentLogger.debug('[AdminGuard] User role type:', typeof userRole);
+    developmentLogger.debug('[AdminGuard] isAdminRole result:', isAdminRole(userRole));
+    developmentLogger.debug('[AdminGuard] Includes check:', allowedRoles.includes(userRole as AdminRole));
     const result = typeof userRole === "string" && isAdminRole(userRole) && allowedRoles.includes(userRole as AdminRole);
-    console.log('[AdminGuard]  Final authorization result:', result);
+    developmentLogger.debug('[AdminGuard] Final authorization result:', result);
     return result;
   }, [user, allowedRoles, authLoading]);
 
@@ -87,13 +88,13 @@ export function AdminGuard({
  */
 export function useAdminAccess(allowedRoles: AdminRole[]) {
   const { user, loading, authLoading } = useAuth();
-  
+
   const isAuthorized = React.useMemo(() => {
     if (loading || authLoading.enrichment || !user) return false;
-    
+
     const userRole = user.role;
     if (!userRole || !isAdminRole(userRole)) return false;
-    
+
     return allowedRoles.includes(userRole as AdminRole);
   }, [user, loading, authLoading.enrichment, allowedRoles]);
 
