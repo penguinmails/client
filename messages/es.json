@@ -35,6 +35,29 @@
       "free": "Cuenta Gratuita"
     }
   },
+  "AdminSidebar": {
+    "sections": {
+      "system": "Sistema"
+    },
+    "items": {
+      "diagnostics": "Diagnóstico",
+      "users": "Usuarios"
+    }
+  },
+  "AdminDashboard": {
+    "permissionError": "Acceso Denegado: Su rol actual ({role}) no tiene permisos de administrador para ver datos de usuarios. Por favor contacte a un administrador para obtener acceso.",
+    "accessDeniedTitle": "Acceso Denegado",
+    "goBackToDashboard": "Volver al Dashboard",
+    "supportNotice": "Tiene acceso de Soporte (Solo lectura). Algunas acciones de edición y gestión están restringidas.",
+    "totalUsers": "Total de Usuarios",
+    "staffUsers": "Usuarios Staff",
+    "tenants": "Tenants",
+    "companies": "Compañías"
+  },
+  "Admin": {
+    "usersTitle": "Gestión de Usuarios",
+    "diagnosticsTitle": "Diagnóstico del Sistema"
+  },
   "Navigation": {
     "dashboard": "Tablero",
     "settings": "Configuración",

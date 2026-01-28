@@ -37,6 +37,29 @@
       "free": "Free Account"
     }
   },
+  "AdminSidebar": {
+    "sections": {
+      "system": "System"
+    },
+    "items": {
+      "diagnostics": "Diagnostics",
+      "users": "Users"
+    }
+  },
+  "AdminDashboard": {
+    "permissionError": "Access Denied: Your current role ({role}) does not have admin permissions to view user data. Please contact an administrator for access.",
+    "accessDeniedTitle": "Access Denied",
+    "goBackToDashboard": "Go back to Dashboard",
+    "supportNotice": "You have Support (Read-only) access. Some editing and management actions are restricted.",
+    "totalUsers": "Total Users",
+    "staffUsers": "Staff Users",
+    "tenants": "Tenants",
+    "companies": "Companies"
+  },
+  "Admin": {
+    "usersTitle": "User Management",
+    "diagnosticsTitle": "System Diagnostics"
+  },
   "Navigation": {
     "dashboard": "Dashboard",
     "settings": "Settings",
