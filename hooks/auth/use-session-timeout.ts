@@ -163,10 +163,17 @@ export function useSessionTimeout({
       
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (warningRef.current) clearTimeout(warningRef.current);
-      if (countdownRef.current) clearInterval(countdownRef.current);
     };
   }, [enabled, user, resetTimer, refreshInternalTimers, isWarning]);
-
+  
+  useEffect(() => {
+  return () => {
+    if (countdownRef.current) {
+      console.log('[SessionTimeout] 🧹 Cleaning up countdown on unmount');
+      clearInterval(countdownRef.current);
+    }
+  };
+}, []);
   return {
     isWarning,
     remainingSeconds,
