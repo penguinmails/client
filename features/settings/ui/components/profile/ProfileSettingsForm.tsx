@@ -4,35 +4,40 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button/button";
-import { developmentLogger } from "@/lib/logger";
+import { developmentLogger, productionLogger } from "@/lib/logger";
 import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UnifiedFormField } from "@/components/design-system";
 
-import { profileFormSchema, ProfileFormValues } from "@/features/settings";
+import { profileFormSchema, ProfileFormValues, useSettingsNotifications } from "@/features/settings";
+import { updateProfile } from "@/features/settings/actions/profile";
 
 export function ProfileSettingsForm({
   userProfile,
 }: {
   userProfile: ProfileFormValues;
 }) {
+  const { showProfileUpdateSuccess } = useSettingsNotifications();
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: userProfile,
     mode: "onChange",
   });
 
-  function onSubmit(data: ProfileFormValues) {
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-96 rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    // Handle profile update logic here
-    developmentLogger.debug("Profile updated:", data);
+  async function onSubmit(data: ProfileFormValues) {
+    try {
+      const result = await updateProfile(data);
+      if (result.success) {
+        showProfileUpdateSuccess();
+        developmentLogger.debug("Profile updated:", result.data);
+      } else {
+        toast.error("Failed to update profile");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+      productionLogger.error("Failed to update profile:", error);
+    }
   }
 
   return (
