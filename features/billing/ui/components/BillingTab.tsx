@@ -4,7 +4,6 @@ import { ChangePlanTrigger } from "@features/billing/ui/components/change-plan-d
 import EditAddressTrigger from "@features/billing/ui/components/edit-trigger-dialog";
 import InvoicesTable from "@features/billing/ui/components/invocies-table";
 import UpdateCardDialogTrigger from "@features/billing/ui/components/update-card-dialog";
-import { BillingData } from "@features/billing/types";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
