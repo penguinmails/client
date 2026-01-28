@@ -35,7 +35,7 @@ async function page() {
         <Card className="border-destructive">
           <CardHeader>
             <CardTitle>Error Loading Domains</CardTitle>
-            <CardDescription>Failed to connect to HestiaCP infrastructure.</CardDescription>
+            <CardDescription>Failed to connect to server infrastructure.</CardDescription>
           </CardHeader>
         </Card>
       </div>
