@@ -8,6 +8,14 @@ import {
   CacheTTL 
 } from '@/lib/cache/cache-service';
 
+type StatsData = Awaited<ReturnType<typeof getGlobalStatsAction>>['data'];
+type ChartData = Awaited<ReturnType<typeof getAnalyticsChartDataAction>>['data'];
+
+interface DashboardAnalytics {
+  stats: StatsData;
+  chartData: ChartData;
+}
+
 /**
  * GET /api/analytics/dashboard
  * Returns real metrics from NileDB
@@ -16,7 +24,7 @@ export async function GET() {
   const cacheKey = 'pm:analytics:dashboard';
   
   try {
-    const cached = await getCached<unknown>(cacheKey);
+    const cached = await getCached<DashboardAnalytics>(cacheKey);
     if (cached) {
       return NextResponse.json(cached, {
         headers: { 'X-Cache': 'HIT' }

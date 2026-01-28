@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { listSegmentsAction } from '@/features/marketing/actions/segments';
+import { listContactsAction } from '@/features/marketing/actions/contacts';
 import { 
   getCached, 
   setCache, 
@@ -21,8 +22,6 @@ export interface SegmentApiResponse {
   }>;
   error?: string;
 }
-
-import { listContactsAction } from '@/features/marketing/actions/contacts';
 
 /**
  * GET /api/segments
@@ -89,7 +88,7 @@ export async function GET() {
             liveCount
           };
         } catch (error) {
-          productionLogger.warn(`Failed to sync count for segment ${segment.alias}:`, error);
+          productionLogger.warn(`Failed to sync count for segment ${segment.alias || segment.id}:`, error);
           return { ...segment, liveCount: segment.contactCount };
         }
       })

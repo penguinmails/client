@@ -57,7 +57,6 @@ export async function GET(request: Request) {
     }
 
     // Fetch from Mautic
-    // Fetch from Mautic
     const segmentFilter = listAlias || listId || '';
     const search = segmentFilter ? `segment:${segmentFilter}` : '';
     const contactsResult = await listContactsAction({ limit: 100, search });
@@ -75,7 +74,7 @@ export async function GET(request: Request) {
       id: String(contact.id),
       name: `${contact.firstName || ''} ${contact.lastName || ''}`.trim() || contact.email,
       email: contact.email,
-      phone: contact.phone || undefined,
+      phone: (contact as any).phone || undefined,
       company: contact.company || undefined,
       status: 'active' as const,
       tags: contact.tags || [],
