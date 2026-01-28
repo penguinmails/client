@@ -23,16 +23,50 @@ export type AdminUser = z.infer<typeof AdminUserSchema>
  */
 export const RegularUserSchema = z.object({
   id: z.string().uuid(),
-  email: z.string(), // Masked email for privacy
+  email: z.string(), // Masked or full email depending on admin role
   name: z.string(),
+  givenName: z.string().optional(),
+  familyName: z.string().optional(),
   role: z.string(),
   isPenguinMailsStaff: z.boolean(),
   tenantCount: z.number().min(0),
   companyCount: z.number().min(0),
   created: z.string(),
+  piiMasked: z.boolean().optional(), // Indicates if PII is masked for this user
 })
 
 export type RegularUser = z.infer<typeof RegularUserSchema>
+
+/**
+ * Revealed User PII Type
+ * Full PII data returned from the reveal endpoint
+ */
+export const RevealedUserSchema = z.object({
+  id: z.string().uuid(),
+  email: z.string().email(),
+  name: z.string(),
+  givenName: z.string().nullable(),
+  familyName: z.string().nullable(),
+  role: z.string(),
+  isPenguinMailsStaff: z.boolean(),
+  created: z.string(),
+})
+
+export type RevealedUser = z.infer<typeof RevealedUserSchema>
+
+/**
+ * PII Reveal Response Type
+ */
+export const PiiRevealResponseSchema = z.object({
+  user: RevealedUserSchema,
+  audit: z.object({
+    accessedAt: z.string(),
+    accessedBy: z.string(),
+    reason: z.string().nullable(),
+  }),
+})
+
+export type PiiRevealResponse = z.infer<typeof PiiRevealResponseSchema>
 
 /**
  * Audit Log Entry Type
