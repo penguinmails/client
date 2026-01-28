@@ -7,9 +7,19 @@ import { DbLeadList } from "@/types/clients-leads";
 import { developmentLogger, productionLogger } from "@/lib/logger";
 import { listContactsAction } from "@/features/marketing/actions/contacts";
 import { listSegmentsAction } from "@/features/marketing/actions/segments";
+import { getCached, setCache } from "@/lib/cache/cache-service";
 
 export async function getLeadsStats(): Promise<LeadStats> {
+  const cacheKey = 'pm:leads:stats';
+  
   try {
+    // Check cache first
+    const cached = await getCached<LeadStats>(cacheKey);
+    if (cached) {
+      developmentLogger.debug("Using cached leads stats");
+      return cached;
+    }
+
     // Get current user to authenticate request
     let userId: string | null = null;
     try {
@@ -21,7 +31,6 @@ export async function getLeadsStats(): Promise<LeadStats> {
     }
 
     if (!userId) {
-      // Fallback to mock data if not authenticated
       return leadsStats;
     }
 
@@ -40,8 +49,7 @@ export async function getLeadsStats(): Promise<LeadStats> {
         ? segmentsResult.data.total 
         : 0;
 
-      // Return calculated stats in the expected format
-      return [
+      const stats: LeadStats = [
         {
           title: "Total Contacts",
           value: totalContacts.toLocaleString(),
@@ -55,19 +63,31 @@ export async function getLeadsStats(): Promise<LeadStats> {
           color: "bg-purple-100 text-purple-600",
         },
       ];
+
+      // Cache the result for 5 minutes
+      await setCache(cacheKey, stats, 300);
+      return stats;
     } catch (apiError) {
       productionLogger.error("Mautic API error in getLeadsStats, falling back to mock data:", apiError);
       return leadsStats;
     }
   } catch (error) {
     productionLogger.error("getLeadsStats error:", error);
-    // Fallback to mock data on error
     return leadsStats;
   }
 }
 
 export async function getLeadLists(): Promise<DbLeadList[]> {
+  const cacheKey = 'pm:leads:lists:summary';
+
   try {
+    // Check cache
+    const cached = await getCached<DbLeadList[]>(cacheKey);
+    if (cached) {
+      developmentLogger.debug("Using cached leads lists summary");
+      return cached;
+    }
+
     // Get current user to authenticate request
     let userId: string | null = null;
     try {
@@ -75,7 +95,6 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
       userId = user?.id || null;
     } catch (authError) {
       developmentLogger.warn("Authentication error in getLeadLists, falling back to mock data:", authError);
-      // Transform LeadList[] to DbLeadList[] to match expected interface
       return leadLists.map(list => ({
         id: list.id.toString(),
         name: list.name,
@@ -85,8 +104,6 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
     }
 
     if (!userId) {
-      // Fallback to mock data if not authenticated
-      // Transform LeadList[] to DbLeadList[] to match expected interface
       return leadLists.map(list => ({
         id: list.id.toString(),
         name: list.name,
@@ -100,16 +117,18 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
       const segmentsResult = await listSegmentsAction({ limit: 100 });
 
       if (segmentsResult.success && segmentsResult.data) {
-        // Map SegmentDTO to DbLeadList for UI compatibility
-        return segmentsResult.data.data.map(segment => ({
+        const data = segmentsResult.data.data.map(segment => ({
           id: String(segment.id),
           name: segment.name,
           contacts: segment.contactCount || 0,
           description: segment.description || "",
         }));
+        
+        // Cache result for 5 minutes
+        await setCache(cacheKey, data, 300);
+        return data;
       }
 
-      // Fallback to mock data if API call wasn't successful
       return leadLists.map(list => ({
         id: list.id.toString(),
         name: list.name,
@@ -118,7 +137,6 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
       }));
     } catch (apiError) {
       productionLogger.error("Mautic API error in getLeadLists, falling back to mock data:", apiError);
-      // Transform LeadList[] to DbLeadList[] to match expected interface
       return leadLists.map(list => ({
         id: list.id.toString(),
         name: list.name,
@@ -128,8 +146,6 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
     }
   } catch (error) {
     productionLogger.error("getLeadLists error:", error);
-    // Fallback to mock data on error
-    // Transform LeadList[] to DbLeadList[] to match expected interface
     return leadLists.map(list => ({
       id: list.id.toString(),
       name: list.name,

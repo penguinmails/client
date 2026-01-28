@@ -2,12 +2,35 @@ import { NextResponse } from "next/server";
 import { getGlobalStatsAction, getAnalyticsChartDataAction } from "@/features/analytics/actions/stats";
 import { productionLogger } from "@/lib/logger";
 
+import { 
+  getCached, 
+  setCache, 
+  CacheTTL 
+} from '@/lib/cache/cache-service';
+
+type StatsData = Awaited<ReturnType<typeof getGlobalStatsAction>>['data'];
+type ChartData = Awaited<ReturnType<typeof getAnalyticsChartDataAction>>['data'];
+
+interface DashboardAnalytics {
+  stats: StatsData;
+  chartData: ChartData;
+}
+
 /**
  * GET /api/analytics/dashboard
  * Returns real metrics from NileDB
  */
 export async function GET() {
+  const cacheKey = 'pm:analytics:dashboard';
+  
   try {
+    const cached = await getCached<DashboardAnalytics>(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: { 'X-Cache': 'HIT' }
+      });
+    }
+
     const [statsResult, chartResult] = await Promise.all([
       getGlobalStatsAction(),
       getAnalyticsChartDataAction()
@@ -17,9 +40,15 @@ export async function GET() {
       throw new Error("Failed to fetch analytics data");
     }
 
-    return NextResponse.json({
+    const responseData = {
       stats: statsResult.data,
       chartData: chartResult.data,
+    };
+
+    await setCache(cacheKey, responseData, CacheTTL.DASHBOARD);
+
+    return NextResponse.json(responseData, {
+      headers: { 'X-Cache': 'MISS' }
     });
   } catch (error) {
     productionLogger.error("API /api/analytics/dashboard failed:", error);

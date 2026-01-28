@@ -47,7 +47,7 @@ function LeadsSelectionStep() {
     };
     fetchLists();
   }, []);
-  
+
   const handleLeadsListChange = (listId: string) => {
     const selectedList = leadLists.find((list: LeadList) => String(list.id) === listId);
     if (selectedList) {
@@ -71,7 +71,7 @@ function LeadsSelectionStep() {
             Select Lead List
           </h2>
           <p className="text-muted-foreground">
-            {loading ? "Loading Mautic segments..." : "Choose which leads you want to target with this campaign"}
+            {loading ? "Loading segments..." : "Choose which leads you want to target with this campaign"}
           </p>
           {editingMode ? (
             <Alert className="mt-4 bg-blue-100 dark:bg-blue-500/20">

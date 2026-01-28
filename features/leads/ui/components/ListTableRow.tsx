@@ -101,34 +101,30 @@ function ListTableRow({ list }: { list: LeadListData }) {
   useEffect(() => {
     // Stale counts are common in Mautic's list endpoint
     // We fetch the real count in the background for consistency
-    let isMounted = true;
+    const controller = new AbortController();
 
     const updateCount = async () => {
-      // 1. Only sync if count is 0/undefined (most likely stale)
-      if (!alias || list.contacts! > 0) return;
-
-      // 2. Add random stagger (0-3s) to avoid mass-firing on mount
-      const delayMs = Math.floor(Math.random() * 3000);
-      await new Promise(resolve => setTimeout(resolve, delayMs));
-
-      if (!isMounted) return;
+      if (!alias) return;
       setIsCounting(true);
-
       try {
         const result = await getLeadListCountAction(alias);
-        if (isMounted && result.success && result.data !== undefined) {
+        if (controller.signal.aborted) return;
+        if (result.success && result.data !== undefined) {
           setActualCount(result.data);
         }
       } catch (error) {
+        if (controller.signal.aborted) return;
         productionLogger.error("Failed to update contact count:", error);
       } finally {
-        if (isMounted) setIsCounting(false);
+        if (!controller.signal.aborted) {
+          setIsCounting(false);
+        }
       }
     };
 
     updateCount();
-    return () => { isMounted = false; };
-  }, [alias, list.contacts]);
+    return () => controller.abort();
+  }, [alias]);
 
   return (
     <TableRow key={list.id}>

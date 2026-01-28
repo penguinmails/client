@@ -1,4 +1,5 @@
 "use client";
+import { Filter, SearchInput } from "@/components/ui/custom/Filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button/button";
 import {
@@ -8,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   Archive,
@@ -16,7 +16,6 @@ import {
   Clock,
   Inbox,
   Mail,
-  Search,
   Send,
   Tag,
   Trash2,
@@ -188,7 +187,7 @@ function InboxFilter() {
                       setSelectedItems,
                     )
                   }
-                  className="h-3 w-3 p-0 ml-1 hover:bg-accent"
+                  className="h-3 w-3 p-0 ml-1 hover:bg-gray-300"
                 >
                   <X className="w-2 h-2" />
                 </Button>
@@ -218,24 +217,16 @@ function InboxFilter() {
         </Select>
       </div>
     );
-    
   };
 
   return (
     <>
-      <div
+      <Filter
         className={cn(
-          "items-start lg:items-center justify-between space-y-4 lg:space-y-0 lg:space-x-4 p-4 border shadow-sm bg-background dark:bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none",
+          "bg-card dark:bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none",
         )}
       >
-        <div className="flex items-center space-x-2 border shadow-sm rounded-lg px-2 bg-muted/50 dark:bg-muted peer-focus-within:border-ring-primary focus-within:ring-1 focus-within:ring-primary w-full lg:w-auto border-input">
-          <Search className="h-4 w-4 text-muted-foreground pointer-events-none" />
-          <Input
-            type="text"
-            placeholder="Search"
-            className="w-full bg-transparent border-0 h-9 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
-          />
-        </div>
+        <SearchInput />
 
         {/* Filters */}
         <div className="flex-1 p-4 overflow-y-auto">
@@ -252,10 +243,10 @@ function InboxFilter() {
                       : "ghost"
                   }
                   className={cn(
-                    "w-full justify-between h-auto py-2 px-3",
+                    "w-full justify-between h-auto py-2.5 px-3",
                     filterState.selectedFilter === filter.id
-                      ? "bg-primary/10 text-primary hover:bg-primary/10 dark:bg-primary/20"
-                      : "text-muted-foreground hover:bg-muted dark:text-foreground dark:hover:bg-muted",
+                      ? "bg-blue-50 text-blue-600 hover:bg-blue-50"
+                      : "text-gray-600 dark:text-muted-foreground hover:bg-gray-100",
                   )}
                 >
                   <div className="flex items-center space-x-3">
@@ -263,8 +254,8 @@ function InboxFilter() {
                       className={cn(
                         "w-4 h-4",
                         filterState.selectedFilter === filter.id
-                          ? "text-primary"
-                          : "text-muted-foreground dark:text-foreground",
+                          ? "text-blue-600"
+                          : "text-gray-500",
                       )}
                     />
                     <span className="text-sm font-medium">{filter.label}</span>
@@ -286,7 +277,7 @@ function InboxFilter() {
 
           {/* Additional Filters */}
           <div className="mt-6 space-y-4">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Filter By
             </h3>
 
@@ -320,8 +311,8 @@ function InboxFilter() {
             {/* Time Filter (single select) */}
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-medium text-foreground">
+                <Clock className="w-4 h-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700 dark:text-foreground">
                   Time
                 </span>
               </div>
@@ -342,8 +333,7 @@ function InboxFilter() {
             </div>
           </div>
         </div>
-        <div className="pb-6"></div>
-      </div>
+      </Filter>
     </>
   );
 }
