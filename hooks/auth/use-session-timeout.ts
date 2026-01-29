@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useAuth } from "./use-auth";
-import { productionLogger, developmentLogger } from "@/lib/logger";
+import { productionLogger } from "@/lib/logger";
 
-// Default inactivity timeout: 15 minutes (B2B standard for sensitive data apps)
 const DEFAULT_TIMEOUT_MS = 15 * 60 * 1000;
-// Warning before logout: 2 minutes
 const WARNING_BEFORE_LOGOUT_MS = 2 * 60 * 1000;
+const STORAGE_KEY = "session_timeout_expiry";
 
 interface UseSessionTimeoutOptions {
   timeoutMs?: number;
@@ -23,14 +22,6 @@ interface SessionTimeoutState {
   resetTimer: () => void;
 }
 
-/**
- * useSessionTimeout - Auto-logout after inactivity
- * 
- * Tracks user activity (mouse, keyboard, scroll) and auto-logs out
- * after a configurable timeout period. Shows warning before logout.
- * 
- * Default: 15 minutes timeout, 2 minutes warning
- */
 export function useSessionTimeout({
   timeoutMs = DEFAULT_TIMEOUT_MS,
   warningMs = WARNING_BEFORE_LOGOUT_MS,
@@ -39,144 +30,88 @@ export function useSessionTimeout({
   enabled = true,
 }: UseSessionTimeoutOptions = {}): SessionTimeoutState {
   const { logout, user } = useAuth();
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const warningRef = useRef<NodeJS.Timeout | null>(null);
-  const countdownRef = useRef<NodeJS.Timeout | null>(null);
-  const lastActivityRef = useRef<number>(0);
-  
   const [isWarning, setIsWarning] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState(0);
 
-  // Handle timeout - logout user
-  const handleTimeout = useCallback(async () => {
-    productionLogger.info("[SessionTimeout] Session expired due to inactivity");
-    
-    if (onTimeout) {
-      onTimeout();
-    }
-    
-    try {
-      await logout();
-    } catch (error) {
-      productionLogger.error("[SessionTimeout] Logout failed:", error);
-    }
-  }, [logout, onTimeout]);
+  const setExpiryTime = useCallback(() => {
+    const expiryTime = Date.now() + timeoutMs;
+    localStorage.setItem(STORAGE_KEY, expiryTime.toString());
+  }, [timeoutMs]);
 
-  // Handle warning - notify user
-  const handleWarning = useCallback(() => {
-    developmentLogger.debug('[SessionTimeout] WARNING TRIGGERED');
-    setIsWarning(true);
-    setRemainingSeconds(Math.floor(warningMs / 1000));
-    
-    if (onWarning) {
-      onWarning(warningMs);
-    }
+  const checkTimeRemaining = useCallback(() => {
+    const expiryTime = localStorage.getItem(STORAGE_KEY);
+    if (!expiryTime) return;
 
-    developmentLogger.debug('[SessionTimeout] Starting countdown interval');
+    const now = Date.now();
+    const expiry = parseInt(expiryTime);
+    const remaining = expiry - now;
 
-    // Start countdown
-    countdownRef.current = setInterval(() => {
-      developmentLogger.debug('[SessionTimeout] Countdown tick');
-      setRemainingSeconds((prev) => {
-        developmentLogger.debug('[SessionTimeout] prev seconds:', prev);
-        if (prev <= 1) {
-          if (countdownRef.current) {
-            clearInterval(countdownRef.current);
-          }
-          return 0;
-        }
-        return prev - 1;
+    if (remaining <= 0) {
+      localStorage.removeItem(STORAGE_KEY);
+      setIsWarning(false);
+      
+      if (onTimeout) {
+        onTimeout();
+      }
+      
+      logout().catch((error) => {
+        productionLogger.error("[SessionTimeout] Logout failed:", error);
       });
-    }, 1000);
-  }, [warningMs, onWarning]);
-
-  // Internal function to refresh timers without triggering state updates
-  // This helps avoid lint warnings about setState in effects
-  const refreshInternalTimers = useCallback(() => {
-    lastActivityRef.current = Date.now();
-
-    // Clear existing timers
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    if (warningRef.current) {
-      clearTimeout(warningRef.current);
-    }
-    if (countdownRef.current) {
-      clearInterval(countdownRef.current);
+      return;
     }
 
-    if (!enabled || !user) return;
+    if (remaining <= warningMs) {
+      if (!isWarning) {
+        setIsWarning(true);
+        if (onWarning) {
+          onWarning(remaining);
+        }
+      }
+      setRemainingSeconds(Math.ceil(remaining / 1000));
+    } else {
+      setIsWarning(false);
+      setRemainingSeconds(0);
+    }
+  }, [warningMs, onWarning, onTimeout, logout, isWarning]);
 
-    // Set warning timer
-    const warningTime = timeoutMs - warningMs;
-    warningRef.current = setTimeout(handleWarning, warningTime);
-
-    // Set timeout timer
-    timeoutRef.current = setTimeout(handleTimeout, timeoutMs);
-  }, [enabled, user, timeoutMs, warningMs, handleWarning, handleTimeout]);
-
-  // Public reset function that also clears UI warning states
   const resetTimer = useCallback(() => {
     setIsWarning(false);
     setRemainingSeconds(0);
-    refreshInternalTimers();
-  }, [refreshInternalTimers]);
+    setExpiryTime();
+  }, [setExpiryTime]);
 
-  // Setup activity listeners
   useEffect(() => {
-    if (!enabled || !user) return;
+    if (!enabled || !user) {
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
 
-    const activityEvents = [
-      "mousedown",
-      "keydown",
-      "scroll",
-      "touchstart",
-      "mousemove",
-    ];
-
-    // Throttle activity updates
-    let lastThrottledUpdate = 0;
+    const activityEvents = ["mousedown", "keydown", "scroll", "touchstart", "mousemove"];
+    let lastActivity = 0;
     const THROTTLE_MS = 1000;
 
     const handleActivity = () => {
       if (isWarning) return;
       const now = Date.now();
-      if (now - lastThrottledUpdate < THROTTLE_MS) return;
-      lastThrottledUpdate = now;
+      if (now - lastActivity < THROTTLE_MS) return;
+      lastActivity = now;
       resetTimer();
     };
 
-    // Add listeners
     activityEvents.forEach((event) => {
       window.addEventListener(event, handleActivity, { passive: true });
     });
 
-    // Initial timer setup - call internal function only to avoid setState warning
-    refreshInternalTimers();
+    setExpiryTime();
+    const interval = setInterval(checkTimeRemaining, 1000);
 
-    // Cleanup
     return () => {
       activityEvents.forEach((event) => {
         window.removeEventListener(event, handleActivity);
       });
-      
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      if (warningRef.current) clearTimeout(warningRef.current);
+      clearInterval(interval);
     };
-  }, [enabled, user, resetTimer, refreshInternalTimers, isWarning]);
-  
-  useEffect(() => {
-    return () => {
-      if (countdownRef.current) {
-        developmentLogger.debug('[SessionTimeout] Cleaning up countdown on unmount');
-        clearInterval(countdownRef.current);
-      }
-    };
-  }, []);
-  return {
-    isWarning,
-    remainingSeconds,
-    resetTimer,
-  };
+  }, [enabled, user, isWarning, resetTimer, setExpiryTime, checkTimeRemaining]);
+
+  return { isWarning, remainingSeconds, resetTimer };
 }
