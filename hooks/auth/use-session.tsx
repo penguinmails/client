@@ -1,5 +1,7 @@
+"use client";
+
 import { useContext } from "react";
-import { SessionContext } from "../ui/context/session-context";
+import { SessionContext } from "@/features/auth/ui/context/session-context";
 
 /**
  * Hook to access session data.

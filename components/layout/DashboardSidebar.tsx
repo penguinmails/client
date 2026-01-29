@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useAuth } from "@features/auth/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
 import Image from "next/image";
 import { productionLogger } from "@/lib/logger";
 import { isInfrastructureRoute, INFRASTRUCTURE_MAIN_ROUTE } from "@/lib/constants/routes";

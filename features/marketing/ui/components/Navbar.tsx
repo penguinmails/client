@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useAuth } from "@features/auth/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { productionLogger } from "@/lib/logger";
 
 const Logo = () => {

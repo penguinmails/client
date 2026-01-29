@@ -5,7 +5,7 @@
  */
 
 import { NextRequest } from 'next/server';
-import { NileDBUser } from '@features/auth/types';
+import { NileDBUser } from '@/types/auth';
 import { getCurrentUser, queryWithContext } from './session';
 import { ResourceNotFoundError } from '@/lib/nile/errors';
 import { productionLogger } from '@/lib/logger';

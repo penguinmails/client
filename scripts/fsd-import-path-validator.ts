@@ -154,11 +154,12 @@ const COMPONENT_PLACEMENT_RULES = [
 ];
 
 function getFileLayer(filePath: string): string | null {
-  if (filePath.includes('/app/') || filePath.startsWith('app/')) return 'app';
-  if (filePath.includes('/features/') || filePath.startsWith('features/')) return 'features';
-  if (filePath.includes('/shared/') || filePath.startsWith('shared/')) return 'shared';
-  if ((filePath.includes('/components/') || filePath.startsWith('components/')) && 
-      !filePath.includes('/features/') && !filePath.startsWith('features/')) return 'components';
+  const normalizedPath = filePath.replace(/\\/g, '/');
+  if (normalizedPath.includes('/app/') || normalizedPath.startsWith('app/')) return 'app';
+  if (normalizedPath.includes('/features/') || normalizedPath.startsWith('features/')) return 'features';
+  if (normalizedPath.includes('/shared/') || normalizedPath.startsWith('shared/')) return 'shared';
+  if ((normalizedPath.includes('/components/') || normalizedPath.startsWith('components/')) && 
+      !normalizedPath.includes('/features/') && !normalizedPath.startsWith('features/')) return 'components';
   return null;
 }
 
@@ -171,8 +172,9 @@ function getImportLayer(importPath: string): string | null {
 }
 
 function getFeatureName(path: string): string | null {
+  const normalizedPath = path.replace(/\\/g, '/');
   // Handle both paths with and without leading slashes
-  const featureMatch = path.match(/\/features\/([^\/]+)/) || path.match(/features\/([^\/]+)/);
+  const featureMatch = normalizedPath.match(/\/features\/([^\/]+)/) || normalizedPath.match(/features\/([^\/]+)/);
   return featureMatch ? featureMatch[1] : null;
 }
 
@@ -440,6 +442,7 @@ function getAllTsxFiles(dir: string, files: string[] = []): string[] {
 function isTestFile(filePath: string): boolean {
   // Exclude test files from FSD validation
   // Test files need to import from various layers for testing purposes
+  const normalizedPath = filePath.replace(/\\/g, '/');
   const testPatterns = [
     /\.test\.tsx$/,
     /\.test\.ts$/,
@@ -450,7 +453,7 @@ function isTestFile(filePath: string): boolean {
     /\.spec\./
   ];
   
-  return testPatterns.some(pattern => pattern.test(filePath));
+  return testPatterns.some(pattern => pattern.test(normalizedPath));
 }
 
 function generateLayerComplianceReport(files: string[], violations: FSDImportViolation[]): LayerComplianceReport {
@@ -729,13 +732,14 @@ function main() {
   }
   
   const allFiles = getAllTsxFiles('.');
-  const targetFiles = allFiles.filter(file => 
-    (file.includes('/app/') || 
-     file.includes('/features/') || 
-     file.includes('/components/') ||
-     file.includes('/shared/')) &&
-    !isTestFile(file)
-  );
+  const targetFiles = allFiles.filter(file => {
+    const normalizedPath = file.replace(/\\/g, '/');
+    return (normalizedPath.includes('/app/') || 
+     normalizedPath.includes('/features/') || 
+     normalizedPath.includes('/components/') ||
+     normalizedPath.includes('/shared/')) &&
+    !isTestFile(file);
+  });
   
   console.log(`📁 Analyzing ${targetFiles.length} files for FSD compliance...\n`);
   

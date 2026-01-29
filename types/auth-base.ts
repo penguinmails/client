@@ -32,6 +32,65 @@ export enum Permission {
   MANAGE_SUBSCRIPTIONS = "manage_subscriptions",
 }
 
+/**
+ * Admin roles for access control
+ * - SUPER_ADMIN: Full system access, internal Penguin Mails staff
+ * - OWNER: Full system access, can manage other admins
+ * - ADMIN: User and campaign management, settings access
+ * - SUPPORT: Read-only access for customer support
+ */
+export enum AdminRole {
+  SUPER_ADMIN = "super_admin",
+  OWNER = "owner",
+  ADMIN = "admin",
+  SUPPORT = "support",
+}
+
+/**
+ * Permission mappings for each admin role
+ */
+export const AdminRolePermissions: Record<AdminRole, Permission[]> = {
+  [AdminRole.SUPER_ADMIN]: Object.values(Permission), // All permissions
+  [AdminRole.OWNER]: Object.values(Permission), // All permissions
+  [AdminRole.ADMIN]: [
+    Permission.CREATE_USER,
+    Permission.UPDATE_USER,
+    Permission.VIEW_USERS,
+    Permission.CREATE_CAMPAIGN,
+    Permission.UPDATE_CAMPAIGN,
+    Permission.DELETE_CAMPAIGN,
+    Permission.VIEW_CAMPAIGNS,
+    Permission.VIEW_DOMAINS,
+    Permission.VIEW_MAILBOXES,
+    Permission.VIEW_ANALYTICS,
+    Permission.EXPORT_DATA,
+    Permission.UPDATE_SETTINGS,
+    Permission.VIEW_SETTINGS,
+  ],
+  [AdminRole.SUPPORT]: [
+    Permission.VIEW_USERS,
+    Permission.VIEW_CAMPAIGNS,
+    Permission.VIEW_DOMAINS,
+    Permission.VIEW_MAILBOXES,
+    Permission.VIEW_ANALYTICS,
+    Permission.VIEW_SETTINGS,
+  ],
+};
+
+/**
+ * Check if an admin role has a specific permission
+ */
+export function hasAdminPermission(role: AdminRole, permission: Permission): boolean {
+  return AdminRolePermissions[role]?.includes(permission) ?? false;
+}
+
+/**
+ * Check if a role is a valid admin role
+ */
+export function isAdminRole(role: string): role is AdminRole {
+  return Object.values(AdminRole).includes(role as AdminRole);
+}
+
 
 export interface Tenant {
   id: string;

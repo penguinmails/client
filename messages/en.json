@@ -37,6 +37,29 @@
       "free": "Free Account"
     }
   },
+  "AdminSidebar": {
+    "sections": {
+      "system": "System"
+    },
+    "items": {
+      "diagnostics": "Diagnostics",
+      "users": "Users"
+    }
+  },
+  "AdminDashboard": {
+    "permissionError": "Access Denied: Your current role ({role}) does not have admin permissions to view user data. Please contact an administrator for access.",
+    "accessDeniedTitle": "Access Denied",
+    "goBackToDashboard": "Go back to Dashboard",
+    "supportNotice": "You have Support (Read-only) access. Some editing and management actions are restricted.",
+    "totalUsers": "Total Users",
+    "staffUsers": "Staff Users",
+    "tenants": "Tenants",
+    "companies": "Companies"
+  },
+  "Admin": {
+    "usersTitle": "User Management",
+    "diagnosticsTitle": "System Diagnostics"
+  },
   "Navigation": {
     "dashboard": "Dashboard",
     "settings": "Settings",
@@ -693,6 +716,18 @@
   "Admin": {
     "title": "Admin Dashboard",
     "description": "Cross-tenant user management and analytics"
+  },
+  "SessionTimeout": {
+    "title": "Session Expiring Soon",
+    "message": "Your session will expire due to inactivity. Click the button below to stay logged in.",
+    "stayLoggedIn": "Stay Logged In"
+  },
+  "AccessDenied": {
+    "title": "Access Denied",
+    "description": "You don't have permission to access this page. Please contact your administrator if you believe this is an error.",
+    "contactMessage": "If you need access to this section, please contact your system administrator or request the appropriate permissions.",
+    "homeButton": "Go Home",
+    "loginButton": "Sign In"
   },
   "Infrastructure": {
     "layout": {

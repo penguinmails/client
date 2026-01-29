@@ -34,7 +34,7 @@ interface _TeamActionResult<T> {
 }
 
 // Mock ONLY external auth utilities and API calls
-jest.mock('@features/auth/lib/hooks/use-enhanced-auth', () => ({
+jest.mock('@/features/auth/lib/hooks/use-enhanced-auth', () => ({
   getCurrentUserId: jest.fn(async () => 'test-user-1'),
   requireUserId: jest.fn(async () => 'test-user-1'),
   checkRateLimit: jest.fn(async () => true),

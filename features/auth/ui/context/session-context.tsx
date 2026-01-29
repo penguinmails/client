@@ -18,7 +18,7 @@ import {
   performLogout,
 } from "../../lib/session-operations";
 import { signupWithVerification } from "../../lib/signup-operations";
-import { BaseUser } from "../../types/auth-user";
+import { BaseUser } from "@/types/auth";
 import { SessionRecoveryError } from "../../types/auth-errors";
 
 export interface SessionContextValue {
@@ -69,7 +69,13 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(true);
     setError(null);
     try {
-      const recoveredSession = await recoverSessionWithRetry();
+      // Check if we're recovering from a logout (need fresh session check)
+      const needsForceRefresh = sessionStorage.getItem('justLoggedOut') === 'true';
+      if (needsForceRefresh) {
+        sessionStorage.removeItem('justLoggedOut');
+      }
+
+      const recoveredSession = await recoverSessionWithRetry(3, 1000, false, needsForceRefresh);
       if (recoveredSession) {
         setSession(recoveredSession);
         setRetryCount(0);

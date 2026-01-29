@@ -3,8 +3,7 @@
  * These tests verify the consolidated User type matches the specification
  */
 
-import { AuthUser, Permission, UserRole } from '@features/auth/types';
-import { UserPreferences } from '@features/auth/types/auth-user';
+import { AuthUser, Permission, UserRole, UserPreferences } from "@/types/auth";
 
 // Test consolidated User interface structure
 describe('Consolidated User Interface', () => {

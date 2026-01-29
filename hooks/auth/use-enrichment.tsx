@@ -1,5 +1,7 @@
+"use client";
+
 import { useContext } from "react";
-import { EnrichmentContext } from "../ui/context/enrichment-context";
+import { EnrichmentContext } from "@/features/auth/ui/context/enrichment-context";
 
 /**
  * Hook to access enrichment data (profile, tenants, etc.).

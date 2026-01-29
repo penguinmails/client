@@ -35,6 +35,29 @@
       "free": "Cuenta Gratuita"
     }
   },
+  "AdminSidebar": {
+    "sections": {
+      "system": "Sistema"
+    },
+    "items": {
+      "diagnostics": "Diagnóstico",
+      "users": "Usuarios"
+    }
+  },
+  "AdminDashboard": {
+    "permissionError": "Acceso Denegado: Su rol actual ({role}) no tiene permisos de administrador para ver datos de usuarios. Por favor contacte a un administrador para obtener acceso.",
+    "accessDeniedTitle": "Acceso Denegado",
+    "goBackToDashboard": "Volver al Dashboard",
+    "supportNotice": "Tiene acceso de Soporte (Solo lectura). Algunas acciones de edición y gestión están restringidas.",
+    "totalUsers": "Total de Usuarios",
+    "staffUsers": "Usuarios Staff",
+    "tenants": "Tenants",
+    "companies": "Compañías"
+  },
+  "Admin": {
+    "usersTitle": "Gestión de Usuarios",
+    "diagnosticsTitle": "Diagnóstico del Sistema"
+  },
   "Navigation": {
     "dashboard": "Tablero",
     "settings": "Configuración",
@@ -688,6 +711,18 @@
   "Admin": {
     "title": "Panel de Administración",
     "description": "Gestión de usuarios y análisis entre inquilinos"
+  },
+  "SessionTimeout": {
+    "title": "Sesión Expirando Pronto",
+    "message": "Tu sesión expirará por inactividad. Haz clic en el botón para mantenerte conectado.",
+    "stayLoggedIn": "Mantenerse Conectado"
+  },
+  "AccessDenied": {
+    "title": "Acceso Denegado",
+    "description": "No tienes permiso para acceder a esta página. Por favor, contacta a tu administrador si crees que esto es un error.",
+    "contactMessage": "Si necesitas acceso a esta sección, por favor contacta a tu administrador del sistema o solicita los permisos apropiados.",
+    "homeButton": "Ir al Inicio",
+    "loginButton": "Iniciar Sesión"
   },
   "Infrastructure": {
     "layout": {

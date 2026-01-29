@@ -1,6 +1,6 @@
-import { useAuth } from '@features/auth/hooks/use-auth';
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useSystemHealth } from "@/hooks";
-import { UserRole } from '@features/auth/types';
+import { UserRole } from '@/types/auth';
 import { developmentLogger } from '@/lib/logger';
 import { useCallback, useState } from 'react';
 

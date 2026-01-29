@@ -7,7 +7,7 @@
  * TODO: Replace with real data fetching once getUserCompanies, getUserRoles, getUserPermissions are implemented
  */
 
-import { Permission } from "@/features/auth/types";
+import { Permission } from "@/types/auth";
 import { CompanyInfo } from "@/types/company";
 
 /**

@@ -8,13 +8,12 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { useSession } from "../../hooks/use-session";
+import { useSession } from "@/hooks/auth/use-session";
 import { useSystemHealth } from "@/hooks";
-import { productionLogger } from "@/lib/logger";
+import { productionLogger, developmentLogger } from "@/lib/logger";
 import { fetchEnrichedUser } from "../../lib/enrichment-operations";
-import { AuthUser } from "../../types/auth-user";
+import { AuthUser, Tenant } from "@/types/auth";
 import { CompanyInfo } from "@/types/company";
-import { Tenant } from "../../types/base";
 import { EnrichmentError } from "../../types/auth-errors";
 
 // ============================================================================
@@ -51,18 +50,16 @@ const RETRY_DELAY_MS = 2000;
 export const UserEnrichmentProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { session, isLoading: isSessionLoading } = useSession(); 
+  const { session, isLoading: isSessionLoading } = useSession();
   const { systemHealth } = useSystemHealth();
   const isHealthy = systemHealth.status === "healthy";
 
   // State
   const [enrichedUser, setEnrichedUser] = useState<AuthUser | null>(null);
-  const [isLoadingEnrichment, setIsLoadingEnrichment] = useState(false);
+  const [isLoadingEnrichment, setIsLoadingEnrichment] = useState(true);
   const [enrichmentError, setEnrichmentError] = useState<Error | null>(null);
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
-    null
-  );
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const retryCountRef = useRef(0);
 
   // ============================================================================
@@ -79,20 +76,30 @@ export const UserEnrichmentProvider: React.FC<{
       try {
         const data = await fetchEnrichedUser(userId);
 
+        developmentLogger.debug('[Enrichment] ===== ENRICHMENT DATA =====');
+        developmentLogger.debug('[Enrichment] Data from fetchEnrichedUser:', data);
+        developmentLogger.debug('[Enrichment] Data.role:', data.role);
+
         // Merge base user with enrichment
         if (session) {
-            setEnrichedUser({
-                ...session,
-                // data is Partial<AuthUser>.
-                ...(data as Record<string, unknown>),
-                id: userId,
-                email: session.email,
-            } as AuthUser);
+          developmentLogger.debug('[Enrichment] Session:', session);
+
+          const merged = {
+            ...session,
+            ...(data as Record<string, unknown>),
+            id: userId,
+            email: session.email,
+          } as AuthUser;
+
+          developmentLogger.debug('[Enrichment] Merged user:', merged);
+          developmentLogger.debug('[Enrichment] Merged user.role:', merged.role);
+
+          setEnrichedUser(merged);
         }
 
         // Auto-select tenant
         if (data.tenantMembership?.tenantId) {
-            setSelectedTenantId(data.tenantMembership.tenantId);
+          setSelectedTenantId(data.tenantMembership.tenantId);
         }
 
         retryCountRef.current = 0;
@@ -129,18 +136,15 @@ export const UserEnrichmentProvider: React.FC<{
   // ============================================================================
   useEffect(() => {
     if (session?.id) {
-       // Only enrich if we have a session
-       // Initialize with base data
-       setEnrichedUser(prev => ({
-           id: session.id,
-           email: session.email,
-           emailVerified: session.emailVerified,
-           ...prev
-       } as AuthUser));
-       
-       enrichUser(session.id);
+      setEnrichedUser(prev => ({
+        id: session.id,
+        email: session.email,
+        emailVerified: session.emailVerified,
+        ...prev
+      } as AuthUser));
+
+      enrichUser(session.id);
     } else if (!isSessionLoading && !session) {
-      // Clear if no session
       setEnrichedUser(null);
       setSelectedTenantId(null);
       setSelectedCompanyId(null);
@@ -148,7 +152,7 @@ export const UserEnrichmentProvider: React.FC<{
       setIsLoadingEnrichment(false);
       retryCountRef.current = 0;
     }
-  }, [session, isSessionLoading, enrichUser]); 
+  }, [session, isSessionLoading, enrichUser]);
 
   // ============================================================================
   // Derived Values
@@ -157,12 +161,12 @@ export const UserEnrichmentProvider: React.FC<{
     () =>
       enrichedUser?.tenantMembership?.tenant
         ? [
-            {
-              id: enrichedUser.tenantMembership.tenantId,
-              name: enrichedUser.tenantMembership.tenant.name,
-              created: "",
-            },
-          ]
+          {
+            id: enrichedUser.tenantMembership.tenantId,
+            name: enrichedUser.tenantMembership.tenant.name,
+            created: "",
+          },
+        ]
         : [],
     [enrichedUser]
   );

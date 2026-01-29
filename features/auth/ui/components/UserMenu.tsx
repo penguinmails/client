@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@features/auth/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { SignOutButton } from "@niledatabase/react";
 import { useTranslations } from "next-intl";
 

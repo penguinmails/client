@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { useEnrichment } from "../../hooks/use-enrichment";
-import { UserRole } from "../../types/base"; // Importing UserRole enum
+import { useEnrichment } from "@/hooks/auth/use-enrichment";
+import { UserRole } from "@/types/auth"; // Importing UserRole enum
 import { AlertCircle } from "lucide-react";
 
 interface RoleGuardProps {

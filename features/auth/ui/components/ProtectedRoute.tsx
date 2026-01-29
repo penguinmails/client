@@ -3,11 +3,11 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter, usePathname } from "@/lib/config/i18n/navigation";
-import { useSession } from "../../hooks/use-session";
-import { useEnrichment } from "../../hooks/use-enrichment";
+import { useSession } from "@/hooks/auth/use-session";
+import { useEnrichment } from "@/hooks/auth/use-enrichment";
 import { Loader2 } from "lucide-react";
 import { SessionErrorView, EnrichmentErrorView } from "./ErrorViews";
-import { UserRole } from "../../types/base";
+import { UserRole } from "@/types/auth";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

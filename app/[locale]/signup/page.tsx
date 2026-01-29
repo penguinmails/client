@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useAuth } from "@features/auth/hooks/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { User } from "lucide-react";
 import { LandingLayout } from "@/features/marketing/ui/components/LandingLayout";
 import { AuthTemplate } from "@/features/auth/ui/components/AuthTemplate";

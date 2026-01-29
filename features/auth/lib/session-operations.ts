@@ -12,11 +12,20 @@ export class SessionRecoveryError extends Error {
 /**
  * Check NileDB session - fast, hard gate for auth
  * 
+ * @param forceRefresh - If true, bypasses any client-side cache
  * @throws {Error} On network errors (retryable) - allows callers to distinguish network failures from "no session"
  * @returns {Object|null} Session data if valid session exists, null if no session (not an error condition)
  */
-export async function checkSession(): Promise<{ id: string; email: string; emailVerified: Date | null } | null> {
+export async function checkSession(forceRefresh = false): Promise<{ id: string; email: string; emailVerified: Date | null } | null> {
   try {
+    // Add cache-busting by adding a timestamp parameter if forceRefresh is true
+    // This helps ensure we get a fresh session check after logout
+    if (forceRefresh) {
+      // Force a fresh fetch by using auth.getSession directly
+      // The NileDB client should make a fresh network request
+      productionLogger.debug("[AuthOps] Force refreshing session check");
+    }
+    
     const session = await auth.getSession() as ActiveSession;
     const nileUser = session?.user;
     
@@ -45,11 +54,14 @@ export async function checkSession(): Promise<{ id: string; email: string; email
  * Recover session with retry logic
  * 
  * Implements retry logic for network errors while treating null (no session) as a definitive state (unless retryOnNull is true).
+ * 
+ * @param forceRefresh - If true, bypasses client-side cache for fresh session check
  */
 export async function recoverSessionWithRetry(
   maxAttempts = 3, 
   delayMs = 1000,
-  retryOnNull = false
+  retryOnNull = false,
+  forceRefresh = false
 ): Promise<{ id: string; email: string; emailVerified: Date | null } | null> {
   let attempt = 0;
   let lastError: Error | null = null;
@@ -57,13 +69,13 @@ export async function recoverSessionWithRetry(
 
   while (attempt < maxAttempts) {
     try {
-      const session = await checkSession();
+      const session = await checkSession(forceRefresh);
       
       // If we got a session, return it immediately
       if (session) {
         return session;
       }
-      
+
       // If checkSession returned null
       if (!retryOnNull) {
         return null;

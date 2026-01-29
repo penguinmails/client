@@ -34,6 +34,7 @@ export interface SystemHealthContextValue {
 }
 
 // Auth Types (shared across features) are now in common.ts
+export * from './auth';
 
 export interface TenantInfo {
   id: string;

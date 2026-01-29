@@ -5,21 +5,7 @@
 
 import type { ComponentType } from 'react';
 
-export interface BaseUser {
-  id: string;
-  email: string;
-  emailVerified?: boolean;
-  role?: string;
-}
-
-export const UserRole = {
-  ADMIN: "admin",
-  SUPER_ADMIN: "super_admin",
-  MANAGER: "manager",
-  USER: "user",
-} as const;
-
-export type UserRole = typeof UserRole[keyof typeof UserRole];
+// BaseUser and UserRole moved to ./auth
 
 
 // Custom component type constraint to avoid 'any' in linter

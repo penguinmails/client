@@ -76,14 +76,14 @@ const mockAuthContext = {
   restoreSession: jest.fn().mockResolvedValue(true),
 };
 
-jest.mock("@features/auth/ui/context/auth-provider", () => ({
+jest.mock("@/features/auth", () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
   ),
   useAuth: () => mockAuthContext,
 }));
 
-import { AuthProvider } from "@features/auth/ui/context/auth-provider";
+import { AuthProvider } from "@features/auth";
 
 // Simple test component
 const TestComponent = () => {

@@ -23,7 +23,7 @@ import {
   Users,
 } from "lucide-react";
 import SidebarLink from "./SidebarLink";
-import { useEnrichment } from "@features/auth/hooks/use-enrichment";
+import { useEnrichment } from "@/hooks/auth/use-enrichment";
 import { useTranslations } from "next-intl";
 
 // Wrapper component to provide translations to navigation groups
@@ -96,16 +96,6 @@ function AppSideBar() {
           to: "/dashboard/analytics",
           label: t("items.analyticsHub"),
           icon: BarChart3,
-        },
-      ],
-    },
-    {
-      title: t("sections.admin"),
-      items: [
-        {
-          to: "/dashboard/admin",
-          label: t("items.diagnostics"),
-          icon: Server,
         },
       ],
     },

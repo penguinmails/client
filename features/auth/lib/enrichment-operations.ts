@@ -1,4 +1,4 @@
-import { AuthUser, TenantMembership } from "../types/auth-user";
+import { AuthUser, TenantMembership } from "@/types/auth";
 import { CompanyInfo } from "@/types";
 import { productionLogger } from "@/lib/logger";
 import { 
@@ -58,10 +58,13 @@ export async function fetchEnrichedUser(userId: string): Promise<Partial<AuthUse
     // Note: App logic says user has ONE tenant in this context
     const primaryTenant = tenantsData.tenants?.[0];
     
+ 
+    const role = (profileData.profile.role as string) || (profileData.profile.claims?.role as string) || "user";
+    
     const tenantMembership: TenantMembership | undefined = primaryTenant ? {
       tenantId: primaryTenant.id,
       user_id: userId,
-      roles: profileData.profile.claims?.role ? [profileData.profile.claims.role] : [],
+      roles: [role],  
       email: profileData.profile.email,
       tenant: {
         id: primaryTenant.id,
@@ -70,25 +73,28 @@ export async function fetchEnrichedUser(userId: string): Promise<Partial<AuthUse
       }
     } : undefined;
 
-    const role = profileData.profile.claims?.role || "user";
-
     return {
       name: profileData.profile.displayName,
       displayName: profileData.profile.displayName,
       picture: profileData.profile.photoURL,
       photoURL: profileData.profile.photoURL,
-      givenName: profileData.profile.profile?.firstName,
-      familyName: profileData.profile.profile?.lastName,
-      isStaff: !!profileData.profile.claims?.role && (profileData.profile.claims.role === "admin" || profileData.profile.claims.role === "super_admin"),
+      givenName: profileData.profile.profile?.firstName as string | undefined,
+      familyName: profileData.profile.profile?.lastName as string | undefined,
+      isStaff: (profileData.profile.isStaff as boolean) || false,  
       role,
       claims: {
         role,
-        permissions: [],
+        permissions: Array.isArray(profileData.profile.permissions) ? (profileData.profile.permissions as string[]) : [],  
         tenantId: primaryTenant?.id || "",
         companyId: companiesData.companies?.[0]?.id,
       },
-      preferences: profileData.profile.profile as Record<string, unknown>,
+      preferences: (profileData.profile.preferences as Record<string, unknown>) || {},
       tenantMembership,
+  
+      permissions: Array.isArray(profileData.profile.permissions) ? (profileData.profile.permissions as string[]) : [],
+      roles: Array.isArray(profileData.profile.roles) ? (profileData.profile.roles as string[]) : [role],
+      tenants: Array.isArray(profileData.profile.tenants) ? profileData.profile.tenants as AuthUser['tenants'] : [],
+      companies: Array.isArray(profileData.profile.companies) ? (profileData.profile.companies as CompanyInfo[]) : [],
     };
   } catch (error) {
     productionLogger.warn('[AuthOps] Enrichment failed, returning basic user data:', error);

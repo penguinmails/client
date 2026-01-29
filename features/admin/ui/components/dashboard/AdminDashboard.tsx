@@ -5,12 +5,19 @@ import { AdminUsersResponse } from "@/types/admin";
 import { AdminUserTable } from "../users/AdminUserTable";
 import { AdminUserFilters } from "../users/AdminUserFilters";
 import { AdminDashboardSkeleton } from "./AdminDashboardSkeleton";
+import { useAuth } from "@/hooks/auth/use-auth";
+import { AdminRole } from "@/types/auth";
+import { Info, Lock } from "lucide-react";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 interface AdminDashboardProps {
   initialData?: AdminUsersResponse;
 }
 
 export function AdminDashboard({ initialData }: AdminDashboardProps) {
+  const { user } = useAuth();
+  const t = useTranslations("AdminDashboard");
   const [data, setData] = useState<AdminUsersResponse | null>(
     initialData || null
   );
@@ -35,8 +42,15 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        const errorMessage = (errorData as Record<string, unknown>)?.error as string || "Unknown error";
+
+        // Check if it's a permission error
+        if (response.status === 403 || errorMessage.includes("Forbidden")) {
+          throw new Error(t("permissionError", { role: user?.role || "unknown" }));
+        }
+
         throw new Error(
-          `Failed to fetch users: ${response.status} - ${((errorData as Record<string, unknown>)?.error as string) || "Unknown error"}`
+          `Failed to fetch users: ${response.status} - ${errorMessage}`
         );
       }
 
@@ -67,10 +81,10 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
       setData((prev) =>
         prev
           ? {
-              ...prev,
-              users: [...prev.users, ...result.users],
-              pagination: result.pagination,
-            }
+            ...prev,
+            users: [...prev.users, ...result.users],
+            pagination: result.pagination,
+          }
           : result
       );
     } catch (err) {
@@ -84,6 +98,7 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
     if (!initialData) {
       fetchUsers();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData]);
 
   if (loading && !data) {
@@ -92,33 +107,25 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+      <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950 dark:border-amber-800 p-6">
         <div className="flex">
           <div className="shrink-0">
-            <svg
-              className="h-5 w-5 text-red-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <Lock className="h-6 w-6 text-amber-500" />
           </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-red-800">
-              Error loading users
+          <div className="ml-4">
+            <h3 className="text-sm font-medium text-amber-800 dark:text-amber-200">
+              {t("accessDeniedTitle")}
             </h3>
-            <p className="mt-1 text-sm text-red-700">{error}</p>
+            <p className="mt-2 text-sm text-amber-700 dark:text-amber-300">
+              {error}
+            </p>
             <div className="mt-4">
-              <button
-                onClick={() => fetchUsers()}
-                className="rounded-md bg-red-100 px-3 py-2 text-sm font-medium text-red-800 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center rounded-md bg-amber-100 dark:bg-amber-900 px-3 py-2 text-sm font-medium text-amber-800 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-800"
               >
-                Try again
-              </button>
+                {t("goBackToDashboard")}
+              </Link>
             </div>
           </div>
         </div>
@@ -130,8 +137,25 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
     return <AdminDashboardSkeleton />;
   }
 
+  const isSupport = user?.role === AdminRole.SUPPORT;
+
   return (
     <div className="space-y-6">
+      {isSupport && (
+        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+          <div className="flex items-center">
+            <div className="shrink-0">
+              <Info className="h-5 w-5 text-blue-400" aria-hidden="true" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-blue-700">
+                {t("supportNotice")}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div className="bg-white dark:bg-card overflow-hidden shadow rounded-lg">
@@ -155,7 +179,7 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 dark:text-muted-foreground truncate">
-                    Total Users
+                    {t("totalUsers")}
                   </dt>
                   <dd className="text-lg font-medium text-gray-900 dark:text-foreground">
                     {data.total.toLocaleString()}
@@ -180,14 +204,14 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 0 0118 0z"
                   />
                 </svg>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 dark:text-muted-foreground truncate">
-                    Staff Users
+                    {t("staffUsers")}
                   </dt>
                   <dd className="text-lg font-medium text-gray-900 dark:text-foreground">
                     {data.users.filter((u) => u.isPenguinMailsStaff).length}
@@ -219,7 +243,7 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 dark:text-muted-foreground truncate">
-                    Tenants
+                    {t("tenants")}
                   </dt>
                   <dd className="text-lg font-medium text-gray-900 dark:text-foreground">
                     {data.users.reduce((sum, u) => sum + u.tenantCount, 0)}
@@ -251,7 +275,7 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 dark:text-muted-foreground truncate">
-                    Companies
+                    {t("companies")}
                   </dt>
                   <dd className="text-lg font-medium text-gray-900 dark:text-foreground">
                     {data.users.reduce((sum, u) => sum + u.companyCount, 0)}
